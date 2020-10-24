@@ -1,0 +1,48 @@
+#include <SPI.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+#define SCREEN_WIDTH 128 
+#define SCREEN_HEIGHT 64 
+#define OLED_RESET     -1
+
+#define ALPHA 0.7
+
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+int oldVal = 0;
+void setup() {
+  Serial.begin(115200);
+   if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { 
+    Serial.println(F("SSD1306 allocation failed"));
+    for(;;); // Don't proceed, loop forever
+  }
+  
+}
+
+void loop() {
+  Serial.println(algo());
+  delay(1000);
+  Serial.println(analogRead(A0));
+  printDisp(algo());
+
+}
+void printDisp(int value){
+  display.display();
+  delay(200); 
+  display.clearDisplay();
+  display.setCursor(25,10);
+  display.setTextSize(5);
+  display.setTextColor(WHITE);
+  display.println(value);
+  display.drawPixel(10,10,WHITE);
+  delay(222);
+  display.display();
+  delay(200);
+}
+
+int algo(){
+  int newVal = analogRead(A0);
+  return(ALPHA * newVal + (1-ALPHA) * oldVal);
+}
