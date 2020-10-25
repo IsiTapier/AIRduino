@@ -1,6 +1,9 @@
+#include <Adafruit_SSD1306.h>
+#include <splash.h>
+
 #include <Wire.h>
 #include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
+
 
 #define D_L 128
 #define D_W 64
@@ -22,6 +25,8 @@
 #define maxPiep 1200
 #define maxDisplayed 1400
 #define averagingPitch 5
+#define alpha 0.7
+#define debug true
 
 #define criticalHight map(maxLight, 0, maxDisplayed, 0, D_W)
 #define minHight map(outsideValuePpm, 0, maxDisplayed, 0, D_W)
@@ -29,8 +34,9 @@
 short graphData[arrayLength];
 Adafruit_SSD1306 display = Adafruit_SSD1306(D_L, D_W, &Wire, -1); // Create display object
 
-unsigned long  airCondition;
-int lastAirCondition;
+long airCondition;
+int lastAirCondition = 0;
+int airConditionRaw;
 int value;
 int lowest = 600;
 int led;
@@ -44,13 +50,17 @@ int drop;
 boolean ventilating = false;
 
 void setup() {
-  initDisplay(); 
-  initSensor();   
+  Serial.begin(9600); 
+  initSensor();
+  initDisplay();
 }
 
 void loop() {
-  meassureAirCondition();
+  loopSensor();
 }
+
+
+//Sensor
 
 void initSensor() {
   //Pins
@@ -58,107 +68,115 @@ void initSensor() {
   pinMode(ledGreen, OUTPUT);
   pinMode(ledBlue, OUTPUT);
 
-  //Serial
-  Serial.begin(9600);                 //Starten des Seriellen Outputs
- /* Serial.println("//////////////////////////////////////");
-  Serial.println("Config: ");
-  Serial.println(1400);               //Anpassen der Skala
-  Serial.println(lowest);             //Wert rurück zum Ausgangswert
-  Serial.println("//////////////////////////////////////");
-*/
-  for (int i = 0; i < averagingPitch * 2; i++) {      //Array für die letzten 10 Werte auf 0 setzten
+  //prepare Arrays
+  for (int i = 0; i < averagingPitch * 2; i++) {
     values[i] = 0;
+  }
+}
+
+void loopSensor() {
+  meassureAirCondition();
+  mapAirCondition();
+  calculatePitch();
+  checkVentilating();
+  writeLed();
+  debugSensor();
+}
+
+void debugSensor() {
+  if(debug) {
+     Serial.println("//////////////////////////////////////");
+     Serial.println("Sensor");
+     Serial.println("//////////////////////////////////////");
+     Serial.print("Analog: ");
+     Serial.println(analogRead(inputGasSensor));
+     Serial.print("Average: ");
+     Serial.println(airConditionRaw);
+     Serial.print("Smoothed: ");
+     Serial.println(lastAirCondition);
+     Serial.print("PPM: ");
+     Serial.println(airCondition);
+     Serial.print("Pitch: ");
+     Serial.println(pitch);
+     Serial.print("Lowest: ");
+     Serial.println(lowest);
+     Serial.print("LED: ");
+     Serial.println(led);
+     Serial.println("//////////////////////////////////////");
   }
 }
 
 void meassureAirCondition() {
   //Messung
-  airCondition = 0;                                                                                               //Zurücksetzten des AirCondition value
-  for (int i = 0; i < averaging; i++) {                                                                           //Vielfaches Messen für Durschnittswerte
-    value = analogRead(inputGasSensor);                                                                           //Messen der Luftqualität
-    if (airCondition / i + maxIncrease < value && i != 0 /*|| value + maxIncrease < airCondition / i && i != 0*/)     //Bei Werten mit zu großen Steigungen (Senkungen) wird der Durchschnittswert verwendet
+  airCondition = 0;
+  for (int i = 0; i < averaging; i++) {
+    value = analogRead(inputGasSensor);
+    
+    //Fehlmessungen überschreiben
+    if(lastAirCondition + maxIncrease < value && i == 0)
+      airCondition = airCondition + lastAirCondition;
+    else if (airCondition / i + maxIncrease < value && i != 0)
       airCondition = airCondition + airCondition / i;
     else
-      airCondition = airCondition + value;                                                                        //Sonst Wert dazu addieren
+      airCondition = airCondition + value;
+      
     delay(10);
   }
-  airCondition = airCondition / averaging;                                                                        //Berechnung des Durschnittwertes der Rechnung
+  airCondition = airCondition / averaging;
+  airConditionRaw = airCondition;
+  
+  //Wert smoothen;
+  airCondition = alpha * airCondition + (1-alpha) * lastAirCondition;
+
   lastAirCondition = airCondition;
+}
 
-  //Diagramm
-  airCondition = airCondition - outsideValueSensor;                                                               //Grundluftqualtität wird abgezogen
-  airCondition = map(airCondition, 0, 1023, outsideValuePpm, maxPpm);   //Wert wird auf Co2 Konzentrationen gemapped
-  
-  Serial.println("//////////////////////////////////////");
-  Serial.print("Analog: ");
-  Serial.println(analogRead(A0));
-  delay(10);
-  Serial.print("Ppm: ");
-  Serial.println(airCondition);
-  
-  airCondition = map(airCondition, 0, maxDisplayed, 0, D_W);   //Diagramm wird gezeichnet
-  
-  //Serial.print("PixelHight: ");
-  //Serial.println(airCondition);
-  
-  draw(airCondition);
+void mapAirCondition() {
+  //to PPM
+  airCondition = airCondition - outsideValueSensor;
+  airCondition = map(airCondition, 0, 1023, outsideValuePpm, maxPpm);
 
-  //Steigung
+  //to Graph
+  draw(map(airCondition, 0, maxDisplayed, 0, D_W));
+}
+
+void calculatePitch() {
+  //store last AirConditions
   for (int i = averagingPitch * 2 - 1; i > 0; i--) {
     values[i] = values[i - 1];
   }
   values[0] = airCondition;
-  calculatePitch();
 
-  //lowest value
-  if (ventilating && airCondition < drop)                                                                         //Einstellung des Grund-Values
-    drop = airCondition;
-
-  //LED
-  if (airCondition > maxLight)                                                                                    //Werte über dem Maximalwert werden angeglichen
-    airCondition = maxLight;
-  if (airCondition < lowest)
-    airCondition = lowest;
-  led = map(airCondition, lowest, maxLight, 0, 255);                                                              //Mapping für LED
-  red = led;                                                                                                      //Wertberechnung für die rote LED
-  green = 255 - led;                                                                                              //Wertberechnung für die grüne LED
-  if (red < 0)                                                                                                    //Werte unter 0 werden auf 0 gesetzt
-    red = 0;
-  if (!ventilating)
-    rgb(red, green, 0);                                                                                           //LED wird auf die entsprechenden Werte gesetzt
-}
-
-//LED write function
-void rgb(int red, int green, int blue) {
-  analogWrite(ledRed, red);
-  analogWrite(ledGreen, green);
-  analogWrite(ledBlue, blue);
-}
-
-//Pitch
-void calculatePitch() {
+  //average current AirCondition
   for (int i = 0; i < averagingPitch; i++) {
     now = now + values[i];
   }
   now = now / averagingPitch;
 
+  //average last AirCondition
   for (int i = averagingPitch; i < averagingPitch * 2; i++) {
     last = last + values[i];
   }
   last = last / averagingPitch;
 
+  //Pitch
   pitch = now - last;
+}
 
-  //check Ventilating
+void checkVentilating() {
+  //lowest value
+  if (ventilating && airCondition < drop)
+    drop = airCondition;
+
+  //start Ventilating
   if (pitch * -1 > maxDecrease && !ventilating) {
-    //Ventilating
     ventilating = true;
     drop = airCondition;
     rgb(0, 0, 255);
   }
 
+  //stop Ventilating
   if (last < now && ventilating) {
-    //stopVentilating
     if (drop - lowest < maxDropIncrease)
       lowest = drop;
     ventilating = false;
@@ -166,8 +184,35 @@ void calculatePitch() {
   last = now;
 }
 
+void writeLed() {
+  //prepare Values
+  if (airCondition > maxLight)
+    airCondition = maxLight;
+  if (airCondition < lowest)
+    airCondition = lowest;
+
+  //map Values
+  led = map(airCondition, lowest, maxLight, 0, 255);
+  red = led;
+  green = 255 - led;
+
+  //turn on
+  if (!ventilating)
+    rgb(red, green, 0);
+}
+
+void rgb(int red, int green, int blue) {
+  analogWrite(ledRed, red);
+  analogWrite(ledGreen, green);
+  analogWrite(ledBlue, blue);
+}
+
+
+
+//Display
+
 void initDisplay() {
-  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
+  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
     Serial.println(F("SSD1306 allocation failed"));
     for (;;);
   }
