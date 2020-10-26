@@ -286,8 +286,8 @@ void draw(int data) {
 void drawGraph() {
   for (short x = verticalLine; x < D_L; x++) {
     byte arrayDigit = x - verticalLine;
-    if (graphData[arrayDigit] != 0) display.drawPixel(x, graphData[arrayDigit], WHITE);
 
+    if (graphData[arrayDigit] != 0) display.drawPixel(x, graphData[arrayDigit], WHITE);
     Serial.print("Array Stelle: ");
     Serial.println(arrayDigit);
     if (x != verticalLine) {
@@ -299,16 +299,13 @@ void drawGraph() {
           //}
         }
       }
-      if (graphData[arrayDigit - 1] > graphData[arrayDigit]) {
-        for (byte y = graphData[arrayDigit]; y < graphData[arrayDigit - 1]; y++) {
-          //if (display.getPixel(graphData[x - 1], y) == 0) {
-          display.drawPixel(x, y, WHITE);
-          display.drawPixel(x - 1, y, BLACK);
-          //}
-        }
+      for (byte y = graphData[arrayDigit]; y < graphData[arrayDigit - 1]; y++) {
+        //if (display.getPixel(graphData[x - 1], y) == 0) {
+        display.drawPixel(x, y, WHITE);
+        display.drawPixel(x - 1, y, BLACK);
+        //}
       }
     }
-
   }
 }
 
