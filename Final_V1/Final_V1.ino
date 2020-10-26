@@ -21,10 +21,10 @@
 #define maxBlink 1100
 #define maxPiep 1200
 #define maxDisplayed 1400
-#define averagingPitch 5
+#define averagingGradient 5
 #define alpha 0.7
 #define debug true
-#define delayTime 10*1000
+#define cycleLength 10*1000
 
 #define criticalHight map(maxLight, 0, maxDisplayed, 0, D_W)
 #define minHight map(outsideValuePpm, 0, maxDisplayed, 0, D_W)
@@ -40,10 +40,10 @@ short lowest = 600;
 short led;
 short red;
 short green;
-short values[averagingPitch * 2];
+short values[averagingGradient * 2];
 short last;
 short now;
-short pitch;
+short gradient;
 short drop;
 boolean ventilating = false;
 
@@ -73,7 +73,7 @@ void initSensor() {
 void loopSensor() {
   meassureAirCondition();
   mapAirCondition();
-  calculatePitch();
+  calculategradient();
   checkVentilating();
   writeLed();
   debugSensor();
@@ -92,8 +92,8 @@ void debugSensor() {
     Serial.println(lastAirCondition);
     Serial.print("PPM: ");
     Serial.println(airCondition);
-    Serial.print("Pitch: ");
-    Serial.println(pitch);
+    Serial.print("gradient: ");
+    Serial.println(gradient);
     Serial.print("Lowest: ");
     Serial.println(lowest);
   }
@@ -113,7 +113,7 @@ void meassureAirCondition() {
     else
       airCondition = airCondition + value;
 
-    delay(delayTime/averaging);
+    delay(cycleLength/averaging);
   }
   
   airCondition = airCondition / averaging;
@@ -135,27 +135,27 @@ void mapAirCondition() {
   draw(map(airCondition, 0, maxDisplayed, 0, D_W));
 }
 
-void calculatePitch() {
+void calculategradient() {
   //store last AirConditions
-  for (int i = averagingPitch * 2 - 1; i > 0; i--) {
+  for (int i = averagingGradient * 2 - 1; i > 0; i--) {
     values[i] = values[i - 1];
   }
   values[0] = airCondition;
 
   //average current AirCondition
-  for (int i = 0; i < averagingPitch; i++) {
+  for (int i = 0; i < averagingGradient; i++) {
     now = now + values[i];
   }
-  now = now / averagingPitch;
+  now = now / averagingGradient;
 
   //average last AirCondition
-  for (int i = averagingPitch; i < averagingPitch * 2; i++) {
+  for (int i = averagingGradient; i < averagingGradient * 2; i++) {
     last = last + values[i];
   }
-  last = last / averagingPitch;
+  last = last / averagingGradient;
 
-  //Pitch
-  pitch = now - last;
+  //gradient
+  gradient = now - last;
 }
 
 void checkVentilating() {
@@ -164,7 +164,7 @@ void checkVentilating() {
     drop = airCondition;
 
   //start Ventilating
-  if (pitch * -1 > maxDecrease && !ventilating) {
+  if (gradient * -1 > maxDecrease && !ventilating) {
     ventilating = true;
     drop = airCondition;
     rgb(0, 0, 255);
