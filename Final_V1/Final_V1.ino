@@ -316,5 +316,5 @@ void fillData(int data) {  // Künstliches Auffüllen der Werte, wird später vo
   for (short x = arrayLength - 1; x > 0; x--) {
     graphData[x] = graphData[x - 1];
   }
-  graphData[0] = data;
+  graphData[0] = D_W - data;
 }
