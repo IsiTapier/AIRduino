@@ -1,16 +1,21 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
+#include <Adafruit_ST7735.h>
 
-#define D_L 128
-#define D_W 64
-#define arrayLength D_L
+#define D_L 160
+#define D_W 128
+#define arrayLength verticalLine
 
-#define ledRed 9
-#define ledGreen 10
-#define ledBlue 11
+#define TFT_CS     10
+#define TFT_RST    9  // You can also connect this to the Arduino reset in which case, set this #define pin to -1!
+#define TFT_DC     8
+#define rotation -45
+
+#define ledRed 5
+#define ledGreen 6
+#define ledBlue 7
 #define inputGasSensor A0
-#define outsideValueSensor 200
+#define outsideValueSensor 80
 #define outsideValuePpm 400
 #define maxPpm 5000
 #define maxIncrease 1.5
@@ -23,14 +28,28 @@
 #define maxDisplayed 1400
 #define averagingPitch 5
 #define alpha 0.7
-#define debug true
-#define delayTime 10*1000
+#define debug false
+#define delayTime 0.5*1000
 
+#define verticalLine D_L / 2
 #define criticalHight map(maxLight, 0, maxDisplayed, 0, D_W)
 #define minHight map(outsideValuePpm, 0, maxDisplayed, 0, D_W)
 
+// Color definitions
+#define BLACK 0x0000
+#define BLUE 0x001F
+#define RED 0xF800
+#define GREEN 0x07E0
+#define CYAN 0x07FF
+#define MAGENTA 0xF81F
+#define YELLOW 0xFFE0
+#define WHITE 0xFFFF
+#define GREY 0x8C51
+
+
 short graphData[arrayLength];
-Adafruit_SSD1306 display = Adafruit_SSD1306(D_L, D_W, &Wire, -1); // Create display object
+
+Adafruit_ST7735 display = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 
 int airCondition = 0;
 short lastAirCondition = 0;
@@ -47,7 +66,10 @@ short pitch;
 short drop;
 boolean ventilating = false;
 
+short count = 0;
+
 void setup() {
+
   Serial.begin(9600);
   initDisplay();
   initSensor();
@@ -55,6 +77,7 @@ void setup() {
 
 void loop() {
   loopSensor();
+  count++;
 }
 
 
@@ -113,9 +136,9 @@ void meassureAirCondition() {
     else
       airCondition = airCondition + value;
 
-    delay(delayTime/averaging);
+    delay(delayTime / averaging);
   }
-  
+
   airCondition = airCondition / averaging;
   airConditionRaw = airCondition;
 
@@ -123,7 +146,7 @@ void meassureAirCondition() {
   airCondition = alpha * airCondition + (1 - alpha) * lastAirCondition;
 
   lastAirCondition = airCondition;
-  
+
 }
 
 void mapAirCondition() {
@@ -183,7 +206,7 @@ void writeLed() {
   //prepare Values
   /*if (airCondition > maxLight)
     airCondition = maxLight;
-  if (airCondition < lowest)
+    if (airCondition < lowest)
     airCondition = lowest;*/
 
   //map Values
@@ -207,11 +230,14 @@ void rgb(int red, int green, int blue) {
 //Display
 
 void initDisplay() {
-  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
-    Serial.println(F("Error"));
-    for (;;);
-  }
-  display.clearDisplay();
+  display.initR(INITR_BLACKTAB);  // Initialize a ST7735S chip, black tab
+  display.fillScreen(ST7735_BLACK);  // Fill screen with black
+  display.setTextWrap(false);  // By default, long lines of text are set to automatically “wrap” back to the leftmost column.
+  // To override this behavior (so text will run off the right side of the display - useful for
+  // scrolling marquee effects), use setTextWrap(false). The normal wrapping behavior is restored
+  // with setTextWrap(true).
+  display.setRotation(rotation);
+  display.fillScreen(ST7735_BLACK);
 
   //Auffüllen des Arrays
   for (short x = 0; x < arrayLength; x++) {
@@ -221,13 +247,19 @@ void initDisplay() {
 }
 
 void createLines() {
+  drawLineVertical();
   drawLineMax();
   drawLineMin();
-  display.display();
+}
+
+void drawLineVertical() {
+  for(byte y = 0; y <= D_W; y++) {
+    display.drawPixel(verticalLine, y, GREY);
+  }
 }
 
 void drawLineMax() {
-  for (short x = arrayLength; x >= 0; x--) {
+  for (short x = D_L; x >= 0; x--) {
     if ((x % 5) == 0) {
       display.drawPixel(x, criticalHight, WHITE);
     }
@@ -235,7 +267,7 @@ void drawLineMax() {
 }
 
 void drawLineMin() {
-  for (short x = arrayLength; x >= 0; x--) {
+  for (short x = D_L; x >= 0; x--) {
     if ((x % 5) == 0) {
       display.drawPixel(x, minHight, WHITE);
     }
@@ -243,33 +275,40 @@ void drawLineMin() {
 }
 
 void draw(int data) {
-  display.clearDisplay();
+  
   fillData(data);
   drawGraph();
   createLines();
-  //writeVar(); //verdrehte Schrift
+  
 }
 
-void drawGraph() {
-  for (short x = 0; x < arrayLength; x++) {
-    display.drawPixel(x, graphData[x], WHITE);
 
-    if (x != 0) {
-      if (graphData[x - 1] < graphData[x]) {
-        for (byte y = graphData[x]; y > graphData[x - 1]; y--) {
-          if (display.getPixel(graphData[x - 1], y) == 0) {
-            display.drawPixel(x, y, WHITE);
-          }
-        }
-      }
-      if (graphData[x - 1] > graphData[x]) {
-        for (byte y = graphData[x]; y < graphData[x - 1]; y++) {
+void drawGraph() {
+  for (short x = verticalLine; x < D_L; x++) {
+    byte arrayDigit = x - verticalLine;
+    if(graphData[arrayDigit] != 0) display.drawPixel(x, graphData[arrayDigit], WHITE);
+    
+    Serial.print("Array Stelle: ");
+    Serial.println(arrayDigit);
+    if (x != verticalLine) {
+      if (graphData[arrayDigit - 1] < graphData[arrayDigit]) {
+        for (byte y = graphData[arrayDigit]; y > graphData[arrayDigit - 1]; y--) {
           //if (display.getPixel(graphData[x - 1], y) == 0) {
           display.drawPixel(x, y, WHITE);
+          display.drawPixel(x - 1, y, BLACK);
           //}
         }
       }
-    }
+      if (graphData[arrayDigit - 1] > graphData[arrayDigit]) {
+        for (byte y = graphData[arrayDigit]; y < graphData[arrayDigit - 1]; y++) {
+          //if (display.getPixel(graphData[x - 1], y) == 0) {
+          display.drawPixel(x, y, WHITE);
+          display.drawPixel(x - 1, y, BLACK);
+          //}
+        }
+      }
+    } 
+
   }
 }
 
