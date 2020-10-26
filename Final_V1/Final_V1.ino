@@ -55,7 +55,12 @@ void setup() {
 }
 
 void loop() {
-  loopSensor();
+  meassureAirCondition();
+  mapAirCondition();
+  calculatePitch();
+  checkVentilating();
+  writeLed();
+  debugSensor();
 }
 
 
@@ -69,15 +74,6 @@ void initSensor() {
 
   airConditionRaw, lastAirCondition = analogRead(inputGasSensor); 
   
-}
-
-void loopSensor() {
-  meassureAirCondition();
-  mapAirCondition();
-  calculatePitch();
-  checkVentilating();
-  writeLed();
-  debugSensor();
 }
 
 void debugSensor() {
