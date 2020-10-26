@@ -10,6 +10,7 @@
 #define ledGreen 10
 #define ledBlue 11
 #define inputGasSensor A0
+
 #define outsideValueSensor 200
 #define outsideValuePpm 400
 #define maxPpm 5000
@@ -22,7 +23,7 @@
 #define maxPiep 1200
 #define maxDisplayed 1400
 #define averagingPitch 5
-#define alpha 0.7
+#define alpha 0.5
 #define debug true
 #define delayTime 10*1000
 
@@ -66,8 +67,8 @@ void initSensor() {
   pinMode(ledGreen, OUTPUT);
   pinMode(ledBlue, OUTPUT);
 
-  airConditionRaw = analogRead(inputGasSensor);
-  lastAirCondition = analogRead(inputGasSensor);
+  airConditionRaw, lastAirCondition = analogRead(inputGasSensor); 
+  
 }
 
 void loopSensor() {
