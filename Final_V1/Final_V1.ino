@@ -24,6 +24,7 @@
 #define averagingPitch 5
 #define alpha 0.7
 #define debug true
+#define delayTime 10*1000
 
 #define criticalHight map(maxLight, 0, maxDisplayed, 0, D_W)
 #define minHight map(outsideValuePpm, 0, maxDisplayed, 0, D_W)
@@ -112,7 +113,7 @@ void meassureAirCondition() {
     else
       airCondition = airCondition + value;
 
-    delay(100);
+    delay(delayTime/averaging);
   }
   
   airCondition = airCondition / averaging;
