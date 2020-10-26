@@ -29,7 +29,7 @@
 #define averagingPitch 5
 #define alpha 0.7
 #define debug false
-#define delayTime 1*1000
+#define delayTime 0.5*1000
 
 #define criticalHight map(maxLight, 0, maxDisplayed, 0, D_W)
 #define minHight map(outsideValuePpm, 0, maxDisplayed, 0, D_W)
@@ -275,28 +275,16 @@ void draw(int data) {
 
 
 void drawGraph() {
-  Serial.println("Graph");
   for (short x = 1; x < arrayLength; x++) {
     display.drawPixel(x, graphData[x], WHITE);
     if (x != 0) {
       if (graphData[x - 1] < graphData[x]) {
-        Serial.println("Graph1");
         for (byte y = graphData[x]; y > graphData[x - 1]; y--) {
           //if (display.getPixel(graphData[x - 1], y) == 0) {
           display.drawPixel(x, y, WHITE);
           display.drawPixel(x - 1, y, BLACK);
           //}
         }
-        /*Serial.println("Graph2");
-        //Pixel drunter und drüber schwarz machen
-        for (byte y_up = graphData[x - 1]; y_up <= D_W; y_up++) {
-          display.drawPixel(x, y_up, BLACK);
-        }
-        
-        for (byte y_down = graphData[x] - 1; y_down >= 0; y_down--) {
-          display.drawPixel(x, y_down, BLACK);
-        }*/
-
       }
       if (graphData[x - 1] > graphData[x]) {
         for (byte y = graphData[x]; y < graphData[x - 1]; y++) {
@@ -305,13 +293,6 @@ void drawGraph() {
           display.drawPixel(x - 1, y, BLACK);
           //}
         }
-        //Pixel drunter und drüber schwarz machen
-        /*for (byte y_up = graphData[x] + 1; y_up <= D_W; y_up++) {
-          display.drawPixel(x, y_up, BLACK);
-        }
-        for (byte y_down = graphData[x - 1] - 1; y_down >= 0; y_down--) {
-          display.drawPixel(x, y_down, BLACK);
-        }*/
       }
     } 
 
