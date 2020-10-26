@@ -276,7 +276,7 @@ void draw(int data) {
 
 void drawGraph() {
   for (short x = 1; x < arrayLength; x++) {
-    display.drawPixel(x, graphData[x], WHITE);
+    if(graphData[x] != 0) display.drawPixel(x, graphData[x], WHITE);
     if (x != 0) {
       if (graphData[x - 1] < graphData[x]) {
         for (byte y = graphData[x]; y > graphData[x - 1]; y--) {
