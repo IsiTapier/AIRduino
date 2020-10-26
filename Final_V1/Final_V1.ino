@@ -253,8 +253,10 @@ void createLines() {
 }
 
 void drawLineVertical() {
-  for(byte y = 0; y <= D_W; y++) {
-    display.drawPixel(verticalLine, y, GREY);
+  for (byte y = 0; y <= D_W; y++) {
+    if ((y % 2) == 0) {
+      display.drawPixel(verticalLine, y, GREY);
+    }
   }
 }
 
@@ -275,19 +277,17 @@ void drawLineMin() {
 }
 
 void draw(int data) {
-  
+  createLines();
   fillData(data);
   drawGraph();
-  createLines();
-  
 }
 
 
 void drawGraph() {
   for (short x = verticalLine; x < D_L; x++) {
     byte arrayDigit = x - verticalLine;
-    if(graphData[arrayDigit] != 0) display.drawPixel(x, graphData[arrayDigit], WHITE);
-    
+    if (graphData[arrayDigit] != 0) display.drawPixel(x, graphData[arrayDigit], WHITE);
+
     Serial.print("Array Stelle: ");
     Serial.println(arrayDigit);
     if (x != verticalLine) {
@@ -307,7 +307,7 @@ void drawGraph() {
           //}
         }
       }
-    } 
+    }
 
   }
 }
@@ -316,5 +316,5 @@ void fillData(int data) {  // Künstliches Auffüllen der Werte, wird später vo
   for (short x = arrayLength - 1; x > 0; x--) {
     graphData[x] = graphData[x - 1];
   }
-  graphData[0] = D_W - data;
+  graphData[0] = data;
 }
