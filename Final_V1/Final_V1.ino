@@ -6,6 +6,8 @@
 #define D_W 128
 #define arrayLength verticalLine
 
+#define delayTime 2*1000
+
 #define TFT_CS     10
 #define TFT_RST    9  // You can also connect this to the Arduino reset in which case, set this #define pin to -1!
 #define TFT_DC     8
@@ -29,11 +31,11 @@
 #define averagingPitch 5
 #define alpha 0.7
 #define debug false
-#define delayTime 0.5*1000
+
 
 #define verticalLine D_L / 2
-#define criticalHight map(maxLight, 0, maxDisplayed, 0, D_W)
-#define minHight map(outsideValuePpm, 0, maxDisplayed, 0, D_W)
+#define criticalHight 160 - map(maxLight, 0, maxDisplayed, 0, D_W)
+#define minHight 160 - map(outsideValuePpm, 0, maxDisplayed, 0, D_W)
 
 // Color definitions
 #define BLACK 0x0000
@@ -45,6 +47,7 @@
 #define YELLOW 0xFFE0
 #define WHITE 0xFFFF
 #define GREY 0x8C51
+#define LIME 0xAF98
 
 
 short graphData[arrayLength];
@@ -66,7 +69,7 @@ short pitch;
 short drop;
 boolean ventilating = false;
 
-short count = 0;
+short lastAirConditionGraph = 0;
 
 void setup() {
 
@@ -77,7 +80,7 @@ void setup() {
 
 void loop() {
   loopSensor();
-  count++;
+ 
 }
 
 
@@ -241,7 +244,7 @@ void initDisplay() {
 
   //Auffüllen des Arrays
   for (short x = 0; x < arrayLength; x++) {
-    graphData[x] = 0;
+    graphData[x] = D_W - 0;
   }
 
 }
@@ -250,6 +253,7 @@ void createLines() {
   drawLineVertical();
   drawLineMax();
   drawLineMin();
+  writeInfo();
 }
 
 void drawLineVertical() {
@@ -277,32 +281,33 @@ void drawLineMin() {
 }
 
 void draw(int data) {
+
   createLines();
   fillData(data);
   drawGraph();
+
+
 }
 
 
 void drawGraph() {
-  for (short x = verticalLine; x < D_L; x++) {
-    byte arrayDigit = x - verticalLine;
+  for (short x = verticalLine; x > 0; x--) {
+    byte arrayDigit = verticalLine - x;
 
-    if (graphData[arrayDigit] != 0) display.drawPixel(x, graphData[arrayDigit], WHITE);
-    Serial.print("Array Stelle: ");
-    Serial.println(arrayDigit);
+    display.drawPixel(x, graphData[arrayDigit], WHITE);
     if (x != verticalLine) {
       if (graphData[arrayDigit - 1] < graphData[arrayDigit]) {
         for (byte y = graphData[arrayDigit]; y > graphData[arrayDigit - 1]; y--) {
           //if (display.getPixel(graphData[x - 1], y) == 0) {
           display.drawPixel(x, y, WHITE);
-          display.drawPixel(x - 1, y, BLACK);
+          display.drawPixel(x + 1, y, BLACK);
           //}
         }
       }
       for (byte y = graphData[arrayDigit]; y < graphData[arrayDigit - 1]; y++) {
         //if (display.getPixel(graphData[x - 1], y) == 0) {
         display.drawPixel(x, y, WHITE);
-        display.drawPixel(x - 1, y, BLACK);
+        display.drawPixel(x + 1, y, BLACK);
         //}
       }
     }
@@ -313,5 +318,26 @@ void fillData(int data) {  // Künstliches Auffüllen der Werte, wird später vo
   for (short x = arrayLength - 1; x > 0; x--) {
     graphData[x] = graphData[x - 1];
   }
-  graphData[0] = data;
+  graphData[0] = D_W - data;
+}
+
+void writeInfo() {
+  display.setCursor(0, 80);  // Set position (x,y)
+  display.setTextSize(3);
+
+  //Clear old Pixels lastAirCondition
+  display.setTextColor(BLACK);
+  display.println(lastAirConditionGraph);
+  Serial.println("BLACK");
+  
+  delay(100);
+  display.setTextColor(WHITE);  // Set color of text. First is the color of text and after is color of background
+  display.println(airCondition);  // Print a text or value
+  
+  lastAirConditionGraph = airCondition; //Setzt letzten Wert
+
+  display.setTextColor(LIME);
+  display.setCursor(55, 108);
+  display.setTextSize(2);
+  display.println("ppm");
 }
