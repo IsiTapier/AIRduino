@@ -51,9 +51,16 @@
 #define LIME 0x87F4
 
 
-#define PPM_COLOR_N 0xB5BF //Normal
+#define PPM_COLOR_N BLACK //Normal
 #define PPM_COLOR_R 0xFE0E //Risk
 #define PPM_COLOR_A 0xF800 //Alarm
+
+//Customize
+#define GraphColor MAGENTA
+#define GraphBackgroundColor BLACK
+#define BarBackgroundColor GREY
+#define BarStripeThickness 3
+#define BarStripeColor GREEN
 
 
 short graphData[arrayLength];
@@ -241,18 +248,22 @@ void rgb(int red, int green, int blue) {
 
 void initDisplay() {
   display.initR(INITR_BLACKTAB);  // Initialize a ST7735S chip, black tab
-  display.fillScreen(ST7735_BLACK);  // Fill screen with black
   display.setTextWrap(false);  // By default, long lines of text are set to automatically “wrap” back to the leftmost column.
   // To override this behavior (so text will run off the right side of the display - useful for
   // scrolling marquee effects), use setTextWrap(false). The normal wrapping behavior is restored
   // with setTextWrap(true).
   display.setRotation(rotation);
-  display.fillScreen(ST7735_BLACK);
+  display.fillScreen(GraphBackgroundColor);
 
   //Auffüllen des Arrays
   for (short x = 0; x < arrayLength; x++) {
     graphData[x] = D_W - 0;
   }
+
+  // Draw Bar Background
+  display.fillRect(0, DisplayBottomBorder + 1, D_L, D_W, BarBackgroundColor);
+  display.fillRect(0, DisplayBottomBorder + 1, D_L, BarStripeThickness, BarStripeColor);
+  Serial.println("Come on");
 
 }
 
@@ -302,20 +313,20 @@ void drawGraph() {
   for (short x = verticalLine; x > 0; x--) {
     byte arrayDigit = verticalLine - x;
 
-    display.drawPixel(x, graphData[arrayDigit] - BorderDifference, WHITE);
+    display.drawPixel(x, graphData[arrayDigit] - BorderDifference, GraphColor);
     if (x != verticalLine) {
       if (graphData[arrayDigit - 1] < graphData[arrayDigit]) {
         for (byte y = graphData[arrayDigit]; y > graphData[arrayDigit - 1]; y--) {
           //if (display.getPixel(graphData[x - 1], y) == 0) {
-          display.drawPixel(x, y - BorderDifference, WHITE);
-          display.drawPixel(x + 1, y - BorderDifference, BLACK);
+          display.drawPixel(x, y - BorderDifference, GraphColor);
+          display.drawPixel(x + 1, y - BorderDifference, GraphBackgroundColor);
           //}
         }
       }
       for (byte y = graphData[arrayDigit]; y < graphData[arrayDigit - 1]; y++) {
         //if (display.getPixel(graphData[x - 1], y) == 0) {
-        display.drawPixel(x, y - BorderDifference, WHITE);
-        display.drawPixel(x + 1, y - BorderDifference, BLACK);
+        display.drawPixel(x, y - BorderDifference, GraphColor);
+        display.drawPixel(x + 1, y - BorderDifference, GraphBackgroundColor);
         //}
       }
     }
@@ -329,7 +340,7 @@ void fillData(int data) {  // Künstliches Auffüllen der Werte, wird später vo
   graphData[0] = D_W - data;
 }
 
-void writeInfo() {
+void writeInfo() { 
   //acertain ppm color
   int currentColor = BLACK;
   switch (STATUS) {
@@ -340,25 +351,29 @@ void writeInfo() {
     case 3: currentColor = PPM_COLOR_A;
       break;
   }
-
-
+    //ppm zeichnen
+  if (airCondition < 1000) { //Verhindert überschreiben von "ppm"
+    display.setTextColor(currentColor);
+    display.setCursor(55, 118);
+    display.setTextSize(1.5);
+    display.println("ppm");
+  } else {
+    display.setTextColor(BarBackgroundColor);
+    display.setCursor(55, 118);
+    display.setTextSize(1.5);
+    display.println("ppm");
+  }
+  //Clear old Pixels
   display.setCursor(0, 105);  // Set position (x,y)
   display.setTextSize(3);
-
-  //Clear old Pixels lastAirCondition
-  display.setTextColor(BLACK);
+  display.setTextColor(BarBackgroundColor);
   display.println(lastAirConditionGraph);
-  Serial.println("BLACK");
-
+  
+  //write new Pixels
   display.setCursor(0, 105);  // Set position (x,y)
   display.setTextSize(3);
   display.setTextColor(currentColor);  // Set color of text. First is the color of text and after is color of background
   display.println(airCondition);  // Print a text or value
-
+  //Set new lastAirCondition
   lastAirConditionGraph = airCondition; //Setzt letzten Wert
-
-  display.setTextColor(currentColor);
-  display.setCursor(55, 118);
-  display.setTextSize(1.5);
-  display.println("ppm");
 }
