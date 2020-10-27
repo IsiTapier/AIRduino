@@ -36,6 +36,7 @@
 #define verticalLine D_L / 2
 #define criticalHight 160 - map(maxLight, 0, maxDisplayed, 0, D_W)
 #define minHight 160 - map(outsideValuePpm, 0, maxDisplayed, 0, D_W)
+#define DisplayBottomBorder 100
 
 // Color definitions
 #define BLACK 0x0000
@@ -47,7 +48,12 @@
 #define YELLOW 0xFFE0
 #define WHITE 0xFFFF
 #define GREY 0x8C51
-#define LIME 0xAF98
+#define LIME 0x87F4
+
+
+#define PPM_COLOR_N 0xB5BF //Normal
+#define PPM_COLOR_R 0xFE0E //Risk
+#define PPM_COLOR_A 0xF800 //Alarm
 
 
 short graphData[arrayLength];
@@ -70,6 +76,7 @@ short drop;
 boolean ventilating = false;
 
 short lastAirConditionGraph = 0;
+byte STATUS = 1; //Normal or Risk or Alarm
 
 void setup() {
 
@@ -80,7 +87,7 @@ void setup() {
 
 void loop() {
   loopSensor();
- 
+
 }
 
 
@@ -158,7 +165,7 @@ void mapAirCondition() {
   airCondition = map(airCondition, 0, 1023, outsideValuePpm, maxPpm);
 
   //to Graph
-  draw(map(airCondition, 0, maxDisplayed, 0, D_W));
+  draw(map(airCondition, 0, maxDisplayed, 0, DisplayBottomBorder));
 }
 
 void calculatePitch() {
@@ -291,23 +298,24 @@ void draw(int data) {
 
 
 void drawGraph() {
+  byte BorderDifference = D_W - DisplayBottomBorder;
   for (short x = verticalLine; x > 0; x--) {
     byte arrayDigit = verticalLine - x;
 
-    display.drawPixel(x, graphData[arrayDigit], WHITE);
+    display.drawPixel(x, graphData[arrayDigit] - BorderDifference, WHITE);
     if (x != verticalLine) {
       if (graphData[arrayDigit - 1] < graphData[arrayDigit]) {
         for (byte y = graphData[arrayDigit]; y > graphData[arrayDigit - 1]; y--) {
           //if (display.getPixel(graphData[x - 1], y) == 0) {
-          display.drawPixel(x, y, WHITE);
-          display.drawPixel(x + 1, y, BLACK);
+          display.drawPixel(x, y - BorderDifference, WHITE);
+          display.drawPixel(x + 1, y - BorderDifference, BLACK);
           //}
         }
       }
       for (byte y = graphData[arrayDigit]; y < graphData[arrayDigit - 1]; y++) {
         //if (display.getPixel(graphData[x - 1], y) == 0) {
-        display.drawPixel(x, y, WHITE);
-        display.drawPixel(x + 1, y, BLACK);
+        display.drawPixel(x, y - BorderDifference, WHITE);
+        display.drawPixel(x + 1, y - BorderDifference, BLACK);
         //}
       }
     }
@@ -322,22 +330,35 @@ void fillData(int data) {  // Künstliches Auffüllen der Werte, wird später vo
 }
 
 void writeInfo() {
-  display.setCursor(0, 80);  // Set position (x,y)
+  //acertain ppm color
+  int currentColor = BLACK;
+  switch (STATUS) {
+    case 1: currentColor = PPM_COLOR_N;
+      break;
+    case 2: currentColor = PPM_COLOR_R;
+      break;
+    case 3: currentColor = PPM_COLOR_A;
+      break;
+  }
+
+
+  display.setCursor(0, 105);  // Set position (x,y)
   display.setTextSize(3);
 
   //Clear old Pixels lastAirCondition
   display.setTextColor(BLACK);
   display.println(lastAirConditionGraph);
   Serial.println("BLACK");
-  
-  delay(100);
-  display.setTextColor(WHITE);  // Set color of text. First is the color of text and after is color of background
+
+  display.setCursor(0, 105);  // Set position (x,y)
+  display.setTextSize(3);
+  display.setTextColor(currentColor);  // Set color of text. First is the color of text and after is color of background
   display.println(airCondition);  // Print a text or value
-  
+
   lastAirConditionGraph = airCondition; //Setzt letzten Wert
 
-  display.setTextColor(LIME);
-  display.setCursor(55, 108);
-  display.setTextSize(2);
+  display.setTextColor(currentColor);
+  display.setCursor(55, 118);
+  display.setTextSize(1.5);
   display.println("ppm");
 }
