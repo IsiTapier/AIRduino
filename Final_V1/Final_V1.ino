@@ -32,7 +32,7 @@
 #define MAX_BLINK 1100
 #define MAX_PIEP 1200
 #define MAX_DISPLAYED_PPM 1280
-
+#define MAX_DISPLAYED_SENSOR 300
 //pins:
 #define TFT_CS     10
 #define TFT_RST    9
@@ -206,13 +206,14 @@ void mapAirCondition() {
   //to PPM
   if (airCondition < OSV_SENSOR)
     airCondition = OSV_SENSOR;
+  if(airCondition > MAX_DISPLAYED_SENSOR)
+    airCondition = MAX_DISPLAYED_SENSOR;
 
-  airCondition = airCondition - OSV_SENSOR;
-  airCondition = map(airCondition, 0, MAX_SENSOR, OSV_PPM, MAX_PPM);
+  //airCondition = airCondition - OSV_SENSOR;
+  airCondition = map(airCondition, OSV_SENSOR, MAX_DISPLAYED_SENSOR, OSV_PPM, MAX_DISPLAYED_PPM);
 
-  if (airCondition > MAX_DISPLAYED_PPM) {
-    airCondition = MAX_DISPLAYED_PPM;
-  }
+  /*if (airCondition > MAX_DISPLAYED_PPM)
+    airCondition = MAX_DISPLAYED_PPM; */
 }
 
 void calculatePitch() {

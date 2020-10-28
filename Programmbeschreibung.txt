@@ -50,15 +50,13 @@ Ideen:
 - bessere Schriftart
 - Vorberechung
 - mehr verschiedene Staten (für Farben)
-- mapping zu PPM verbessern
 - schnellere Lüftungserkennung
-- Formatierung Info-Box flexibel gestallten
 - Time pro Durchlauf auf möglichst exakt 1 Sekunde bringen
-- Werte Zuverflässigkeit sicherstellen
+
 
 TODO:
-- Design Info-Feld, insbesondere Farben
 - code improven
-- Variabelen, Defines und Comments hinzufügen (z.B. für Infobox Design Parameter)
 - Variablen ordnen
-- Blinken und Piepsen
+- Variabelen, Defines und Comments hinzufügen (z.B. für Infobox Design Parameter)
+- Formatierung Info-Box flexibel gestallten
+- Werte Zuverflässigkeit sicherstellen
