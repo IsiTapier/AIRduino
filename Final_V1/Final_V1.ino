@@ -29,7 +29,7 @@
 #define MAX_PIEP 1200
 #define MAX_DISPLAYED_PPM 1280
 
-#define LOADING_SCREEN_TIME 20
+#define LOADING_SCREEN_TIME 2
 
 //pins:
 #define TFT_CS     10
@@ -49,7 +49,7 @@
 #define GRAPH_COLOR WHITE//MAGENTA
 #define GRAPH_BACKGROUND_COLOR BLACK
 #define BAR_BACKGROUND_COLOR 0x2104 //Fast schwarz
-#define BAR_STRIPE_THICKNESS 3
+#define BAR_STRIPE_THICKNESS 1
 #define TIME_COLOR_CRITICAL RED
 #define TIME_COLOR_NORMAL WHITE
 #define LOADING_SCREEN_DOTS_COLOR WHITE
@@ -69,9 +69,9 @@
 #define LIGHT_BLUE 0x76BF
 #define TURKISE 0x3FFA
 
-#define PPM_COLOR_N BLACK //Normal
-#define PPM_COLOR_R 0xFE0E //Risk
-#define PPM_COLOR_A 0xF800 //Alarm
+#define PPM_COLOR_N GREEN //Normal
+#define PPM_COLOR_R 0xFE60 //Risk
+#define PPM_COLOR_A 0xFA27 //Alarm
 
 
 Adafruit_ST7735 display = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
@@ -97,9 +97,7 @@ short pitch;
 short drop;
 boolean ventilating = false;
 short airStatus;
-short lastAirConditionGraph = 0;
-
-
+short lastAirConditionGraph;
 
 void setup() {
   Serial.begin(9600);
@@ -238,6 +236,7 @@ void checkVentilating() {
       drop = ALPHA_LOWEST * drop + (1 - ALPHA_LOWEST) * lowest;
       lowest = drop;
     }
+    
     ventilating = false;
     timer = 0;
     startTime = millis();
@@ -292,9 +291,6 @@ void initDisplay() {
     graphData[x] = DISPLAY_LENGTH;
   }
   graphData[0] = DATABOX_TOP_HIGHT - 1;
-
-  // Draw Bar Background
-  display.fillRect(0, DATABOX_TOP_HIGHT + 1, DISPLAY_LENGTH, DISPLAY_WIDTH, BAR_BACKGROUND_COLOR);
 }
 
 void createLines() {
@@ -350,13 +346,13 @@ void writeInfo() {
   //acertain ppm color
   int currentColor = BLACK;
   switch (airStatus) {
-    case 0: currentColor = GREEN;//PPM_COLOR_N;
+    case 0: currentColor = PPM_COLOR_N;//PPM_COLOR_N;
       break;
-    case 1: currentColor = YELLOW; //PPM_COLOR_R;
+    case 1: currentColor = PPM_COLOR_R; //PPM_COLOR_R;
       break;
-    case 2: currentColor = RED; //PPM_COLOR_A;
+    case 2: currentColor = PPM_COLOR_A; //PPM_COLOR_A;
       break;
-    default: currentColor = RED;
+    default: currentColor = PPM_COLOR_A;
       break;
   }
 
@@ -400,7 +396,7 @@ void writeInfo() {
     dPrint(90, 110, 2, TIME_COLOR_CRITICAL, Time);
   else
     dPrint(90, 110, 2, TIME_COLOR_NORMAL, Time);
-  //Set new lastAirCondition
+  //Set new lastTime
   lastTime = Time; //Setzt letzten Wert
 }
 
@@ -433,14 +429,16 @@ void loadingScreen(int t) {
         break;
       case 2: dPrint(55, 75, 3, LOADING_SCREEN_DOTS_COLOR, "..");
         break;
-      case 3: 
+      case 3:
         dPrint(55, 75, 3, LOADING_SCREEN_DOTS_COLOR, "...");
-        c = 0;        
+        c = 0;
         break;
-    }   
+    }
     delay(500);
   }
   display.fillScreen(GRAPH_BACKGROUND_COLOR);
+  // Draw Bar Background
+  display.fillRect(0, DATABOX_TOP_HIGHT + 1, DISPLAY_LENGTH, DISPLAY_WIDTH, BAR_BACKGROUND_COLOR);
 }
 // Schreibt AIRduino fix aufs Display
 void writeLoadingScreenTitle() {
