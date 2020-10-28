@@ -1,0 +1,64 @@
+Messung:
+- über 1 Minute 10 Messungen durchführen
+- dabei Messwerte die über x% [50] des Durschnittes liegen herausnehmen
+- den Durschnitt dieser 10 Messungen nehmen
+- den gemessenen Wert mit dem Vorherigen angleichen um einen gleichmäßigeren Verlauf zu erhalten
+- den Außenwert des Sensors von der Messung abziehen
+- Werte unter dem Grundwert auf den Grundwert setzten
+- die Messung auf PPM Werte strecken
+
+Steigung:
+- aktuelle Messung einspeichern
+- den Durschnitt der letzten x Werte und der vorherigen x Werte berechnen
+- die Steigung durch die letzten x Werte abzüglich der vorherigen x Werte berechnen
+
+Lüftungsdetektion:
+- Wenn im Lüftungsmodus und der aktuelle Messwert liegt unter dem tiefsten Wert innerhalb dieser Lüftungsphase, wird der aktuelle Messwert eingespeichert
+- Wenn die Steigung unter -x beträgt, wird der Lüftungsmodus aktiviert und die LED auf blau geschaltet und die Startzeit resettet
+- Wenn die Steigung größer 0 oder mehr als x Sekunden lang gleich 0 ist, wird der Lüftungsmodus deaktiviert
+- Dabei wird der niedrigste Wert auf den niedrigsten Wert innerhalb des Lüftens gesetzt die Startzeit resettet
+- den neuen niedrigsten Wert mit dem vorherigen angleichen
+
+Statusbestimmung:
+- der Status wird, dem Messwert entsprechendem Wertebereiches zwischen dem tiefsten Wert und der Maximal-Grenze, auf 0, 1 oder 2 gesetzt [map]
+- Falls der Messwert über dem Grenzwert für den Pieper liegt, wird der Status auf 4 gesetzt
+- Falls der Messwert über dem Grentwert für das Blinken liegt, wird der Status auf 3 gesetzt
+- Status-Werte unter 0 bzw. über 4 werden auf 0 bzw. 4 gesetzt
+
+LED:
+- die aktuelle Messung wird auf das Wertespektrum der LED [0-255] gestreckt
+- der Rot-Wert wird auf diesen Wert und der Grün-Wert auf 255 abzüglich dieses Wertes gesetzt
+- Wenn der Lüftungsmodus inaktiv ist, wird die LED entsprechend jener Werte angeschalten
+
+Display:
+- die Messung auf die Display Größe strecken
+- die minimum und maximum Linie zeichnen
+- die Trennlinie zum Info-Block wird in der dem aktuellen Status entsprechenden Farbe gezeichnet [Während dem Lüften blau]
+- die alte Schrift wird mit Schwarz überschrieben
+- der aktuelle PPM-Wert wird in der entsprechenden Farbe geschrieben
+- die Sekunden werden aus dem Modulu 60, der aktuelle Systemzeit abzüglich der start Systemzeit geteilt durch 1000 berechnet
+- die Minuten werden aus der aktuellen Systemzeit abzüglich der start Systemzeit durch 1000 abzüglich der Sekunden geteilt durch 60 berechnent
+- die Minuten und Sekunden werden zu Strings umformatiert und auf das Display geschrieben
+
+- alle Werte des Graphen werden im Array eine Stelle nach hinten verschoben und an die erste Stelle wird der aktuelle Messwert gesetzt
+- die X-Werte werden durchgeschleift und die Entsprechenden Y-Werte auf das Display gezeichnet
+- es werden auf der Y-Achse Punkte zum nächsten Y-Wert gezogen und dabei die vorherigen Pixel entfernt somit entsteht eine Verbindung zwischen den einzelnen Punkten des Graphen
+
+
+Ideen:
+- Diagramm von links nach rechts
+- bessere Schriftart
+- Vorberechung
+- mehr verschiedene Staten (für Farben)
+- mapping zu PPM verbessern
+- schnellere Lüftungserkennung
+- Formatierung Info-Box flexibel gestallten
+- Time pro Durchlauf auf möglichst exakt 1 Sekunde bringen
+- Werte Zuverflässigkeit sicherstellen
+
+TODO:
+- Design Info-Feld, insbesondere Farben
+- code improven
+- Variabelen, Defines und Comments hinzufügen (z.B. für Infobox Design Parameter)
+- Variablen ordnen
+- Blinken und Piepsen
