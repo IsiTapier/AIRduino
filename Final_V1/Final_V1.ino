@@ -75,6 +75,7 @@
 
 
 Adafruit_ST7735 display = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
+
 short graphData[DISPLAY_LENGTH];
 unsigned long startTime;
 unsigned long timer;
@@ -107,7 +108,14 @@ void setup() {
 }
 
 void loop() {
-  loopSensor();
+  meassureAirCondition();
+  mapAirCondition();
+  calculatePitch();
+  checkVentilating();
+  setStatus();
+  writeLed();
+  draw(map(airCondition, 0, MAX_DISPLAYED_PPM, 0, DISPLAY_WIDTH));
+  debugSensor();
 }
 
 void debug(String title, int value) {
@@ -135,17 +143,6 @@ void initSensor() {
   airConditionRaw = analogRead(GAS_SENSOR);
   lastAirCondition = analogRead(GAS_SENSOR);
   startTime = millis();
-}
-
-void loopSensor() {
-  meassureAirCondition();
-  mapAirCondition();
-  calculatePitch();
-  checkVentilating();
-  setStatus();
-  writeLed();
-  draw(map(airCondition, 0, MAX_DISPLAYED_PPM, 0, DISPLAY_WIDTH));
-  debugSensor();
 }
 
 void debugSensor() {
