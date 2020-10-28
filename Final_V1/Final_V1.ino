@@ -1,16 +1,23 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
+#include <Adafruit_ST7735.h>
 
-#define D_L 128
-#define D_W 64
-#define arrayLength D_L
+#define D_L 160
+#define D_W 128
+#define arrayLength verticalLine
 
-#define ledRed 9
-#define ledGreen 10
-#define ledBlue 11
+#define delayTime 2*1000
+
+#define TFT_CS     10
+#define TFT_RST    9  // You can also connect this to the Arduino reset in which case, set this #define pin to -1!
+#define TFT_DC     8
+#define rotation -45
+
+#define ledRed 5
+#define ledGreen 6
+#define ledBlue 7
 #define inputGasSensor A0
-#define outsideValueSensor 200
+#define outsideValueSensor 80
 #define outsideValuePpm 400
 #define maxPpm 5000
 #define maxIncrease 1.5
@@ -21,16 +28,43 @@
 #define maxBlink 1100
 #define maxPiep 1200
 #define maxDisplayed 1400
-#define averagingGradient 5
+#define averagingPitch 5
 #define alpha 0.7
-#define debug true
-#define cycleLength 10*1000
+#define debug false
 
-#define criticalHight map(maxLight, 0, maxDisplayed, 0, D_W)
-#define minHight map(outsideValuePpm, 0, maxDisplayed, 0, D_W)
+
+#define verticalLine D_L / 2
+#define criticalHight 160 - map(maxLight, 0, maxDisplayed, 0, D_W)
+#define minHight 160 - map(outsideValuePpm, 0, maxDisplayed, 0, D_W)
+#define DisplayBottomBorder 100
+
+// Color definitions
+#define BLACK 0x0000
+#define BLUE 0x001F
+#define RED 0xF800
+#define GREEN 0x07E0
+#define CYAN 0x07FF
+#define MAGENTA 0xF81F
+#define YELLOW 0xFFE0
+#define WHITE 0xFFFF
+#define GREY 0x8C51
+#define LIME 0x87F4
+
+
+#define PPM_COLOR_N WHITE //Normal
+#define PPM_COLOR_A 0xF800 //Alarm
+
+//Customize
+#define GraphColor WHITE
+#define GraphBackgroundColor BLACK
+#define BarBackgroundColor BLACK
+#define BarStripeThickness 3
+#define BarStripeColor WHITE
+
 
 short graphData[arrayLength];
-Adafruit_SSD1306 display = Adafruit_SSD1306(D_L, D_W, &Wire, -1); // Create display object
+
+Adafruit_ST7735 display = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 
 int airCondition = 0;
 short lastAirCondition = 0;
@@ -40,14 +74,18 @@ short lowest = 600;
 short led;
 short red;
 short green;
-short values[averagingGradient * 2];
+short values[averagingPitch * 2];
 short last;
 short now;
-short gradient;
+short pitch;
 short drop;
 boolean ventilating = false;
 
+short lastAirConditionGraph = 0;
+byte STATUS = 1; //Normal or Risk or Alarm
+
 void setup() {
+
   Serial.begin(9600);
   initDisplay();
   initSensor();
@@ -55,6 +93,7 @@ void setup() {
 
 void loop() {
   loopSensor();
+
 }
 
 
@@ -73,7 +112,7 @@ void initSensor() {
 void loopSensor() {
   meassureAirCondition();
   mapAirCondition();
-  calculategradient();
+  calculatePitch();
   checkVentilating();
   writeLed();
   debugSensor();
@@ -92,8 +131,8 @@ void debugSensor() {
     Serial.println(lastAirCondition);
     Serial.print("PPM: ");
     Serial.println(airCondition);
-    Serial.print("gradient: ");
-    Serial.println(gradient);
+    Serial.print("Pitch: ");
+    Serial.println(pitch);
     Serial.print("Lowest: ");
     Serial.println(lowest);
   }
@@ -113,9 +152,9 @@ void meassureAirCondition() {
     else
       airCondition = airCondition + value;
 
-    delay(cycleLength/averaging);
+    delay(delayTime / averaging);
   }
-  
+
   airCondition = airCondition / averaging;
   airConditionRaw = airCondition;
 
@@ -123,7 +162,7 @@ void meassureAirCondition() {
   airCondition = alpha * airCondition + (1 - alpha) * lastAirCondition;
 
   lastAirCondition = airCondition;
-  
+
 }
 
 void mapAirCondition() {
@@ -132,30 +171,30 @@ void mapAirCondition() {
   airCondition = map(airCondition, 0, 1023, outsideValuePpm, maxPpm);
 
   //to Graph
-  draw(map(airCondition, 0, maxDisplayed, 0, D_W));
+  draw(map(airCondition, 0, maxDisplayed, 0, DisplayBottomBorder));
 }
 
-void calculategradient() {
+void calculatePitch() {
   //store last AirConditions
-  for (int i = averagingGradient * 2 - 1; i > 0; i--) {
+  for (int i = averagingPitch * 2 - 1; i > 0; i--) {
     values[i] = values[i - 1];
   }
   values[0] = airCondition;
 
   //average current AirCondition
-  for (int i = 0; i < averagingGradient; i++) {
+  for (int i = 0; i < averagingPitch; i++) {
     now = now + values[i];
   }
-  now = now / averagingGradient;
+  now = now / averagingPitch;
 
   //average last AirCondition
-  for (int i = averagingGradient; i < averagingGradient * 2; i++) {
+  for (int i = averagingPitch; i < averagingPitch * 2; i++) {
     last = last + values[i];
   }
-  last = last / averagingGradient;
+  last = last / averagingPitch;
 
-  //gradient
-  gradient = now - last;
+  //Pitch
+  pitch = now - last;
 }
 
 void checkVentilating() {
@@ -164,7 +203,7 @@ void checkVentilating() {
     drop = airCondition;
 
   //start Ventilating
-  if (gradient * -1 > maxDecrease && !ventilating) {
+  if (pitch * -1 > maxDecrease && !ventilating) {
     ventilating = true;
     drop = airCondition;
     rgb(0, 0, 255);
@@ -183,7 +222,7 @@ void writeLed() {
   //prepare Values
   /*if (airCondition > maxLight)
     airCondition = maxLight;
-  if (airCondition < lowest)
+    if (airCondition < lowest)
     airCondition = lowest;*/
 
   //map Values
@@ -207,27 +246,43 @@ void rgb(int red, int green, int blue) {
 //Display
 
 void initDisplay() {
-  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
-    Serial.println(F("Error"));
-    for (;;);
-  }
-  display.clearDisplay();
+  display.initR(INITR_BLACKTAB);  // Initialize a ST7735S chip, black tab
+  display.setTextWrap(false);  // By default, long lines of text are set to automatically “wrap” back to the leftmost column.
+  // To override this behavior (so text will run off the right side of the display - useful for
+  // scrolling marquee effects), use setTextWrap(false). The normal wrapping behavior is restored
+  // with setTextWrap(true).
+  display.setRotation(rotation);
+  display.fillScreen(GraphBackgroundColor);
 
   //Auffüllen des Arrays
   for (short x = 0; x < arrayLength; x++) {
-    graphData[x] = 0;
+    graphData[x] = D_W - 0;
   }
+
+  // Draw Bar Background
+  display.fillRect(0, DisplayBottomBorder + 1, D_L, D_W, BarBackgroundColor);
+  display.fillRect(0, DisplayBottomBorder + 1, D_L, BarStripeThickness, BarStripeColor);
+  Serial.println("Come on");
 
 }
 
 void createLines() {
+  drawLineVertical();
   drawLineMax();
   drawLineMin();
-  display.display();
+  writeInfo();
+}
+
+void drawLineVertical() {
+  for (byte y = 0; y <= DisplayBottomBorder; y++) {
+    if ((y % 2) == 0) {
+      display.drawPixel(verticalLine, y, GREY);
+    }
+  }
 }
 
 void drawLineMax() {
-  for (short x = arrayLength; x >= 0; x--) {
+  for (short x = D_L; x >= 0; x--) {
     if ((x % 5) == 0) {
       display.drawPixel(x, criticalHight, WHITE);
     }
@@ -235,7 +290,7 @@ void drawLineMax() {
 }
 
 void drawLineMin() {
-  for (short x = arrayLength; x >= 0; x--) {
+  for (short x = D_L; x >= 0; x--) {
     if ((x % 5) == 0) {
       display.drawPixel(x, minHight, WHITE);
     }
@@ -243,31 +298,35 @@ void drawLineMin() {
 }
 
 void draw(int data) {
-  display.clearDisplay();
+
+  createLines();
   fillData(data);
   drawGraph();
-  createLines();
-  //writeVar(); //verdrehte Schrift
+
+
 }
 
-void drawGraph() {
-  for (short x = 0; x < arrayLength; x++) {
-    display.drawPixel(x, graphData[x], WHITE);
 
-    if (x != 0) {
-      if (graphData[x - 1] < graphData[x]) {
-        for (byte y = graphData[x]; y > graphData[x - 1]; y--) {
-          if (display.getPixel(graphData[x - 1], y) == 0) {
-            display.drawPixel(x, y, WHITE);
-          }
-        }
-      }
-      if (graphData[x - 1] > graphData[x]) {
-        for (byte y = graphData[x]; y < graphData[x - 1]; y++) {
+void drawGraph() {
+  byte BorderDifference = D_W - DisplayBottomBorder;
+  for (short x = verticalLine; x > 0; x--) {
+    byte arrayDigit = verticalLine - x;
+
+    display.drawPixel(x, graphData[arrayDigit] - BorderDifference, GraphColor);
+    if (x != verticalLine) {
+      if (graphData[arrayDigit - 1] < graphData[arrayDigit]) {
+        for (byte y = graphData[arrayDigit]; y > graphData[arrayDigit - 1]; y--) {
           //if (display.getPixel(graphData[x - 1], y) == 0) {
-          display.drawPixel(x, y, WHITE);
+          display.drawPixel(x, y - BorderDifference, GraphColor);
+          display.drawPixel(x + 1, y - BorderDifference, GraphBackgroundColor);
           //}
         }
+      }
+      for (byte y = graphData[arrayDigit]; y < graphData[arrayDigit - 1]; y++) {
+        //if (display.getPixel(graphData[x - 1], y) == 0) {
+        display.drawPixel(x, y - BorderDifference, GraphColor);
+        display.drawPixel(x + 1, y - BorderDifference, GraphBackgroundColor);
+        //}
       }
     }
   }
@@ -277,5 +336,41 @@ void fillData(int data) {  // Künstliches Auffüllen der Werte, wird später vo
   for (short x = arrayLength - 1; x > 0; x--) {
     graphData[x] = graphData[x - 1];
   }
-  graphData[0] = data;
+  graphData[0] = D_W - data;
+}
+
+void writeInfo() { 
+  //acertain ppm color
+  int currentColor = BLACK;
+  switch (STATUS) {
+    case 1: currentColor = PPM_COLOR_N;
+      break;
+    case 2: currentColor = PPM_COLOR_A;
+      break;
+  }
+    //ppm zeichnen
+  if (airCondition < 1000) { //Verhindert überschreiben von "ppm"
+    display.setTextColor(currentColor);
+    display.setCursor(55, 118);
+    display.setTextSize(1.5);
+    display.println("ppm");
+  } else {
+    display.setTextColor(BarBackgroundColor);
+    display.setCursor(55, 118);
+    display.setTextSize(1.5);
+    display.println("ppm");
+  }
+  //Clear old Pixels
+  display.setCursor(0, 105);  // Set position (x,y)
+  display.setTextSize(3);
+  display.setTextColor(BarBackgroundColor);
+  display.println(lastAirConditionGraph);
+  
+  //write new Pixels
+  display.setCursor(0, 105);  // Set position (x,y)
+  display.setTextSize(3);
+  display.setTextColor(currentColor);  // Set color of text. First is the color of text and after is color of background
+  display.println(airCondition);  // Print a text or value
+  //Set new lastAirCondition
+  lastAirConditionGraph = airCondition; //Setzt letzten Wert
 }
