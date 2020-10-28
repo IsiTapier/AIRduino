@@ -7,22 +7,22 @@
 #define DEBUG true
 
 #define STAGE_TIME 1*1000
-  #define VENTILATING_TIMEOUT 5*1000
+#define VENTILATING_TIMEOUT 5*1000
 
 #define AVERAGING_MEASUREMENTS 100
 #define AVERAGING_GRADIENT 5
-  #define ALPHA_MEASUREMENTS 0.7
-  #define ALPHA_LOWEST 0.5
+#define ALPHA_MEASUREMENTS 0.7
+#define ALPHA_LOWEST 0.5
 
-  #define OSV_SENSOR 80
-  #define OSV_PPM 400
+#define OSV_SENSOR 80
+#define OSV_PPM 400
 #define MIN_HIGHT DISPLAY_WIDTH - map(OSV_PPM, 0, MAX_DISPLAYED_PPM, 0, DISPLAY_WIDTH)
 #define CRITICAL_HIGHT DISPLAY_WIDTH - map(MAX_LIGHT, 0, MAX_DISPLAYED_PPM, 0, DISPLAY_WIDTH)
 
-  #define MAX_SENSOR 1023
-  #define MAX_PPM 5000
-  #define MAX_INCREASE 1.5
-  #define MAX_DECREASE 10
+#define MAX_SENSOR 1023
+#define MAX_PPM 5000
+#define MAX_INCREASE 1.5
+#define MAX_DECREASE 10
 #define MAX_DROP_INCREASE 50
 #define MAX_LIGHT 1000
 #define MAX_BLINK 1100
@@ -46,8 +46,11 @@
 #define DATABOX_TOP_HIGHT 100
 #define GRAPH_COLOR WHITE//MAGENTA
 #define GRAPH_BACKGROUND_COLOR BLACK
-#define BAR_BACKGROUND_COLOR GREY
+#define BAR_BACKGROUND_COLOR 0x2104 //Fast schwarz
 #define BAR_STRIPE_THICKNESS 3
+#define TIME_COLOR_CRITICAL RED
+#define TIME_COLOR_NORMAL WHITE
+
 
 // Color definitions
 #define BLACK 0x0000
@@ -388,9 +391,9 @@ void writeInfo() {
   dPrint(90, 110, 2, BAR_BACKGROUND_COLOR, lastTime);
   //write new Pixels
   if (minutes >= 20)
-    dPrint(90, 110, 2, RED, Time);
+    dPrint(90, 110, 2, TIME_COLOR_CRITICAL, Time);
   else
-    dPrint(90, 110, 2, BLACK, Time);
+    dPrint(90, 110, 2, TIME_COLOR_NORMAL, Time);
   //Set new lastAirCondition
   lastTime = Time; //Setzt letzten Wert
 }
