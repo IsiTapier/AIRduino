@@ -29,6 +29,8 @@
 #define MAX_PIEP 1200
 #define MAX_DISPLAYED_PPM 1280
 
+#define LOADING_SCREEN_TIME 20
+
 //pins:
 #define TFT_CS     10
 #define TFT_RST    9
@@ -50,6 +52,7 @@
 #define BAR_STRIPE_THICKNESS 3
 #define TIME_COLOR_CRITICAL RED
 #define TIME_COLOR_NORMAL WHITE
+#define LOADING_SCREEN_DOTS_COLOR WHITE
 
 
 // Color definitions
@@ -63,6 +66,8 @@
 #define WHITE 0xFFFF
 #define GREY 0x8C51
 #define LIME 0x87F4
+#define LIGHT_BLUE 0x76BF
+#define TURKISE 0x3FFA
 
 #define PPM_COLOR_N BLACK //Normal
 #define PPM_COLOR_R 0xFE0E //Risk
@@ -100,6 +105,7 @@ void setup() {
   Serial.begin(9600);
   initDisplay();
   initSensor();
+  loadingScreen(LOADING_SCREEN_TIME);
 }
 
 void loop() {
@@ -398,6 +404,7 @@ void writeInfo() {
   lastTime = Time; //Setzt letzten Wert
 }
 
+//Verkürzung: Writing mit Text
 void dPrint(int y, int x, float scale, int color, String text) {
   display.setCursor(y, x);
   display.setTextSize(scale);
@@ -405,9 +412,40 @@ void dPrint(int y, int x, float scale, int color, String text) {
   display.println(text);
 }
 
+//Verkürzung: Writing mit Integern
 void dPrint(int y, int x, float scale, int color, int text) {
   display.setCursor(y, x);
   display.setTextSize(scale);
   display.setTextColor(color);
   display.println(text);
+}
+
+void loadingScreen(int t) {
+  writeLoadingScreenTitle();
+
+  //Draw: Loading Dots
+  byte c = 0;
+  for (int x = t * 2; x >= 0; x--) {
+    c++;
+    dPrint(55, 75, 3, GRAPH_BACKGROUND_COLOR, "..."); // Altes Clearen
+    switch (c) {
+      case 1: dPrint(55, 75, 3, LOADING_SCREEN_DOTS_COLOR, ".");
+        break;
+      case 2: dPrint(55, 75, 3, LOADING_SCREEN_DOTS_COLOR, "..");
+        break;
+      case 3: 
+        dPrint(55, 75, 3, LOADING_SCREEN_DOTS_COLOR, "...");
+        c = 0;        
+        break;
+    }   
+    delay(500);
+  }
+  display.fillScreen(GRAPH_BACKGROUND_COLOR);
+}
+// Schreibt AIRduino fix aufs Display
+void writeLoadingScreenTitle() {
+  dPrint(50, 35, 4, LIGHT_BLUE, "A");
+  dPrint(70, 35, 4, TURKISE, "I");
+  dPrint(90, 35, 4, LIME, "R");
+  dPrint(35, 65, 3, GREY, "duino");
 }
