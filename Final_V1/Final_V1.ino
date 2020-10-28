@@ -32,7 +32,8 @@
 #define MAX_BLINK 1100
 #define MAX_PIEP 1200
 #define MAX_DISPLAYED_PPM 1280
-#define MAX_DISPLAYED_SENSOR 300
+#define MAX_DISPLAYED_SENSOR 270
+
 //pins:
 #define TFT_CS     10
 #define TFT_RST    9
@@ -348,7 +349,7 @@ void drawBorder(int xStart, int yStart, int xEnd, int yEnd, int color) {
 
 void drawDisplay() {
   display.fillScreen(GRAPH_BACKGROUND_COLOR);
-  display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH, DISPLAY_WIDTH, BAR_BACKGROUND_COLOR);
+  display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH+1, DISPLAY_WIDTH, BAR_BACKGROUND_COLOR);
   createLines();
 }
 
@@ -381,11 +382,12 @@ boolean getData(int data) {
 }
 
 void drawGraph() {
-  for (short x = DISPLAY_LENGTH; x > 0; x--) {
-    byte arrayDigit = DISPLAY_LENGTH - x;
+  display.drawLine(DISPLAY_LENGTH, 0, DISPLAY_LENGTH, DATABOX_TOP_HIGHT-1, GRAPH_BACKGROUND_COLOR);
+  for (short x = 0; x <= DISPLAY_LENGTH; x++) {
+    byte arrayDigit = x;
     if (graphData[arrayDigit] < DATABOX_TOP_HIGHT)
       display.drawPixel(x, graphData[arrayDigit], GRAPH_COLOR);
-    if (x != DISPLAY_LENGTH) {
+    if (x != 0) {
       if (graphData[arrayDigit - 1] < graphData[arrayDigit])
         drawConnections(x, graphData[arrayDigit - 1] + 1, graphData[arrayDigit] + 1);
       else
@@ -397,7 +399,7 @@ void drawGraph() {
 void drawConnections(int x, int startY, int endY) {
   for (byte y = startY; y < endY; y++) {
     if (y < DATABOX_TOP_HIGHT) {
-      display.drawPixel(x + 1, y, GRAPH_BACKGROUND_COLOR);
+      display.drawPixel(x - 1, y, GRAPH_BACKGROUND_COLOR);
       display.drawPixel(x, y, GRAPH_COLOR);
     }
   }
@@ -405,7 +407,7 @@ void drawConnections(int x, int startY, int endY) {
 
 // Künstliches Auffüllen der Werte, wird später vom Modul übernommen
 void fillData(int data) {
-  for (short x = DISPLAY_LENGTH - 1; x > 0; x--) {
+  for (short x = DISPLAY_LENGTH; x > 0; x--) {
     graphData[x] = graphData[x - 1];
   }
   graphData[0] = DISPLAY_WIDTH - data;
@@ -429,9 +431,9 @@ void writeInfo() {
 
   //ppm zeichnen
   if (ventilating)
-    display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH, BAR_STRIPE_THICKNESS, CYAN);
+    display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH+1, BAR_STRIPE_THICKNESS, CYAN);
   else
-    display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH, BAR_STRIPE_THICKNESS, currentColor);
+    display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH+1, BAR_STRIPE_THICKNESS, currentColor);
 
   //Verhindert überschreiben von "ppm"
   if (airCondition < 1000)
