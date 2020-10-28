@@ -4,15 +4,19 @@
 
 //variabel defines:
 #define ROTATION 45
+#define DISPLAY_BRIGHTNESS 0.7
 #define DEBUG true
 
+#define LOADING_SCREEN_TIME 2
 #define STAGE_TIME 1*1000
 #define VENTILATING_TIMEOUT 5*1000
 
 #define AVERAGING_MEASUREMENTS 100
 #define AVERAGING_GRADIENT 5
+#define AVERAGING_GRAPH 10
 #define ALPHA_MEASUREMENTS 0.7
 #define ALPHA_LOWEST 0.5
+#define ALPHA_GRAPH 0.7
 
 #define OSV_SENSOR 80
 #define OSV_PPM 400
@@ -22,23 +26,23 @@
 #define MAX_SENSOR 1023
 #define MAX_PPM 5000
 #define MAX_INCREASE 1.5
-#define MAX_DECREASE 10
+#define MAX_DECREASE 30
 #define MAX_DROP_INCREASE 50
 #define MAX_LIGHT 1000
 #define MAX_BLINK 1100
 #define MAX_PIEP 1200
 #define MAX_DISPLAYED_PPM 1280
 
-#define LOADING_SCREEN_TIME 2
-
 //pins:
 #define TFT_CS     10
 #define TFT_RST    9
 #define TFT_DC     8
-#define LED_RED 5
-#define LED_GREEN 6
-#define LED_BLUE 7
+#define TFT_LED    3
+#define LED_RED    5
+#define LED_GREEN  6
+#define LED_BLUE   7
 #define GAS_SENSOR A0
+#define PIEZO      4
 
 //Data:
 #define DISPLAY_LENGTH 159
@@ -49,7 +53,7 @@
 #define GRAPH_COLOR WHITE//MAGENTA
 #define GRAPH_BACKGROUND_COLOR BLACK
 #define BAR_BACKGROUND_COLOR 0x2104 //Fast schwarz
-#define BAR_STRIPE_THICKNESS 1
+#define BAR_STRIPE_THICKNESS 3
 #define TIME_COLOR_CRITICAL RED
 #define TIME_COLOR_NORMAL WHITE
 #define LOADING_SCREEN_DOTS_COLOR WHITE
@@ -63,6 +67,7 @@
 #define CYAN 0x07FF
 #define MAGENTA 0xF81F
 #define YELLOW 0xFFE0
+#define ORANGE 0xFC00
 #define WHITE 0xFFFF
 #define GREY 0x8C51
 #define LIME 0x87F4
@@ -97,8 +102,15 @@ short now;
 short pitch;
 short drop;
 boolean ventilating = false;
-short airStatus;
+short state;
 short lastAirConditionGraph;
+int valuesGraph[AVERAGING_GRAPH];
+int counter = 0;
+int pixel = 0;
+int lastPixel = 0;
+int lastState = false;
+
+
 
 void setup() {
   Serial.begin(9600);
@@ -139,6 +151,9 @@ void initSensor() {
   pinMode(LED_RED, OUTPUT);
   pinMode(LED_GREEN, OUTPUT);
   pinMode(LED_BLUE, OUTPUT);
+  pinMode(PIEZO, OUTPUT);
+
+  digitalWrite(PIEZO, LOW);
 
   airConditionRaw = analogRead(GAS_SENSOR);
   lastAirCondition = analogRead(GAS_SENSOR);
@@ -156,7 +171,7 @@ void debugSensor() {
     debug("PPM", airCondition);
     debug("Pitch", pitch);
     debug("Lowest", lowest);
-    debug("Status", airStatus);
+    debug("Status", state);
   }
 }
 
@@ -195,8 +210,9 @@ void mapAirCondition() {
   airCondition = airCondition - OSV_SENSOR;
   airCondition = map(airCondition, 0, MAX_SENSOR, OSV_PPM, MAX_PPM);
 
-  //to Graph
-
+  if (airCondition > MAX_DISPLAYED_PPM) {
+    airCondition = MAX_DISPLAYED_PPM;
+  }
 }
 
 void calculatePitch() {
@@ -233,7 +249,7 @@ void checkVentilating() {
       drop = ALPHA_LOWEST * drop + (1 - ALPHA_LOWEST) * lowest;
       lowest = drop;
     }
-    
+
     ventilating = false;
     timer = 0;
     startTime = millis();
@@ -261,16 +277,16 @@ void rgb(int red, int green, int blue) {
 }
 
 void setStatus() {
-  airStatus = map(airCondition, lowest, MAX_LIGHT, 0, 2);
+  state = map(airCondition, lowest, MAX_LIGHT, 0, 3);
   if (airCondition > MAX_PIEP)
-    airStatus = 4;
+    state = 5;
   else if (airCondition > MAX_BLINK)
-    airStatus = 3;
+    state = 4;
 
-  if (airStatus < 0)
-    airStatus = 0;
-  if (airStatus > 4)
-    airStatus = 4;
+  if (state < 0)
+    state = 0;
+  if (state > 5)
+    state = 5;
 }
 
 
@@ -278,10 +294,16 @@ void setStatus() {
 //Display
 
 void initDisplay() {
+  pinMode(TFT_CS, OUTPUT);
+  pinMode(TFT_RST, OUTPUT);
+  pinMode(TFT_DC, OUTPUT);
+  pinMode(TFT_LED, OUTPUT);
+
+  analogWrite(TFT_LED, DISPLAY_BRIGHTNESS * 256);
+
   display.initR(INITR_BLACKTAB);
   display.setTextWrap(false);
   display.setRotation(ROTATION);
-  display.fillScreen(GRAPH_BACKGROUND_COLOR);
 
   //Auffüllen des Arrays
   for (short x = 0; x < DISPLAY_LENGTH; x++) {
@@ -290,10 +312,48 @@ void initDisplay() {
   graphData[0] = DATABOX_TOP_HIGHT - 1;
 }
 
+void draw(int data) {
+  checkState();
+  if (getData(data)) {
+    createLines();
+    fillData(pixel);
+    drawGraph();
+  }
+}
+
+void checkState() {
+  if (lastState) {
+    drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_WIDTH, GRAPH_BACKGROUND_COLOR);
+    display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH, DISPLAY_WIDTH, BAR_BACKGROUND_COLOR);
+    createLines();
+    digitalWrite(PIEZO, LOW);
+    lastState = false;
+  } else if (state >= 4) {
+    drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_WIDTH, RED);
+    if (state == 5) {
+      digitalWrite(PIEZO, HIGH);
+    }
+    lastState = true;
+  }
+  writeInfo();
+}
+
+void drawBorder(int xStart, int yStart, int xEnd, int yEnd, int color) {
+  display.drawLine(xStart, yStart, xEnd, yStart, color);
+  display.drawLine(xStart, yEnd, xEnd, yEnd, color);
+  display.drawLine(xStart, yStart, xStart, yEnd, color);
+  display.drawLine(xEnd, yStart, xEnd, yEnd, color);
+}
+
+void drawDisplay() {
+  display.fillScreen(GRAPH_BACKGROUND_COLOR);
+  display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH, DISPLAY_WIDTH, BAR_BACKGROUND_COLOR);
+  createLines();
+}
+
 void createLines() {
   drawLine(DISPLAY_LENGTH + 1, CRITICAL_HIGHT, 5);
   drawLine(DISPLAY_LENGTH + 1, MIN_HIGHT, 5);
-  writeInfo();
 }
 
 void drawLine(int x, int y, int z) {
@@ -302,10 +362,21 @@ void drawLine(int x, int y, int z) {
   }
 }
 
-void draw(int data) {
-  createLines();
-  fillData(data);
-  drawGraph();
+boolean getData(int data) {
+  valuesGraph[counter] = data;
+  counter ++;
+  if (!(counter < AVERAGING_GRAPH)) {
+    pixel = 0;
+    for (int i = 0; i < AVERAGING_GRAPH; i++) {
+      pixel = pixel + valuesGraph[i];
+    }
+    pixel = pixel / AVERAGING_GRAPH;
+    pixel = ALPHA_GRAPH * pixel + (1 - ALPHA_GRAPH) * lastPixel;
+    lastPixel = pixel;
+    counter = 0;
+    return (true);
+  } else
+    return (false);
 }
 
 void drawGraph() {
@@ -342,12 +413,14 @@ void fillData(int data) {
 void writeInfo() {
   //acertain ppm color
   int currentColor = BLACK;
-  switch (airStatus) {
-    case 0: currentColor = PPM_COLOR_N;//PPM_COLOR_N;
+  switch (state) {
+    case 0: currentColor = PPM_COLOR_N;
       break;
-    case 1: currentColor = PPM_COLOR_R; //PPM_COLOR_R;
+    case 1: currentColor = PPM_COLOR_R;
       break;
-    case 2: currentColor = PPM_COLOR_A; //PPM_COLOR_A;
+    case 2: currentColor = ORANGE;
+      break;
+    case 3: currentColor = PPM_COLOR_A;
       break;
     default: currentColor = PPM_COLOR_A;
       break;
@@ -355,9 +428,9 @@ void writeInfo() {
 
   //ppm zeichnen
   if (ventilating)
-    display.fillRect(0, DATABOX_TOP_HIGHT + 1, DISPLAY_LENGTH, BAR_STRIPE_THICKNESS, CYAN);
+    display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH, BAR_STRIPE_THICKNESS, CYAN);
   else
-    display.fillRect(0, DATABOX_TOP_HIGHT + 1, DISPLAY_LENGTH, BAR_STRIPE_THICKNESS, currentColor);
+    display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH, BAR_STRIPE_THICKNESS, currentColor);
 
   //Verhindert überschreiben von "ppm"
   if (airCondition < 1000)
@@ -387,33 +460,35 @@ void writeInfo() {
   Time = Time + seconds;
 
   //Clear old Pixels
-  dPrint(90, 110, 2, BAR_BACKGROUND_COLOR, lastTime);
+  dPrint(96, 109, 2, BAR_BACKGROUND_COLOR, lastTime);
   //write new Pixels
   if (minutes >= 20)
-    dPrint(90, 110, 2, TIME_COLOR_CRITICAL, Time);
+    dPrint(96, 109, 2, TIME_COLOR_CRITICAL, Time);
   else
-    dPrint(90, 110, 2, TIME_COLOR_NORMAL, Time);
-  //Set new lastTime
+    dPrint(96, 109, 2, TIME_COLOR_NORMAL, Time);
+  //Set new lasttime
   lastTime = Time; //Setzt letzten Wert
 }
 
 //Verkürzung: Writing mit Text
-void dPrint(int y, int x, float scale, int color, String text) {
-  display.setCursor(y, x);
+void dPrint(int x, int y, float scale, int color, String text) {
+  display.setCursor(x, y);
   display.setTextSize(scale);
   display.setTextColor(color);
   display.println(text);
 }
 
 //Verkürzung: Writing mit Integern
-void dPrint(int y, int x, float scale, int color, int text) {
-  display.setCursor(y, x);
+void dPrint(int x, int y, float scale, int color, int text) {
+  display.setCursor(x, y);
   display.setTextSize(scale);
   display.setTextColor(color);
   display.println(text);
 }
 
+//Loading Screen
 void loadingScreen(int t) {
+  display.fillScreen(GRAPH_BACKGROUND_COLOR);
   writeLoadingScreenTitle();
 
   //Draw: Loading Dots
@@ -426,17 +501,15 @@ void loadingScreen(int t) {
         break;
       case 2: dPrint(55, 75, 3, LOADING_SCREEN_DOTS_COLOR, "..");
         break;
-      case 3:
-        dPrint(55, 75, 3, LOADING_SCREEN_DOTS_COLOR, "...");
+      case 3: dPrint(55, 75, 3, LOADING_SCREEN_DOTS_COLOR, "...");
         c = 0;
         break;
     }
     delay(500);
   }
-  display.fillScreen(GRAPH_BACKGROUND_COLOR);
-  // Draw Bar Background
-  display.fillRect(0, DATABOX_TOP_HIGHT + 1, DISPLAY_LENGTH, DISPLAY_WIDTH, BAR_BACKGROUND_COLOR);
+  drawDisplay();
 }
+
 // Schreibt AIRduino fix aufs Display
 void writeLoadingScreenTitle() {
   dPrint(50, 35, 4, LIGHT_BLUE, "A");
