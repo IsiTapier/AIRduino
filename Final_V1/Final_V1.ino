@@ -1,3 +1,7 @@
+
+
+
+
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_ST7735.h>
@@ -132,14 +136,17 @@ short last;
 short now;
 short gradient;
 short drop;
-boolean ventilating = false;
 short state;
+short colorState;
 short lastAirConditionGraph;
 int valuesGraph[AVERAGING_GRAPH];
 int counter = 0;
 int pixel = 0;
 int lastPixel = 0;
 int lastState = false;
+
+short previousState;
+int ppmSinceVentilation;
 
 
 //   _____      _
@@ -221,7 +228,7 @@ void writeLed() {
   green = 255 - led;
 
   //turn on
-  if (!ventilating)
+  if (state != -1)
     rgb(red, green, 0);
 }
 
@@ -273,13 +280,13 @@ void mapAirCondition() {
   //to PPM
   /*if (airCondition < OSV_SENSOR)
     airCondition = OSV_SENSOR;
-  if (airCondition > MAX_DISPLAYED_SENSOR)
+    if (airCondition > MAX_DISPLAYED_SENSOR)
     airCondition = MAX_DISPLAYED_SENSOR;*/
 
   airCondition = map(airCondition, OSV_SENSOR, MAX_DISPLAYED_PPM / FACTOR, OSV_PPM, MAX_DISPLAYED_PPM);
   /*airCondition = airCondition - OSV_SENSOR;
-  airCondition = airCondition * FACTOR;
-  airCondition = airCondition + OSV_PPM;*/
+    airCondition = airCondition * FACTOR;
+    airCondition = airCondition + OSV_PPM;*/
 }
 
 
@@ -302,28 +309,28 @@ void calculateGradient() {
 
 void checkVentilating() {
   //start Ventilating
-  if (gradient < MAX_DECREASE && !ventilating) { // Wenn die Differenz die Hemmschwelle übersteigt: Wird Ventilating erkannt
-    ventilating = true;
+  if (gradient < MAX_DECREASE && state != -1) { // Wenn die Differenz die Hemmschwelle übersteigt: Wird Ventilating erkannt
+    state = -1;
+    ppmSinceVentilation = airCondition;
     rgb(0, 0, 255);
     startTime = millis();
-    Serial.println("Start Ventilating"); 
   }
 
   //stop Ventilating
 
-  if ((gradient > 1 && ventilating) || (millis() - timer >= VENTILATING_TIMEOUT && ventilating && timer != 0)) {
-    // Wenn der Graph nach oben Steigt oder der Timer abgelaufen ist 
+  if ((gradient > 1 && state == - 1) || (millis() - timer >= VENTILATING_TIMEOUT && state == -1 && timer != 0)) {
+    // Wenn der Graph nach oben Steigt oder der Timer abgelaufen ist
     if (airCondition - lowest < MAX_INCREASE_LOWEST) {
-      //Wenn 
+      //Wenn
       lowest = ALPHA_LOWEST * airCondition + (1 - ALPHA_LOWEST) * lowest;
     }
 
-    ventilating = false;
+    state = 0;
     timer = 0;
     startTime = millis();
 
-    
-  } else if (gradient == 1 && timer == 0 && ventilating) {
+
+  } else if (gradient == 1 && timer == 0 && state == -1) {
     //Wenn der Graph nicht mehr steigt und der Timer noch nicht gestartet wurde
     //Ziel nach gewisser Zeit kein Abstieg -> Timer für Timeout wird gestartet
     timer = millis();
@@ -332,14 +339,17 @@ void checkVentilating() {
 }
 
 void setStatus() {
-  state = map(airCondition, lowest, MAX_LIGHT, 0, 3);
+  colorState = map(airCondition, lowest, MAX_LIGHT, 0, 3);
+  if (state == -1)
+    return;
+  state = colorState;
   if (airCondition > MAX_PIEP)
     state = 5;
   else if (airCondition > MAX_BLINK)
     state = 4;
 
-  if (state < 0)
-    state = 0;
+  if (state < -1)
+    state = -1;
   if (state > 5)
     state = 5;
 }
@@ -352,8 +362,9 @@ void checkState() {
     digitalWrite(PIEZO, LOW);
     lastState = false;
   } else if (state >= 4) {
-    drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_WIDTH, RED);
+    drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_WIDTH, WHITE);
     if (state == 5) {
+      //PIEP
       digitalWrite(PIEZO, HIGH);
     }
     lastState = true;
@@ -365,11 +376,7 @@ boolean getData(int data) {
   valuesGraph[counter] = data;
   counter ++;
   if (!(counter < AVERAGING_GRAPH)) {
-    pixel = 0;
-    for (int i = 0; i < AVERAGING_GRAPH; i++) {
-      pixel = pixel + valuesGraph[i];
-    }
-    pixel = pixel / AVERAGING_GRAPH;
+    pixel = average(valuesGraph, 0, AVERAGING_GRAPH);
     pixel = ALPHA_GRAPH * pixel + (1 - ALPHA_GRAPH) * lastPixel;
     lastPixel = pixel;
     counter = 0;
@@ -503,6 +510,8 @@ void writeInfo() {
   //acertain ppm color
   int currentColor = BLACK;
   switch (state) {
+    case -1:  currentColor = CYAN;
+      break;
     case 0: currentColor = PPM_COLOR_N;
       break;
     case 1: currentColor = PPM_COLOR_R;
@@ -515,24 +524,35 @@ void writeInfo() {
       break;
   }
 
+
+
   //ppm zeichnen
-  if (ventilating)
-    display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH + 1, BAR_STRIPE_THICKNESS, CYAN);
-  else
+  if (lastAirConditionGraph != airCondition || previousState != state) {
+    //Wenn sich der Wert geändert hat oder state sich geändert hat
+
+
+    //Verhindert überschreiben von "ppm"
+    if (airCondition < 1000)
+      dPrint(57, 118, 1.5, currentColor, "ppm");
+    else
+      dPrint(57, 118, 1.5, BAR_BACKGROUND_COLOR, "ppm");
+
+    //Clear old Pixels
+    dPrint(2, 105, 3, BAR_BACKGROUND_COLOR, lastAirConditionGraph);
+    //write new Pixels
+    dPrint(2, 105, 3, currentColor, airCondition);
+    //Set new lastAirCondition
+    lastAirConditionGraph = airCondition; //Setzt letzten Wert
+    //Draw Bar
     display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH + 1, BAR_STRIPE_THICKNESS, currentColor);
+    previousState = state;
+  }
+  //Draw Loading Bar
+  if (state == -1) {
+    short bar_ventilating_length = map(airCondition, lowest, ppmSinceVentilation, 0, DISPLAY_LENGTH);
+    display.fillRect(DISPLAY_LENGTH - bar_ventilating_length, DATABOX_TOP_HIGHT, bar_ventilating_length, BAR_STRIPE_THICKNESS, GREY);
+  }
 
-  //Verhindert überschreiben von "ppm"
-  if (airCondition < 1000)
-    dPrint(57, 118, 1.5, currentColor, "ppm");
-  else
-    dPrint(57, 118, 1.5, BAR_BACKGROUND_COLOR, "ppm");
-
-  //Clear old Pixels
-  dPrint(2, 105, 3, BAR_BACKGROUND_COLOR, lastAirConditionGraph);
-  //write new Pixels
-  dPrint(2, 105, 3, currentColor, airCondition);
-  //Set new lastAirCondition
-  lastAirConditionGraph = airCondition; //Setzt letzten Wert
 
   //calculate time since last ventilating
   seconds = (millis() - startTime) / 1000 % 60;
