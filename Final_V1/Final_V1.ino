@@ -262,18 +262,6 @@ void meassureAirCondition() {
 }
 
 
-
-int average(int averageArray[], int averageStart, int averageEnd) {
-  int sum = 0;
-  for (int i = averageStart; i < averageEnd; i++) {
-    sum = sum + averageArray[i];
-  }
-  return (sum / (averageEnd - averageStart));
-}
-
-
-
-
 //  _____        _
 // |  __ \      | |
 // | |  | | __ _| |_ __ _
@@ -614,4 +602,12 @@ void rgb(int red, int green, int blue) {
   analogWrite(LED_RED, red);
   analogWrite(LED_GREEN, green);
   analogWrite(LED_BLUE, blue);
+}
+
+int average(int averageArray[], int averageStart, int averageEnd) {
+  int sum = 0;
+  for (int i = averageStart; i < averageEnd; i++) {
+    sum = sum + averageArray[i];
+  }
+  return (sum / (averageEnd - averageStart));
 }
