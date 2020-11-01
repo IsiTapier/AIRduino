@@ -2,6 +2,27 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_ST7735.h>
 
+
+                                                                                
+//                                      ,,               ,,                       
+//      db      `7MMF'`7MM"""Mq.      `7MM               db                       
+//     ;MM:       MM    MM   `MM.       MM                                        
+//    ,V^MM.      MM    MM   ,M9   ,M""bMM `7MM  `7MM  `7MM  `7MMpMMMb.  ,pW"Wq.  
+//   ,M  `MM      MM    MMmmdM9  ,AP    MM   MM    MM    MM    MM    MM 6W'   `Wb 
+//   AbmmmqMA     MM    MM  YM.  8MI    MM   MM    MM    MM    MM    MM 8M     M8 
+//  A'     VML    MM    MM   `Mb.`Mb    MM   MM    MM    MM    MM    MM YA.   ,A9 
+//.AMA.   .AMMA..JMML..JMML. .JMM.`Wbmd"MML. `Mbod"YML..JMML..JMML  JMML.`Ybmd9'  
+//                                                                                
+
+//   _____             __ _       
+//  / ____|           / _(_)      
+// | |     ___  _ __ | |_ _  __ _ 
+// | |    / _ \| '_ \|  _| |/ _` |
+// | |___| (_) | | | | | | | (_| |
+// \_____\___/|_| |_|_| |_|\__, |
+//                           __/ |
+//                          |___/ 
+//
 //variabel defines:
 #define ROTATION 45
 #define DISPLAY_BRIGHTNESS 0.7
@@ -82,6 +103,14 @@
 
 Adafruit_ST7735 display = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 
+// __      __        _       _     _            
+// \ \    / /       (_)     | |   | |           
+//  \ \  / /_ _ _ __ _  __ _| |__ | | ___ _ __  
+//   \ \/ / _` | '__| |/ _` | '_ \| |/ _ \ '_ \ 
+//    \  / (_| | |  | | (_| | |_) | |  __/ | | |
+//     \/ \__,_|_|  |_|\__,_|_.__/|_|\___|_| |_|
+//                                              
+                                              
 short graphData[DISPLAY_LENGTH];
 unsigned long startTime;
 unsigned long timer;
@@ -112,7 +141,14 @@ int lastPixel = 0;
 int lastState = false;
 
 
-
+//   _____      _               
+//  / ____|    | |              
+// | (___   ___| |_ _   _ _ __  
+//  \___ \ / _ \ __| | | | '_ \ 
+//  ____) |  __/ |_| |_| | |_) |
+// |_____/ \___|\__|\__,_| .__/ 
+//                       | |    
+//                       |_|    
 void setup() {
   Serial.begin(9600);
   initDisplay();
@@ -120,6 +156,15 @@ void setup() {
   loadingScreen(LOADING_SCREEN_TIME);
 }
 
+
+//  _                       
+// | |                      
+// | |     ___   ___  _ __  
+// | |    / _ \ / _ \| '_ \ 
+// | |___| (_) | (_) | |_) |
+// |______\___/ \___/| .__/ 
+//                   | |    
+//                   |_|    
 void loop() {
   meassureAirCondition();
   mapAirCondition();
@@ -131,10 +176,43 @@ void loop() {
   debugSensor();
 }
 
-void debug(String title, int value) {
-  Serial.print(title + ": ");
-  Serial.println(value);
+//  __  __                                   
+// |  \/  |                                  
+// | \  / | ___  __ _ ___ ___ _   _ _ __ ___ 
+// | |\/| |/ _ \/ _` / __/ __| | | | '__/ _ \
+// | |  | |  __/ (_| \__ \__ \ |_| | | |  __/
+// |_|  |_|\___|\__,_|___/___/\__,_|_|  \___|
+                                           
+                                           
+
+void meassureAirCondition() {
+  //Messung
+  airCondition = 0;
+  for (int i = 0; i < AVERAGING_MEASUREMENTS; i++) {
+    value = analogRead(GAS_SENSOR);
+
+    //Fehlmessungen überschreiben
+    if (airConditionRaw * MAX_INCREASE < value && i == 0)
+      airCondition = airCondition + airConditionRaw;
+    else if (airCondition / i * MAX_INCREASE < value && i != 0)
+      airCondition = airCondition + airCondition / i;
+    else
+      airCondition = airCondition + value;
+
+    delay(STAGE_TIME / AVERAGING_MEASUREMENTS);
+  }
+
+  airCondition = airCondition / AVERAGING_MEASUREMENTS;
+  airConditionRaw = airCondition;
+
+  //Wert smoothen;
+  airCondition = ALPHA_MEASUREMENTS * airCondition + (1 - ALPHA_MEASUREMENTS) * lastAirCondition;
+
+  lastAirCondition = airCondition;
+
 }
+
+
 
 int average(int averageArray[], int averageStart, int averageEnd) {
   int back = 0;
@@ -145,7 +223,14 @@ int average(int averageArray[], int averageStart, int averageEnd) {
 }
 
 
-//Sensor
+//   _____                           
+//  / ____|                          
+// | (___   ___ _ __  ___  ___  _ __ 
+//  \___ \ / _ \ '_ \/ __|/ _ \| '__|
+//  ____) |  __/ | | \__ \ (_) | |   
+// |_____/ \___|_| |_|___/\___/|_|   
+//                                   
+                                   
 
 void initSensor() {
   //Pins
@@ -176,33 +261,25 @@ void debugSensor() {
   }
 }
 
-void meassureAirCondition() {
-  //Messung
-  airCondition = 0;
-  for (int i = 0; i < AVERAGING_MEASUREMENTS; i++) {
-    value = analogRead(GAS_SENSOR);
+void writeLed() {
+  //map Values
+  led = map(airCondition, lowest, MAX_LIGHT, 0, 255);
+  red = led;
+  green = 255 - led;
 
-    //Fehlmessungen überschreiben
-    if (airConditionRaw * MAX_INCREASE < value && i == 0)
-      airCondition = airCondition + airConditionRaw;
-    else if (airCondition / i * MAX_INCREASE < value && i != 0)
-      airCondition = airCondition + airCondition / i;
-    else
-      airCondition = airCondition + value;
-
-    delay(STAGE_TIME / AVERAGING_MEASUREMENTS);
-  }
-
-  airCondition = airCondition / AVERAGING_MEASUREMENTS;
-  airConditionRaw = airCondition;
-
-  //Wert smoothen;
-  airCondition = ALPHA_MEASUREMENTS * airCondition + (1 - ALPHA_MEASUREMENTS) * lastAirCondition;
-
-  lastAirCondition = airCondition;
-
+  //turn on
+  if (!ventilating)
+    rgb(red, green, 0);
 }
 
+
+//  _____        _        
+// |  __ \      | |       
+// | |  | | __ _| |_ __ _ 
+// | |  | |/ _` | __/ _` |
+// | |__| | (_| | || (_| |
+// |_____/ \__,_|\__\__,_|
+//                        
 void mapAirCondition() {
   //to PPM
   if (airCondition < OSV_SENSOR)
@@ -230,7 +307,7 @@ void calculatePitch() {
 
   //Pitch
   pitch = now - last;
-}
+}                        
 
 void checkVentilating() {
   //lowest value
@@ -261,23 +338,6 @@ void checkVentilating() {
   last = now;
 }
 
-void writeLed() {
-  //map Values
-  led = map(airCondition, lowest, MAX_LIGHT, 0, 255);
-  red = led;
-  green = 255 - led;
-
-  //turn on
-  if (!ventilating)
-    rgb(red, green, 0);
-}
-
-void rgb(int red, int green, int blue) {
-  analogWrite(LED_RED, red);
-  analogWrite(LED_GREEN, green);
-  analogWrite(LED_BLUE, blue);
-}
-
 void setStatus() {
   state = map(airCondition, lowest, MAX_LIGHT, 0, 3);
   if (airCondition > MAX_PIEP)
@@ -291,10 +351,58 @@ void setStatus() {
     state = 5;
 }
 
+void checkState() {
+  if (lastState) {
+    drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_WIDTH, GRAPH_BACKGROUND_COLOR);
+    display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH, DISPLAY_WIDTH, BAR_BACKGROUND_COLOR);
+    createLines();
+    digitalWrite(PIEZO, LOW);
+    lastState = false;
+  } else if (state >= 4) {
+    drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_WIDTH, RED);
+    if (state == 5) {
+      digitalWrite(PIEZO, HIGH);
+    }
+    lastState = true;
+  }
+  writeInfo();
+}
+
+boolean getData(int data) {
+  valuesGraph[counter] = data;
+  counter ++;
+  if (!(counter < AVERAGING_GRAPH)) {
+    pixel = 0;
+    for (int i = 0; i < AVERAGING_GRAPH; i++) {
+      pixel = pixel + valuesGraph[i];
+    }
+    pixel = pixel / AVERAGING_GRAPH;
+    pixel = ALPHA_GRAPH * pixel + (1 - ALPHA_GRAPH) * lastPixel;
+    lastPixel = pixel;
+    counter = 0;
+    return (true);
+  } else
+    return (false);
+}
+
+// Künstliches Auffüllen der Werte, wird später vom Modul übernommen
+void fillData(int data) {
+  for (short x = DISPLAY_LENGTH; x > 0; x--) {
+    graphData[x] = graphData[x - 1];
+  }
+  graphData[0] = DISPLAY_WIDTH - data;
+}
 
 
-//Display
-
+//  _____  _           _             
+// |  __ \(_)         | |            
+// | |  | |_ ___ _ __ | | __ _ _   _ 
+// | |  | | / __| '_ \| |/ _` | | | |
+// | |__| | \__ \ |_) | | (_| | |_| |
+// |_____/|_|___/ .__/|_|\__,_|\__, |
+//              | |             __/ |
+//              |_|            |___/ 
+//
 void initDisplay() {
   pinMode(TFT_CS, OUTPUT);
   pinMode(TFT_RST, OUTPUT);
@@ -323,22 +431,7 @@ void draw(int data) {
   }
 }
 
-void checkState() {
-  if (lastState) {
-    drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_WIDTH, GRAPH_BACKGROUND_COLOR);
-    display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH, DISPLAY_WIDTH, BAR_BACKGROUND_COLOR);
-    createLines();
-    digitalWrite(PIEZO, LOW);
-    lastState = false;
-  } else if (state >= 4) {
-    drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_WIDTH, RED);
-    if (state == 5) {
-      digitalWrite(PIEZO, HIGH);
-    }
-    lastState = true;
-  }
-  writeInfo();
-}
+
 
 void drawBorder(int xStart, int yStart, int xEnd, int yEnd, int color) {
   display.drawLine(xStart, yStart, xEnd, yStart, color);
@@ -362,23 +455,6 @@ void drawLine(int x, int y, int z) {
   for (int i = 0; i < x; i = i + z) {
     display.drawPixel(i, y, WHITE);
   }
-}
-
-boolean getData(int data) {
-  valuesGraph[counter] = data;
-  counter ++;
-  if (!(counter < AVERAGING_GRAPH)) {
-    pixel = 0;
-    for (int i = 0; i < AVERAGING_GRAPH; i++) {
-      pixel = pixel + valuesGraph[i];
-    }
-    pixel = pixel / AVERAGING_GRAPH;
-    pixel = ALPHA_GRAPH * pixel + (1 - ALPHA_GRAPH) * lastPixel;
-    lastPixel = pixel;
-    counter = 0;
-    return (true);
-  } else
-    return (false);
 }
 
 void drawGraph() {
@@ -405,14 +481,31 @@ void drawConnections(int x, int startY, int endY) {
   }
 }
 
-// Künstliches Auffüllen der Werte, wird später vom Modul übernommen
-void fillData(int data) {
-  for (short x = DISPLAY_LENGTH; x > 0; x--) {
-    graphData[x] = graphData[x - 1];
+//Loading Screen
+void loadingScreen(int t) {
+  display.fillScreen(GRAPH_BACKGROUND_COLOR);
+  writeLoadingScreenTitle();
+
+  //Draw: Loading Dots
+  byte c = 0;
+  for (int x = t * 2; x >= 0; x--) {
+    c++;
+    dPrint(55, 75, 3, GRAPH_BACKGROUND_COLOR, "..."); // Altes Clearen
+    switch (c) {
+      case 1: dPrint(55, 75, 3, LOADING_SCREEN_DOTS_COLOR, ".");
+        break;
+      case 2: dPrint(55, 75, 3, LOADING_SCREEN_DOTS_COLOR, "..");
+        break;
+      case 3: dPrint(55, 75, 3, LOADING_SCREEN_DOTS_COLOR, "...");
+        c = 0;
+        break;
+    }
+    delay(500);
   }
-  graphData[0] = DISPLAY_WIDTH - data;
+  drawDisplay();
 }
 
+//Write PPM, Time
 void writeInfo() {
   //acertain ppm color
   int currentColor = BLACK;
@@ -473,6 +566,21 @@ void writeInfo() {
   lastTime = Time; //Setzt letzten Wert
 }
 
+
+//  ______                _   _                 
+// |  ____|              | | (_)                
+// | |__ _   _ _ __   ___| |_ _  ___  _ __  ___ 
+// |  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
+// | |  | |_| | | | | (__| |_| | (_) | | | \__ \
+// |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
+                                              
+                                              
+
+void debug(String title, int value) {
+  Serial.print(title + ": ");
+  Serial.println(value);
+}
+
 //Verkürzung: Writing mit Text
 void dPrint(int x, int y, float scale, int color, String text) {
   display.setCursor(x, y);
@@ -489,34 +597,16 @@ void dPrint(int x, int y, float scale, int color, int text) {
   display.println(text);
 }
 
-//Loading Screen
-void loadingScreen(int t) {
-  display.fillScreen(GRAPH_BACKGROUND_COLOR);
-  writeLoadingScreenTitle();
-
-  //Draw: Loading Dots
-  byte c = 0;
-  for (int x = t * 2; x >= 0; x--) {
-    c++;
-    dPrint(55, 75, 3, GRAPH_BACKGROUND_COLOR, "..."); // Altes Clearen
-    switch (c) {
-      case 1: dPrint(55, 75, 3, LOADING_SCREEN_DOTS_COLOR, ".");
-        break;
-      case 2: dPrint(55, 75, 3, LOADING_SCREEN_DOTS_COLOR, "..");
-        break;
-      case 3: dPrint(55, 75, 3, LOADING_SCREEN_DOTS_COLOR, "...");
-        c = 0;
-        break;
-    }
-    delay(500);
-  }
-  drawDisplay();
-}
-
 // Schreibt AIRduino fix aufs Display
 void writeLoadingScreenTitle() {
   dPrint(50, 35, 4, LIGHT_BLUE, "A");
   dPrint(70, 35, 4, TURKISE, "I");
   dPrint(90, 35, 4, LIME, "R");
   dPrint(35, 65, 3, GREY, "duino");
+}
+
+void rgb(int red, int green, int blue) {
+  analogWrite(LED_RED, red);
+  analogWrite(LED_GREEN, green);
+  analogWrite(LED_BLUE, blue);
 }
