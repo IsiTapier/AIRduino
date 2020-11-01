@@ -3,30 +3,31 @@
 #include <Adafruit_ST7735.h>
 
 
-                                                                                
-//                                      ,,               ,,                       
-//      db      `7MMF'`7MM"""Mq.      `7MM               db                       
-//     ;MM:       MM    MM   `MM.       MM                                        
-//    ,V^MM.      MM    MM   ,M9   ,M""bMM `7MM  `7MM  `7MM  `7MMpMMMb.  ,pW"Wq.  
-//   ,M  `MM      MM    MMmmdM9  ,AP    MM   MM    MM    MM    MM    MM 6W'   `Wb 
-//   AbmmmqMA     MM    MM  YM.  8MI    MM   MM    MM    MM    MM    MM 8M     M8 
-//  A'     VML    MM    MM   `Mb.`Mb    MM   MM    MM    MM    MM    MM YA.   ,A9 
-//.AMA.   .AMMA..JMML..JMML. .JMM.`Wbmd"MML. `Mbod"YML..JMML..JMML  JMML.`Ybmd9'  
-//                                                                                
 
-//   _____             __ _       
-//  / ____|           / _(_)      
-// | |     ___  _ __ | |_ _  __ _ 
+//                                      ,,               ,,
+//      db      `7MMF'`7MM"""Mq.      `7MM               db
+//     ;MM:       MM    MM   `MM.       MM
+//    ,V^MM.      MM    MM   ,M9   ,M""bMM `7MM  `7MM  `7MM  `7MMpMMMb.  ,pW"Wq.
+//   ,M  `MM      MM    MMmmdM9  ,AP    MM   MM    MM    MM    MM    MM 6W'   `Wb
+//   AbmmmqMA     MM    MM  YM.  8MI    MM   MM    MM    MM    MM    MM 8M     M8
+//  A'     VML    MM    MM   `Mb.`Mb    MM   MM    MM    MM    MM    MM YA.   ,A9
+//.AMA.   .AMMA..JMML..JMML. .JMM.`Wbmd"MML. `Mbod"YML..JMML..JMML  JMML.`Ybmd9'
+//
+
+//   _____             __ _
+//  / ____|           / _(_)
+// | |     ___  _ __ | |_ _  __ _
 // | |    / _ \| '_ \|  _| |/ _` |
 // | |___| (_) | | | | | | | (_| |
 // \_____\___/|_| |_|_| |_|\__, |
 //                           __/ |
-//                          |___/ 
+//                          |___/
 //
 //variabel defines:
 #define ROTATION 45
 #define DISPLAY_BRIGHTNESS 0.7
-#define DEBUG true
+#define DEBUG false
+#define FACTOR 4.631578947368421
 
 #define LOADING_SCREEN_TIME 2
 #define STAGE_TIME 1*1000
@@ -47,8 +48,8 @@
 #define MAX_SENSOR 1023
 #define MAX_PPM 5000
 #define MAX_INCREASE 1.5
-#define MAX_DECREASE 30
-#define MAX_DROP_INCREASE 50
+#define MAX_DECREASE 0.96  //Schwelle ab der die Ventilation getriggert wird
+#define MAX_INCREASE_LOWEST 50
 #define MAX_LIGHT 1000
 #define MAX_BLINK 1100
 #define MAX_PIEP 1200
@@ -103,14 +104,14 @@
 
 Adafruit_ST7735 display = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 
-// __      __        _       _     _            
-// \ \    / /       (_)     | |   | |           
-//  \ \  / /_ _ _ __ _  __ _| |__ | | ___ _ __  
+// __      __        _       _     _
+// \ \    / /       (_)     | |   | |
+//  \ \  / /_ _ _ __ _  __ _| |__ | | ___ _ __
 //   \ \/ / _` | '__| |/ _` | '_ \| |/ _ \ '_ \ 
 //    \  / (_| | |  | | (_| | |_) | |  __/ | | |
 //     \/ \__,_|_|  |_|\__,_|_.__/|_|\___|_| |_|
-//                                              
-                                              
+//
+
 short graphData[DISPLAY_LENGTH];
 unsigned long startTime;
 unsigned long timer;
@@ -129,7 +130,7 @@ short green;
 short values[AVERAGING_GRADIENT * 2];
 short last;
 short now;
-short pitch;
+short gradient;
 short drop;
 boolean ventilating = false;
 short state;
@@ -141,14 +142,14 @@ int lastPixel = 0;
 int lastState = false;
 
 
-//   _____      _               
-//  / ____|    | |              
-// | (___   ___| |_ _   _ _ __  
+//   _____      _
+//  / ____|    | |
+// | (___   ___| |_ _   _ _ __
 //  \___ \ / _ \ __| | | | '_ \ 
 //  ____) |  __/ |_| |_| | |_) |
-// |_____/ \___|\__|\__,_| .__/ 
-//                       | |    
-//                       |_|    
+// |_____/ \___|\__|\__,_| .__/
+//                       | |
+//                       |_|
 void setup() {
   Serial.begin(9600);
   initDisplay();
@@ -157,33 +158,81 @@ void setup() {
 }
 
 
-//  _                       
-// | |                      
-// | |     ___   ___  _ __  
+//  _
+// | |
+// | |     ___   ___  _ __
 // | |    / _ \ / _ \| '_ \ 
 // | |___| (_) | (_) | |_) |
-// |______\___/ \___/| .__/ 
-//                   | |    
-//                   |_|    
+// |______\___/ \___/| .__/
+//                   | |
+//                   |_|
 void loop() {
   meassureAirCondition();
   mapAirCondition();
-  calculatePitch();
+  calculateGradient();
   checkVentilating();
   setStatus();
   writeLed();
   draw(map(airCondition, 0, MAX_DISPLAYED_PPM, 0, DISPLAY_WIDTH));
   debugSensor();
 }
+//   _____
+//  / ____|
+// | (___   ___ _ __  ___  ___  _ __
+//  \___ \ / _ \ '_ \/ __|/ _ \| '__|
+//  ____) |  __/ | | \__ \ (_) | |
+// |_____/ \___|_| |_|___/\___/|_|
+//
 
-//  __  __                                   
-// |  \/  |                                  
-// | \  / | ___  __ _ ___ ___ _   _ _ __ ___ 
+
+void initSensor() {
+  //Pins
+  pinMode(LED_RED, OUTPUT);
+  pinMode(LED_GREEN, OUTPUT);
+  pinMode(LED_BLUE, OUTPUT);
+  pinMode(PIEZO, OUTPUT);
+
+  digitalWrite(PIEZO, LOW);
+
+  airConditionRaw = analogRead(GAS_SENSOR);
+  lastAirCondition = analogRead(GAS_SENSOR);
+  startTime = millis();
+}
+
+void debugSensor() {
+  if (DEBUG) {
+    Serial.println("");
+    Serial.println("Sensor");
+    Serial.println("");
+    debug("Analog", analogRead(GAS_SENSOR));
+    debug("Average", airConditionRaw);
+    debug("Smoothed", lastAirCondition);
+    debug("PPM", airCondition);
+    debug("gradient", gradient);
+    debug("Lowest", lowest);
+    debug("Status", state);
+  }
+}
+
+void writeLed() {
+  //map Values
+  led = map(airCondition, lowest, MAX_LIGHT, 0, 255);
+  red = led;
+  green = 255 - led;
+
+  //turn on
+  if (!ventilating)
+    rgb(red, green, 0);
+}
+
+//  __  __
+// |  \/  |
+// | \  / | ___  __ _ ___ ___ _   _ _ __ ___
 // | |\/| |/ _ \/ _` / __/ __| | | | '__/ _ \
 // | |  | |  __/ (_| \__ \__ \ |_| | | |  __/
 // |_|  |_|\___|\__,_|___/___/\__,_|_|  \___|
-                                           
-                                           
+
+
 
 void meassureAirCondition() {
   //Messung
@@ -215,86 +264,40 @@ void meassureAirCondition() {
 
 
 int average(int averageArray[], int averageStart, int averageEnd) {
-  int back = 0;
+  int sum = 0;
   for (int i = averageStart; i < averageEnd; i++) {
-    back = back + averageArray[i];
+    sum = sum + averageArray[i];
   }
-  return (back / (averageEnd - averageStart));
+  return (sum / (averageEnd - averageStart));
 }
 
 
-//   _____                           
-//  / ____|                          
-// | (___   ___ _ __  ___  ___  _ __ 
-//  \___ \ / _ \ '_ \/ __|/ _ \| '__|
-//  ____) |  __/ | | \__ \ (_) | |   
-// |_____/ \___|_| |_|___/\___/|_|   
-//                                   
-                                   
-
-void initSensor() {
-  //Pins
-  pinMode(LED_RED, OUTPUT);
-  pinMode(LED_GREEN, OUTPUT);
-  pinMode(LED_BLUE, OUTPUT);
-  pinMode(PIEZO, OUTPUT);
-
-  digitalWrite(PIEZO, LOW);
-
-  airConditionRaw = analogRead(GAS_SENSOR);
-  lastAirCondition = analogRead(GAS_SENSOR);
-  startTime = millis();
-}
-
-void debugSensor() {
-  if (DEBUG) {
-    Serial.println("");
-    Serial.println("Sensor");
-    Serial.println("");
-    debug("Analog", analogRead(GAS_SENSOR));
-    debug("Average", airConditionRaw);
-    debug("Smoothed", lastAirCondition);
-    debug("PPM", airCondition);
-    debug("Pitch", pitch);
-    debug("Lowest", lowest);
-    debug("Status", state);
-  }
-}
-
-void writeLed() {
-  //map Values
-  led = map(airCondition, lowest, MAX_LIGHT, 0, 255);
-  red = led;
-  green = 255 - led;
-
-  //turn on
-  if (!ventilating)
-    rgb(red, green, 0);
-}
 
 
-//  _____        _        
-// |  __ \      | |       
-// | |  | | __ _| |_ __ _ 
+//  _____        _
+// |  __ \      | |
+// | |  | | __ _| |_ __ _
 // | |  | |/ _` | __/ _` |
 // | |__| | (_| | || (_| |
 // |_____/ \__,_|\__\__,_|
-//                        
+//
 void mapAirCondition() {
   //to PPM
-  if (airCondition < OSV_SENSOR)
+  /*if (airCondition < OSV_SENSOR)
     airCondition = OSV_SENSOR;
-  if(airCondition > MAX_DISPLAYED_SENSOR)
-    airCondition = MAX_DISPLAYED_SENSOR;
+  if (airCondition > MAX_DISPLAYED_SENSOR)
+    airCondition = MAX_DISPLAYED_SENSOR;*/
 
-  //airCondition = airCondition - OSV_SENSOR;
-  airCondition = map(airCondition, OSV_SENSOR, MAX_DISPLAYED_SENSOR, OSV_PPM, MAX_DISPLAYED_PPM);
-
-  /*if (airCondition > MAX_DISPLAYED_PPM)
-    airCondition = MAX_DISPLAYED_PPM; */
+  airCondition = map(airCondition, OSV_SENSOR, MAX_DISPLAYED_PPM / FACTOR, OSV_PPM, MAX_DISPLAYED_PPM);
+  /*airCondition = airCondition - OSV_SENSOR;
+  airCondition = airCondition * FACTOR;
+  airCondition = airCondition + OSV_PPM;*/
 }
 
-void calculatePitch() {
+
+
+void calculateGradient() {
+  // gradient ist die Differenz zwischen altem und neuem Wert
   //store last AirConditions
   for (int i = AVERAGING_GRADIENT * 2 - 1; i > 0; i--) {
     values[i] = values[i - 1];
@@ -305,34 +308,36 @@ void calculatePitch() {
   now = average(values, 0, AVERAGING_GRADIENT);
   last = average(values, AVERAGING_GRADIENT, AVERAGING_GRADIENT * 2);
 
-  //Pitch
-  pitch = now - last;
-}                        
+  //gradient
+  gradient = now / last;
+}
 
 void checkVentilating() {
-  //lowest value
-  if (ventilating && airCondition < drop)
-    drop = airCondition;
-
   //start Ventilating
-  if (pitch * -1 > MAX_DECREASE && !ventilating) {
+  if (gradient < MAX_DECREASE && !ventilating) { // Wenn die Differenz die Hemmschwelle übersteigt: Wird Ventilating erkannt
     ventilating = true;
-    drop = airCondition;
     rgb(0, 0, 255);
     startTime = millis();
+    Serial.println("Start Ventilating"); 
   }
 
   //stop Ventilating
-  if (last < now && ventilating || millis() - timer >= VENTILATING_TIMEOUT && ventilating && timer != 0) {
-    if (drop - lowest < MAX_DROP_INCREASE) {
-      drop = ALPHA_LOWEST * drop + (1 - ALPHA_LOWEST) * lowest;
-      lowest = drop;
+
+  if ((gradient > 1 && ventilating) || (millis() - timer >= VENTILATING_TIMEOUT && ventilating && timer != 0)) {
+    // Wenn der Graph nach oben Steigt oder der Timer abgelaufen ist 
+    if (airCondition - lowest < MAX_INCREASE_LOWEST) {
+      //Wenn 
+      lowest = ALPHA_LOWEST * airCondition + (1 - ALPHA_LOWEST) * lowest;
     }
 
     ventilating = false;
     timer = 0;
     startTime = millis();
-  } else if (now == 0 && timer == 0 && ventilating) {
+
+    
+  } else if (gradient == 1 && timer == 0 && ventilating) {
+    //Wenn der Graph nicht mehr steigt und der Timer noch nicht gestartet wurde
+    //Ziel nach gewisser Zeit kein Abstieg -> Timer für Timeout wird gestartet
     timer = millis();
   }
   last = now;
@@ -394,14 +399,14 @@ void fillData(int data) {
 }
 
 
-//  _____  _           _             
-// |  __ \(_)         | |            
-// | |  | |_ ___ _ __ | | __ _ _   _ 
+//  _____  _           _
+// |  __ \(_)         | |
+// | |  | |_ ___ _ __ | | __ _ _   _
 // | |  | | / __| '_ \| |/ _` | | | |
 // | |__| | \__ \ |_) | | (_| | |_| |
 // |_____/|_|___/ .__/|_|\__,_|\__, |
 //              | |             __/ |
-//              |_|            |___/ 
+//              |_|            |___/
 //
 void initDisplay() {
   pinMode(TFT_CS, OUTPUT);
@@ -442,7 +447,7 @@ void drawBorder(int xStart, int yStart, int xEnd, int yEnd, int color) {
 
 void drawDisplay() {
   display.fillScreen(GRAPH_BACKGROUND_COLOR);
-  display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH+1, DISPLAY_WIDTH, BAR_BACKGROUND_COLOR);
+  display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH + 1, DISPLAY_WIDTH, BAR_BACKGROUND_COLOR);
   createLines();
 }
 
@@ -458,7 +463,7 @@ void drawLine(int x, int y, int z) {
 }
 
 void drawGraph() {
-  display.drawLine(DISPLAY_LENGTH, 0, DISPLAY_LENGTH, DATABOX_TOP_HIGHT-1, GRAPH_BACKGROUND_COLOR);
+  display.drawLine(DISPLAY_LENGTH, 0, DISPLAY_LENGTH, DATABOX_TOP_HIGHT - 1, GRAPH_BACKGROUND_COLOR);
   for (short x = 0; x <= DISPLAY_LENGTH; x++) {
     byte arrayDigit = x;
     if (graphData[arrayDigit] < DATABOX_TOP_HIGHT)
@@ -524,9 +529,9 @@ void writeInfo() {
 
   //ppm zeichnen
   if (ventilating)
-    display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH+1, BAR_STRIPE_THICKNESS, CYAN);
+    display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH + 1, BAR_STRIPE_THICKNESS, CYAN);
   else
-    display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH+1, BAR_STRIPE_THICKNESS, currentColor);
+    display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH + 1, BAR_STRIPE_THICKNESS, currentColor);
 
   //Verhindert überschreiben von "ppm"
   if (airCondition < 1000)
@@ -567,14 +572,14 @@ void writeInfo() {
 }
 
 
-//  ______                _   _                 
-// |  ____|              | | (_)                
-// | |__ _   _ _ __   ___| |_ _  ___  _ __  ___ 
+//  ______                _   _
+// |  ____|              | | (_)
+// | |__ _   _ _ __   ___| |_ _  ___  _ __  ___
 // |  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
 // | |  | |_| | | | | (__| |_| | (_) | | | \__ \
 // |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
-                                              
-                                              
+
+
 
 void debug(String title, int value) {
   Serial.print(title + ": ");
