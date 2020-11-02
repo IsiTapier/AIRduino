@@ -541,6 +541,24 @@ void writeInfo() {
   if (lastAirConditionGraph != airCondition || previousState != state) {
     //Wenn sich der Wert geändert hat oder state sich geändert hat
 
+    //Schreibt Status an die Decke
+    String statusInfo;
+    switch (state) {
+      case -1: statusInfo = "Lueftet..";
+        break;
+      case 0: statusInfo = "Optimal";
+        break;
+      case 1: statusInfo = "Schlecht";
+        break;
+      case 2: statusInfo = "Riskant";
+        break;
+      case 3: statusInfo = "Gammlig";
+        break;
+      case 4: statusInfo = "Gammlig";
+        break;
+    }
+    display.fillRect(30, 0, 110, 15, GRAPH_BACKGROUND_COLOR);
+    dPrint(30, 0, 2, WHITE, statusInfo);
 
     //Verhindert überschreiben von "ppm"
     if (airCondition < 1000)
