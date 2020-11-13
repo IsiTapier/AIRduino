@@ -262,6 +262,13 @@ void writeLed() {
     rgb(red, green, 0);
 }
 
+int map(int value, int startA, int startB, float factor) {
+  value = value - startA;
+  value = value * factor;
+  value = value + startB;
+  return(value);
+}
+
 //  __  __
 // |  \/  |
 // | \  / | ___  __ _ ___ ___ _   _ _ __ ___
@@ -313,7 +320,8 @@ void mapAirCondition() {
     if (airCondition > MAX_DISPLAYED_SENSOR)
     airCondition = MAX_DISPLAYED_SENSOR;*/
 
-  airCondition = map(airCondition, OSV_SENSOR, MAX_DISPLAYED_PPM / FACTOR, OSV_PPM, MAX_DISPLAYED_PPM);
+  //airCondition = map(airCondition, OSV_SENSOR, MAX_DISPLAYED_PPM / FACTOR, OSV_PPM, MAX_DISPLAYED_PPM);
+  airCondition = map(airCondition, OSV_SENSOR, OSV_PPM, FACTOR);
   /*airCondition = airCondition - OSV_SENSOR;
     airCondition = airCondition * FACTOR;
     airCondition = airCondition + OSV_PPM;*/
