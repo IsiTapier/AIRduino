@@ -27,9 +27,9 @@
 
 #include "Arduino.h"
 #include "Print.h"
-#include <Adafruit_GFX.h>
-#include <Adafruit_SPITFT.h>
-#include <Adafruit_SPITFT_Macros.h>
+#include "../Adafruit_GFX_Library/Adafruit_GFX.h"
+#include "../Adafruit_GFX_Library/Adafruit_SPITFT.h"
+#include "../Adafruit_GFX_Library/Adafruit_SPITFT_Macros.h"
 
 #define ST7735_TFTWIDTH_128 128  // for 1.44 and mini
 #define ST7735_TFTWIDTH_80 80    // for mini

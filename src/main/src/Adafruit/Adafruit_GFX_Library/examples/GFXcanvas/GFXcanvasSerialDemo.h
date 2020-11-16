@@ -1,6 +1,6 @@
 #ifndef __GFXcanvasSerialDemo__
 #define __GFXcanvasSerialDemo__
-#include <Adafruit_GFX.h>
+#include "../../Adafruit_GFX.h"
 
 /**********************************************************************/
 /*!

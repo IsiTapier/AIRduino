@@ -1,4 +1,4 @@
-#include <Adafruit_BusIO_Register.h>
+#include "Adafruit_BusIO_Register.h"
 
 /*!
  *    @brief  Create a register we access over an I2C Device (which defines the

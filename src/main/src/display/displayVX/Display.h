@@ -7,10 +7,10 @@
 
 #include "Arduino.h"
 #include "Wire.h"
-#include "Adafruit_GFX.h"
-#include "Adafruit_ST7735.h"
-#include "Util.h"
-#include "Meassure.h"
+#include "../../Adafruit/Adafruit_GFX_Library/Adafruit_GFX.h"
+#include "../../Adafruit/Adafruit_ST7735_and_ST7789_Library/Adafruit_ST7735.h"
+#include "../../util/Util.h"
+#include "../../meassure/Meassure.h"
 
 //settings
 #define ROTATION 45

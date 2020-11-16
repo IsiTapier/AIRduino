@@ -1,5 +1,5 @@
-#include <Adafruit_I2CDevice.h>
-#include <Adafruit_SPIDevice.h>
+#include "Adafruit_I2CDevice.h"
+#include "Adafruit_SPIDevice.h"
 #include <Arduino.h>
 
 #ifndef Adafruit_BusIO_Register_h

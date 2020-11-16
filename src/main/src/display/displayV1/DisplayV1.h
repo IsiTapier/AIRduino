@@ -5,13 +5,7 @@
 #ifndef DisplayV1_h
 #define DisplayV1_h
 
-#include "Arduino.h"
-#include "Wire.h"
-#include "Adafruit_GFX.h"
-#include "Adafruit_ST7735.h"
-#include "Util.h"
-#include "Meassure.h"
-#include "Display.h"
+#include "../DisplayVX/Display.h"
 
 //Design
 #define MIN_HIGHT DISPLAY_WIDTH - map(OSV_PPM, 0, MAX_DISPLAYED_PPM, 0, DISPLAY_WIDTH)

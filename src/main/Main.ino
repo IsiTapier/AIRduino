@@ -1,6 +1,9 @@
-#include <Meassure.h>
-#include <DisplayV1.h>
-#include <DisplayV2.h>
+extern "C" {
+  #include "src/meassure/meassure.h"
+  #include "src/display/displayV1/DisplayV1.h"
+  #include "src/display/displayV2/DisplayV2.h"
+}
+
 
 
 //                                      ,,               ,,
@@ -25,8 +28,8 @@
 //                       |_|
 void setup() {
   Serial.begin(9600);
- // DisplayV1::setup();
-  DisplayV2::setup();
+  DisplayV1::setup();
+  //DisplayV2::setup();
   Meassure::setup();
 }
 
@@ -41,6 +44,6 @@ void setup() {
 //                   |_|
 void loop() {
   Meassure::loop();
-//  DisplayV1::loop();
-  DisplayV2::loop();
+  DisplayV1::loop();
+  //DisplayV2::loop();
 }

@@ -1,4 +1,4 @@
-#include <Adafruit_SPIDevice.h>
+#include "Adafruit_SPIDevice.h"
 #include <Arduino.h>
 
 //#define DEBUG_SERIAL Serial

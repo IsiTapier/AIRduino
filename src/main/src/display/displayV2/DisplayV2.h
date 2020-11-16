@@ -5,8 +5,7 @@
 #ifndef DisplayV2_h
 #define DisplayV2_h
 
-#include "Arduino.h"
-#include "Display.h"
+#include "../displayVX/Display.h"
 
 #define BORDER_X 10
 #define BORDER_Y 43
