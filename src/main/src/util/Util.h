@@ -6,6 +6,7 @@
 #define Util_h
 
 #include "Arduino.h"
+#include "EEPROM.h"
 #include "../classes/Pair/Pair.h"
 #include "../classes/calibration/Calibration.h"
 
