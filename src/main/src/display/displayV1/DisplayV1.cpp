@@ -74,6 +74,7 @@ static int DisplayV1::lastPixel = 0;
   }
 
   static void DisplayV1::createLines() {
+    display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH + 1, DISPLAY_WIDTH, BAR_BACKGROUND_COLOR);
     drawLine(DISPLAY_LENGTH + 1, CRITICAL_HIGHT, 5);
     drawLine(DISPLAY_LENGTH + 1, MIN_HIGHT, 5);
   }

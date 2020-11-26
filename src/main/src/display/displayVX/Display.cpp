@@ -76,24 +76,23 @@
 
   static void Display::drawDisplay() {
     display.fillScreen(GRAPH_BACKGROUND_COLOR);
-    display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH + 1, DISPLAY_WIDTH, BAR_BACKGROUND_COLOR);
     createLines();
   }
 
   static void Display::checkState() {
-    if (lastState) {
+    if (blinkSwitch) {
       drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_WIDTH, GRAPH_BACKGROUND_COLOR);
       display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH, DISPLAY_WIDTH, BAR_BACKGROUND_COLOR);
       createLines();
       digitalWrite(PIEZO, LOW);
-      lastState = false;
+      blinkSwitch = false;
     } else if (state >= 3) {
       drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_WIDTH, WHITE);
       if (state == PIEP) {
         //PIEP
         digitalWrite(PIEZO, HIGH);
       }
-      lastState = true;
+      blinkSwitch = true;
     }
     writeInfo();
   }
@@ -205,7 +204,7 @@
   static State Display::previousState;
   static int Display::airCondition;
   static int Display::lastAirConditionGraph;
-  static int Display::lastState = false;
+  static int Display::blinkSwitch = false;
   static String Display::statusInfo;
   static String Display::lastTime;
   static String Display::Time;
