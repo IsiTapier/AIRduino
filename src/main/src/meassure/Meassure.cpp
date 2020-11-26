@@ -135,7 +135,7 @@
 
   static void Meassure::mapAirCondition() {
     //to PPM
-    if (airCondition <= Util::calibration[EEPROM.read(0)].getLowestSensor()
+    if (airCondition <= Util::calibration[EEPROM.read(0)].getLowestSensor())
       airCondition = Util::calibration[EEPROM.read(0)].getLowestSensor();
     /*if (airCondition > MAX_DISPLAYED_SENSOR)
       airCondition = MAX_DISPLAYED_SENSOR;*/

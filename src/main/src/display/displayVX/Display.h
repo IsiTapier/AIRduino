@@ -73,7 +73,7 @@ class Display {
     static State previousState;
     static int airCondition;
     static int lastAirConditionGraph;
-    static int lastState;
+    static boolean blinkSwitch;
     static String statusInfo;
     static String lastTime;
     static String Time;

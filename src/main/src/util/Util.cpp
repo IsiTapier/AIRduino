@@ -30,7 +30,7 @@
     }
   }
 
-  static Calibration calibration[] = {
+  static Calibration Util::calibration[] = {
       Calibration(30, 120, 400, 1000),
       Calibration(20, 80, 400, 1000),
       Calibration(80, 250, 400, 1000)

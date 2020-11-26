@@ -204,7 +204,7 @@
   static State Display::previousState;
   static int Display::airCondition;
   static int Display::lastAirConditionGraph;
-  static int Display::blinkSwitch = false;
+  static boolean Display::blinkSwitch = false;
   static String Display::statusInfo;
   static String Display::lastTime;
   static String Display::Time;
