@@ -5,6 +5,8 @@
 #include "Arduino.h"
 #include "DisplayV2.h"
 
+static short DisplayV2::first_section_x;
+static short DisplayV2::second_section_x;
 
 //   _____      _
 //  / ____|    | |
@@ -48,28 +50,27 @@ static void DisplayV2::drawBarChart() {
 }
 
 static void DisplayV2::drawBarBorder() { //x,y,breite, höhe, dicke
-  display.fillRect(BORDER_X, BORDER_Y, BORDER_WIDTH, BORDER_HIGHT, WHITE);
+  //display.fillRect(BORDER_X, BORDER_Y, BORDER_WIDTH, BORDER_HIGHT, WHITE);
   display.fillRect(BAR_X, BAR_Y, BAR_WIDTH, BAR_HIGHT, BLACK); //Setzt das "Loch" in die Mitte des Rechtecks
 }
 
 static void DisplayV2::drawSections() {
-  first_section_x = map(LIMIT_GOOD, Util::calibration[EEPROM.read(0)].getLowestPPM(), LIMIT_BAD, BAR_X, BAR_X + BAR_WIDTH);
-  second_section_x = map(LIMIT_MEDIUM, Util::calibration[EEPROM.read(0)].getLowestPPM(), LIMIT_BAD, BAR_X, BAR_X + BAR_WIDTH);
+  first_section_x = map(LIMIT_GOOD, Util::calibration[EEPROM.read(0)].getLowestPPM(), Util::calibration[EEPROM.read(0)].getHighestPPM(), BAR_X, BAR_X + BAR_WIDTH);
+  second_section_x = map(LIMIT_MEDIUM, Util::calibration[EEPROM.read(0)].getLowestPPM(), Util::calibration[EEPROM.read(0)].getHighestPPM(), BAR_X, BAR_X + BAR_WIDTH);
 
   display.drawLine(first_section_x, BAR_Y - 10, first_section_x, BAR_Y + 10 + BAR_HIGHT, GREY);
   display.drawLine(second_section_x, BAR_Y - 10, second_section_x, BAR_Y + 10 + BAR_HIGHT, GREY);
 }
 
 static void DisplayV2::drawBar() {
-  int barPixel = map(airCondition, 0, LIMIT_BAD, 0, BAR_WIDTH);
-  if (airCondition < LIMIT_GOOD)
-    display.fillRect(BAR_X + 1, BAR_Y + 1, barPixel, BAR_HIGHT, Util::getColor(state));
-  else if (airCondition < LIMIT_MEDIUM)
-    display.fillRect(BAR_X + 1, BAR_Y + 1, barPixel, BAR_HIGHT, Util::getColor(state));
-  else if (airCondition > LIMIT_MEDIUM) {
-    display.fillRect(BAR_X + 1, BAR_Y + 1, barPixel, BAR_HIGHT, Util::getColor(state));
+  int barPixel = map(airCondition, Util::calibration[EEPROM.read(0)].getLowestPPM(), Util::calibration[EEPROM.read(0)].getHighestPPM(), BAR_X, BAR_X + BAR_WIDTH);
+  if(barPixel <= BAR_WIDTH && barPixel >= 0) {
+    if (airCondition < LIMIT_GOOD)
+      display.fillRect(BAR_X, BAR_Y, barPixel, BAR_HIGHT, Util::getColor(state));
+    else if (airCondition < LIMIT_MEDIUM)
+      display.fillRect(BAR_X, BAR_Y, barPixel, BAR_HIGHT, Util::getColor(state));
+    else if (airCondition > LIMIT_MEDIUM) {
+      display.fillRect(BAR_X, BAR_Y, barPixel, BAR_HIGHT, Util::getColor(state));
+    }
   }
 }
-
-static short DisplayV2::first_section_x;
-static short DisplayV2::second_section_x;
