@@ -7,6 +7,7 @@
 
 #include "Arduino.h"
 #include "../classes/Pair/Pair.h"
+#include "../classes/calibration/Calibration.h"
 
 //pins
 #define LED_RED    5
@@ -41,6 +42,8 @@ class Util {
     static State states[7];
     static int getColor(State state);
     static State getStateOf(int value);
+
+    static Calibration calibration[];
 
     static void setup();
     static void loop();

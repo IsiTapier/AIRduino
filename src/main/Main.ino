@@ -1,3 +1,5 @@
+#include <EEPROM.h>
+
 extern "C" {
   #include "src/meassure/meassure.h"
   #include "src/display/displayV1/DisplayV1.h"
@@ -27,6 +29,7 @@ extern "C" {
 //                       | |
 //                       |_|
 void setup() {
+  //EEPROM.write(0, 0);
   Serial.begin(9600);
   //DisplayV1::setup();
   DisplayV2::setup();

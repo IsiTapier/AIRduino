@@ -77,15 +77,6 @@
     return(startTime);
   }
 
-  static Pair Meassure::getCalcSensor() {
-    return(calcSensor);
-  }
-
-  static Pair Meassure::getCalcPPM() {
-    return(calcPPM);
-  }
-
-
   static void Meassure::debug() {
     if (DEBUG) {
       Serial.println("");
@@ -144,13 +135,13 @@
 
   static void Meassure::mapAirCondition() {
     //to PPM
-    if (airCondition <= calcSensor.getFirst())
-      airCondition = calcSensor.getFirst();
+    if (airCondition <= Util::calibration[EEPROM.read(0)].getLowestSensor();
+      airCondition = Util::calibration[EEPROM.read(0)].getLowestSensor();
     /*if (airCondition > MAX_DISPLAYED_SENSOR)
       airCondition = MAX_DISPLAYED_SENSOR;*/
 
     //airCondition = map(airCondition, OSV_SENSOR, MAX_DISPLAYED_PPM / FACTOR, OSV_PPM, MAX_DISPLAYED_PPM);
-    airCondition = map(airCondition, calcSensor.getFirst(), calcSensor.getLast(), calcPPM.getFirst(), calcPPM.getLast());
+    airCondition = map(airCondition, Util::calibration[EEPROM.read(0)].getLowestSensor(), Util::calibration[EEPROM.read(0)].getHighestSensor(), Util::calibration[EEPROM.read(0)].getLowestPPM(), Util::calibration[EEPROM.read(0)].getHighestPPM());
     /*airCondition = airCondition - OSV_SENSOR;
       airCondition = airCondition * FACTOR;
       airCondition = airCondition + OSV_PPM;*/
