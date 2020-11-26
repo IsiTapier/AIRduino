@@ -22,9 +22,9 @@
 #define ALPHA_GRAPH 0.7
 
 //pins:
-#define TFT_CS     10
-#define TFT_RST    9
-#define TFT_DC     8
+#define TFT_CS     8
+#define TFT_RST    10
+#define TFT_DC     9
 #define TFT_LED    3
 #define PIEZO      4
 

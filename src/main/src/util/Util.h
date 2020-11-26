@@ -6,6 +6,7 @@
 #define Util_h
 
 #include "Arduino.h"
+#include "../classes/Pair/Pair.h"
 
 //pins
 #define LED_RED    5
@@ -31,13 +32,13 @@
 #define PPM_COLOR_R 0xFE60 //Risk
 #define PPM_COLOR_A 0xFA27 //Alarm
 
-enum State {VENTILATING = -1, GOOD = 0, MEDIUM = 1, RISKY = 2, BAD = 3, BLINK = 4, PIEP = 5};
+enum State {VENTILATING = -1, GOOD = 0, MEDIUM = 1, BAD = 2, BLINK = 3, PIEP = 4};
 
 class Util {
 
   public:
     //State
-    static State states[8];
+    static State states[7];
     static int getColor(State state);
     static State getStateOf(int value);
 

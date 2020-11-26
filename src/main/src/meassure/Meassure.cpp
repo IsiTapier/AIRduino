@@ -77,6 +77,14 @@
     return(startTime);
   }
 
+  static Pair Meassure::getCalcSensor() {
+    return(calcSensor);
+  }
+
+  static Pair Meassure::getCalcPPM() {
+    return(calcPPM);
+  }
+
 
   static void Meassure::debug() {
     if (DEBUG) {
@@ -136,13 +144,13 @@
 
   static void Meassure::mapAirCondition() {
     //to PPM
-    if (airCondition <= OSV_SENSOR)
-      airCondition = OSV_SENSOR;
+    if (airCondition <= calcSensor.getFirst())
+      airCondition = calcSensor.getFirst();
     /*if (airCondition > MAX_DISPLAYED_SENSOR)
       airCondition = MAX_DISPLAYED_SENSOR;*/
 
     //airCondition = map(airCondition, OSV_SENSOR, MAX_DISPLAYED_PPM / FACTOR, OSV_PPM, MAX_DISPLAYED_PPM);
-    airCondition = Util::map(airCondition, OSV_SENSOR, OSV_PPM, FACTOR);
+    airCondition = map(airCondition, calcSensor.getFirst(), calcSensor.getLast(), calcPPM.getFirst(), calcPPM.getLast());
     /*airCondition = airCondition - OSV_SENSOR;
       airCondition = airCondition * FACTOR;
       airCondition = airCondition + OSV_PPM;*/
@@ -196,7 +204,7 @@
   }
 
   static void Meassure::setState() {
-    colorState = map(airCondition, airConditionLowest, MAX_LIGHT, 0, 3);
+    colorState = map(airCondition, airConditionLowest, MAX_LIGHT, 0, 2);
     if (state == -1)
       return;
     state = Util::getStateOf(colorState);

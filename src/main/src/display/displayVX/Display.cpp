@@ -87,7 +87,7 @@
       createLines();
       digitalWrite(PIEZO, LOW);
       lastState = false;
-    } else if (state >= 4) {
+    } else if (state >= 3) {
       drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_WIDTH, WHITE);
       if (state == PIEP) {
         //PIEP
@@ -112,11 +112,9 @@
           break;
         case 1: statusInfo = "Schlecht";
           break;
-        case 2: statusInfo = "Riskant";
+        case 2: statusInfo = "Gammlig";
           break;
-        case 3: statusInfo = "Gammlig";
-          break;
-        case 4: statusInfo = "Gammlig";
+        default: statusInfo = "Gammlig";
           break;
       }
       display.fillRect(30, 0, 110, 15, GRAPH_BACKGROUND_COLOR);

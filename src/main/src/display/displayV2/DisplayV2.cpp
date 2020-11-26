@@ -22,7 +22,7 @@ static void DisplayV2::setup() {
 static void DisplayV2::loop() {
   state = Meassure::getState();
   airCondition = Meassure::getAirCondition();
-  
+
   checkState();
   writeInfo();
 
@@ -52,8 +52,8 @@ static void DisplayV2::drawBarBorder() { //x,y,breite, höhe, dicke
 }
 
 static void DisplayV2::drawSections() {
-  first_section_x = map(LIMIT_GOOD, OSV_PPM, LIMIT_BAD, BAR_X, BAR_X + BAR_WIDTH);
-  second_section_x = map(LIMIT_MEDIUM, OSV_PPM, LIMIT_BAD, BAR_X, BAR_X + BAR_WIDTH);
+  first_section_x = map(LIMIT_GOOD, Meassure::getCalcPPM().getFirst(), LIMIT_BAD, BAR_X, BAR_X + BAR_WIDTH);
+  second_section_x = map(LIMIT_MEDIUM, Meassure::getCalcPPM().getFirst(), LIMIT_BAD, BAR_X, BAR_X + BAR_WIDTH);
 
   display.drawLine(first_section_x, BAR_Y - 10, first_section_x, BAR_Y + 10 + BAR_HIGHT, GREY);
   display.drawLine(second_section_x, BAR_Y - 10, second_section_x, BAR_Y + 10 + BAR_HIGHT, GREY);

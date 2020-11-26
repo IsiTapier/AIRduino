@@ -8,7 +8,7 @@
 #include "../DisplayVX/Display.h"
 
 //Design
-#define MIN_HIGHT DISPLAY_WIDTH - map(OSV_PPM, 0, MAX_DISPLAYED_PPM, 0, DISPLAY_WIDTH)
+#define MIN_HIGHT DISPLAY_WIDTH - map(Meassure::getCalcPPM().getFirst(), 0, MAX_DISPLAYED_PPM, 0, DISPLAY_WIDTH)
 #define CRITICAL_HIGHT DISPLAY_WIDTH - map(MAX_LIGHT, 0, MAX_DISPLAYED_PPM, 0, DISPLAY_WIDTH)
 
 class DisplayV1 : public Display {

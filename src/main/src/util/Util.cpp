@@ -6,7 +6,7 @@
 #include "Util.h"
 
   //State
-  static State Util::states[8] = {State::VENTILATING, State::GOOD, State::MEDIUM, State::RISKY, State::BAD, State::BLINK, State::PIEP};
+  static State Util::states[7] = {State::VENTILATING, State::GOOD, State::MEDIUM, State::BAD, State::BLINK, State::PIEP};
 
   static int Util::getColor(State state) {
     switch ((int)state) {
@@ -16,9 +16,7 @@
         break;
       case 1: return (PPM_COLOR_R);
         break;
-      case 2: return (ORANGE);
-        break;
-      case 3: return (PPM_COLOR_A);
+      case 2: return (PPM_COLOR_A);
         break;
       default: return (PPM_COLOR_A);
         break;
