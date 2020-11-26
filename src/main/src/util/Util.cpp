@@ -30,6 +30,13 @@
     }
   }
 
+  static Calibration calibration[] = {
+      Calibration(30, 120, 400, 1000),
+      Calibration(20, 80, 400, 1000),
+      Calibration(80, 250, 400, 1000)
+  };
+
+
 
   static void Util::setup() {
     pinMode(LED_RED, OUTPUT);

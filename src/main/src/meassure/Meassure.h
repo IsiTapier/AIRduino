@@ -20,9 +20,6 @@
 #define ALPHA_MEASUREMENTS 0.7
 #define ALPHA_LOWEST 0.5
 
-static const Pair calcSensor = Pair(80, 1023);
-static const Pair calcPPM = Pair(400, 5000);
-
 #define OSV_SENSOR 80
 #define OSV_PPM 400
 
@@ -53,8 +50,6 @@ class Meassure {
     static unsigned long getStartTime();
     static int getPpmSinceVentilation();
     static int getLowest();
-    static Pair getCalcSensor();
-    static Pair getCalcPPM();
 
   private:
     static void debug();
