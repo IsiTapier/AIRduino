@@ -1,9 +1,14 @@
-/*
+ /*
   DisplayV1.cpp - DisplayV1-Library for Librarys.
 */
-
 #include "Arduino.h"
 #include "DisplayV1.h"
+
+static int DisplayV1::valuesGraph[AVERAGING_GRAPH];
+static int DisplayV1::graphData[DISPLAY_LENGTH];
+static int DisplayV1::counter = 0;
+static int DisplayV1::pixel = 0;
+static int DisplayV1::lastPixel = 0;
 
   //   _____      _
   //  / ____|    | |
@@ -15,25 +20,13 @@
   //                       |_|
 
   static void DisplayV1::setup() {
-    pinMode(TFT_CS, OUTPUT);
-    pinMode(TFT_RST, OUTPUT);
-    pinMode(TFT_DC, OUTPUT);
-    pinMode(TFT_LED, OUTPUT);
-    pinMode(PIEZO, OUTPUT);
-
-    analogWrite(TFT_LED, DISPLAY_BRIGHTNESS * 256);
-
-    display.initR(INITR_BLACKTAB);
-    display.setTextWrap(false);
-    display.setRotation(ROTATION);
+    Display::setup();
 
     //Auffüllen des Arrays
     for (short x = 0; x < DISPLAY_LENGTH; x++) {
       graphData[x] = DISPLAY_LENGTH;
     }
     graphData[0] = DATABOX_TOP_HIGHT - 1;
-
-    loadingScreen();
   }
 
   static void DisplayV1::loop() {
@@ -108,10 +101,3 @@
       }
     }
   }
-
-
-  static int DisplayV1::valuesGraph[AVERAGING_GRAPH];
-  static int DisplayV1::graphData[DISPLAY_LENGTH];
-  static int DisplayV1::counter = 0;
-  static int DisplayV1::pixel = 0;
-  static int DisplayV1::lastPixel = 0;

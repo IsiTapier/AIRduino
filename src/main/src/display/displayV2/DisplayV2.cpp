@@ -17,6 +17,7 @@
 
 static void DisplayV2::setup() {
   Display::setup();
+
 }
 
 static void DisplayV2::loop() {
