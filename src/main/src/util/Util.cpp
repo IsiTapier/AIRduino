@@ -31,7 +31,7 @@
   }
 
   static Calibration Util::calibration[] = {
-      Calibration(40, 50, 400, 1000),
+      Calibration(30, 90, 400, 1000),
       Calibration(75, 95, 400, 1000),
       Calibration(75, 95, 400, 1000)
   };

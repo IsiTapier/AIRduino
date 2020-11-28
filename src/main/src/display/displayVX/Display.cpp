@@ -170,6 +170,7 @@
     display.drawLine(xEnd, yStart, xEnd, yEnd, color);
   }
 
+
   static void Display::drawLine(int x, int y, int z) {
     for (int i = 0; i < x; i = i + z) {
       display.drawPixel(i, y, WHITE);
@@ -197,9 +198,6 @@
 
   }
 
-  static void Display::drawLinedRect(x1, x_length, y2, y_length, int color) {
-    
-  }
 
 
   static Adafruit_ST7735 Display::display = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);

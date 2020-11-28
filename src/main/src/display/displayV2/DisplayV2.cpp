@@ -52,10 +52,10 @@ static void DisplayV2::loop() {
 
 
 static void DisplayV2::drawBarBorder() { //x,y,breite, höhe, dicke
-  display.fillRect(BORDER_X, BORDER_Y, BORDER_WIDTH, BORDER_HIGHT, GREY);
+  display.drawRect(BORDER_X, BORDER_Y, BORDER_WIDTH, BORDER_HIGHT, GREY);
   //   - search position of the bar -
   //Draw balance bar
-  barPixel = map(airCondition, Util::calibration[EEPROM.read(0)].getLowestPPM(), Util::calibration[EEPROM.read(0)].getHighestPPM(), BAR_X, BAR_X + BAR_WIDTH);
+  barPixel = map(airCondition, Util::calibration[EEPROM.read(0)].getLowestPPM(), Util::calibration[EEPROM.read(0)].getHighestPPM(), 0, BAR_WIDTH);
   display.fillRect(barPixel + 1, BAR_Y, (BAR_X + BAR_WIDTH) - barPixel, BAR_HIGHT, GRAPH_BACKGROUND_COLOR);
 
   //display.fillRect(BAR_X, BAR_Y, BAR_WIDTH, BAR_HIGHT, BLACK); //Setzt das "Loch" in die Mitte des Rechtecks
