@@ -195,13 +195,24 @@
   }
 
   static void Meassure::setState() {
-    colorState = map(airCondition, airConditionLowest, MAX_LIGHT, 0, 2);
+
+    // define colorState  -changed
+    if(airCondition < LIMIT_GOOD) {
+      colorState = 0;
+    } else if (airCondition < LIMIT_MEDIUM) {
+      colorState = 1;
+    } else if (airCondition < LIMIT_BAD) {
+      colorState = 2;
+    }
+
+    //colorState = map(airCondition, Util::calibration[EEPROM.read(0)].getLowestPPM(), Util::calibration[EEPROM.read(0)].getHighestPPM(), 0, 2);
+
     if (state == -1)
       return;
     state = Util::getStateOf(colorState);
-    if (airCondition > MAX_PIEP)
+    if (airCondition > LIMIT_PIEP)
       state = PIEP;
-    else if (airCondition > MAX_BLINK)
+    else if (airCondition > LIMIT_ALARM)
       state = BLINK;
 
     if (state < -1)
@@ -212,7 +223,7 @@
 
   static void Meassure::writeLed() {
     //map Values
-    led = map(airCondition, lowest, MAX_LIGHT, 0, 255);
+    led = map(airCondition, lowest, LIMIT_ALARM, 0, 255);
     red = led;
     green = 255 - led;
 

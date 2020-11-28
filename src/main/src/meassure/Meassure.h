@@ -29,9 +29,15 @@
 #define MAX_INCREASE 1.5
 #define MAX_DECREASE 0.96
 #define MAX_INCREASE_LOWEST 50
-#define MAX_LIGHT 1000
-#define MAX_BLINK 1100
-#define MAX_PIEP 1200
+
+
+#define LIMIT_GOOD 600
+#define LIMIT_MEDIUM 800
+#define LIMIT_BAD 900
+#define LIMIT_ALARM 1000
+#define LIMIT_ALARM 1100
+#define LIMIT_PIEP 1200
+
 #define MAX_DISPLAYED_PPM 1280
 
 //pins

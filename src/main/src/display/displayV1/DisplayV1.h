@@ -22,6 +22,7 @@ class DisplayV1 : public Display {
     static void fillData();
     static void createLines();
     static void drawGraph();
+    static void drawLoadingBar();
     static void drawConnections(int x, int startY, int endY);
 
     static int valuesGraph[AVERAGING_GRAPH];

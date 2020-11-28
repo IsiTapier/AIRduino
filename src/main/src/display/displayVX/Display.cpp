@@ -132,15 +132,10 @@
       //Set new lastAirCondition
       lastAirConditionGraph = airCondition; //Setzt letzten Wert
       //Draw Bar
-      display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH + 1, BAR_STRIPE_THICKNESS, Util::getColor(state));
+
       previousState = state;
     }
-    //Draw Loading Bar
-    if (state == VENTILATING) {
-      short bar_ventilating_length = map(airCondition, Meassure::getLowest(), Meassure::getPpmSinceVentilation(), 0, DISPLAY_LENGTH);
-      display.fillRect(DISPLAY_LENGTH - bar_ventilating_length, DATABOX_TOP_HIGHT, bar_ventilating_length, BAR_STRIPE_THICKNESS, GREY);
-    }
-
+    drawLoadingBar();
 
     //calculate time since last ventilating
     long startTime = Meassure::getStartTime();
@@ -196,6 +191,14 @@
     display.setTextSize(scale);
     display.setTextColor(color);
     display.println(text);
+  }
+
+  static void Display::drawLoadingBar() {
+
+  }
+
+  static void Display::drawLinedRect(x1, x_length, y2, y_length, int color) {
+    
   }
 
 

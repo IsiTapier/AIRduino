@@ -102,3 +102,12 @@ static int DisplayV1::lastPixel = 0;
       }
     }
   }
+
+  static void DisplayV1::drawLoadingBar() {
+    display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH + 1, BAR_STRIPE_THICKNESS, Util::getColor(state));
+    //Draw Loading Bar
+    if (state == VENTILATING) {
+      short bar_ventilating_length = map(airCondition, Meassure::getLowest(), Meassure::getPpmSinceVentilation(), 0, DISPLAY_LENGTH);
+      display.fillRect(DISPLAY_LENGTH - bar_ventilating_length, DATABOX_TOP_HIGHT, bar_ventilating_length, BAR_STRIPE_THICKNESS, GREY);
+    }
+  }

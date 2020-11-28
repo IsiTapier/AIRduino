@@ -24,12 +24,12 @@ class DisplayV2 : Display {
     static void loop();
 
   private:
-    static void drawBarChart();
     static void drawBarBorder();
     static void drawSections();
     static void drawBar();
+    static void writeAnalogValue();
 
-
+    static int barPixel;
     static short first_section_x;
     static short second_section_x;
 

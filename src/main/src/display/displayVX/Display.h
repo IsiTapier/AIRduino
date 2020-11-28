@@ -60,6 +60,7 @@ class Display {
 
   protected:
     static void drawDisplay();
+    static void drawLoadingBar();
     static void checkState();
     static void writeInfo();
     static void drawBorder(int xStart, int yStart, int xEnd, int yEnd, int color);

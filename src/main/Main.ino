@@ -30,8 +30,10 @@ extern "C" {
 //                       | |
 //                       |_|
 void setup() {
-  //EEPROM.write(0, 0);
+  EEPROM.write(0, 0);
   Serial.begin(9600);
+  Serial.println(analogRead(A0));
+
   //DisplayV1::setup();
   DisplayV2::setup();
   Meassure::setup();

@@ -7,6 +7,7 @@
 
 static short DisplayV2::first_section_x;
 static short DisplayV2::second_section_x;
+static int DisplayV2::barPixel;
 
 //   _____      _
 //  / ____|    | |
@@ -29,8 +30,11 @@ static void DisplayV2::loop() {
   checkState();
   writeInfo();
 
-  drawBarChart();
+  writeAnalogValue();
+  drawBarBorder();
   drawBar();
+  drawSections();
+
 }
 
 
@@ -44,27 +48,46 @@ static void DisplayV2::loop() {
 //              |_|            |___/
 //
 
-static void DisplayV2::drawBarChart() {
-  drawBarBorder();
-  drawSections();
-}
+
+
 
 static void DisplayV2::drawBarBorder() { //x,y,breite, höhe, dicke
-  //display.fillRect(BORDER_X, BORDER_Y, BORDER_WIDTH, BORDER_HIGHT, WHITE);
-  display.fillRect(BAR_X, BAR_Y, BAR_WIDTH, BAR_HIGHT, BLACK); //Setzt das "Loch" in die Mitte des Rechtecks
+  display.fillRect(BORDER_X, BORDER_Y, BORDER_WIDTH, BORDER_HIGHT, GREY);
+  //   - search position of the bar -
+  //Draw balance bar
+  barPixel = map(airCondition, Util::calibration[EEPROM.read(0)].getLowestPPM(), Util::calibration[EEPROM.read(0)].getHighestPPM(), BAR_X, BAR_X + BAR_WIDTH);
+  display.fillRect(barPixel + 1, BAR_Y, (BAR_X + BAR_WIDTH) - barPixel, BAR_HIGHT, GRAPH_BACKGROUND_COLOR);
+
+  //display.fillRect(BAR_X, BAR_Y, BAR_WIDTH, BAR_HIGHT, BLACK); //Setzt das "Loch" in die Mitte des Rechtecks
 }
 
-static void DisplayV2::drawSections() {
-  first_section_x = map(LIMIT_GOOD, Util::calibration[EEPROM.read(0)].getLowestPPM(), Util::calibration[EEPROM.read(0)].getHighestPPM(), BAR_X, BAR_X + BAR_WIDTH);
-  second_section_x = map(LIMIT_MEDIUM, Util::calibration[EEPROM.read(0)].getLowestPPM(), Util::calibration[EEPROM.read(0)].getHighestPPM(), BAR_X, BAR_X + BAR_WIDTH);
 
-  display.drawLine(first_section_x, BAR_Y - 10, first_section_x, BAR_Y + 10 + BAR_HIGHT, GREY);
-  display.drawLine(second_section_x, BAR_Y - 10, second_section_x, BAR_Y + 10 + BAR_HIGHT, GREY);
+static void DisplayV2::drawSections() {
+  //    - define section position -
+  first_section_x = map(LIMIT_GOOD, Util::calibration[EEPROM.read(0)].getLowestPPM(), Util::calibration[EEPROM.read(0)].getHighestPPM(), 0, BAR_WIDTH) + BAR_X;
+  second_section_x = map(LIMIT_MEDIUM, Util::calibration[EEPROM.read(0)].getLowestPPM(), Util::calibration[EEPROM.read(0)].getHighestPPM(), 0, BAR_WIDTH) + BAR_X;
+
+
+  //    - Draw Sections -
+  //display.drawLine(first_section_x, BAR_Y - 10, first_section_x, BAR_Y + 10 + BAR_HIGHT, WHITE);
+  //display.drawLine(second_section_x, BAR_Y - 10, second_section_x, BAR_Y + 10 + BAR_HIGHT, WHITE);
+
+  for(short y = BAR_Y - 10; y < BAR_Y + 10 + BAR_HIGHT; y++) {
+    if(y%5 == 0) {
+      display.drawPixel(first_section_x, y, WHITE);
+      display.drawPixel(second_section_x, y, WHITE);
+      display.drawPixel(first_section_x + 1, y, WHITE);
+      display.drawPixel(second_section_x + 1, y, WHITE);
+    }
+  }
+
 }
 
 static void DisplayV2::drawBar() {
-  int barPixel = map(airCondition, Util::calibration[EEPROM.read(0)].getLowestPPM(), Util::calibration[EEPROM.read(0)].getHighestPPM(), BAR_X, BAR_X + BAR_WIDTH);
   if(barPixel <= BAR_WIDTH && barPixel >= 0) {
+    //   - search position of the bar -
+    barPixel = map(airCondition, Util::calibration[EEPROM.read(0)].getLowestPPM(), Util::calibration[EEPROM.read(0)].getHighestPPM(), BAR_X, BAR_X + BAR_WIDTH);
+
     if (airCondition < LIMIT_GOOD)
       display.fillRect(BAR_X, BAR_Y, barPixel, BAR_HIGHT, Util::getColor(state));
     else if (airCondition < LIMIT_MEDIUM)
@@ -73,4 +96,9 @@ static void DisplayV2::drawBar() {
       display.fillRect(BAR_X, BAR_Y, barPixel, BAR_HIGHT, Util::getColor(state));
     }
   }
+}
+
+static void DisplayV2::writeAnalogValue() {
+    display.fillRect(0, 0, 15, 10, GRAPH_BACKGROUND_COLOR);
+    dPrint(0, 0, 1, WHITE, analogRead(A0));
 }
