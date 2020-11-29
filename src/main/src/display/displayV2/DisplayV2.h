@@ -16,6 +16,10 @@
 #define BAR_Y BORDER_Y + 2
 #define BAR_WIDTH BORDER_WIDTH - (2 * 2)
 #define BAR_HIGHT BORDER_HIGHT - (2 * 2)
+#define BAR_COLOR WHITE
+#define BAR_SECTIONS_COLOR WHITE
+#define BAR_SECTIONS_THICKNESS 2
+
 
 class DisplayV2 : Display {
 

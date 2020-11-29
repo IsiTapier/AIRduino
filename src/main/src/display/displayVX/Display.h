@@ -37,7 +37,7 @@
 #define OSV_PPM 400
 #define MAX_DISPLAYED_PPM 1280
 
-#define LIMIT_GOOD 600
+#define LIMIT_GOOD 500
 #define LIMIT_MEDIUM 800
 #define LIMIT_BAD 900
 #define LIMIT_ALARM 1000

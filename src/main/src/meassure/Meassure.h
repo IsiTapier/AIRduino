@@ -9,7 +9,7 @@
 #include "../util/Util.h"
 
 //settings
-#define DEBUG true
+#define DEBUG false
 
 #define FACTOR 4.631578947368421
 #define STAGE_TIME 1*1000
@@ -20,8 +20,6 @@
 #define ALPHA_MEASUREMENTS 0.7
 #define ALPHA_LOWEST 0.5
 
-#define OSV_SENSOR 80
-#define OSV_PPM 400
 
 #define MAX_SENSOR 1023
 #define MAX_PPM 5000
