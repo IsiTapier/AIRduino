@@ -104,20 +104,31 @@
       //Wenn sich der Wert geändert hat oder state sich geändert hat
 
       //Schreibt Status an die Decke
+      dPrint((DISPLAY_LENGTH - (6*statusLetters-1)*2)/2, STATUS_INFO_TOP_MARGIN, 2, GRAPH_BACKGROUND_COLOR, statusInfo);
       switch (state) {
-        case -1: statusInfo = "Lueftet..";
+        case -1: statusInfo = "Lueftet";
+                 statusLetters = 6;
           break;
-        case 0: statusInfo = "Optimal";
+        case 0:  statusInfo = "Optimal";
+                 statusLetters = 7;
           break;
-        case 1: statusInfo = "Schlecht";
+        case 1:  statusInfo = "Schlecht";
+                 statusLetters = 8;
           break;
-        case 2: statusInfo = "Gammlig";
+        case 2:  statusInfo = "Gammlig";
+                 statusLetters = 7;
           break;
-        default: statusInfo = "Gammlig";
+        case 3:  statusInfo = "sehr Gammlig";
+                 statusLetters = 12;
+          break;
+        case 4:  statusInfo = "ueber Gammlig";
+                 statusLetters = 12;
+          break;
+        default: statusInfo = "Undefiniert";
+                 statusLetters = 11;
           break;
       }
-      display.fillRect(30, 0, 110, 15, GRAPH_BACKGROUND_COLOR);
-      dPrint(30, 0, 2, WHITE, statusInfo);
+      dPrint((DISPLAY_LENGTH - (6*statusLetters-1)*2)/2, STATUS_INFO_TOP_MARGIN, 2, WHITE, statusInfo);
 
       //Verhindert überschreiben von "ppm"
       if (airCondition < 1000)
@@ -183,7 +194,14 @@
     display.setCursor(x, y);
     display.setTextSize(scale);
     display.setTextColor(color);
-    display.println(text);
+    for(int i = 0; i < text.length(); i++) {
+      if(text.charAt(i) == (char)'u' && text.charAt(i+1) == (char) 'e') {
+        display.print(char(0x81));
+        i++;
+      } else
+        display.print(text.charAt(i));
+    }
+    display.println();
   }
 
   //Verkürzung: Writing mit Integern
@@ -206,6 +224,7 @@
   static int Display::airCondition;
   static int Display::lastAirConditionGraph;
   static boolean Display::blinkSwitch = false;
+  static int Display::statusLetters;
   static String Display::statusInfo;
   static String Display::lastTime;
   static String Display::Time;

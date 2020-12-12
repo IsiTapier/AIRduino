@@ -15,9 +15,9 @@
   //                       | |
   //                       |_|
 
-  static int Meassure::airCondition;
-  static int Meassure::airConditionRaw;
-  static int Meassure::airConditionLast;
+  static float Meassure::airCondition;
+  static float Meassure::airConditionRaw;
+  static float Meassure::airConditionLast;
   static int Meassure::airConditionLowest;
   static unsigned long Meassure::startTime;
   static unsigned long Meassure::timer;
@@ -62,7 +62,7 @@
   }
 
   static int Meassure::getAirCondition() {
-    return(airCondition);
+    return((int) airCondition);
   }
 
   static int Meassure::getLowest() {
@@ -138,8 +138,7 @@
     if (airCondition <= Util::calibration[EEPROM.read(0)].getLowestSensor())
       airCondition = Util::calibration[EEPROM.read(0)].getLowestSensor();
 
-    airCondition = map(airCondition, Util::calibration[EEPROM.read(0)].getLowestSensor(), Util::calibration[EEPROM.read(0)].getHighestSensor(), Util::calibration[EEPROM.read(0)].getLowestPPM(), Util::calibration[EEPROM.read(0)].getHighestPPM());
-
+    airCondition = Util::map(airCondition, Util::calibration[EEPROM.read(0)].getLowestSensor(), Util::calibration[EEPROM.read(0)].getHighestSensor(), Util::calibration[EEPROM.read(0)].getLowestPPM(), Util::calibration[EEPROM.read(0)].getHighestPPM());
   }
 
 
@@ -156,7 +155,7 @@
     last = Util::average(values, AVERAGING_GRADIENT, AVERAGING_GRADIENT * 2);
 
     //gradient
-    gradient = now / last;
+    gradient = (float) now / last;
   }
 
   static void Meassure::checkVentilating() {
@@ -166,6 +165,9 @@
       ppmSinceVentilation = airCondition;
       Util::rgb(0, 0, 255);
       startTime = millis();
+      digitalWrite(2, HIGH);
+      delay(1000);
+      digitalWrite(2, LOW);
     }
 
     //stop Ventilating
@@ -212,8 +214,8 @@
 
     if (state < -1)
       state = -1;
-    if (state > 5)
-      state = 5;
+    if (state > 4)
+      state = 4;
   }
 
   static void Meassure::writeLed() {

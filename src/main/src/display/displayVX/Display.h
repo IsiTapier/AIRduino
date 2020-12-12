@@ -43,6 +43,7 @@
 #define LIMIT_ALARM 1000
 #define LIMIT_PIEP 1200
 
+#define STATUS_INFO_TOP_MARGIN 5
 #define DATABOX_TOP_HIGHT 100
 #define GRAPH_COLOR WHITE//MAGENTA
 #define GRAPH_BACKGROUND_COLOR BLACK
@@ -75,6 +76,7 @@ class Display {
     static int airCondition;
     static int lastAirConditionGraph;
     static boolean blinkSwitch;
+    static int statusLetters;
     static String statusInfo;
     static String lastTime;
     static String Time;

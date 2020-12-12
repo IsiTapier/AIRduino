@@ -31,10 +31,10 @@ static void DisplayV2::loop() {
   checkState();
   writeInfo();
 
-  writeAnalogValue();
+  //writeAnalogValue();
   drawBarBorder();
-  drawSections();
   drawBar();
+  drawSections();
 
 
 }
@@ -58,7 +58,6 @@ static void DisplayV2::drawBarBorder() { //x,y,breite, höhe, dicke
   //   - search position of the bar -
   //Draw balance bar
   barPixel = map(airCondition, Util::calibration[EEPROM.read(0)].getLowestPPM(), Util::calibration[EEPROM.read(0)].getHighestPPM(), 0, BAR_WIDTH) + BAR_X;
-  display.fillRect(barPixel + 1, BAR_Y, (BAR_X + BAR_WIDTH) - barPixel, BAR_HIGHT, GRAPH_BACKGROUND_COLOR);
 
   //display.fillRect(BAR_X, BAR_Y, BAR_WIDTH, BAR_HIGHT, BLACK); //Setzt das "Loch" in die Mitte des Rechtecks
 }
@@ -74,21 +73,21 @@ static void DisplayV2::drawSections() {
   //display.drawLine(first_section_x, BAR_Y - 10, first_section_x, BAR_Y + 10 + BAR_HIGHT, WHITE);
   //display.drawLine(second_section_x, BAR_Y - 10, second_section_x, BAR_Y + 10 + BAR_HIGHT, WHITE);
 
-  for(short y = BAR_Y - 10; y < BAR_Y + 10 + BAR_HIGHT; y++) {
-    if(y%5 == 0) {
-      for(byte z = 0; z <= BAR_SECTIONS_THICKNESS; z++) {
-        display.drawPixel(first_section_x + z, y, BAR_SECTIONS_COLOR);
-        display.drawPixel(second_section_x + z, y, BAR_SECTIONS_COLOR);
-      }
+  for(short y = BAR_Y - 10; y < BAR_Y + 10 + BAR_HIGHT; y = y+5) {
+    for(byte z = 0; z <= BAR_SECTIONS_THICKNESS; z++) {
+      display.drawPixel(first_section_x + z, y, BAR_SECTIONS_COLOR);
+      display.drawPixel(second_section_x + z, y, BAR_SECTIONS_COLOR);
     }
   }
-
 }
 
 static void DisplayV2::drawBar() {
-  if(barPixel <= BAR_WIDTH && barPixel >= 0) {
     //   - search position of the bar -
     barPixel = map(airCondition, Util::calibration[EEPROM.read(0)].getLowestPPM(), Util::calibration[EEPROM.read(0)].getHighestPPM(), 0, BAR_WIDTH);
+    if(barPixel <= 0)
+      return;
+    if(barPixel > BAR_WIDTH)
+      barPixel = BAR_WIDTH;
 
     if (airCondition < LIMIT_GOOD)
       display.fillRect(BAR_X, BAR_Y, barPixel, BAR_HIGHT, Util::getColor(state));
@@ -97,7 +96,6 @@ static void DisplayV2::drawBar() {
     else if (airCondition > LIMIT_MEDIUM) {
       display.fillRect(BAR_X, BAR_Y, barPixel, BAR_HIGHT, Util::getColor(state));
     }
-  }
 }
 
 static void DisplayV2::writeAnalogValue() {

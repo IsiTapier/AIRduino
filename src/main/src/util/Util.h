@@ -48,10 +48,11 @@ class Util {
 
     static void setup();
     static void loop();
+    static long map(double x, long in_min, long in_max, long out_min, long out_max);
     static int map(int value, int startA, int startB, float factor);
     static void rgb(int red, int green, int blue);
     static int average(int averageArray[], int averageStart, int averageEnd);
-    static void debug(String title, int value);
+    static void debug(String title, float value);
 
   private:
 

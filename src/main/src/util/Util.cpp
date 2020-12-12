@@ -32,7 +32,7 @@
 
   static Calibration Util::calibration[] = {
       Calibration(37, 44, 400, 1000),
-      Calibration(20, 60, 400, 1000),
+      Calibration(85, 110, 400, 1000),
       Calibration(40, 60, 400, 1000)
   };
 
@@ -46,6 +46,10 @@
 
   static void Util::loop() {
 
+  }
+
+  static long Util::map(double x, long in_min, long in_max, long out_min, long out_max) {
+    return round((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min);
   }
 
   static int Util::map(int value, int startA, int startB, float factor) {
@@ -69,7 +73,11 @@
     return (sum / (averageEnd - averageStart));
   }
 
-  static void Util::debug(String title, int value) {
+  static void Util::debug(String title, float value) {
     Serial.print(title + ": ");
-    Serial.println(value);
+    if(floor(value) == ceil(value))
+      Serial.println((int) value);
+    else
+      Serial.println(value);
+
   }

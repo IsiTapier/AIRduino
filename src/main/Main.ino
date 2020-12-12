@@ -1,4 +1,4 @@
-  #include <EEPROM.h>
+#include <EEPROM.h>
 
 
 extern "C" {
@@ -30,10 +30,9 @@ extern "C" {
 //                       | |
 //                       |_|
 void setup() {
-  EEPROM.write(0, 0);
+  pinMode(2, OUTPUT);
+  //EEPROM.write(0, 1);
   Serial.begin(9600);
-  Serial.println(analogRead(A0));
-
   //DisplayV1::setup();
   DisplayV2::setup();
   Meassure::setup();

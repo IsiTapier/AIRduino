@@ -9,14 +9,14 @@
 #include "../util/Util.h"
 
 //settings
-#define DEBUG false
+#define DEBUG true
 
 #define FACTOR 4.631578947368421
 #define STAGE_TIME 1*1000
 #define VENTILATING_TIMEOUT 5*1000
 
 #define AVERAGING_MEASUREMENTS 100
-#define AVERAGING_GRADIENT 5
+#define AVERAGING_GRADIENT 10
 #define ALPHA_MEASUREMENTS 0.7
 #define ALPHA_LOWEST 0.5
 
@@ -25,7 +25,7 @@
 #define MAX_PPM 5000
 
 #define MAX_INCREASE 1.5
-#define MAX_DECREASE 0.96
+#define MAX_DECREASE 0.9
 #define MAX_INCREASE_LOWEST 50
 
 
@@ -66,9 +66,9 @@ class Meassure {
     static void setState();
     static void writeLed();
 
-    static int airCondition;
-    static int airConditionRaw;
-    static int airConditionLast;
+    static float airCondition;
+    static float airConditionRaw;
+    static float airConditionLast;
     static int airConditionLowest;
     static unsigned long startTime;
     static unsigned long timer;
