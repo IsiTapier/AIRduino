@@ -5,6 +5,20 @@
 #include "Arduino.h"
 #include "Display.h"
 
+static Adafruit_ST7735 Display::display = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
+
+static State Display::state;
+static State Display::previousState;
+static int Display::airCondition;
+static int Display::lastAirConditionGraph;
+static boolean Display::blinkSwitch = false;
+static int Display::statusLetters;
+static String Display::statusInfo;
+static String Display::lastTime;
+static String Display::Time;
+static short Display::seconds;
+static short Display::minutes;
+
 
   //   _____      _
   //  / ____|    | |
@@ -215,18 +229,3 @@
   static void Display::drawLoadingBar() {
 
   }
-
-
-
-  static Adafruit_ST7735 Display::display = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
-  static State Display::state;
-  static State Display::previousState;
-  static int Display::airCondition;
-  static int Display::lastAirConditionGraph;
-  static boolean Display::blinkSwitch = false;
-  static int Display::statusLetters;
-  static String Display::statusInfo;
-  static String Display::lastTime;
-  static String Display::Time;
-  static short Display::seconds;
-  static short Display::minutes;
