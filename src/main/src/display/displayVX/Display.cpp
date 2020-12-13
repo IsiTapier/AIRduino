@@ -5,7 +5,9 @@
 #include "Arduino.h"
 #include "Display.h"
 
-static Adafruit_ST7735 Display::display = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
+static Adafruit_TFTLCD Display::display(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
+static TouchScreen Display::ts = TouchScreen(XP, YP, XM, YM, 300);
+static uint16_t Display::identifier = display.readID();
 
 static State Display::state;
 static State Display::previousState;
@@ -20,6 +22,8 @@ static short Display::seconds;
 static short Display::minutes;
 
 
+
+
   //   _____      _
   //  / ____|    | |
   // | (___   ___| |_ _   _ _ __
@@ -31,15 +35,35 @@ static short Display::minutes;
 
 
   static void Display::setup() {
-    pinMode(TFT_CS, OUTPUT);
-    pinMode(TFT_RST, OUTPUT);
-    pinMode(TFT_DC, OUTPUT);
-    pinMode(TFT_LED, OUTPUT);
     pinMode(PIEZO, OUTPUT);
+    //TODO Helligkeit einstellen
 
-    analogWrite(TFT_LED, DISPLAY_BRIGHTNESS * 256);
+    if(identifier == 0x9325) {
+      Serial.println(F("Found ILI9325 LCD driver"));
+    } else if(identifier == 0x9328) {
+      Serial.println(F("Found ILI9328 LCD driver"));
+    } else if(identifier == 0x7575) {
+      Serial.println(F("Found HX8347G LCD driver"));
+    } else if(identifier == 0x9341) {
+      Serial.println(F("Found ILI9341 LCD driver"));
+    } else if(identifier == 0x8357) {
+      Serial.println(F("Found HX8357D LCD driver"));
+    } else {
+      Serial.print(F("Unknown LCD driver chip: "));
+      Serial.println(identifier, HEX);
+      Serial.println(F("If using the Adafruit 2.8\" TFT Arduino shield, the line:"));
+      Serial.println(F("  #define USE_ADAFRUIT_SHIELD_PINOUT"));
+      Serial.println(F("should appear in the library header (Adafruit_TFT.h)."));
+      Serial.println(F("If using the breakout board, it should NOT be #defined!"));
+      Serial.println(F("Also if using the breakout, double-check that all wiring"));
+      Serial.println(F("matches the tutorial."));
+      return;
+    }
 
-    display.initR(INITR_BLACKTAB);
+
+    display.begin(identifier);
+
+    display.fillScreen(BLACK);
     display.setTextWrap(false);
     display.setRotation(ROTATION);
 
@@ -48,33 +72,38 @@ static short Display::minutes;
 
   //Loading Screen
   void Display::loadingScreen() {
+    Serial.println("test1");
     display.fillScreen(GRAPH_BACKGROUND_COLOR);
     writeLoadingScreenTitle();
 
     //Draw: Loading Dots
+    short distanceToFirstDot = (DISPLAY_LENGTH - 15*LOADING_SCREEN_DOT_SIZE) / 2;
     byte c = 0;
     for (int x = LOADING_SCREEN_TIME * 2; x >= 0; x--) {
       c++;
-      dPrint(55, 75, 3, GRAPH_BACKGROUND_COLOR, "..."); // Altes Clearen
+      dPrint(distanceToFirstDot, DISPLAY_WIDTH / 5 * 3, LOADING_SCREEN_DOT_SIZE, GRAPH_BACKGROUND_COLOR, "..."); // Altes Clearen
       switch (c) {
-        case 1: dPrint(55, 75, 3, LOADING_SCREEN_DOTS_COLOR, ".");
+        case 1: dPrint(distanceToFirstDot, DISPLAY_WIDTH / 5 * 3, LOADING_SCREEN_DOT_SIZE, LOADING_SCREEN_DOTS_COLOR, ".");
           break;
-        case 2: dPrint(55, 75, 3, LOADING_SCREEN_DOTS_COLOR, "..");
+        case 2: dPrint(distanceToFirstDot, DISPLAY_WIDTH / 5 * 3, LOADING_SCREEN_DOT_SIZE, LOADING_SCREEN_DOTS_COLOR, "..");
           break;
-        case 3: dPrint(55, 75, 3, LOADING_SCREEN_DOTS_COLOR, "...");
+        case 3: dPrint(distanceToFirstDot, DISPLAY_WIDTH / 5 * 3, LOADING_SCREEN_DOT_SIZE, LOADING_SCREEN_DOTS_COLOR, "...");
           c = 0;
           break;
       }
       delay(500);
     }
+    Serial.println("test2");
     drawDisplay();
   }
 
   static void Display::writeLoadingScreenTitle() {
-    dPrint(50, 35, 4, LIGHT_BLUE, "A");
-    dPrint(70, 35, 4, TURKISE, "I");
-    dPrint(90, 35, 4, LIME, "R");
-    dPrint(35, 65, 3, GREY, "duino");
+    short distanceToFirstLetter = (DISPLAY_LENGTH - (18*LOADING_SCREEN_TITLE_SIZE)) / 2;
+    short distanceToFirstLetterSub = (DISPLAY_LENGTH - (30*LOADING_SCREEN_SUB_SIZE)) / 2;
+    dPrint(distanceToFirstLetter + LOADING_SCREEN_TITLE_SIZE, 35, LOADING_SCREEN_TITLE_SIZE, LIGHT_BLUE, "A");
+    dPrint(distanceToFirstLetter + 6*LOADING_SCREEN_TITLE_SIZE, 35, LOADING_SCREEN_TITLE_SIZE, TURKISE, "I");
+    dPrint(distanceToFirstLetter + 12*LOADING_SCREEN_TITLE_SIZE, 35, LOADING_SCREEN_TITLE_SIZE, LIME, "R");
+    dPrint(distanceToFirstLetterSub, 120, LOADING_SCREEN_SUB_SIZE, GREY, "duino");
   }
 
 

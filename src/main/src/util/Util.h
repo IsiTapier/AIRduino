@@ -11,9 +11,9 @@
 #include "../classes/calibration/Calibration.h"
 
 //pins
-#define LED_RED    5
-#define LED_GREEN  6
-#define LED_BLUE   7
+#define LED_RED    11
+#define LED_GREEN  12
+#define LED_BLUE   13
 
 //colors
 #define BLACK 0x0000

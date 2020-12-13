@@ -33,13 +33,10 @@
 #define LIMIT_MEDIUM 800
 #define LIMIT_BAD 900
 #define LIMIT_ALARM 1000
-#define LIMIT_ALARM 1100
 #define LIMIT_PIEP 1200
 
-#define MAX_DISPLAYED_PPM 1280
-
 //pins
-#define GAS_SENSOR A0
+#define GAS_SENSOR A5
 #define PIEZO      4
 
 

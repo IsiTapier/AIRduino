@@ -12,7 +12,7 @@
  #include "WProgram.h"
 #endif
 
-#include <Adafruit_GFX.h>
+#include "../Adafruit_GFX_Library-1.5.3/Adafruit_GFX.h"
 
 // **** IF USING THE LCD BREAKOUT BOARD, COMMENT OUT THIS NEXT LINE. ****
 // **** IF USING THE LCD SHIELD, LEAVE THE LINE ENABLED:             ****
@@ -93,7 +93,7 @@ class Adafruit_TFTLCD : public Adafruit_GFX {
 					  csPinUnset,  cdPinUnset,  wrPinUnset,  rdPinUnset,
 					  _reset;
   #endif
-  
+
 #endif
 };
 
