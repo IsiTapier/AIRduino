@@ -54,11 +54,15 @@ static void DisplayV2::loop() {
 
 
 static void DisplayV2::drawBarBorder() { //x,y,breite, höhe, dicke
-  display.drawRect(BORDER_X, BORDER_Y, BORDER_WIDTH, BORDER_HIGHT, BAR_COLOR);
+  Util::debug("Border x", BORDER_X);
+  for(short z = 0; z < BORDER_THICKNESS; z++) {
+    display.drawRect(BORDER_X - z, BORDER_Y - z, BORDER_WIDTH + z + 2, BORDER_HIGHT + z + 2 , BAR_COLOR);
+  }
+
   //   - search position of the bar -
   //Draw balance bar
   barPixel = map(airCondition, Util::calibration[EEPROM.read(0)].getLowestPPM(), Util::calibration[EEPROM.read(0)].getHighestPPM(), 0, BAR_WIDTH) + BAR_X;
-
+  display.fillRect(barPixel + 1, BAR_Y, (BAR_X + BAR_WIDTH) - barPixel, BAR_HIGHT, GRAPH_BACKGROUND_COLOR);
   //display.fillRect(BAR_X, BAR_Y, BAR_WIDTH, BAR_HIGHT, BLACK); //Setzt das "Loch" in die Mitte des Rechtecks
 }
 

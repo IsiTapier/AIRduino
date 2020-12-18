@@ -21,7 +21,7 @@
 //settings
 #define ROTATION 45
 #define DISPLAY_BRIGHTNESS 0.7
-#define LOADING_SCREEN_TIME 10
+#define LOADING_SCREEN_TIME 1
 
 #define AVERAGING_GRAPH 10
 #define ALPHA_GRAPH 0.7
@@ -46,8 +46,8 @@
 
 #define PIEZO 4
 
-#define DISPLAY_LENGTH 320
-#define DISPLAY_WIDTH 240
+#define DISPLAY_LENGTH 319
+#define DISPLAY_WIDTH 239
 
 //Design
 #define MAX_LIGHT 1000
@@ -63,10 +63,18 @@
 #define TIME_COLOR_CRITICAL RED
 #define TIME_COLOR_NORMAL WHITE
 
+#define PPM_DIGIT_SIZE 6
+#define PPM_DIGIT_MARGIN 5 //Rand links
+
+#define PPM_STRING_SIZE 4
+#define PPM_STRING_MARGIN 5 // Rand von unten
+
+#define TIMER_SIZE 4
+
 
 //loadingScreen
 #define LOADING_SCREEN_TITLE_SIZE 12
-#define LOADING_SCREEN_SUB_SIZE 10
+#define LOADING_SCREEN_SUB_SIZE 8
 #define LOADING_SCREEN_DOTS_COLOR WHITE
 #define LOADING_SCREEN_DOT_SIZE 10
 

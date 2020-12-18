@@ -63,7 +63,7 @@ static short Display::minutes;
 
     display.begin(identifier);
 
-    display.fillScreen(BLACK);
+    display.fillScreen(GRAPH_BACKGROUND_COLOR);
     display.setTextWrap(false);
     display.setRotation(ROTATION);
 
@@ -174,15 +174,18 @@ static short Display::minutes;
       dPrint((DISPLAY_LENGTH - (6*statusLetters-1)*2)/2, STATUS_INFO_TOP_MARGIN, 2, WHITE, statusInfo);
 
       //Verhindert überschreiben von "ppm"
+      short PPM_DIGIT_Y = DISPLAY_WIDTH - PPM_DIGIT_SIZE * 10;
+
       if (airCondition < 1000)
-        dPrint(57, 118, 1.5, Util::getColor(state), "ppm");
+        dPrint(PPM_DIGIT_MARGIN + 3*6*PPM_DIGIT_SIZE, PPM_DIGIT_Y, PPM_STRING_SIZE, Util::getColor(state), "ppm");
       else
-        dPrint(57, 118, 1.5, BAR_BACKGROUND_COLOR, "ppm");
+        dPrint(PPM_DIGIT_MARGIN + 3*6*PPM_DIGIT_SIZE, PPM_DIGIT_Y, PPM_STRING_SIZE, BAR_BACKGROUND_COLOR, "ppm");
 
       //Clear old Pixels
-      dPrint(2, 105, 3, BAR_BACKGROUND_COLOR, lastAirConditionGraph);
+
+      dPrint(PPM_DIGIT_MARGIN, PPM_DIGIT_Y, PPM_DIGIT_SIZE, BAR_BACKGROUND_COLOR, lastAirConditionGraph);
       //write new Pixels
-      dPrint(2, 105, 3, Util::getColor(state), airCondition);
+      dPrint(PPM_DIGIT_MARGIN, PPM_DIGIT_Y, PPM_DIGIT_SIZE, Util::getColor(state), airCondition) ;
       //Set new lastAirCondition
       lastAirConditionGraph = airCondition; //Setzt letzten Wert
       //Draw Bar
