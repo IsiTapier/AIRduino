@@ -10,12 +10,12 @@
 class Calibration {
 
   public:
-    Calibration::Calibration(int lowestSensor, int highestSensor, int lowestPPM, int highestPPM);
+    Calibration(int lowestSensor, int highestSensor, int lowestPPM, int highestPPM);
 
-    int Calibration::getLowestSensor();
-    int Calibration::getHighestSensor();
-    int Calibration::getLowestPPM();
-    int Calibration::getHighestPPM();
+    int getLowestSensor();
+    int getHighestSensor();
+    int getLowestPPM();
+    int getHighestPPM();
 
   private:
     int lowestSensor;

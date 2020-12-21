@@ -1,12 +1,8 @@
 
-#include <EEPROM.h>
-
-
-extern "C" {
   #include "src/meassure/meassure.h"
   #include "src/display/displayV1/DisplayV1.h"
   #include "src/display/displayV2/DisplayV2.h"
-}
+
 
 
 
@@ -31,9 +27,13 @@ extern "C" {
 //                       | |
 //                       |_|
 void setup() {
-  pinMode(2, OUTPUT);
-  //EEPROM.write(0, 1);
+  EEPROM.write(0, 1);
   Serial.begin(9600);
+  Serial.println();
+  Serial.println();
+  Serial.println("SETUP:");
+  Serial.println("Serial communication started at 9600 baud");
+  Serial.println();
   //DisplayV1::setup();
   DisplayV2::setup();
   Meassure::setup();

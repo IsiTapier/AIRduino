@@ -7,21 +7,15 @@
 
 #include "Arduino.h"
 #include "Wire.h"
-#include "../../Adafruit/Adafruit_TouchScreen-master/TouchScreen.h"
-#include "../../Adafruit/Adafruit_GFX_Library-1.5.3/Adafruit_GFX.h"
-#include "../../Adafruit/TFTLCD-Library-master/Adafruit_TFTLCD.h"
+//#include "../../Adafruit/Adafruit_TouchScreen-master/TouchScreen.h"
+#include "../../extern/TFT_eSPI-master/TFT_eSPI.h"
 #include "../../util/Util.h"
 #include "../../meassure/Meassure.h"
 
-#if defined(__SAM3X8E__)
-    #undef __FlashStringHelper::F(string_literal)
-    #define F(string_literal) string_literal
-#endif
-
 //settings
-#define ROTATION 45
+#define ROTATION -45
 #define DISPLAY_BRIGHTNESS 0.7
-#define LOADING_SCREEN_TIME 1
+#define LOADING_SCREEN_TIME 10
 
 #define AVERAGING_GRAPH 10
 #define ALPHA_GRAPH 0.7
@@ -63,7 +57,7 @@
 #define TIME_COLOR_CRITICAL RED
 #define TIME_COLOR_NORMAL WHITE
 
-#define PPM_DIGIT_SIZE 6
+#define PPM_DIGIT_SIZE 5
 #define PPM_DIGIT_MARGIN 5 //Rand links
 
 #define PPM_STRING_SIZE 4
@@ -96,9 +90,8 @@ class Display {
     static void dPrint(int x, int y, int scale, int color, int text);
 
   //  static Adafruit_TFTLCD display;
-    static Adafruit_TFTLCD display;
-    static TouchScreen ts;
-    static uint16_t identifier;
+    static TFT_eSPI display;
+    //static TouchScreen ts;
 
     static State state;
     static State previousState;

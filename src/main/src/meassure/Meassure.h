@@ -36,8 +36,8 @@
 #define LIMIT_PIEP 1200
 
 //pins
-#define GAS_SENSOR A5
-#define PIEZO      4
+#define GAS_SENSOR 36
+#define PIEZO      18
 
 
 class Meassure {

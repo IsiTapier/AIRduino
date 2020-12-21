@@ -7,6 +7,7 @@
 
 #include "Arduino.h"
 #include "EEPROM.h"
+#include <pgmspace.h>
 #include "../classes/Pair/Pair.h"
 #include "../classes/calibration/Calibration.h"
 

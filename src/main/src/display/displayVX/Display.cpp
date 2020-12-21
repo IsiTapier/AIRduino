@@ -5,21 +5,20 @@
 #include "Arduino.h"
 #include "Display.h"
 
-static Adafruit_TFTLCD Display::display(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
-static TouchScreen Display::ts = TouchScreen(XP, YP, XM, YM, 300);
-static uint16_t Display::identifier = display.readID();
+extern TFT_eSPI Display::display(240, 320);
+//extern TouchScreen Display::ts = TouchScreen(XP, YP, XM, YM, 300);
 
-static State Display::state;
-static State Display::previousState;
-static int Display::airCondition;
-static int Display::lastAirConditionGraph;
-static boolean Display::blinkSwitch = false;
-static int Display::statusLetters;
-static String Display::statusInfo;
-static String Display::lastTime;
-static String Display::Time;
-static short Display::seconds;
-static short Display::minutes;
+extern State Display::state;
+extern State Display::previousState;
+extern int Display::airCondition;
+extern int Display::lastAirConditionGraph;
+extern boolean Display::blinkSwitch = false;
+extern int Display::statusLetters;
+extern String Display::statusInfo;
+extern String Display::lastTime;
+extern String Display::Time;
+extern short Display::seconds;
+extern short Display::minutes;
 
 
 
@@ -34,45 +33,22 @@ static short Display::minutes;
   //                       |_|
 
 
-  static void Display::setup() {
-    pinMode(PIEZO, OUTPUT);
-    //TODO Helligkeit einstellen
-
-    if(identifier == 0x9325) {
-      Serial.println(F("Found ILI9325 LCD driver"));
-    } else if(identifier == 0x9328) {
-      Serial.println(F("Found ILI9328 LCD driver"));
-    } else if(identifier == 0x7575) {
-      Serial.println(F("Found HX8347G LCD driver"));
-    } else if(identifier == 0x9341) {
-      Serial.println(F("Found ILI9341 LCD driver"));
-    } else if(identifier == 0x8357) {
-      Serial.println(F("Found HX8357D LCD driver"));
-    } else {
-      Serial.print(F("Unknown LCD driver chip: "));
-      Serial.println(identifier, HEX);
-      Serial.println(F("If using the Adafruit 2.8\" TFT Arduino shield, the line:"));
-      Serial.println(F("  #define USE_ADAFRUIT_SHIELD_PINOUT"));
-      Serial.println(F("should appear in the library header (Adafruit_TFT.h)."));
-      Serial.println(F("If using the breakout board, it should NOT be #defined!"));
-      Serial.println(F("Also if using the breakout, double-check that all wiring"));
-      Serial.println(F("matches the tutorial."));
-      return;
-    }
-
-
-    display.begin(identifier);
-
+  extern void Display::setup() {
+    Serial.println("DISPLAY SETUP started");
+    display.begin();
+    Serial.println("Display connection started");
     display.fillScreen(GRAPH_BACKGROUND_COLOR);
     display.setTextWrap(false);
     display.setRotation(ROTATION);
-
+    Serial.println("Display initialized");
     loadingScreen();
+    Serial.println("DISPLAY SETUP complete");
+    Serial.println();
   }
 
   //Loading Screen
   void Display::loadingScreen() {
-    Serial.println("test1");
+    Serial.println("loadingscreen started");
     display.fillScreen(GRAPH_BACKGROUND_COLOR);
     writeLoadingScreenTitle();
 
@@ -93,11 +69,12 @@ static short Display::minutes;
       }
       delay(500);
     }
-    Serial.println("test2");
+    Serial.println("loadingscreen ended");
     drawDisplay();
+    Serial.println("Display drawn");
   }
 
-  static void Display::writeLoadingScreenTitle() {
+  extern void Display::writeLoadingScreenTitle() {
     short distanceToFirstLetter = (DISPLAY_LENGTH - (18*LOADING_SCREEN_TITLE_SIZE)) / 2;
     short distanceToFirstLetterSub = (DISPLAY_LENGTH - (30*LOADING_SCREEN_SUB_SIZE)) / 2;
     dPrint(distanceToFirstLetter + LOADING_SCREEN_TITLE_SIZE, 35, LOADING_SCREEN_TITLE_SIZE, LIGHT_BLUE, "A");
@@ -117,12 +94,12 @@ static short Display::minutes;
   //              |_|            |___/
   //
 
-  static void Display::drawDisplay() {
+  extern void Display::drawDisplay() {
     display.fillScreen(GRAPH_BACKGROUND_COLOR);
     createLines();
   }
 
-  static void Display::checkState() {
+  extern void Display::checkState() {
     if (blinkSwitch) {
       drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_WIDTH, GRAPH_BACKGROUND_COLOR);
       display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH, DISPLAY_WIDTH, BAR_BACKGROUND_COLOR);
@@ -141,7 +118,7 @@ static short Display::minutes;
   }
 
   //Write PPM, Time
-  static void Display::writeInfo() {
+  extern void Display::writeInfo() {
     //ppm zeichnen
     if (lastAirConditionGraph != airCondition || previousState != state) {
       //Wenn sich der Wert geändert hat oder state sich geändert hat
@@ -210,17 +187,17 @@ static short Display::minutes;
     Time = Time + seconds;
 
     //Clear old Pixels
-    dPrint(96, 109, 2, BAR_BACKGROUND_COLOR, lastTime);
+    dPrint(180, 180, TIMER_SIZE, BAR_BACKGROUND_COLOR, lastTime);
     //write new Pixels
     if (minutes >= 20)
-      dPrint(96, 109, 2, TIME_COLOR_CRITICAL, Time);
+      dPrint(180, 180, TIMER_SIZE, TIME_COLOR_CRITICAL, Time);
     else
-      dPrint(96, 109, 2, TIME_COLOR_NORMAL, Time);
+      dPrint(180, 180, TIMER_SIZE, TIME_COLOR_NORMAL, Time);
     //Set new lasttime
     lastTime = Time; //Setzt letzten Wert
   }
 
-  static void Display::drawBorder(int xStart, int yStart, int xEnd, int yEnd, int color) {
+  extern void Display::drawBorder(int xStart, int yStart, int xEnd, int yEnd, int color) {
     display.drawLine(xStart, yStart, xEnd, yStart, color);
     display.drawLine(xStart, yEnd, xEnd, yEnd, color);
     display.drawLine(xStart, yStart, xStart, yEnd, color);
@@ -228,15 +205,15 @@ static short Display::minutes;
   }
 
 
-  static void Display::drawLine(int x, int y, int z) {
+  extern void Display::drawLine(int x, int y, int z) {
     for (int i = 0; i < x; i = i + z) {
       display.drawPixel(i, y, WHITE);
     }
   }
 
-  static void Display::createLines() {}
+  extern void Display::createLines() {}
 
-  static void Display::dPrint(int x, int y, int scale, int color, String text) {
+  extern void Display::dPrint(int x, int y, int scale, int color, String text) {
     display.setCursor(x, y);
     display.setTextSize(scale);
     display.setTextColor(color);
@@ -251,13 +228,13 @@ static short Display::minutes;
   }
 
   //Verkürzung: Writing mit Integern
-  static void Display::dPrint(int x, int y, int scale, int color, int text) {
+  extern void Display::dPrint(int x, int y, int scale, int color, int text) {
     display.setCursor(x, y);
     display.setTextSize(scale);
     display.setTextColor(color);
     display.println(text);
   }
 
-  static void Display::drawLoadingBar() {
+  extern void Display::drawLoadingBar() {
 
   }

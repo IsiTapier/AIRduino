@@ -5,9 +5,9 @@
 #include "Arduino.h"
 #include "DisplayV2.h"
 
-static short DisplayV2::first_section_x;
-static short DisplayV2::second_section_x;
-static int DisplayV2::barPixel;
+extern short DisplayV2::first_section_x;
+extern short DisplayV2::second_section_x;
+extern int DisplayV2::barPixel;
 
 //   _____      _
 //  / ____|    | |
@@ -18,13 +18,14 @@ static int DisplayV2::barPixel;
 //                       | |
 //                       |_|
 
-static void DisplayV2::setup() {
-  Serial.begin(9600);
+extern void DisplayV2::setup() {
   Display::setup();
-
+  Serial.println("DisplayV2-Setup started");
+  Serial.println("DisplayV2-Setup complete");
+  Serial.println();
 }
 
-static void DisplayV2::loop() {
+extern void DisplayV2::loop() {
   state = Meassure::getState();
   airCondition = Meassure::getAirCondition();
 
@@ -35,7 +36,6 @@ static void DisplayV2::loop() {
   drawBarBorder();
   drawBar();
   drawSections();
-
 
 }
 
@@ -53,7 +53,7 @@ static void DisplayV2::loop() {
 
 
 
-static void DisplayV2::drawBarBorder() { //x,y,breite, höhe, dicke
+extern void DisplayV2::drawBarBorder() { //x,y,breite, höhe, dicke
   Util::debug("Border x", BORDER_X);
   for(short z = 0; z < BORDER_THICKNESS; z++) {
     display.drawRect(BORDER_X - z, BORDER_Y - z, BORDER_WIDTH + z + 2, BORDER_HIGHT + z + 2 , BAR_COLOR);
@@ -67,7 +67,7 @@ static void DisplayV2::drawBarBorder() { //x,y,breite, höhe, dicke
 }
 
 
-static void DisplayV2::drawSections() {
+extern void DisplayV2::drawSections() {
   //    - define section position -
   first_section_x = map(LIMIT_GOOD, Util::calibration[EEPROM.read(0)].getLowestPPM(), Util::calibration[EEPROM.read(0)].getHighestPPM(), 0, BAR_WIDTH) + BAR_X;
   second_section_x = map(LIMIT_MEDIUM, Util::calibration[EEPROM.read(0)].getLowestPPM(), Util::calibration[EEPROM.read(0)].getHighestPPM(), 0, BAR_WIDTH) + BAR_X;
@@ -85,7 +85,7 @@ static void DisplayV2::drawSections() {
   }
 }
 
-static void DisplayV2::drawBar() {
+extern void DisplayV2::drawBar() {
     //   - search position of the bar -
     barPixel = map(airCondition, Util::calibration[EEPROM.read(0)].getLowestPPM(), Util::calibration[EEPROM.read(0)].getHighestPPM(), 0, BAR_WIDTH);
     if(barPixel <= 0)
@@ -102,7 +102,7 @@ static void DisplayV2::drawBar() {
     }
 }
 
-static void DisplayV2::writeAnalogValue() {
+extern void DisplayV2::writeAnalogValue() {
     display.fillRect(0, 0, 25, 10, GRAPH_BACKGROUND_COLOR);
     dPrint(0, 0, 1, WHITE, analogRead(A0));
 }

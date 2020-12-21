@@ -4,11 +4,11 @@
 #include "Arduino.h"
 #include "DisplayV1.h"
 
-static int DisplayV1::valuesGraph[AVERAGING_GRAPH];
-static int DisplayV1::graphData[DISPLAY_LENGTH];
-static int DisplayV1::counter = 0;
-static int DisplayV1::pixel = 0;
-static int DisplayV1::lastPixel = 0;
+extern int DisplayV1::valuesGraph[AVERAGING_GRAPH];
+extern int DisplayV1::graphData[DISPLAY_LENGTH];
+extern int DisplayV1::counter = 0;
+extern int DisplayV1::pixel = 0;
+extern int DisplayV1::lastPixel = 0;
 
   //   _____      _
   //  / ____|    | |
@@ -19,17 +19,20 @@ static int DisplayV1::lastPixel = 0;
   //                       | |
   //                       |_|
 
-  static void DisplayV1::setup() {
+  extern void DisplayV1::setup() {
     Display::setup();
 
+    Serial.println("DisplayV1-Setup started");
     //Auffüllen des Arrays
     for (short x = 0; x < DISPLAY_LENGTH; x++) {
       graphData[x] = DISPLAY_LENGTH;
     }
     graphData[0] = DATABOX_TOP_HIGHT - 1;
+    Serial.println("DisplayV1-Setup complete");
+    Serial.println();
   }
 
-  static void DisplayV1::loop() {
+  extern void DisplayV1::loop() {
     state = Meassure::getState();
     airCondition = Meassure::getAirCondition();
 
@@ -52,7 +55,7 @@ static int DisplayV1::lastPixel = 0;
   //              |_|            |___/
   //
 
-  static boolean DisplayV1::getData() {
+  extern boolean DisplayV1::getData() {
     valuesGraph[counter] = airCondition;
     counter ++;
     if (!(counter < AVERAGING_GRAPH)) {
@@ -66,20 +69,20 @@ static int DisplayV1::lastPixel = 0;
   }
 
   // Künstliches Auffüllen der Werte, wird später vom Modul übernommen
-  static void DisplayV1::fillData() {
+  extern void DisplayV1::fillData() {
     for (short x = DISPLAY_LENGTH; x > 0; x--) {
       graphData[x] = graphData[x - 1];
     }
     graphData[0] = DISPLAY_WIDTH - pixel;
   }
 
-  static void DisplayV1::createLines() {
+  extern void DisplayV1::createLines() {
     display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH + 1, DISPLAY_WIDTH, BAR_BACKGROUND_COLOR);
     drawLine(DISPLAY_LENGTH + 1, CRITICAL_HIGHT, 5);
     drawLine(DISPLAY_LENGTH + 1, MIN_HIGHT, 5);
   }
 
-  static void DisplayV1::drawGraph() {
+  extern void DisplayV1::drawGraph() {
     display.drawLine(DISPLAY_LENGTH, 0, DISPLAY_LENGTH, DATABOX_TOP_HIGHT - 1, GRAPH_BACKGROUND_COLOR);
     for (short x = 0; x <= DISPLAY_LENGTH; x++) {
       byte arrayDigit = x;
@@ -94,7 +97,7 @@ static int DisplayV1::lastPixel = 0;
     }
   }
 
-  static void DisplayV1::drawConnections(int x, int startY, int endY) {
+  extern void DisplayV1::drawConnections(int x, int startY, int endY) {
     for (byte y = startY; y < endY; y++) {
       if (y < DATABOX_TOP_HIGHT) {
         display.drawPixel(x - 1, y, GRAPH_BACKGROUND_COLOR);
@@ -103,7 +106,7 @@ static int DisplayV1::lastPixel = 0;
     }
   }
 
-  static void DisplayV1::drawLoadingBar() {
+  extern void DisplayV1::drawLoadingBar() {
     display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH + 1, BAR_STRIPE_THICKNESS, Util::getColor(state));
     //Draw Loading Bar
     if (state == VENTILATING) {

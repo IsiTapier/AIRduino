@@ -15,36 +15,40 @@
   //                       | |
   //                       |_|
 
-  static float Meassure::airCondition;
-  static float Meassure::airConditionRaw;
-  static float Meassure::airConditionLast;
-  static int Meassure::airConditionLowest;
-  static unsigned long Meassure::startTime;
-  static unsigned long Meassure::timer;
-  static float Meassure::gradient;
-  static int Meassure::value;
-  static int Meassure::values[AVERAGING_GRADIENT * 2];
-  static int Meassure::now;
-  static int Meassure::last;
-  static int Meassure::ppmSinceVentilation;
-  static State Meassure::state;
-  static int Meassure::colorState;
-  static int Meassure::led;
-  static int Meassure::lowest;
-  static int Meassure::red;
-  static int Meassure::green;
-  static int Meassure::blue;
+  extern float Meassure::airCondition;
+  extern float Meassure::airConditionRaw;
+  extern float Meassure::airConditionLast;
+  extern int Meassure::airConditionLowest;
+  extern unsigned long Meassure::startTime;
+  extern unsigned long Meassure::timer;
+  extern float Meassure::gradient;
+  extern int Meassure::value;
+  extern int Meassure::values[AVERAGING_GRADIENT * 2];
+  extern int Meassure::now;
+  extern int Meassure::last;
+  extern int Meassure::ppmSinceVentilation;
+  extern State Meassure::state;
+  extern int Meassure::colorState;
+  extern int Meassure::led;
+  extern int Meassure::lowest;
+  extern int Meassure::red;
+  extern int Meassure::green;
+  extern int Meassure::blue;
 
-  static void Meassure::setup() {
+  extern void Meassure::setup() {
+    Serial.println("MEASSURE SETUP started");
     pinMode(PIEZO, OUTPUT);
     digitalWrite(PIEZO, LOW);
-
+    Serial.println("Pins initialized");
     airConditionRaw = analogRead(GAS_SENSOR);
     airConditionLast = analogRead(GAS_SENSOR);
     startTime = millis();
+    Serial.println("Variables initialized");
+    Serial.println("MEASSURE SETUP complete");
+    Serial.println();
   }
 
-  static void Meassure::loop() {
+  extern void Meassure::loop() {
     meassureAirCondition();
     mapAirCondition();
     calculateGradient();
@@ -57,27 +61,27 @@
 
   //Getter
 
-  static State Meassure::getState() {
+  extern State Meassure::getState() {
     return(state);
   }
 
-  static int Meassure::getAirCondition() {
+  extern int Meassure::getAirCondition() {
     return((int) airCondition);
   }
 
-  static int Meassure::getLowest() {
+  extern int Meassure::getLowest() {
     return(lowest);
   }
 
-  static int Meassure::getPpmSinceVentilation() {
+  extern int Meassure::getPpmSinceVentilation() {
     return(ppmSinceVentilation);
   }
 
-  static unsigned long Meassure::getStartTime() {
+  extern unsigned long Meassure::getStartTime() {
     return(startTime);
   }
 
-  static void Meassure::debug() {
+  extern void Meassure::debug() {
     if (DEBUG) {
       Serial.println("");
       Serial.println("Sensor");
@@ -99,7 +103,7 @@
   // | |  | |  __/ (_| \__ \__ \ |_| | | |  __/
   // |_|  |_|\___|\__,_|___/___/\__,_|_|  \___|
 
-  static void Meassure::meassureAirCondition() {
+  extern void Meassure::meassureAirCondition() {
     //Messung
     airCondition = 0;
     for (int i = 0; i < AVERAGING_MEASUREMENTS; i++) {
@@ -133,7 +137,7 @@
   // | |__| | (_| | || (_| |
   // |_____/ \__,_|\__\__,_|
 
-  static void Meassure::mapAirCondition() {
+  extern void Meassure::mapAirCondition() {
     //to PPM
     if (airCondition <= Util::calibration[EEPROM.read(0)].getLowestSensor())
       airCondition = Util::calibration[EEPROM.read(0)].getLowestSensor();
@@ -142,7 +146,7 @@
   }
 
 
-  static void Meassure::calculateGradient() {
+  extern void Meassure::calculateGradient() {
     // gradient ist die Differenz zwischen altem und neuem Wert
     //store last AirConditions
     for (int i = AVERAGING_GRADIENT * 2 - 1; i > 0; i--) {
@@ -158,7 +162,7 @@
     gradient = (float) now / last;
   }
 
-  static void Meassure::checkVentilating() {
+  extern void Meassure::checkVentilating() {
     //start Ventilating
     if (gradient < MAX_DECREASE && state != VENTILATING) { // Wenn die Differenz die Hemmschwelle übersteigt: Wird Ventilating erkannt
       state = VENTILATING;
@@ -178,7 +182,7 @@
         airConditionLowest = ALPHA_LOWEST * airCondition + (1 - ALPHA_LOWEST) * airConditionLowest;
       }
 
-      state = 0;
+      state = (State) 0;
       timer = 0;
       startTime = millis();
 
@@ -191,15 +195,15 @@
     last = now;
   }
 
-  static void Meassure::setState() {
+  extern void Meassure::setState() {
 
     // define colorState  -changed
     if(airCondition < LIMIT_GOOD) {
-      colorState = 0;
+      colorState = Util::getStateOf(0);
     } else if (airCondition < LIMIT_MEDIUM) {
-      colorState = 1;
+      colorState = (State) 1;
     } else if (airCondition < LIMIT_BAD) {
-      colorState = 2;
+      colorState = (State) 2;
     }
 
     //colorState = map(airCondition, Util::calibration[EEPROM.read(0)].getLowestPPM(), Util::calibration[EEPROM.read(0)].getHighestPPM(), 0, 2);
@@ -213,12 +217,12 @@
       state = BLINK;
 
     if (state < -1)
-      state = -1;
+      state = (State) -1;
     if (state > 4)
-      state = 4;
+      state = (State) 4;
   }
 
-  static void Meassure::writeLed() {
+  extern void Meassure::writeLed() {
     //map Values
     led = map(airCondition, lowest, LIMIT_ALARM, 0, 255);
     red = led;
