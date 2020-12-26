@@ -341,7 +341,7 @@
 ** Function name:           getUnicodeIndex
 ** Description:             Get the font file index of a Unicode character
 *************************************************************************************x*/
-/*bool TFT_eSPI::getUnicodeIndex(uint16_t unicode, uint16_t *index)
+bool TFT_eSPI::getUnicodeIndex(uint16_t unicode, uint16_t *index)
 {
   for (uint16_t i = 0; i < gFont.gCount; i++)
   {
@@ -360,7 +360,7 @@
 ** Description:             Write a character to the TFT cursor position
 *************************************************************************************x*/
 // Expects file to be open
-/*void TFT_eSPI::drawGlyph(uint16_t code)
+void TFT_eSPI::drawGlyph(uint16_t code)
 {
   uint16_t fg = textcolor;
   uint16_t bg = textbgcolor;

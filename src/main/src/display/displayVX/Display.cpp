@@ -5,20 +5,20 @@
 #include "Arduino.h"
 #include "Display.h"
 
-extern TFT_eSPI Display::display(240, 320);
+extern TFT_eSPI Display::display(DISPLAY_HEIGHT, DISPLAY_LENGTH);
 //extern TouchScreen Display::ts = TouchScreen(XP, YP, XM, YM, 300);
-
 extern State Display::state;
-extern State Display::previousState;
+extern State Display::lastState;
 extern int Display::airCondition;
-extern int Display::lastAirConditionGraph;
+extern int Display::lastAirCondition = 0;
 extern boolean Display::blinkSwitch = false;
 extern int Display::statusLetters;
 extern String Display::statusInfo;
 extern String Display::lastTime;
-extern String Display::Time;
+extern String Display::time;
 extern short Display::seconds;
 extern short Display::minutes;
+extern boolean Display::start;
 
 
 
@@ -37,11 +37,12 @@ extern short Display::minutes;
     Serial.println("DISPLAY SETUP started");
     display.begin();
     Serial.println("Display connection started");
-    display.fillScreen(GRAPH_BACKGROUND_COLOR);
+    display.fillScreen(BACKGROUND_COLOR);
     display.setTextWrap(false);
     display.setRotation(ROTATION);
     Serial.println("Display initialized");
     loadingScreen();
+    start = true;
     Serial.println("DISPLAY SETUP complete");
     Serial.println();
   }
@@ -49,7 +50,7 @@ extern short Display::minutes;
   //Loading Screen
   void Display::loadingScreen() {
     Serial.println("loadingscreen started");
-    display.fillScreen(GRAPH_BACKGROUND_COLOR);
+    display.fillScreen(BACKGROUND_COLOR);
     writeLoadingScreenTitle();
 
     //Draw: Loading Dots
@@ -57,30 +58,28 @@ extern short Display::minutes;
     byte c = 0;
     for (int x = LOADING_SCREEN_TIME * 2; x >= 0; x--) {
       c++;
-      dPrint(distanceToFirstDot, DISPLAY_WIDTH / 5 * 3, LOADING_SCREEN_DOT_SIZE, GRAPH_BACKGROUND_COLOR, "..."); // Altes Clearen
+      dPrint("...", distanceToFirstDot, DISPLAY_HEIGHT / 5 * 3, LOADING_SCREEN_DOT_SIZE, BACKGROUND_COLOR); // Altes Clearen
       switch (c) {
-        case 1: dPrint(distanceToFirstDot, DISPLAY_WIDTH / 5 * 3, LOADING_SCREEN_DOT_SIZE, LOADING_SCREEN_DOTS_COLOR, ".");
+        case 1: dPrint(".", distanceToFirstDot, DISPLAY_HEIGHT / 5 * 3, LOADING_SCREEN_DOT_SIZE, LOADING_SCREEN_DOTS_COLOR);
           break;
-        case 2: dPrint(distanceToFirstDot, DISPLAY_WIDTH / 5 * 3, LOADING_SCREEN_DOT_SIZE, LOADING_SCREEN_DOTS_COLOR, "..");
+        case 2: dPrint("..", distanceToFirstDot, DISPLAY_HEIGHT / 5 * 3, LOADING_SCREEN_DOT_SIZE, LOADING_SCREEN_DOTS_COLOR);
           break;
-        case 3: dPrint(distanceToFirstDot, DISPLAY_WIDTH / 5 * 3, LOADING_SCREEN_DOT_SIZE, LOADING_SCREEN_DOTS_COLOR, "...");
+        case 3: dPrint("...", distanceToFirstDot, DISPLAY_HEIGHT / 5 * 3, LOADING_SCREEN_DOT_SIZE, LOADING_SCREEN_DOTS_COLOR);
           c = 0;
           break;
       }
       delay(500);
     }
     Serial.println("loadingscreen ended");
-    drawDisplay();
-    Serial.println("Display drawn");
   }
 
   extern void Display::writeLoadingScreenTitle() {
     short distanceToFirstLetter = (DISPLAY_LENGTH - (18*LOADING_SCREEN_TITLE_SIZE)) / 2;
     short distanceToFirstLetterSub = (DISPLAY_LENGTH - (30*LOADING_SCREEN_SUB_SIZE)) / 2;
-    dPrint(distanceToFirstLetter + LOADING_SCREEN_TITLE_SIZE, 35, LOADING_SCREEN_TITLE_SIZE, LIGHT_BLUE, "A");
-    dPrint(distanceToFirstLetter + 6*LOADING_SCREEN_TITLE_SIZE, 35, LOADING_SCREEN_TITLE_SIZE, TURKISE, "I");
-    dPrint(distanceToFirstLetter + 12*LOADING_SCREEN_TITLE_SIZE, 35, LOADING_SCREEN_TITLE_SIZE, LIME, "R");
-    dPrint(distanceToFirstLetterSub, 120, LOADING_SCREEN_SUB_SIZE, GREY, "duino");
+    dPrint("A", distanceToFirstLetter + LOADING_SCREEN_TITLE_SIZE, 35, LOADING_SCREEN_TITLE_SIZE, LIGHT_BLUE);
+    dPrint("I", distanceToFirstLetter + 6*LOADING_SCREEN_TITLE_SIZE, 35, LOADING_SCREEN_TITLE_SIZE, TURKISE);
+    dPrint("R", distanceToFirstLetter + 12*LOADING_SCREEN_TITLE_SIZE, 35, LOADING_SCREEN_TITLE_SIZE, LIME);
+    dPrint("duino", distanceToFirstLetterSub, 120, LOADING_SCREEN_SUB_SIZE, GREY);
   }
 
 
@@ -95,81 +94,88 @@ extern short Display::minutes;
   //
 
   extern void Display::drawDisplay() {
-    display.fillScreen(GRAPH_BACKGROUND_COLOR);
+    display.fillScreen(BACKGROUND_COLOR);
+    display.fillRect(0, DATABOX_Y, DISPLAY_LENGTH, DATABOX_HEIGHT, DATABOX_BACKGROUND_COLOR);
     createLines();
+    Serial.println("Display drawn");
+  }
+
+  extern void Display::getData() {
+    state = Meassure::getState();
+    airCondition = Meassure::getAirCondition();
+  }
+
+  extern void Display::generateData(int startPPM, int endPPM, int changePPM) {
+    if(start)
+      airCondition = startPPM;
+    if(drop)
+      airCondition -= changePPM;
+    else
+      airCondition += changePPM;
+    if(airCondition >= endPPM)
+      drop = true;
+    if(airCondition <= startPPM)
+      drop = false;
+    state = Util::getStateOf(airCondition);
   }
 
   extern void Display::checkState() {
     if (blinkSwitch) {
-      drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_WIDTH, GRAPH_BACKGROUND_COLOR);
-      display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH, DISPLAY_WIDTH, BAR_BACKGROUND_COLOR);
-      createLines();
+      drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, 1, BACKGROUND_COLOR);
+      display.drawLine(0, DISPLAY_HEIGHT, DISPLAY_LENGTH, DISPLAY_HEIGHT, DATABOX_BACKGROUND_COLOR);
+      display.drawLine(0, DATABOX_BAR_Y, 0, DATABOX_HEIGHT, DATABOX_BACKGROUND_COLOR);
+      display.drawLine(DISPLAY_LENGTH, DATABOX_BAR_Y, DISPLAY_LENGTH, DATABOX_HEIGHT, DATABOX_BACKGROUND_COLOR);
+      display.fillRect(0, DATABOX_BAR_Y, DISPLAY_LENGTH, DATABOX_BAR_THICKNESS, state.getColor(COLORED_BAR));
+      //createLines();
       digitalWrite(PIEZO, LOW);
       blinkSwitch = false;
     } else if (state >= 3) {
-      drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_WIDTH, WHITE);
-      if (state == PIEP) {
-        //PIEP
-        digitalWrite(PIEZO, HIGH);
-      }
+      drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, 1, WHITE);
+      if (state == PIEP)
+        digitalWrite(PIEZO, HIGH); //TODO: PIEP
+
       blinkSwitch = true;
     }
-    writeInfo();
   }
 
   //Write PPM, Time
   extern void Display::writeInfo() {
     //ppm zeichnen
-    if (lastAirConditionGraph != airCondition || previousState != state) {
+    if (lastState != state || start) {
       //Wenn sich der Wert geändert hat oder state sich geändert hat
-
       //Schreibt Status an die Decke
-      dPrint((DISPLAY_LENGTH - (6*statusLetters-1)*2)/2, STATUS_INFO_TOP_MARGIN, 2, GRAPH_BACKGROUND_COLOR, statusInfo);
-      switch (state) {
-        case -1: statusInfo = "Lueftet";
-                 statusLetters = 6;
-          break;
-        case 0:  statusInfo = "Optimal";
-                 statusLetters = 7;
-          break;
-        case 1:  statusInfo = "Schlecht";
-                 statusLetters = 8;
-          break;
-        case 2:  statusInfo = "Gammlig";
-                 statusLetters = 7;
-          break;
-        case 3:  statusInfo = "sehr Gammlig";
-                 statusLetters = 12;
-          break;
-        case 4:  statusInfo = "ueber Gammlig";
-                 statusLetters = 12;
-          break;
-        default: statusInfo = "Undefiniert";
-                 statusLetters = 11;
-          break;
-      }
-      dPrint((DISPLAY_LENGTH - (6*statusLetters-1)*2)/2, STATUS_INFO_TOP_MARGIN, 2, WHITE, statusInfo);
+      dPrint(lastState.getTitle(), DISPLAY_LENGTH/2, STATUS_MARGIN_TOP, LAST_STATUS_SIZE, BACKGROUND_COLOR, 1);
+      dPrint(state.getTitle(), DISPLAY_LENGTH/2, STATUS_MARGIN_TOP, STATUS_SIZE, state.getColor(COLORED_STATE), 1);
 
-      //Verhindert überschreiben von "ppm"
-      short PPM_DIGIT_Y = DISPLAY_WIDTH - PPM_DIGIT_SIZE * 10;
+      //Draw Datatbox
 
-      if (airCondition < 1000)
-        dPrint(PPM_DIGIT_MARGIN + 3*6*PPM_DIGIT_SIZE, PPM_DIGIT_Y, PPM_STRING_SIZE, Util::getColor(state), "ppm");
-      else
-        dPrint(PPM_DIGIT_MARGIN + 3*6*PPM_DIGIT_SIZE, PPM_DIGIT_Y, PPM_STRING_SIZE, BAR_BACKGROUND_COLOR, "ppm");
-
-      //Clear old Pixels
-
-      dPrint(PPM_DIGIT_MARGIN, PPM_DIGIT_Y, PPM_DIGIT_SIZE, BAR_BACKGROUND_COLOR, lastAirConditionGraph);
-      //write new Pixels
-      dPrint(PPM_DIGIT_MARGIN, PPM_DIGIT_Y, PPM_DIGIT_SIZE, Util::getColor(state), airCondition) ;
-      //Set new lastAirCondition
-      lastAirConditionGraph = airCondition; //Setzt letzten Wert
       //Draw Bar
+      if(COLORED_BAR || start)
+        display.fillRect(0, DATABOX_BAR_Y, DISPLAY_LENGTH, DATABOX_BAR_THICKNESS, state.getColor(COLORED_BAR));
 
-      previousState = state;
+      //Draw PPM
+      dPrint(lastAirCondition, PPM_MARGIN_LEFT, PPM_Y, PPM_SIZE, DATABOX_BACKGROUND_COLOR, 6);
+      dPrint(String(airCondition) + " ", PPM_MARGIN_LEFT, PPM_Y, PPM_SIZE, state.getColor(COLORED_PPM), 6);
+      if (airCondition < 1000) {
+        dPrint("ppm", PPM_STRING_X, PPM_STRING_Y, PPM_STRING_SIZE, state.getColor(COLORED_PPM), 6);
+      }
     }
-    drawLoadingBar();
+
+    lastState = state;
+
+
+    //write new Pixels
+    dPrint(airCondition, PPM_MARGIN_LEFT, PPM_Y, PPM_SIZE, state.getColor(COLORED_PPM), 6, DATABOX_BACKGROUND_COLOR, lastAirCondition);
+
+    //Verhindert überschreiben von "ppm"
+    if (airCondition < 1000 && lastAirCondition >= 1000 || airCondition < 1000 && start) {
+      dPrint(String(airCondition) + " ", PPM_MARGIN_LEFT, PPM_Y, PPM_SIZE, state.getColor(COLORED_PPM), 6, DATABOX_BACKGROUND_COLOR, String(lastAirCondition));
+      dPrint("ppm", PPM_STRING_X, PPM_STRING_Y, PPM_STRING_SIZE, state.getColor(COLORED_PPM), 6);
+    } else if(airCondition >= 1000 && lastAirCondition < 1000)
+      dPrint("ppm", PPM_STRING_X, PPM_STRING_Y, PPM_STRING_SIZE, DATABOX_BACKGROUND_COLOR, 6);
+
+
+    //drawLoadingBar();
 
     //calculate time since last ventilating
     long startTime = Meassure::getStartTime();
@@ -177,31 +183,47 @@ extern short Display::minutes;
     minutes = ((millis() - startTime) / 1000 - seconds) / 60;
 
     //create String
-    Time = "";
+    time = "";
     if (minutes < 10)
-      Time = Time + 0;
-    Time = Time + minutes;
-    Time = Time + ":";
+      time = time + 0;
+    time = time + minutes;
+    time = time + ":";
     if (seconds < 10)
-      Time = Time + 0;
-    Time = Time + seconds;
+      time = time + 0;
+    time = time + seconds;
 
     //Clear old Pixels
-    dPrint(180, 180, TIMER_SIZE, BAR_BACKGROUND_COLOR, lastTime);
+    //dPrint(lasttime, timeR_X, timeR_Y, timeR_SIZE, BAR_BACKGROUND_COLOR, 8);
     //write new Pixels
-    if (minutes >= 20)
-      dPrint(180, 180, TIMER_SIZE, TIME_COLOR_CRITICAL, Time);
-    else
-      dPrint(180, 180, TIMER_SIZE, TIME_COLOR_NORMAL, Time);
+    if (minutes >= 20 && COLORED_TIME) {
+      if(seconds == 0 && minutes == 20)
+        dPrint(time, TIMER_X, TIMER_Y, TIMER_SIZE, TIME_COLOR_CRITICAL, 8, DATABOX_BACKGROUND_COLOR);
+      else
+        dPrint(time, TIMER_X, TIMER_Y, TIMER_SIZE, TIME_COLOR_CRITICAL, 8, DATABOX_BACKGROUND_COLOR, lastTime);
+    } else
+      dPrint(time, TIMER_X, TIMER_Y, TIMER_SIZE, TIME_COLOR_NORMAL, 8, DATABOX_BACKGROUND_COLOR, lastTime);
     //Set new lasttime
-    lastTime = Time; //Setzt letzten Wert
+    lastTime = time; //Setzt letzten Wert
+
+
+    lastAirCondition = airCondition;
+
   }
 
-  extern void Display::drawBorder(int xStart, int yStart, int xEnd, int yEnd, int color) {
-    display.drawLine(xStart, yStart, xEnd, yStart, color);
-    display.drawLine(xStart, yEnd, xEnd, yEnd, color);
-    display.drawLine(xStart, yStart, xStart, yEnd, color);
-    display.drawLine(xEnd, yStart, xEnd, yEnd, color);
+  extern void Display::drawBorder(int x, int y, int length, int height, int thickness, int color) {
+    length -= thickness;
+    height -= thickness;
+    for(int i = 0; i < thickness; i++) {
+      for(int i = 0; i < thickness; i++) {
+        display.drawLine(x, y, x+length, y, color);
+        display.drawLine(x, y+height, x+length, y+height, color);
+        display.drawLine(x, y, x, y+height, color);
+        display.drawLine(x+length, y, x+length, y+height, color);
+        x++;
+      }
+      y++;
+      x -= thickness;
+    }
   }
 
 
@@ -213,26 +235,43 @@ extern short Display::minutes;
 
   extern void Display::createLines() {}
 
-  extern void Display::dPrint(int x, int y, int scale, int color, String text) {
-    display.setCursor(x, y);
+  extern void Display::showBoxes() {
+    display.fillRect(PPM_MARGIN_LEFT, DISPLAY_HEIGHT - PPM_HEIGHT, PPM_LENGTH, PPM_HEIGHT, GREEN);
+    display.fillRect(DISPLAY_LENGTH - TIMER_LENGTH - TIMER_MARGIN_RIGHT, DISPLAY_HEIGHT - TIMER_MARGIN_BOTTOM - TIMER_HEIGHT, TIMER_LENGTH, TIMER_HEIGHT, WHITE);
+    display.fillRect(DISPLAY_LENGTH - TIMER_LENGTH - TIMER_MARGIN_RIGHT, DISPLAY_HEIGHT - TIMER_MARGIN_BOTTOM - TIMER_SIZE*LETTER_HEIGHT, TIMER_LENGTH, TIMER_SIZE*LETTER_HEIGHT, BLUE);
+    display.fillRect((DISPLAY_LENGTH - STATUS_LENGTH)/2, STATUS_MARGIN_TOP, STATUS_LENGTH, STATUS_HEIGHT, RED);
+  }
+
+  extern void Display::dPrint(String text, int x, int y, int scale, int color, int datum, int backgroundColor, String oldText, int padding) {
     display.setTextSize(scale);
-    display.setTextColor(color);
-    for(int i = 0; i < text.length(); i++) {
-      if(text.charAt(i) == (char)'u' && text.charAt(i+1) == (char) 'e') {
-        display.print(char(0x81));
-        i++;
-      } else
-        display.print(text.charAt(i));
+    display.setTextPadding(padding);
+    display.setTextDatum(datum);
+    if(backgroundColor == 0)
+      backgroundColor = BACKGROUND_COLOR;
+    if(oldText.length() != 0) {
+      if(datum % 3 == 2)
+        x -= LETTER_LENGTH*scale*(text.length()-1);
+      for(int i = 0; i < text.length(); i++) {
+        if(text.charAt(i) != oldText.charAt(i)) {
+          display.setTextColor(backgroundColor);
+          display.drawString((String) oldText.charAt(i), x+LETTER_LENGTH*scale*i, y);
+          display.setTextColor(color);
+          display.drawString((String) text.charAt(i), x+LETTER_LENGTH*scale*i, y);
+        }
+      }
+    } else {
+      display.setCursor(x, y);
+      if(backgroundColor > 0)
+        display.setTextColor(color, backgroundColor);
+      else
+        display.setTextColor(color);
+      display.drawString(text);
     }
-    display.println();
   }
 
   //Verkürzung: Writing mit Integern
-  extern void Display::dPrint(int x, int y, int scale, int color, int text) {
-    display.setCursor(x, y);
-    display.setTextSize(scale);
-    display.setTextColor(color);
-    display.println(text);
+  extern void Display::dPrint(int text, int x, int y, int scale, int color, int datum, int backgroundColor, int oldText, int padding) {
+    dPrint(String(text), x, y, scale, color, datum, backgroundColor, (oldText == -1) ? "" : String(oldText), padding);
   }
 
   extern void Display::drawLoadingBar() {

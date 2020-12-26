@@ -9,7 +9,7 @@
 #include "../util/Util.h"
 
 //settings
-#define DEBUG true
+#define DEBUG false
 
 #define FACTOR 4.631578947368421
 #define STAGE_TIME 1*1000
@@ -29,11 +29,7 @@
 #define MAX_INCREASE_LOWEST 50
 
 
-#define LIMIT_GOOD 600
-#define LIMIT_MEDIUM 800
-#define LIMIT_BAD 900
-#define LIMIT_ALARM 1000
-#define LIMIT_PIEP 1200
+
 
 //pins
 #define GAS_SENSOR 36

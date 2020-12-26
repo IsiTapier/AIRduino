@@ -8,8 +8,15 @@
 #include "../DisplayVX/Display.h"
 
 //Design
-#define MIN_HIGHT DISPLAY_WIDTH - map(Util::calibration[EEPROM.read(0)].getLowestPPM(), 0, MAX_DISPLAYED_PPM, 0, DISPLAY_WIDTH)
-#define CRITICAL_HIGHT DISPLAY_WIDTH - map(MAX_LIGHT, 0, MAX_DISPLAYED_PPM, 0, DISPLAY_WIDTH)
+#define MIN_HIGHT DISPLAY_HEIGHT - map(Util::calibration[EEPROM.read(0)].getLowestPPM(), 0, MAX_DISPLAYED_PPM, 0, DISPLAY_HEIGHT)
+#define CRITICAL_HIGHT DISPLAY_HEIGHT - map(MAX_LIGHT, 0, MAX_DISPLAYED_PPM, 0, DISPLAY_HEIGHT)
+
+#define AVERAGING_GRAPH 10
+#define ALPHA_GRAPH 0.7
+
+#define MAX_LIGHT 1000
+#define OSV_PPM 400
+#define MAX_DISPLAYED_PPM 1280
 
 class DisplayV1 : public Display {
 
@@ -18,7 +25,7 @@ class DisplayV1 : public Display {
     static void loop();
 
   private:
-    static boolean getData();
+    static boolean averageData();
     static void fillData();
     static void createLines();
     static void drawGraph();

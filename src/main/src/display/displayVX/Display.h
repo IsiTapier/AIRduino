@@ -11,67 +11,7 @@
 #include "../../extern/TFT_eSPI-master/TFT_eSPI.h"
 #include "../../util/Util.h"
 #include "../../meassure/Meassure.h"
-
-//settings
-#define ROTATION -45
-#define DISPLAY_BRIGHTNESS 0.7
-#define LOADING_SCREEN_TIME 10
-
-#define AVERAGING_GRAPH 10
-#define ALPHA_GRAPH 0.7
-
-//pins:
-#define LCD_CS A3
-#define LCD_CD A2
-#define LCD_WR A1
-#define LCD_RD A0
-#define LCD_RESET A4
-
-#define TS_MINX 920
-#define TS_MINY 120
-#define TS_MAXX 150
-#define TS_MAXY 940
-
-
-#define YP A3  // must be an analog pin, use "An" notation!
-#define XM A2  // must be an analog pin, use "An" notation!
-#define YM 9   // can be a digital pin
-#define XP 8   // can be a digital pin
-
-#define PIEZO 4
-
-#define DISPLAY_LENGTH 319
-#define DISPLAY_WIDTH 239
-
-//Design
-#define MAX_LIGHT 1000
-#define OSV_PPM 400
-#define MAX_DISPLAYED_PPM 1280
-
-#define STATUS_INFO_TOP_MARGIN 5
-#define DATABOX_TOP_HIGHT 400
-#define GRAPH_COLOR WHITE//MAGENTA
-#define GRAPH_BACKGROUND_COLOR BLACK
-#define BAR_BACKGROUND_COLOR 0x2104 //Fast schwarz
-#define BAR_STRIPE_THICKNESS 10
-#define TIME_COLOR_CRITICAL RED
-#define TIME_COLOR_NORMAL WHITE
-
-#define PPM_DIGIT_SIZE 5
-#define PPM_DIGIT_MARGIN 5 //Rand links
-
-#define PPM_STRING_SIZE 4
-#define PPM_STRING_MARGIN 5 // Rand von unten
-
-#define TIMER_SIZE 4
-
-
-//loadingScreen
-#define LOADING_SCREEN_TITLE_SIZE 12
-#define LOADING_SCREEN_SUB_SIZE 8
-#define LOADING_SCREEN_DOTS_COLOR WHITE
-#define LOADING_SCREEN_DOT_SIZE 10
-
+#include "Design.h"
 
 class Display {
 
@@ -80,30 +20,34 @@ class Display {
 
   protected:
     static void drawDisplay();
+    static void getData();
+    static void generateData(int startPPM, int endPPM, int changePPM);
     static void drawLoadingBar();
     static void checkState();
     static void writeInfo();
-    static void drawBorder(int xStart, int yStart, int xEnd, int yEnd, int color);
+    static void drawBorder(int x, int y, int length, int height, int thickness, int color);
     static void drawLine(int x, int y, int z);
     static void createLines();
-    static void dPrint(int x, int y, int scale, int color, String text);
-    static void dPrint(int x, int y, int scale, int color, int text);
+    static void showBoxes();
+    static void dPrint(String text, int x, int y, int scale, int color, int datum = 0, int backgroundColor = -1, String oldText = "", int padding = 0);
+    static void dPrint(int text, int x, int y, int scale, int color, int datum = 0, int backgroundColor = -1, int oldText = -1, int padding = 0);
 
   //  static Adafruit_TFTLCD display;
     static TFT_eSPI display;
     //static TouchScreen ts;
 
     static State state;
-    static State previousState;
+    static State lastState;
     static int airCondition;
-    static int lastAirConditionGraph;
+    static int lastAirCondition;
     static boolean blinkSwitch;
     static int statusLetters;
     static String statusInfo;
     static String lastTime;
-    static String Time;
+    static String time;
     static short seconds;
     static short minutes;
+    static boolean start;
 
     static void loadingScreen();
   private:

@@ -6,32 +6,23 @@
 #include "Util.h"
 
   //State
-  extern State Util::states[7] = {State::VENTILATING, State::GOOD, State::MEDIUM, State::BAD, State::BLINK, State::PIEP};
-
-  extern int Util::getColor(State state) {
-    switch ((int)state) {
-      case -1:  return (CYAN);
-        break;
-      case 0: return (PPM_COLOR_N);
-        break;
-      case 1: return (PPM_COLOR_R);
-        break;
-      case 2: return (PPM_COLOR_A);
-        break;
-      default: return (PPM_COLOR_A);
-        break;
-    }
-  }
-
   extern State Util::getStateOf(int value) {
-    for (int i = 0; i < 8; i++) {
-      if ((int) states[i] == value)
-        return (states[i]);
-    }
+         if (value <= LIMIT_GOOD)
+      return((State) GOOD);
+    else if (value <= LIMIT_MEDIUM)
+      return((State) MEDIUM);
+    else if (value < LIMIT_BLINK)
+      return((State) BAD);
+    else if (value >= LIMIT_BLINK)
+      return((State) BLINK);
+    else if (value >= LIMIT_PIEP)
+      return((State) PIEP);
+    else
+      return((State) BAD);
   }
 
   extern Calibration Util::calibration[] = {
-      Calibration(400, 500, 400, 1000),
+      Calibration(320, 500, 400, 1000),
       Calibration(55, 65, 400, 1000),
       Calibration(40, 60, 400, 1000)
   };

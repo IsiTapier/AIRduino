@@ -2923,18 +2923,18 @@ void TFT_eSPI::readAddrWindow(int32_t xs, int32_t ys, int32_t w, int32_t h)
 ***************************************************************************************/
 void TFT_eSPI::drawPixel(int32_t x, int32_t y, uint32_t color)
 {
-  if (_vpOoB) return;
+    if (_vpOoB) return;
 
-  x+= _xDatum;
-  y+= _yDatum;
+    x+= _xDatum;
+    y+= _yDatum;
 
-  // Range checking
-  if ((x < _vpX) || (y < _vpY) ||(x >= _vpW) || (y >= _vpH)) return;
+    // Range checking
+    if ((x < _vpX) || (y < _vpY) ||(x >= _vpW) || (y >= _vpH)) return;
 
-#ifdef CGRAM_OFFSET
-  x+=colstart;
-  y+=rowstart;
-#endif
+  #ifdef CGRAM_OFFSET
+    x+=colstart;
+    y+=rowstart;
+  #endif
 
   begin_tft_write();
 
@@ -3798,7 +3798,6 @@ int16_t TFT_eSPI::drawChar(uint16_t uniCode, int32_t x, int32_t y, uint8_t font)
       end_tft_write();
     }
     else { // Faster drawing of characters and background using block write
-
       begin_tft_write();
 
       setWindow(xd, yd, xd + width - 1, yd + height - 1);
@@ -3967,6 +3966,22 @@ int16_t TFT_eSPI::drawString(const String& string, int32_t poX, int32_t poY, uin
   char buffer[len];
   string.toCharArray(buffer, len);
   return drawString(buffer, poX, poY, font);
+}
+//added: Without font number, without coordinates
+int16_t TFT_eSPI::drawString(const String& string)
+{
+  int16_t len = string.length() + 2;
+  char buffer[len];
+  string.toCharArray(buffer, len);
+  return drawString(buffer, getCursorX(), getCursorY(), textfont);
+}
+//added: With font number, without coordintes
+int16_t TFT_eSPI::drawString(const String& string, uint8_t font)
+{
+  int16_t len = string.length() + 2;
+  char buffer[len];
+  string.toCharArray(buffer, len);
+  return drawString(buffer, getCursorX(), getCursorY(), font);
 }
 
 // Without font number, uses font set by setTextFont()
@@ -4576,7 +4591,7 @@ void TFT_eSPI::getSetup(setup_t &tft_settings)
 //#include "Extensions/Sprite.cpp"
 
 #ifdef SMOOTH_FONT
-  #include "Extensions/Smooth_font.cpp"
+//  #include "Extensions/Smooth_font.cpp"
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////////////

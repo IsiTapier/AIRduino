@@ -18,6 +18,7 @@
 
 #define TFT_ESPI_VERSION "2.3.53"
 
+
 // Bit level feature flags
 // Bit 0 set: viewport capability
 #define TFT_ESPI_FEATURES 1
@@ -58,6 +59,7 @@
 // Include header file that defines the fonts loaded, the TFT drivers
 // available and the pins to be used, etc, etc
 #include "User_Setup_Select.h"
+#include "../../Util/Colors.h"
 
 // Handle FLASH based storage e.g. PROGMEM
 #ifdef __AVR__
@@ -253,55 +255,31 @@ const PROGMEM fontinfo fontdata [] = {
 /***************************************************************************************
 **                         Section 6: Colour enumeration
 ***************************************************************************************/
-// Default color definitions
-#define TFT_BLACK       0x0000      /*   0,   0,   0 */
-#define TFT_NAVY        0x000F      /*   0,   0, 128 */
-#define TFT_DARKGREEN   0x03E0      /*   0, 128,   0 */
-#define TFT_DARKCYAN    0x03EF      /*   0, 128, 128 */
-#define TFT_MAROON      0x7800      /* 128,   0,   0 */
-#define TFT_PURPLE      0x780F      /* 128,   0, 128 */
-#define TFT_OLIVE       0x7BE0      /* 128, 128,   0 */
-#define TFT_LIGHTGREY   0xD69A      /* 211, 211, 211 */
-#define TFT_DARKGREY    0x7BEF      /* 128, 128, 128 */
-#define TFT_BLUE        0x001F      /*   0,   0, 255 */
-#define TFT_GREEN       0x07E0      /*   0, 255,   0 */
-#define TFT_CYAN        0x07FF      /*   0, 255, 255 */
-#define TFT_RED         0xF800      /* 255,   0,   0 */
-#define TFT_MAGENTA     0xF81F      /* 255,   0, 255 */
-#define TFT_YELLOW      0xFFE0      /* 255, 255,   0 */
-#define TFT_WHITE       0xFFFF      /* 255, 255, 255 */
-#define TFT_ORANGE      0xFDA0      /* 255, 180,   0 */
-#define TFT_GREENYELLOW 0xB7E0      /* 180, 255,   0 */
-#define TFT_PINK        0xFE19      /* 255, 192, 203 */ //Lighter pink, was 0xFC9F
-#define TFT_BROWN       0x9A60      /* 150,  75,   0 */
-#define TFT_GOLD        0xFEA0      /* 255, 215,   0 */
-#define TFT_SILVER      0xC618      /* 192, 192, 192 */
-#define TFT_SKYBLUE     0x867D      /* 135, 206, 235 */
-#define TFT_VIOLET      0x915C      /* 180,  46, 226 */
+
 
 // Next is a special 16 bit colour value that encodes to 8 bits
 // and will then decode back to the same 16 bit value.
 // Convenient for 8 bit and 16 bit transparent sprites.
-#define TFT_TRANSPARENT 0x0120 // This is actually a dark green
+#define TRANSPARENT 0x0120 // This is actually a dark green
 
 // Default palette for 4 bit colour sprites
 static const uint16_t default_4bit_palette[] PROGMEM = {
-  TFT_BLACK,    //  0  ^
-  TFT_BROWN,    //  1  |
-  TFT_RED,      //  2  |
-  TFT_ORANGE,   //  3  |
-  TFT_YELLOW,   //  4  Colours 0-9 follow the resistor colour code!
-  TFT_GREEN,    //  5  |
-  TFT_BLUE,     //  6  |
-  TFT_PURPLE,   //  7  |
-  TFT_DARKGREY, //  8  |
-  TFT_WHITE,    //  9  v
-  TFT_CYAN,     // 10  Blue+green mix
-  TFT_MAGENTA,  // 11  Blue+red mix
-  TFT_MAROON,   // 12  Darker red colour
-  TFT_DARKGREEN,// 13  Darker green colour
-  TFT_NAVY,     // 14  Darker blue colour
-  TFT_PINK      // 15
+  BLACK,    //  0  ^
+  BROWN,    //  1  |
+  RED,      //  2  |
+  ORANGE,   //  3  |
+  YELLOW,   //  4  Colours 0-9 follow the resistor colour code!
+  GREEN,    //  5  |
+  BLUE,     //  6  |
+  PURPLE,   //  7  |
+  DARKGREY, //  8  |
+  WHITE,    //  9  v
+  CYAN,     // 10  Blue+green mix
+  MAGENTA,  // 11  Blue+red mix
+  MAROON,   // 12  Darker red colour
+  DARKGREEN,// 13  Darker green colour
+  NAVY,     // 14  Darker blue colour
+  PINK      // 15
 };
 
 /***************************************************************************************
@@ -386,8 +364,6 @@ class TFT_eSPI : public Print { //friend class TFT_eSprite; // Sprite class has 
  //--------------------------------------- public ------------------------------------//
  public:
 
-virtual void drawGlyph(uint16_t code) { };
-
   TFT_eSPI(int16_t _W = TFT_WIDTH, int16_t _H = TFT_HEIGHT);
 
   // init() and begin() are equivalent, begin() included for backwards compatibility
@@ -459,7 +435,8 @@ virtual void drawGlyph(uint16_t code) { };
            fillRoundRect(int32_t x, int32_t y, int32_t w, int32_t h, int32_t radius, uint32_t color);
 
 
-  void     drawCircle(int32_t x, int32_t y, int32_t r, uint32_t color),
+  void     drawGlyph(uint16_t code),
+           drawCircle(int32_t x, int32_t y, int32_t r, uint32_t color),
            drawCircleHelper(int32_t x, int32_t y, int32_t r, uint8_t cornername, uint32_t color),
            fillCircle(int32_t x, int32_t y, int32_t r, uint32_t color),
            fillCircleHelper(int32_t x, int32_t y, int32_t r, uint8_t cornername, int32_t delta, uint32_t color),
@@ -528,6 +505,10 @@ virtual void drawGlyph(uint16_t code) { };
            drawString(const char *string, int32_t x, int32_t y),                // Draw string using current font
            drawString(const String& string, int32_t x, int32_t y, uint8_t font),// Draw string using specifed font number
            drawString(const String& string, int32_t x, int32_t y),              // Draw string using current font
+           drawString(const String& string, uint8_t font),
+           //added
+           drawString(const String& string),
+           //added
 
            drawCentreString(const char *string, int32_t x, int32_t y, uint8_t font),  // Deprecated, use setTextDatum() and drawString()
            drawRightString(const char *string, int32_t x, int32_t y, uint8_t font),   // Deprecated, use setTextDatum() and drawString()
@@ -757,7 +738,6 @@ virtual void drawGlyph(uint16_t code) { };
 
  //-------------------------------------- protected ----------------------------------//
  protected:
-
   //int32_t  win_xe, win_ye;          // Window end coords - not needed
 
   int32_t  _init_width, _init_height; // Display w/h as input, used by setRotation()

@@ -27,21 +27,29 @@ extern int DisplayV1::lastPixel = 0;
     for (short x = 0; x < DISPLAY_LENGTH; x++) {
       graphData[x] = DISPLAY_LENGTH;
     }
-    graphData[0] = DATABOX_TOP_HIGHT - 1;
+    graphData[0] = DATABOX_Y - 1;
     Serial.println("DisplayV1-Setup complete");
     Serial.println();
   }
 
   extern void DisplayV1::loop() {
-    state = Meassure::getState();
-    airCondition = Meassure::getAirCondition();
+    getData();
+    //generateData(400, 1000, 30);
 
-    checkState();
-    if (getData()) {
+    if(start) {
+      drawDisplay();
+    }
+
+    if (averageData()) {
       createLines();
       fillData();
       drawGraph();
     }
+    writeInfo();
+    checkState();
+    
+    if(start)
+      start = false;
   }
 
 
@@ -55,7 +63,7 @@ extern int DisplayV1::lastPixel = 0;
   //              |_|            |___/
   //
 
-  extern boolean DisplayV1::getData() {
+  extern boolean DisplayV1::averageData() {
     valuesGraph[counter] = airCondition;
     counter ++;
     if (!(counter < AVERAGING_GRAPH)) {
@@ -73,20 +81,20 @@ extern int DisplayV1::lastPixel = 0;
     for (short x = DISPLAY_LENGTH; x > 0; x--) {
       graphData[x] = graphData[x - 1];
     }
-    graphData[0] = DISPLAY_WIDTH - pixel;
+    graphData[0] = DISPLAY_HEIGHT - pixel;
   }
 
   extern void DisplayV1::createLines() {
-    display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH + 1, DISPLAY_WIDTH, BAR_BACKGROUND_COLOR);
+    display.fillRect(0, DATABOX_Y, DISPLAY_LENGTH + 1, DISPLAY_HEIGHT, DATABOX_BACKGROUND_COLOR);
     drawLine(DISPLAY_LENGTH + 1, CRITICAL_HIGHT, 5);
     drawLine(DISPLAY_LENGTH + 1, MIN_HIGHT, 5);
   }
 
   extern void DisplayV1::drawGraph() {
-    display.drawLine(DISPLAY_LENGTH, 0, DISPLAY_LENGTH, DATABOX_TOP_HIGHT - 1, GRAPH_BACKGROUND_COLOR);
+    display.drawLine(DISPLAY_LENGTH, 0, DISPLAY_LENGTH, DATABOX_Y - 1, BACKGROUND_COLOR);
     for (short x = 0; x <= DISPLAY_LENGTH; x++) {
       byte arrayDigit = x;
-      if (graphData[arrayDigit] < DATABOX_TOP_HIGHT)
+      if (graphData[arrayDigit] < DATABOX_Y)
         display.drawPixel(x, graphData[arrayDigit], GRAPH_COLOR);
       if (x != 0) {
         if (graphData[arrayDigit - 1] < graphData[arrayDigit])
@@ -99,18 +107,18 @@ extern int DisplayV1::lastPixel = 0;
 
   extern void DisplayV1::drawConnections(int x, int startY, int endY) {
     for (byte y = startY; y < endY; y++) {
-      if (y < DATABOX_TOP_HIGHT) {
-        display.drawPixel(x - 1, y, GRAPH_BACKGROUND_COLOR);
+      if (y < DATABOX_Y) {
+        display.drawPixel(x - 1, y, BACKGROUND_COLOR);
         display.drawPixel(x, y, GRAPH_COLOR);
       }
     }
   }
 
   extern void DisplayV1::drawLoadingBar() {
-    display.fillRect(0, DATABOX_TOP_HIGHT, DISPLAY_LENGTH + 1, BAR_STRIPE_THICKNESS, Util::getColor(state));
+    display.fillRect(0, DATABOX_Y, DISPLAY_LENGTH + 1, DATABOX_BAR_THICKNESS, state.getColor(true));
     //Draw Loading Bar
     if (state == VENTILATING) {
       short bar_ventilating_length = map(airCondition, Meassure::getLowest(), Meassure::getPpmSinceVentilation(), 0, DISPLAY_LENGTH);
-      display.fillRect(DISPLAY_LENGTH - bar_ventilating_length, DATABOX_TOP_HIGHT, bar_ventilating_length, BAR_STRIPE_THICKNESS, GREY);
+      display.fillRect(DISPLAY_LENGTH - bar_ventilating_length, DATABOX_Y, bar_ventilating_length, DATABOX_BAR_THICKNESS, GREY);
     }
   }

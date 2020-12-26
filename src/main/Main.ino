@@ -27,7 +27,7 @@
 //                       | |
 //                       |_|
 void setup() {
-  EEPROM.write(0, 1);
+  //EEPROM.write(0, 1);
   Serial.begin(9600);
   Serial.println();
   Serial.println();
@@ -35,8 +35,8 @@ void setup() {
   Serial.println("Serial communication started at 9600 baud");
   Serial.println();
   //DisplayV1::setup();
-  DisplayV2::setup();
   Meassure::setup();
+  DisplayV2::setup();
 }
 
 
@@ -50,6 +50,6 @@ void setup() {
 //                   |_|
 void loop() {
   Meassure::loop();
-  //DisplayV1::loop();
   DisplayV2::loop();
+  //DisplayV1::loop();
 }
