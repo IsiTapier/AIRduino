@@ -21,10 +21,6 @@ class DisplayV2 : Display {
 
     static int barPixel;
     static int lastBarPixel;
-    static short first_section_x;
-    static short second_section_x;
-
-    static boolean drop;
 };
 
 #endif

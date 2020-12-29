@@ -7,6 +7,7 @@
 extern int DisplayV1::valuesGraph[AVERAGING_GRAPH];
 extern int DisplayV1::graphData[DISPLAY_LENGTH];
 extern int DisplayV1::counter = 0;
+extern int DisplayV1::currentPosition = 0;
 extern int DisplayV1::pixel = 0;
 extern int DisplayV1::lastPixel = 0;
 
@@ -23,11 +24,7 @@ extern int DisplayV1::lastPixel = 0;
     Display::setup();
 
     Serial.println("DisplayV1-Setup started");
-    //Auffüllen des Arrays
-    for (short x = 0; x < DISPLAY_LENGTH; x++) {
-      graphData[x] = DISPLAY_LENGTH;
-    }
-    graphData[0] = DATABOX_Y - 1;
+
     Serial.println("DisplayV1-Setup complete");
     Serial.println();
   }
@@ -41,13 +38,13 @@ extern int DisplayV1::lastPixel = 0;
     }
 
     if (averageData()) {
-      createLines();
       fillData();
+      createLines();
       drawGraph();
     }
     writeInfo();
     checkState();
-    
+
     if(start)
       start = false;
   }
@@ -67,9 +64,12 @@ extern int DisplayV1::lastPixel = 0;
     valuesGraph[counter] = airCondition;
     counter ++;
     if (!(counter < AVERAGING_GRAPH)) {
+      lastPixel = pixel;
       pixel = Util::average(valuesGraph, 0, AVERAGING_GRAPH);
       pixel = ALPHA_GRAPH * pixel + (1 - ALPHA_GRAPH) * lastPixel;
-      lastPixel = pixel;
+      pixel = map(pixel, DISPLAYED_PPM_LOWEST, DISPLAYED_PPM_HIGHEST, GRAPH_START_Y, GRAPH_END_Y);
+      if(pixel <= DATABOX_BAR_Y)
+        pixel = DATABOX_BAR_Y-1;
       counter = 0;
       return (true);
     } else
@@ -78,16 +78,19 @@ extern int DisplayV1::lastPixel = 0;
 
   // Künstliches Auffüllen der Werte, wird später vom Modul übernommen
   extern void DisplayV1::fillData() {
-    for (short x = DISPLAY_LENGTH; x > 0; x--) {
-      graphData[x] = graphData[x - 1];
+    if(currentPosition == DISPLAY_LENGTH-1) {
+      for (short x = 0; x < DISPLAY_LENGTH; x++) {
+        graphData[x] = graphData[x + 1];
+      }
+      graphData[DISPLAY_LENGTH] = pixel;
+    } else {
+      graphData[currentPosition] = pixel;
     }
-    graphData[0] = DISPLAY_HEIGHT - pixel;
   }
 
   extern void DisplayV1::createLines() {
-    display.fillRect(0, DATABOX_Y, DISPLAY_LENGTH + 1, DISPLAY_HEIGHT, DATABOX_BACKGROUND_COLOR);
-    drawLine(DISPLAY_LENGTH + 1, CRITICAL_HIGHT, 5);
-    drawLine(DISPLAY_LENGTH + 1, MIN_HIGHT, 5);
+    drawLine(DISPLAY_LENGTH + 1, FIRST_SECTION_Y, 5, true);
+    drawLine(DISPLAY_LENGTH + 1, SECOND_SECTION_Y, 5, true);
   }
 
   extern void DisplayV1::drawGraph() {

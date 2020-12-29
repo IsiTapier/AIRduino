@@ -8,8 +8,7 @@
 #include "../DisplayVX/Display.h"
 
 //Design
-#define MIN_HIGHT DISPLAY_HEIGHT - map(Util::calibration[EEPROM.read(0)].getLowestPPM(), 0, MAX_DISPLAYED_PPM, 0, DISPLAY_HEIGHT)
-#define CRITICAL_HIGHT DISPLAY_HEIGHT - map(MAX_LIGHT, 0, MAX_DISPLAYED_PPM, 0, DISPLAY_HEIGHT)
+
 
 #define AVERAGING_GRAPH 10
 #define ALPHA_GRAPH 0.7
@@ -35,6 +34,7 @@ class DisplayV1 : public Display {
     static int valuesGraph[AVERAGING_GRAPH];
     static int graphData[DISPLAY_LENGTH];
     static int counter;
+    static int currentPosition;
     static int pixel;
     static int lastPixel;
 

@@ -26,7 +26,7 @@ class Display {
     static void checkState();
     static void writeInfo();
     static void drawBorder(int x, int y, int length, int height, int thickness, int color);
-    static void drawLine(int x, int y, int z);
+    static void drawLine(int x, int y, int z, boolean directon);
     static void createLines();
     static void showBoxes();
     static void dPrint(String text, int x, int y, int scale, int color, int datum = 0, int backgroundColor = -1, String oldText = "", int padding = 0);
@@ -48,6 +48,7 @@ class Display {
     static short seconds;
     static short minutes;
     static boolean start;
+    static boolean drop;
 
     static void loadingScreen();
   private:

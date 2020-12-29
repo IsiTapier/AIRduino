@@ -22,7 +22,7 @@
   }
 
   extern Calibration Util::calibration[] = {
-      Calibration(320, 500, 400, 1000),
+      Calibration(320, 600, 400, 1000),
       Calibration(55, 65, 400, 1000),
       Calibration(40, 60, 400, 1000)
   };

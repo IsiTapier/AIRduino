@@ -19,6 +19,7 @@ extern String Display::time;
 extern short Display::seconds;
 extern short Display::minutes;
 extern boolean Display::start;
+extern boolean Display::drop = false;
 
 
 
@@ -227,9 +228,15 @@ extern boolean Display::start;
   }
 
 
-  extern void Display::drawLine(int x, int y, int z) {
-    for (int i = 0; i < x; i = i + z) {
-      display.drawPixel(i, y, WHITE);
+  extern void Display::drawLine(int x, int y, int z, boolean direction) {
+    if(direction) {
+      for (int i = 0; i < x; i = i + z) {
+        display.drawPixel(i, y, WHITE);
+      }
+    } else {
+      for (int i = 0; i < y; i = i + z) {
+        display.drawPixel(x, i, WHITE);
+      }
     }
   }
 
