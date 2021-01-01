@@ -7,21 +7,23 @@
 
 
 // ESP32 pins used for the parallel interface TFT
+
+
 #define TFT_CS   33  // Chip select control pin
-#define TFT_DC   15  // Data Command control pin - must use a pin in the range 0-31
+#define TFT_DC   25  // Data Command control pin - must use a pin in the range 0-31
 #define TFT_RST  32  // Reset pin
 
-#define TFT_WR    4  // Write strobe control pin - must use a pin in the range 0-31
-#define TFT_RD    2
+#define TFT_WR    26  // Write strobe control pin - must use a pin in the range 0-31
+#define TFT_RD    27
 
-#define TFT_D0   12  // Must use pins in the range 0-31 for the data bus
-#define TFT_D1   13  // so a single register write sets/clears all bits
-#define TFT_D2   26
-#define TFT_D3   25
-#define TFT_D4   17
-#define TFT_D5   16
-#define TFT_D6   27
-#define TFT_D7   14
+#define TFT_D0   2  // Must use pins in the range 0-31 for the data bus
+#define TFT_D1   15  // so a single register write sets/clears all bits
+#define TFT_D2   19
+#define TFT_D3   18
+#define TFT_D4   5
+#define TFT_D5   17
+#define TFT_D6   16
+#define TFT_D7   4
 
 
 #define LOAD_GLCD   // Font 1. Original Adafruit 8 pixel font needs ~1820 bytes in FLASH
