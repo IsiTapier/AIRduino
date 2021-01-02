@@ -9,7 +9,7 @@
 #include "../util/Util.h"
 
 //settings
-#define DEBUG false
+#define DEBUG true
 
 #define FACTOR 4.631578947368421
 #define STAGE_TIME 1*1000
@@ -33,7 +33,7 @@
 
 //pins
 #define GAS_SENSOR 36
-#define PIEZO      18
+#define PIEZO      21
 
 
 class Meassure {
