@@ -9,7 +9,7 @@
 #include "../util/Util.h"
 
 //settings
-#define DEBUG true
+#define DEBUG false
 
 #define FACTOR 4.631578947368421
 #define STAGE_TIME 1*1000

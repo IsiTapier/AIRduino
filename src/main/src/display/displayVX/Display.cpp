@@ -97,7 +97,6 @@ extern boolean Display::drop = false;
   extern void Display::drawDisplay() {
     display.fillScreen(BACKGROUND_COLOR);
     display.fillRect(0, DATABOX_Y, DISPLAY_LENGTH, DATABOX_HEIGHT, DATABOX_BACKGROUND_COLOR);
-    createLines();
     Serial.println("Display drawn");
   }
 
@@ -123,10 +122,11 @@ extern boolean Display::drop = false;
   extern void Display::checkState() {
     if (blinkSwitch) {
       drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, 1, BACKGROUND_COLOR);
-      display.drawLine(0, DISPLAY_HEIGHT, DISPLAY_LENGTH, DISPLAY_HEIGHT, DATABOX_BACKGROUND_COLOR);
-      display.drawLine(0, DATABOX_BAR_Y, 0, DATABOX_HEIGHT, DATABOX_BACKGROUND_COLOR);
-      display.drawLine(DISPLAY_LENGTH, DATABOX_BAR_Y, DISPLAY_LENGTH, DATABOX_HEIGHT, DATABOX_BACKGROUND_COLOR);
-      display.fillRect(0, DATABOX_BAR_Y, DISPLAY_LENGTH, DATABOX_BAR_THICKNESS, state.getColor(COLORED_BAR));
+      display.drawLine(0, DISPLAY_HEIGHT-1, DISPLAY_LENGTH-1, DISPLAY_HEIGHT-1, DATABOX_BACKGROUND_COLOR);
+      display.drawLine(0, DATABOX_Y, 0, DISPLAY_HEIGHT-1, DATABOX_BACKGROUND_COLOR);
+      display.drawLine(DISPLAY_LENGTH-1, DATABOX_Y, DISPLAY_LENGTH-1, DISPLAY_HEIGHT-1, DATABOX_BACKGROUND_COLOR);
+      display.drawLine(0, DATABOX_BAR_Y, 0, DATABOX_Y-1, state.getColor(COLORED_BAR));
+      display.drawLine(DISPLAY_LENGTH-1, DATABOX_BAR_Y, DISPLAY_LENGTH-1, DATABOX_Y-1, state.getColor(COLORED_BAR));
       //createLines();
       digitalWrite(PIEZO, LOW);
       blinkSwitch = false;
@@ -164,10 +164,6 @@ extern boolean Display::drop = false;
 
     lastState = state;
 
-
-    //write new Pixels
-    dPrint(airCondition, PPM_MARGIN_LEFT, PPM_Y, PPM_SIZE, state.getColor(COLORED_PPM), 6, DATABOX_BACKGROUND_COLOR, lastAirCondition);
-
     //Verhindert überschreiben von "ppm"
     if (airCondition < 1000 && lastAirCondition >= 1000 || airCondition < 1000 && start) {
       dPrint(String(airCondition) + " ", PPM_MARGIN_LEFT, PPM_Y, PPM_SIZE, state.getColor(COLORED_PPM), 6, DATABOX_BACKGROUND_COLOR, String(lastAirCondition));
@@ -175,6 +171,8 @@ extern boolean Display::drop = false;
     } else if(airCondition >= 1000 && lastAirCondition < 1000)
       dPrint("ppm", PPM_STRING_X, PPM_STRING_Y, PPM_STRING_SIZE, DATABOX_BACKGROUND_COLOR, 6);
 
+    //write new Pixels
+    dPrint(airCondition, PPM_MARGIN_LEFT, PPM_Y, PPM_SIZE, state.getColor(COLORED_PPM), 6, DATABOX_BACKGROUND_COLOR, lastAirCondition);
 
     //drawLoadingBar();
 
@@ -228,19 +226,27 @@ extern boolean Display::drop = false;
   }
 
 
-  extern void Display::drawLine(int x, int y, int z, boolean direction) {
-    if(direction) {
-      for (int i = 0; i < x; i = i + z) {
-        display.drawPixel(i, y, WHITE);
-      }
-    } else {
-      for (int i = 0; i < y; i = i + z) {
-        display.drawPixel(x, i, WHITE);
+  extern void Display::drawLine(int x, int y, int length, int height, int color, int a, int b, boolean filter1, boolean filter2) {
+    length += x;
+    height += y;
+    if(a > 1)
+      x += floor((length-1-x)%a/2);
+    if(b > 1)
+      y += floor((height-1-y)%b/2);
+    for (int i = x; i < length; i+=a) {
+      for (int j = y; j < height; j+=b) {
+        if(filter1) {
+          if(display.readPixel(i, j) == (0x0FFFU * BACKGROUND_COLOR)/100) {
+            if(filter2 && airCondition >= DISPLAYED_PPM_HIGHEST)
+              display.drawPixel(i, j, state.getColor(COLORED_BAR));
+            else
+              display.drawPixel(i, j, color);
+          }
+        } else
+          display.drawPixel(i, j, color);
       }
     }
   }
-
-  extern void Display::createLines() {}
 
   extern void Display::showBoxes() {
     display.fillRect(PPM_MARGIN_LEFT, DISPLAY_HEIGHT - PPM_HEIGHT, PPM_LENGTH, PPM_HEIGHT, GREEN);

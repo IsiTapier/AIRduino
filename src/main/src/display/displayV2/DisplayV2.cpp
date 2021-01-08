@@ -26,10 +26,9 @@ extern void DisplayV2::setup() {
 }
 
 extern void DisplayV2::loop() {
-
   //showBoxes();
-  getData();
-  //generateData(400, 1000, 30);
+  //getData();
+  generateData(400, 1000, 30);
 
   if(start) {
     drawDisplay();
@@ -81,83 +80,68 @@ extern void DisplayV2::drawBarBorder() { //x,y,breite, höhe, dicke
 
   //drawBorder(BAR_BORDER_X, BAR_BORDER_Y, BAR_BORDER_LENGTH, BAR_BORDER_HEIGHT, BAR_BORDER_THICKNESS, WHITE);
   //display.fillRect(BAR_START_X, BAR_Y, BAR_LENGTH, BAR_HEIGHT, BACKGROUND_COLOR);
-  drawBorder(BAR_BORDER_X, BAR_BORDER_Y, BAR_BORDER_LENGTH, BAR_BORDER_HEIGHT, BAR_BORDER_THICKNESS, WHITE);
+  drawBorder(BAR_BORDER_X, BAR_BORDER_Y, BAR_BORDER_LENGTH, BAR_BORDER_HEIGHT, BAR_BORDER_THICKNESS, CHART_BORDER_COLOR);
 }
 
 
 extern void DisplayV2::drawSections() {
-
-
-
   //    - Draw Sections -
   //display.drawLine(FIRST_SECTION_X, BAR_Y - 10, FIRST_SECTION_X, BAR_Y + 10 + BAR_HIGHT, WHITE);
   //display.drawLine(SECOND_SECTION_X, BAR_Y - 10, SECOND_SECTION_X, BAR_Y + 10 + BAR_HIGHT, WHITE);
-  //TODO: use drawLine
-  for(short y = BAR_Y - 10; y < BAR_Y + 10 + BAR_HEIGHT; y = y+5) {
+  /*for(short y = BAR_Y - 10; y < BAR_Y + 10 + BAR_HEIGHT; y = y+5) {
     for(byte z = 0; z <= BAR_SECTIONS_THICKNESS; z++) {
       display.drawPixel(FIRST_SECTION_X + z, y, BAR_SECTIONS_COLOR);
       display.drawPixel(SECOND_SECTION_X + z, y, BAR_SECTIONS_COLOR);
     }
-  }
+  }*/
+  drawLine(FIRST_SECTION_START_X, BAR_SECTIONS_Y, BAR_SECTIONS_LENGTH, BAR_SECTIONS_HEIGHT, BAR_SECTIONS_COLOR, 1, BAR_SECTIONS_STRIPE_DISTANCE);
+  drawLine(SECOND_SECTION_START_X, BAR_SECTIONS_Y, BAR_SECTIONS_LENGTH, BAR_SECTIONS_HEIGHT, BAR_SECTIONS_COLOR, 1, BAR_SECTIONS_STRIPE_DISTANCE);
 }
 
 extern void DisplayV2::drawBar() {
-    //   - search position of the bar -
-    barPixel = map(airCondition, DISPLAYED_PPM_LOWEST, DISPLAYED_PPM_HIGHEST, BAR_START_X, BAR_END_X);
-    lastBarPixel = map(lastAirCondition, DISPLAYED_PPM_LOWEST, DISPLAYED_PPM_HIGHEST, BAR_START_X, BAR_END_X);
-    if(barPixel <= BAR_START_X && lastAirCondition <= BAR_START_X || barPixel == lastBarPixel)
-      return;
-    if(barPixel > BAR_END_X)
-      barPixel = BAR_END_X;
-    if(lastBarPixel > BAR_END_X)
-      lastBarPixel = BAR_END_X;
+  //   - search position of the bar -
+  barPixel = map(airCondition, DISPLAYED_PPM_LOWEST, DISPLAYED_PPM_HIGHEST, BAR_START_X, BAR_END_X);
+  lastBarPixel = map(lastAirCondition, DISPLAYED_PPM_LOWEST, DISPLAYED_PPM_HIGHEST, BAR_START_X, BAR_END_X);
+  if(barPixel <= BAR_START_X && lastAirCondition <= BAR_START_X || barPixel == lastBarPixel)
+    return;
+  if(barPixel > BAR_END_X)
+    barPixel = BAR_END_X;
+  if(lastBarPixel > BAR_END_X)
+    lastBarPixel = BAR_END_X;
 
-    //RELIEABLY
-    //TODO: vereinfachen
-    if(COLOR_MODE) {
-      if(airCondition >= LIMIT_GOOD) {
-        if(!(lastAirCondition >= LIMIT_GOOD))
-          display.fillRect(BAR_START_X, BAR_Y, FIRST_SECTION_X - BAR_START_X, BAR_HEIGHT, PPM_COLOR_N);
-        if(airCondition >= LIMIT_MEDIUM) {
-          if(!(lastAirCondition >= LIMIT_MEDIUM))
-            display.fillRect(FIRST_SECTION_X, BAR_Y, SECOND_SECTION_X - FIRST_SECTION_X, BAR_HEIGHT, PPM_COLOR_R);
-          if(airCondition >= DISPLAYED_PPM_HIGHEST) {
-            if(lastAirCondition < DISPLAYED_PPM_HIGHEST)
-              display.fillRect(SECOND_SECTION_X, BAR_Y, BAR_END_X - SECOND_SECTION_X, BAR_HEIGHT, PPM_COLOR_A);
-          } else if(lastAirCondition < airCondition)
-            display.fillRect(SECOND_SECTION_X, BAR_Y, barPixel - SECOND_SECTION_X, BAR_HEIGHT, PPM_COLOR_A);
-          else
-            display.fillRect(barPixel, BAR_Y, lastBarPixel - barPixel, BAR_HEIGHT, CHART_BACKGROUND_COLOR);
+  //TODO: vereinfachen
+  if(COLOR_MODE) {
+    if(airCondition >= LIMIT_GOOD) {
+      if(!(lastAirCondition >= LIMIT_GOOD))
+        display.fillRect(BAR_START_X, BAR_Y, FIRST_SECTION_X - BAR_START_X, BAR_HEIGHT, PPM_COLOR_N);
+      if(airCondition >= LIMIT_MEDIUM) {
+        if(!(lastAirCondition >= LIMIT_MEDIUM))
+          display.fillRect(FIRST_SECTION_X, BAR_Y, SECOND_SECTION_X - FIRST_SECTION_X, BAR_HEIGHT, PPM_COLOR_R);
+        if(airCondition >= DISPLAYED_PPM_HIGHEST) {
+          if(lastAirCondition < DISPLAYED_PPM_HIGHEST)
+            display.fillRect(SECOND_SECTION_X, BAR_Y, BAR_END_X - SECOND_SECTION_X, BAR_HEIGHT, PPM_COLOR_A);
         } else if(lastAirCondition < airCondition)
-            display.fillRect(FIRST_SECTION_X, BAR_Y, barPixel - FIRST_SECTION_X, BAR_HEIGHT, PPM_COLOR_R);
+          display.fillRect(SECOND_SECTION_X, BAR_Y, barPixel - SECOND_SECTION_X, BAR_HEIGHT, PPM_COLOR_A);
         else
           display.fillRect(barPixel, BAR_Y, lastBarPixel - barPixel, BAR_HEIGHT, CHART_BACKGROUND_COLOR);
       } else if(lastAirCondition < airCondition)
-        display.fillRect(BAR_START_X, BAR_Y, barPixel - BAR_START_X, BAR_HEIGHT, PPM_COLOR_N);
+        display.fillRect(FIRST_SECTION_X, BAR_Y, barPixel - FIRST_SECTION_X, BAR_HEIGHT, PPM_COLOR_R);
       else
         display.fillRect(barPixel, BAR_Y, lastBarPixel - barPixel, BAR_HEIGHT, CHART_BACKGROUND_COLOR);
-    } else if(lastState == state && !start || state >= 2 && 2 <= lastState && !start) {
-      if(lastAirCondition < airCondition)
-        display.fillRect(lastBarPixel, BAR_Y, barPixel - lastBarPixel, BAR_HEIGHT, state.getColor(COLORED_CHART));
-      else
-        display.fillRect(barPixel, BAR_Y, lastBarPixel - barPixel, BAR_HEIGHT, CHART_BACKGROUND_COLOR);
-    } else {
-      if(lastAirCondition > airCondition)
-        display.fillRect(barPixel, BAR_Y, lastBarPixel - barPixel, BAR_HEIGHT, CHART_BACKGROUND_COLOR);
-      display.fillRect(BAR_START_X, BAR_Y, barPixel - BAR_START_X, BAR_HEIGHT, state.getColor(COLORED_CHART));
-    }
-
-
-  //incredibly short and not quite working
-/*  if(Util::getStateOf(lastAirCondition) == Util::getStateOf(airCondition) && lastAirCondition > 0 || Util::getStateOf(airCondition) >= 2 && 2 <= Util::getStateOf(lastAirCondition) || COLOR_MODE) {
-    if(lastAirCondition < airCondition)
-      display.fillRect(lastBarPixel, BAR_Y, barPixel - lastBarPixel, BAR_HEIGHT, state.getColor(COLORED_CHART));
+    } else if(lastAirCondition < airCondition)
+      display.fillRect(BAR_START_X, BAR_Y, barPixel - BAR_START_X, BAR_HEIGHT, PPM_COLOR_N);
     else
       display.fillRect(barPixel, BAR_Y, lastBarPixel - barPixel, BAR_HEIGHT, CHART_BACKGROUND_COLOR);
-  } else {
+  } else if(lastState.getColor(COLORED_CHART) == state.getColor(COLORED_CHART) && !start) {
+    if(lastAirCondition < airCondition)
+      display.fillRect(lastBarPixel, BAR_Y, barPixel - lastBarPixel, BAR_HEIGHT, state.getColor(COLORED_CHART));
+  else
     display.fillRect(barPixel, BAR_Y, lastBarPixel - barPixel, BAR_HEIGHT, CHART_BACKGROUND_COLOR);
+  } else {
+    if(lastAirCondition > airCondition)
+      display.fillRect(barPixel, BAR_Y, lastBarPixel - barPixel, BAR_HEIGHT, CHART_BACKGROUND_COLOR);
     display.fillRect(BAR_START_X, BAR_Y, barPixel - BAR_START_X, BAR_HEIGHT, state.getColor(COLORED_CHART));
-  }*/
+  }
   drawSections();
 }
 

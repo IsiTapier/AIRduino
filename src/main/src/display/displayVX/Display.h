@@ -26,8 +26,8 @@ class Display {
     static void checkState();
     static void writeInfo();
     static void drawBorder(int x, int y, int length, int height, int thickness, int color);
-    static void drawLine(int x, int y, int z, boolean directon);
-    static void createLines();
+    static void drawLine(int x, int y, int length, int height, int color, int a = 0, int b = 0, boolean filter1 = false, boolean filter2 = false);
+    //static void createLines();
     static void showBoxes();
     static void dPrint(String text, int x, int y, int scale, int color, int datum = 0, int backgroundColor = -1, String oldText = "", int padding = 0);
     static void dPrint(int text, int x, int y, int scale, int color, int datum = 0, int backgroundColor = -1, int oldText = -1, int padding = 0);

@@ -7,16 +7,6 @@
 
 #include "../DisplayVX/Display.h"
 
-//Design
-
-
-#define AVERAGING_GRAPH 10
-#define ALPHA_GRAPH 0.7
-
-#define MAX_LIGHT 1000
-#define OSV_PPM 400
-#define MAX_DISPLAYED_PPM 1280
-
 class DisplayV1 : public Display {
 
   public:
@@ -25,14 +15,14 @@ class DisplayV1 : public Display {
 
   private:
     static boolean averageData();
-    static void fillData();
     static void createLines();
+    static void fillData();
     static void drawGraph();
     static void drawLoadingBar();
-    static void drawConnections(int x, int startY, int endY);
+    static void drawConnection(int x, int color=-1, int shift = 0);
 
     static int valuesGraph[AVERAGING_GRAPH];
-    static int graphData[DISPLAY_LENGTH];
+    static int graphData[DISPLAY_LENGTH+1];
     static int counter;
     static int currentPosition;
     static int pixel;

@@ -61,6 +61,10 @@ public:
         break;
       case 2: return (PPM_COLOR_A);
         break;
+      case 3: return (PPM_COLOR_A);
+        break;
+      case 4: return (PPM_COLOR_A);
+        break;
       default: return (PPM_COLOR_A);
         break;
     }
