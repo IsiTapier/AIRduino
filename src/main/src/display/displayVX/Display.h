@@ -53,6 +53,7 @@ class Display {
     static void loadingScreen();
   private:
     static void writeLoadingScreenTitle();
+    static void writeLoadingAnimation(int c1, int c2, int c3);
 
 };
 

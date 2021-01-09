@@ -1,7 +1,7 @@
 //general
 #define ROTATION 3
 #define DISPLAY_BRIGHTNESS 0.7
-#define LOADING_SCREEN_TIME 1
+#define LOADING_SCREEN_TIME 180
 
 //DisplayV1
 #define AVERAGING_GRAPH 1
@@ -10,8 +10,8 @@
 //DisplayV2
 
 //settings
-#define COLOR_MODE true
-#define COLORED_BAR true
+#define COLOR_MODE false
+#define COLORED_BAR false
 #define COLORED_STATE true
 #define COLORED_TIME true
 #define COLORED_PPM true
@@ -147,7 +147,9 @@
 
 
 //loadingScreen
-#define LOADING_SCREEN_TITLE_SIZE 12
-#define LOADING_SCREEN_SUB_SIZE 8
-#define LOADING_SCREEN_DOTS_COLOR WHITE
-#define LOADING_SCREEN_DOT_SIZE 10
+#define LOADING_SCREEN_TITLE_SIZE 40
+#define LOADING_SCREEN_SUB_SIZE 12
+#define LOADING_SCREEN_DOTS_COLOR (BLACK_MODE) ? WHITE : BLACK
+#define LOADING_SCREEN_DOT_SIZE 13
+#define LOADING_ANIMATION_THICKNESS 10
+#define DD_MARGIN 2 //3d rand

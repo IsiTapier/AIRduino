@@ -34,8 +34,8 @@ void setup() {
   Serial.println("SETUP:");
   Serial.println("Serial communication started at 9600 baud");
   Serial.println();
-  DisplayV1::setup();
-  //DisplayV2::setup();
+  //DisplayV1::setup();
+  DisplayV2::setup();
   Meassure::setup();
 }
 
@@ -50,6 +50,6 @@ void setup() {
 //                   |_|
 void loop() {
   Meassure::loop();
-  DisplayV1::loop();
-  //DisplayV2::loop();
+  //DisplayV1::loop();
+  DisplayV2::loop();
 }

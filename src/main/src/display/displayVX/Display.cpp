@@ -20,6 +20,7 @@ extern short Display::seconds;
 extern short Display::minutes;
 extern boolean Display::start;
 extern boolean Display::drop = false;
+extern short thickness = LOADING_ANIMATION_THICKNESS;
 
 
 
@@ -54,34 +55,69 @@ extern boolean Display::drop = false;
     display.fillScreen(BACKGROUND_COLOR);
     writeLoadingScreenTitle();
 
+    Serial.println("loadingscreen ended");
+  }
+
+  extern void Display::writeLoadingScreenTitle() {
+    short distanceToFirstLetterSub = 52;
+    short distanceToFirstDot = 90;
+    short DotVerticalPosition = 155;
+    byte DD = DD_MARGIN; //3d Versatz
+
+    dPrint("duino", distanceToFirstLetterSub + 2, 120 + 2, LOADING_SCREEN_SUB_SIZE, DARKGREY);
+    dPrint("duino", distanceToFirstLetterSub, 120, LOADING_SCREEN_SUB_SIZE, GREY);
+
     //Draw: Loading Dots
-    short distanceToFirstDot = (DISPLAY_LENGTH - 15*LOADING_SCREEN_DOT_SIZE) / 2;
     byte c = 0;
     for (int x = LOADING_SCREEN_TIME * 2; x >= 0; x--) {
       c++;
-      dPrint("...", distanceToFirstDot, DISPLAY_HEIGHT / 5 * 3, LOADING_SCREEN_DOT_SIZE, BACKGROUND_COLOR); // Altes Clearen
+      dPrint("...", distanceToFirstDot, DotVerticalPosition, LOADING_SCREEN_DOT_SIZE, BACKGROUND_COLOR); // Altes Clearen
+      dPrint("...", distanceToFirstDot + DD, DotVerticalPosition + DD, LOADING_SCREEN_DOT_SIZE, BACKGROUND_COLOR);
       switch (c) {
-        case 1: dPrint(".", distanceToFirstDot, DISPLAY_HEIGHT / 5 * 3, LOADING_SCREEN_DOT_SIZE, LOADING_SCREEN_DOTS_COLOR);
+        case 1:
+            dPrint(".", distanceToFirstDot + DD, DotVerticalPosition + DD, LOADING_SCREEN_DOT_SIZE, GREY);
+            dPrint(".",distanceToFirstDot, DotVerticalPosition, LOADING_SCREEN_DOT_SIZE, LOADING_SCREEN_DOTS_COLOR);
+
+            writeLoadingAnimation(LIGHT_BLUE, TURKISE, LIME);
           break;
-        case 2: dPrint("..", distanceToFirstDot, DISPLAY_HEIGHT / 5 * 3, LOADING_SCREEN_DOT_SIZE, LOADING_SCREEN_DOTS_COLOR);
+        case 2:
+            dPrint("..", distanceToFirstDot + DD, DotVerticalPosition + DD, LOADING_SCREEN_DOT_SIZE, GREY);
+            dPrint("..", distanceToFirstDot, DotVerticalPosition, LOADING_SCREEN_DOT_SIZE, LOADING_SCREEN_DOTS_COLOR);
+
+            writeLoadingAnimation(TURKISE, LIME, LIGHT_BLUE);
           break;
-        case 3: dPrint("...", distanceToFirstDot, DISPLAY_HEIGHT / 5 * 3, LOADING_SCREEN_DOT_SIZE, LOADING_SCREEN_DOTS_COLOR);
+        case 3:
+          dPrint("...", distanceToFirstDot + DD, DotVerticalPosition + DD, LOADING_SCREEN_DOT_SIZE, GREY);
+          dPrint("...", distanceToFirstDot, DotVerticalPosition, LOADING_SCREEN_DOT_SIZE, LOADING_SCREEN_DOTS_COLOR);
+
+          writeLoadingAnimation(LIME, LIGHT_BLUE, TURKISE);
           c = 0;
           break;
       }
       delay(500);
     }
-    Serial.println("loadingscreen ended");
+
   }
 
-  extern void Display::writeLoadingScreenTitle() {
-    short distanceToFirstLetter = (DISPLAY_LENGTH - (18*LOADING_SCREEN_TITLE_SIZE)) / 2;
-    short distanceToFirstLetterSub = (DISPLAY_LENGTH - (30*LOADING_SCREEN_SUB_SIZE)) / 2;
-    dPrint("A", distanceToFirstLetter + LOADING_SCREEN_TITLE_SIZE, 35, LOADING_SCREEN_TITLE_SIZE, LIGHT_BLUE);
-    dPrint("I", distanceToFirstLetter + 6*LOADING_SCREEN_TITLE_SIZE, 35, LOADING_SCREEN_TITLE_SIZE, TURKISE);
-    dPrint("R", distanceToFirstLetter + 12*LOADING_SCREEN_TITLE_SIZE, 35, LOADING_SCREEN_TITLE_SIZE, LIME);
-    dPrint("duino", distanceToFirstLetterSub, 120, LOADING_SCREEN_SUB_SIZE, GREY);
+  extern void Display::writeLoadingAnimation(int c1, int c2, int c3) {
+    long endTime = millis() + LOADING_SCREEN_TIME * 1000;
+
+    short distanceToFirstLetter = 70 + DD_MARGIN;
+    short VerticalDistanceToFirstLetter = 55 + DD_MARGIN;
+    dPrint("A", distanceToFirstLetter, VerticalDistanceToFirstLetter, LOADING_SCREEN_TITLE_SIZE, GREY);
+    dPrint("I", distanceToFirstLetter + 60, VerticalDistanceToFirstLetter, LOADING_SCREEN_TITLE_SIZE, GREY);
+    dPrint("R", distanceToFirstLetter + 120, VerticalDistanceToFirstLetter, LOADING_SCREEN_TITLE_SIZE, GREY);
+
+    distanceToFirstLetter = distanceToFirstLetter - DD_MARGIN;
+    VerticalDistanceToFirstLetter = VerticalDistanceToFirstLetter - DD_MARGIN;
+    dPrint("A", distanceToFirstLetter, 55, LOADING_SCREEN_TITLE_SIZE, c1);
+    dPrint("I", distanceToFirstLetter + 60, 55, LOADING_SCREEN_TITLE_SIZE, c2);
+    dPrint("R", distanceToFirstLetter + 120, 55, LOADING_SCREEN_TITLE_SIZE, c3);
   }
+
+
+
+
 
 
   //  _____  _           _
@@ -250,7 +286,7 @@ extern boolean Display::drop = false;
 
   extern void Display::showBoxes() {
     display.fillRect(PPM_MARGIN_LEFT, DISPLAY_HEIGHT - PPM_HEIGHT, PPM_LENGTH, PPM_HEIGHT, GREEN);
-    display.fillRect(DISPLAY_LENGTH - TIMER_LENGTH - TIMER_MARGIN_RIGHT, DISPLAY_HEIGHT - TIMER_MARGIN_BOTTOM - TIMER_HEIGHT, TIMER_LENGTH, TIMER_HEIGHT, WHITE);
+    display.fillRect(DISPLAY_LENGTH - TIMER_LENGTH - TIMER_MARGIN_RIGHT, DISPLAY_HEIGHT - TIMER_MARGIN_BOTTOM - TIMER_HEIGHT, TIMER_LENGTH, TIMER_HEIGHT, BACKGROUND_COLOR);
     display.fillRect(DISPLAY_LENGTH - TIMER_LENGTH - TIMER_MARGIN_RIGHT, DISPLAY_HEIGHT - TIMER_MARGIN_BOTTOM - TIMER_SIZE*LETTER_HEIGHT, TIMER_LENGTH, TIMER_SIZE*LETTER_HEIGHT, BLUE);
     display.fillRect((DISPLAY_LENGTH - STATUS_LENGTH)/2, STATUS_MARGIN_TOP, STATUS_LENGTH, STATUS_HEIGHT, RED);
   }
