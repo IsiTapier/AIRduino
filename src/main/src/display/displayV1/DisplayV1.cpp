@@ -21,7 +21,7 @@ extern int DisplayV1::lastPixel = 0;
   //                       |_|
 
   extern void DisplayV1::setup() {
-    Display::setup();
+    DisplayVX::setup();
 
     Serial.println("DisplayV1-Setup started");
     graphData[0] = GRAPH_START_Y;
@@ -30,8 +30,8 @@ extern int DisplayV1::lastPixel = 0;
   }
 
   extern void DisplayV1::loop() {
-    //getData();
-    generateData(400, 1100, 5);
+    getData();
+    //generateData(400, 1100, 5);
     //setup
     if(start) {
       drawDisplay();
@@ -45,6 +45,7 @@ extern int DisplayV1::lastPixel = 0;
     //info
     writeInfo();
     checkState();
+    handleTouch();
     //end setup
     if(start)
       start = false;
@@ -137,10 +138,10 @@ extern int DisplayV1::lastPixel = 0;
       j = graphData[x];
     }
     //value correction
-    if(i < 0)
-      i = 0;
-    if(j >= DISPLAY_HEIGHT)
-      j = DISPLAY_HEIGHT-1;
+    if(i < GRAPH_END_Y)
+      i = GRAPH_END_Y;
+    if(j >= GRAPH_START_Y)
+      j = GRAPH_START_Y;
     //get color
     int color_;
     if(color < 0 && !COLOR_MODE)

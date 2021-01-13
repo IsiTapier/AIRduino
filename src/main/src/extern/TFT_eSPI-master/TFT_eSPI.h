@@ -363,6 +363,8 @@ class TFT_eSPI : public Print { //friend class TFT_eSprite; // Sprite class has 
 
  //--------------------------------------- public ------------------------------------//
  public:
+  //added
+  TFT_eSPI operator=(TFT_eSPI espi) {setRotation(espi.getRotation()); return(*this);}
 
   TFT_eSPI(int16_t _W = TFT_WIDTH, int16_t _H = TFT_HEIGHT);
 

@@ -18,7 +18,7 @@ extern int DisplayV2::lastBarPixel;
 //                       |_|
 
 extern void DisplayV2::setup() {
-  Display::setup();
+  DisplayVX::setup();
   Serial.println("DisplayV2-Setup started");
 
   Serial.println("DisplayV2-Setup complete");

@@ -2,21 +2,24 @@
   Display.h - Display-Library for Airduino.
 */
 
-#ifndef Display_h
-#define Display_h
+#ifndef DisplayVX_h
+#define DisplayVX_h
 
 #include "Arduino.h"
 #include "Wire.h"
-//#include "../../Adafruit/Adafruit_TouchScreen-master/TouchScreen.h"
+#include "../../extern/Adafruit_TouchScreen-master/TouchScreen.h"
 #include "../../extern/TFT_eSPI-master/TFT_eSPI.h"
+//#include "../../extern/TFT_eSPI-master/Extensions/Touch.h"
 #include "../../util/Util.h"
+#include "../../util/data/Images.h"
 #include "../../meassure/Meassure.h"
-#include "Design.h"
+#include "../Design.h"
 
-class Display {
+class DisplayVX {
 
   public:
     static void setup();
+    static TFT_eSPI getDisplay();
 
   protected:
     static void drawDisplay();
@@ -27,6 +30,7 @@ class Display {
     static void writeInfo();
     static void drawBorder(int x, int y, int length, int height, int thickness, int color);
     static void drawLine(int x, int y, int length, int height, int color, int a = 0, int b = 0, boolean filter1 = false, boolean filter2 = false);
+    static void handleTouch();
     //static void createLines();
     static void showBoxes();
     static void dPrint(String text, int x, int y, int scale, int color, int datum = 0, int backgroundColor = -1, String oldText = "", int padding = 0);
@@ -34,8 +38,7 @@ class Display {
 
   //  static Adafruit_TFTLCD display;
     static TFT_eSPI display;
-    //static TouchScreen ts;
-
+    static TouchScreen ts;
     static State state;
     static State lastState;
     static int airCondition;

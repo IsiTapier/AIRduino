@@ -1,25 +1,25 @@
 /*
-  Display.cpp - Display-Library for Librarys.
+  DisplayVX.cpp - DisplayVX-Library for Librarys.
 */
 
 #include "Arduino.h"
-#include "Display.h"
+#include "DisplayVX.h"
 
-extern TFT_eSPI Display::display(DISPLAY_HEIGHT, DISPLAY_LENGTH);
-//extern TouchScreen Display::ts = TouchScreen(XP, YP, XM, YM, 300);
-extern State Display::state;
-extern State Display::lastState;
-extern int Display::airCondition;
-extern int Display::lastAirCondition = 0;
-extern boolean Display::blinkSwitch = false;
-extern int Display::statusLetters;
-extern String Display::statusInfo;
-extern String Display::lastTime;
-extern String Display::time;
-extern short Display::seconds;
-extern short Display::minutes;
-extern boolean Display::start;
-extern boolean Display::drop = false;
+extern TFT_eSPI DisplayVX::display(DISPLAY_HEIGHT, DISPLAY_LENGTH);
+extern TouchScreen DisplayVX::ts;
+extern State DisplayVX::state;
+extern State DisplayVX::lastState;
+extern int DisplayVX::airCondition;
+extern int DisplayVX::lastAirCondition = 0;
+extern boolean DisplayVX::blinkSwitch = false;
+extern int DisplayVX::statusLetters;
+extern String DisplayVX::statusInfo;
+extern String DisplayVX::lastTime;
+extern String DisplayVX::time;
+extern short DisplayVX::seconds;
+extern short DisplayVX::minutes;
+extern boolean DisplayVX::start;
+extern boolean DisplayVX::drop = false;
 
 
 
@@ -34,7 +34,7 @@ extern boolean Display::drop = false;
   //                       |_|
 
 
-  extern void Display::setup() {
+  extern void DisplayVX::setup() {
     Serial.println("DISPLAY SETUP started");
     display.begin();
     Serial.println("Display connection started");
@@ -42,14 +42,24 @@ extern boolean Display::drop = false;
     display.setTextWrap(false);
     display.setRotation(ROTATION);
     Serial.println("Display initialized");
+    Serial.println("Touch calibration started");
+    dPrint("Calibration", round(DISPLAY_LENGTH/2), round(DISPLAY_HEIGHT/2), TOUCH_CALIBRATION_HEADER_SIZE, TEXT_COLOR, 7);
+    dPrint("press blue box", round(DISPLAY_LENGTH/2), round(DISPLAY_HEIGHT/2), TOUCH_CALIBRATION_TEXT_SIZE, TEXT_COLOR, 1);
+    ts = TouchScreen(TFT_D1, TFT_DC, TFT_CS, TFT_D0, display, TOUCH_RESISTANCE);
+    Serial.print(ts.xmin); Serial.print(", "); Serial.print(ts.xmax); Serial.print(", "); Serial.print(ts.ymin); Serial.print(", "); Serial.println(ts.ymax);
+    Serial.println("Touch calibrated");
     loadingScreen();
     start = true;
     Serial.println("DISPLAY SETUP complete");
     Serial.println();
   }
 
+  TFT_eSPI DisplayVX::getDisplay() {
+    return(display);
+  }
+
   //Loading Screen
-  void Display::loadingScreen() {
+  void DisplayVX::loadingScreen() {
     Serial.println("loadingscreen started");
     display.fillScreen(BACKGROUND_COLOR);
     writeLoadingScreenTitle();
@@ -74,7 +84,7 @@ extern boolean Display::drop = false;
     Serial.println("loadingscreen ended");
   }
 
-  extern void Display::writeLoadingScreenTitle() {
+  extern void DisplayVX::writeLoadingScreenTitle() {
     short distanceToFirstLetter = (DISPLAY_LENGTH - (18*LOADING_SCREEN_TITLE_SIZE)) / 2;
     short distanceToFirstLetterSub = (DISPLAY_LENGTH - (30*LOADING_SCREEN_SUB_SIZE)) / 2;
     dPrint("A", distanceToFirstLetter + LOADING_SCREEN_TITLE_SIZE, 35, LOADING_SCREEN_TITLE_SIZE, LIGHT_BLUE);
@@ -83,6 +93,24 @@ extern boolean Display::drop = false;
     dPrint("duino", distanceToFirstLetterSub, 120, LOADING_SCREEN_SUB_SIZE, GREY);
   }
 
+  extern void DisplayVX::handleTouch() {
+    // a point object holds x y and z coordinates
+    TSPoint p = ts.getPoint();
+    // we have some minimum pressure we consider 'valid'
+    // pressure of 0 means no pressing!
+    if (p.isTouching()) {
+      p.calibrate();
+      p.print();
+      if(p.isTouching(MENU_START_X, MENU_END_X, MENU_START_Y, MENU_END_Y)) {
+        display.fillRect(MENU_START_X, MENU_START_Y, MENU_LENGTH, MENU_HEIGHT, RED);
+        Serial.println("open Menu!!!");
+      } else {
+          display.fillRect(MENU_START_X, MENU_START_Y, MENU_LENGTH, MENU_HEIGHT, BACKGROUND_COLOR);
+          display.drawRect(MENU_START_X, MENU_START_Y, MENU_LENGTH, MENU_HEIGHT, RED);
+      }
+    }
+    display.pushImage(MENU_START_X, MENU_START_Y, MENU_LENGTH, MENU_HEIGHT, menuGear, WHITE);
+  }
 
   //  _____  _           _
   // |  __ \(_)         | |
@@ -94,18 +122,18 @@ extern boolean Display::drop = false;
   //              |_|            |___/
   //
 
-  extern void Display::drawDisplay() {
+  extern void DisplayVX::drawDisplay() {
     display.fillScreen(BACKGROUND_COLOR);
     display.fillRect(0, DATABOX_Y, DISPLAY_LENGTH, DATABOX_HEIGHT, DATABOX_BACKGROUND_COLOR);
     Serial.println("Display drawn");
   }
 
-  extern void Display::getData() {
+  extern void DisplayVX::getData() {
     state = Meassure::getState();
     airCondition = Meassure::getAirCondition();
   }
 
-  extern void Display::generateData(int startPPM, int endPPM, int changePPM) {
+  extern void DisplayVX::generateData(int startPPM, int endPPM, int changePPM) {
     if(start)
       airCondition = startPPM;
     if(drop)
@@ -119,7 +147,7 @@ extern boolean Display::drop = false;
     state = Util::getStateOf(airCondition);
   }
 
-  extern void Display::checkState() {
+  extern void DisplayVX::checkState() {
     if (blinkSwitch) {
       drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, 1, BACKGROUND_COLOR);
       display.drawLine(0, DISPLAY_HEIGHT-1, DISPLAY_LENGTH-1, DISPLAY_HEIGHT-1, DATABOX_BACKGROUND_COLOR);
@@ -140,7 +168,7 @@ extern boolean Display::drop = false;
   }
 
   //Write PPM, Time
-  extern void Display::writeInfo() {
+  extern void DisplayVX::writeInfo() {
     //ppm zeichnen
     if (lastState != state || start) {
       //Wenn sich der Wert geändert hat oder state sich geändert hat
@@ -209,7 +237,7 @@ extern boolean Display::drop = false;
 
   }
 
-  extern void Display::drawBorder(int x, int y, int length, int height, int thickness, int color) {
+  extern void DisplayVX::drawBorder(int x, int y, int length, int height, int thickness, int color) {
     length -= thickness;
     height -= thickness;
     for(int i = 0; i < thickness; i++) {
@@ -226,7 +254,7 @@ extern boolean Display::drop = false;
   }
 
 
-  extern void Display::drawLine(int x, int y, int length, int height, int color, int a, int b, boolean filter1, boolean filter2) {
+  extern void DisplayVX::drawLine(int x, int y, int length, int height, int color, int a, int b, boolean filter1, boolean filter2) {
     length += x;
     height += y;
     if(a > 1)
@@ -248,14 +276,14 @@ extern boolean Display::drop = false;
     }
   }
 
-  extern void Display::showBoxes() {
+  extern void DisplayVX::showBoxes() {
     display.fillRect(PPM_MARGIN_LEFT, DISPLAY_HEIGHT - PPM_HEIGHT, PPM_LENGTH, PPM_HEIGHT, GREEN);
     display.fillRect(DISPLAY_LENGTH - TIMER_LENGTH - TIMER_MARGIN_RIGHT, DISPLAY_HEIGHT - TIMER_MARGIN_BOTTOM - TIMER_HEIGHT, TIMER_LENGTH, TIMER_HEIGHT, WHITE);
     display.fillRect(DISPLAY_LENGTH - TIMER_LENGTH - TIMER_MARGIN_RIGHT, DISPLAY_HEIGHT - TIMER_MARGIN_BOTTOM - TIMER_SIZE*LETTER_HEIGHT, TIMER_LENGTH, TIMER_SIZE*LETTER_HEIGHT, BLUE);
     display.fillRect((DISPLAY_LENGTH - STATUS_LENGTH)/2, STATUS_MARGIN_TOP, STATUS_LENGTH, STATUS_HEIGHT, RED);
   }
 
-  extern void Display::dPrint(String text, int x, int y, int scale, int color, int datum, int backgroundColor, String oldText, int padding) {
+  extern void DisplayVX::dPrint(String text, int x, int y, int scale, int color, int datum, int backgroundColor, String oldText, int padding) {
     display.setTextSize(scale);
     display.setTextPadding(padding);
     display.setTextDatum(datum);
@@ -283,10 +311,10 @@ extern boolean Display::drop = false;
   }
 
   //Verkürzung: Writing mit Integern
-  extern void Display::dPrint(int text, int x, int y, int scale, int color, int datum, int backgroundColor, int oldText, int padding) {
+  extern void DisplayVX::dPrint(int text, int x, int y, int scale, int color, int datum, int backgroundColor, int oldText, int padding) {
     dPrint(String(text), x, y, scale, color, datum, backgroundColor, (oldText == -1) ? "" : String(oldText), padding);
   }
 
-  extern void Display::drawLoadingBar() {
+  extern void DisplayVX::drawLoadingBar() {
 
   }

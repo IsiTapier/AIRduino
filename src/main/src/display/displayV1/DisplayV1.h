@@ -5,9 +5,9 @@
 #ifndef DisplayV1_h
 #define DisplayV1_h
 
-#include "../DisplayVX/Display.h"
+#include "../DisplayVX/DisplayVX.h"
 
-class DisplayV1 : public Display {
+class DisplayV1 : public DisplayVX {
 
   public:
     static void setup();
