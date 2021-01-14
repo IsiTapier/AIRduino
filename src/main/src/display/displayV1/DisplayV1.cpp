@@ -22,16 +22,17 @@ extern int DisplayV1::lastPixel = 0;
 
   extern void DisplayV1::setup() {
     DisplayVX::setup();
-
     Serial.println("DisplayV1-Setup started");
     graphData[0] = GRAPH_START_Y;
     Serial.println("DisplayV1-Setup complete");
     Serial.println();
+    if(lastMode != LOADINGSCREEN)
+      loop();
   }
 
   extern void DisplayV1::loop() {
-    getData();
-    //generateData(400, 1100, 5);
+    //getData();
+    generateData(400, 1100, 5);
     //setup
     if(start) {
       drawDisplay();
@@ -45,7 +46,7 @@ extern int DisplayV1::lastPixel = 0;
     //info
     writeInfo();
     checkState();
-    handleTouch();
+
     //end setup
     if(start)
       start = false;
@@ -67,7 +68,7 @@ extern int DisplayV1::lastPixel = 0;
     counter ++;
     if (!(counter < AVERAGING_GRAPH)) {
       lastPixel = pixel;
-      pixel = Util::average(valuesGraph, 0, AVERAGING_GRAPH);
+      pixel = average(valuesGraph, 0, AVERAGING_GRAPH);
       pixel = map(pixel, DISPLAYED_PPM_LOWEST, DISPLAYED_PPM_HIGHEST, GRAPH_START_Y, GRAPH_END_Y);
       if(lastPixel != 0)
         pixel = ALPHA_GRAPH * pixel + (1 - ALPHA_GRAPH) * lastPixel;
@@ -96,9 +97,9 @@ extern int DisplayV1::lastPixel = 0;
   }
 
   extern void DisplayV1::createLines() {
-    drawLine(0, FIRST_SECTION_Y, DISPLAY_LENGTH, 1, GRAPH_COLOR, GRAPH_SECTIONS_STRIPE_DISTANCE, 1, true);
-    drawLine(0, SECOND_SECTION_Y, DISPLAY_LENGTH, 1, GRAPH_COLOR, GRAPH_SECTIONS_STRIPE_DISTANCE, 1, true);
-    drawLine(0, GRAPH_END_Y, DISPLAY_LENGTH, 1, GRAPH_COLOR, 1, 1, true, true);
+    drawLine(0, FIRST_SECTION_Y, DISPLAY_LENGTH, 1, GRAPH_COLOR, GRAPH_SECTIONS_STRIPE_DISTANCE, 1, true, airCondition);
+    drawLine(0, SECOND_SECTION_Y, DISPLAY_LENGTH, 1, GRAPH_COLOR, GRAPH_SECTIONS_STRIPE_DISTANCE, 1, true, airCondition);
+    drawLine(0, GRAPH_END_Y, DISPLAY_LENGTH, 1, GRAPH_COLOR, 1, 1, true, airCondition, true, state);
   }
 
   extern void DisplayV1::drawGraph() {
@@ -154,7 +155,7 @@ extern int DisplayV1::lastPixel = 0;
     for(int y = i; y <= j; y++) {
       //get color
       if(COLOR_MODE && color < 0)
-        color_ = Util::getStateOf(map(y-2, GRAPH_START_Y, GRAPH_END_Y, DISPLAYED_PPM_LOWEST, DISPLAYED_PPM_HIGHEST)).getColor(COLORED_CHART);
+        color_ = getStateOf(map(y-2, GRAPH_START_Y, GRAPH_END_Y, DISPLAYED_PPM_LOWEST, DISPLAYED_PPM_HIGHEST)).getColor(COLORED_CHART);
       //draw connection
       display.drawPixel(x-1, y, color_);
     }

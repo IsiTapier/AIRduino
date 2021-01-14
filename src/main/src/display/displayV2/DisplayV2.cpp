@@ -23,6 +23,8 @@ extern void DisplayV2::setup() {
 
   Serial.println("DisplayV2-Setup complete");
   Serial.println();
+  if(lastMode != LOADINGSCREEN)
+    loop();
 }
 
 extern void DisplayV2::loop() {
@@ -44,7 +46,7 @@ extern void DisplayV2::loop() {
 
 
   //writeAnalogValue();
-  /*if(airCondition == lastAirCondition || airCondition > LIMIT_BAD && lastAirCondition > Util::calibration[EEPROM.read(0)].getHighestPPM())
+  /*if(airCondition == lastAirCondition || airCondition > LIMIT_BAD && lastAirCondition > calibration[EEPROM.read(0)].getHighestPPM())
     return;*/
   //drawBarBorder();
 
@@ -73,7 +75,7 @@ extern void DisplayV2::drawBarBorder() { //x,y,breite, höhe, dicke
 
   //   - search position of the bar -
   //Draw balance bar
-  barPixel = map(airCondition, Util::calibration[EEPROM.read(0)].getLowestPPM(), Util::calibration[EEPROM.read(0)].getHighestPPM(), 0, BAR_LENGTH) + BAR_START_X;
+  barPixel = map(airCondition, calibration[EEPROM.read(0)].getLowestPPM(), calibration[EEPROM.read(0)].getHighestPPM(), 0, BAR_LENGTH) + BAR_START_X;
   display.fillRect(barPixel + 1, BAR_BORDER_Y, BAR_LENGTH - barPixel, BAR_HEIGHT, BACKGROUND_COLOR);
   //display.fillRect(BAR_START_X, BAR_Y, BAR_WIDTH, BAR_HIGHT, BLACK); //Setzt das "Loch" in die Mitte des Rechtecks*/
   //display.fillRect(BAR_BORDER_X, BAR_BORDER_Y, BAR_BORDER_LENGTH, BAR_BORDER_HEIGHT, BAR_COLOR);

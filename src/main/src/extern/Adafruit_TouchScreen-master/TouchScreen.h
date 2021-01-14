@@ -6,8 +6,10 @@
 #ifndef _ADAFRUIT_TOUCHSCREEN_H_
 #define _ADAFRUIT_TOUCHSCREEN_H_
 #include <stdint.h>
-#import "../../display/Design.h"
-#import "../TFT_eSPI-master/TFT_eSPI.h"
+#include "../../display/Design.h"
+#include "../TFT_eSPI-master/TFT_eSPI.h"
+class TouchScreen;
+#include "../../util/Util.h"
 
 #if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega32U4__) ||              \
     defined(TEENSYDUINO) || defined(__AVR_ATmega2560__) ||                     \
@@ -43,7 +45,7 @@ public:
    * sensing
    */
   TouchScreen(void);
-  TouchScreen(uint8_t xp, uint8_t yp, uint8_t xm, uint8_t ym, TFT_eSPI display, uint16_t rxplate = 0);
+  TouchScreen(uint8_t xp, uint8_t yp, uint8_t xm, uint8_t ym, uint16_t rxplate = 0);
   TouchScreen operator=(TouchScreen touchscreen);
   /**
    * @brief **NOT IMPLEMENTED** Test if the screen has been touched
@@ -62,7 +64,6 @@ public:
 private:
   uint8_t _yp, _ym, _xm, _xp;
   uint16_t _rxplate;
-  TFT_eSPI _display;
 
 #if defined(USE_FAST_PINIO)
   volatile RwReg *xp_port, *yp_port, *xm_port, *ym_port;

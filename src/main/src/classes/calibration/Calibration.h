@@ -18,10 +18,10 @@ class Calibration {
     int getHighestPPM();
 
   private:
-    int lowestSensor;
-    int highestSensor;
-    int lowestPPM;
-    int highestPPM;
+    int _lowestSensor;
+    int _highestSensor;
+    int _lowestPPM;
+    int _highestPPM;
 
 };
 
