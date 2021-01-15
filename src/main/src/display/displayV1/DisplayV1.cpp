@@ -99,7 +99,7 @@ extern int DisplayV1::lastPixel = 0;
   extern void DisplayV1::createLines() {
     drawLine(0, FIRST_SECTION_Y, DISPLAY_LENGTH, 1, GRAPH_COLOR, GRAPH_SECTIONS_STRIPE_DISTANCE, 1, true, airCondition);
     drawLine(0, SECOND_SECTION_Y, DISPLAY_LENGTH, 1, GRAPH_COLOR, GRAPH_SECTIONS_STRIPE_DISTANCE, 1, true, airCondition);
-    drawLine(0, GRAPH_END_Y, DISPLAY_LENGTH, 1, GRAPH_COLOR, 1, 1, true, airCondition, true, state);
+    drawLine(0, TOP_BAR_HEIGHT, DISPLAY_LENGTH, TOP_BAR_THICKNESS, GRAPH_COLOR, 1, 1, true, airCondition, true, state);
   }
 
   extern void DisplayV1::drawGraph() {

@@ -17,7 +17,7 @@ class Display {
     static void setup();
     static void loop();
     static void initDisplay();
-    static void handleTouch();                  //TODO relocate
+    static void handleTouch(); //TODO relocate
 
   private:
     static TSPoint p;

@@ -82,17 +82,13 @@
             mode = (Mode) 2;
           else if(mode == 2)
             mode = (Mode) 1;
-        }  else if(p.isTouching(MENU_SLIDER_START_X, MENU_SLIDER_END_X, MENU_SLIDER1_START_Y, MENU_SLIDER1_END_Y)) {
-            Serial.println("change Version");
-            if(version == V1) {
-              version = V2;
-            } else if(version == V2) {
-              version = V1;
-            } else {
+        } else if(p.isTouching(MENU_ICON_MARGIN, (MENU_ICON_MARGIN + MENU_ICON_LENGTH), MENU_ICON_MARGIN, (MENU_ICON_MARGIN + MENU_ICON_HEIGHT))) {
+          Serial.println("reset");
+          version = V1;
+        } else if(false) {
 
-            }
-        } else {
-
+        } else if(mode == MENU) {
+          Menu::checkTouch(p);
         }
       }
     } else {
