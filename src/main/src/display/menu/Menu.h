@@ -7,17 +7,23 @@
 
 #include "Arduino.h"
 #include "../../util/Util.h"
+#include "../../classes/slider/Slider.h"
 
 class Menu {
   public:
     static void setup();
     static void loop();
+    static void checkTouch(TSPoint p);
 
   private:
     static void drawDisplay();
-    static void drawFirstSection();
-    static void drawSecondSection();
-    static void drawThirdSection();
+
+    static Slider firstSection;
+    static Slider secondSection;
+    static Slider thirdSection;
+    static Slider fourthSection;
+    static Slider fifthSection;
+    static Slider sixthSection;
 };
 
 #endif

@@ -10,20 +10,20 @@ extern int _defaultPage;
 extern String _title;
 extern MenuPage pages[];
 
-extern SubMenu(String title, int numberPages, int currentPage, int defaultPage) {
+extern SubMenu::SubMenu(String title,  int numberPages, int currentPage, int defaultPage) {
 
 }
 
-extern void init() {
+extern void SubMenu::init() {
 
 }
 
-extern void handleTouch(TSPoint p) {
+extern void SubMenu::handleTouch(TSPoint p) {
   if(!checkTouch(p)) {
-    pages[currentPage].handleTouch();
+    pages[_currentPage].checkTouch(p);
   }
 }
 
-extern boolean checkTouch(TSPoint p) {
+extern boolean SubMenu::checkTouch(TSPoint p) {
 
 }

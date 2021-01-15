@@ -10,6 +10,7 @@
 
 class SubMenu {
   public:
+    //template <class MenuPage>
     SubMenu(String title, int numberPages, int currentPage, int defaultPage = 1);
     void init();
     void handleTouch(TSPoint p);

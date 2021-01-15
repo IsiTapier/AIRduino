@@ -7,11 +7,10 @@
 
 #include "Arduino.h"
 #include "../../../classes/slider/Slider.h"
-#include "../subMenu/SubMenu.h"
 
-class MenuPage : subMenu {
+class MenuPage {
   public:
-    MenuPage(int number) //TODO types
+    MenuPage(int number); //TODO types
     void drawPage();
     void checkTouch(TSPoint p);
 
@@ -20,13 +19,7 @@ class MenuPage : subMenu {
     void drawSide();
 
     int page;
-    
-    Slider firstSection;
-    Slider secondSection;
-    Slider thirdSection;
-    Slider fourthSection;
-    Slider fifthSection;
-    Slider sixthSection;
+
 
 };
 
