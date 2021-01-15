@@ -29,11 +29,7 @@
   extern int Meassure::ppmSinceVentilation;
   extern State Meassure::state;
   extern int Meassure::colorState;
-  extern int Meassure::led;
   extern int Meassure::lowest;
-  extern int Meassure::red;
-  extern int Meassure::green;
-  extern int Meassure::blue;
 
   extern void Meassure::setup() {
     Serial.println("MEASSURE SETUP started");
@@ -54,8 +50,7 @@
     calculateGradient();
     checkVentilating();
     setState();
-    writeLed();
-    debug();
+    debugMeassure();
   }
 
 
@@ -81,18 +76,18 @@
     return(startTime);
   }
 
-  extern void Meassure::debug() {
+  extern void Meassure::debugMeassure() {
     if (DEBUG) {
       Serial.println("");
       Serial.println("Sensor");
       Serial.println("");
-      Util::debug("Analog", analogRead(GAS_SENSOR));
-      Util::debug("Average", airConditionRaw);
-      Util::debug("Smoothed", airConditionLast);
-      Util::debug("PPM", airCondition);
-      Util::debug("gradient", gradient);
-      Util::debug("airConditionLowest", airConditionLowest);
-      Util::debug("Status", (int) state);
+      debug("Analog", analogRead(GAS_SENSOR));
+      debug("Average", airConditionRaw);
+      debug("Smoothed", airConditionLast);
+      debug("PPM", airCondition);
+      debug("gradient", gradient);
+      debug("airConditionLowest", airConditionLowest);
+      debug("Status", (int) state);
     }
   }
 
@@ -139,10 +134,10 @@
 
   extern void Meassure::mapAirCondition() {
     //to PPM
-    if (airCondition <= Util::calibration[EEPROM.read(0)].getLowestSensor())
-      airCondition = Util::calibration[EEPROM.read(0)].getLowestSensor();
+    if (airCondition <= calibration[EEPROM.read(0)].getLowestSensor())
+      airCondition = calibration[EEPROM.read(0)].getLowestSensor();
 
-    airCondition = Util::map(airCondition, Util::calibration[EEPROM.read(0)].getLowestSensor(), Util::calibration[EEPROM.read(0)].getHighestSensor(), Util::calibration[EEPROM.read(0)].getLowestPPM(), Util::calibration[EEPROM.read(0)].getHighestPPM());
+    airCondition = map(airCondition, calibration[EEPROM.read(0)].getLowestSensor(), calibration[EEPROM.read(0)].getHighestSensor(), calibration[EEPROM.read(0)].getLowestPPM(), calibration[EEPROM.read(0)].getHighestPPM());
   }
 
 
@@ -155,8 +150,8 @@
     values[0] = airCondition;
 
     //average AirConditions
-    now = Util::average(values, 0, AVERAGING_GRADIENT);
-    last = Util::average(values, AVERAGING_GRADIENT, AVERAGING_GRADIENT * 2);
+    now = average(values, 0, AVERAGING_GRADIENT);
+    last = average(values, AVERAGING_GRADIENT, AVERAGING_GRADIENT * 2);
 
     //gradient
     gradient = (float) now / last;
@@ -167,7 +162,6 @@
     if (gradient < MAX_DECREASE && state != VENTILATING) { // Wenn die Differenz die Hemmschwelle übersteigt: Wird Ventilating erkannt
       state = VENTILATING;
       ppmSinceVentilation = airCondition;
-      Util::rgb(0, 0, 255);
       startTime = millis();
       digitalWrite(2, HIGH);
       delay(1000);
@@ -198,9 +192,9 @@
   extern void Meassure::setState() {
 
     // define colorState  -changed
-  state = Util::getStateOf(airCondition);
+  state = getStateOf(airCondition);
 
-    //colorState = map(airCondition, Util::calibration[EEPROM.read(0)].getLowestPPM(), Util::calibration[EEPROM.read(0)].getHighestPPM(), 0, 2);
+    //colorState = map(airCondition, calibration[EEPROM.read(0)].getLowestPPM(), calibration[EEPROM.read(0)].getHighestPPM(), 0, 2);
 
     if (state == -1)
       return;
@@ -214,15 +208,4 @@
       state =  -1;
     if (state > 4)
       state =  4;
-  }
-
-  extern void Meassure::writeLed() {
-    //map Values
-    led = map(airCondition, lowest, LIMIT_BLINK, 0, 255);
-    red = led;
-    green = 255 - led;
-
-    //turn on
-    if (state != VENTILATING)
-      Util::rgb(red, green, 0);
   }

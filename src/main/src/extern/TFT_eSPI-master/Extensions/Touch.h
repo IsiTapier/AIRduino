@@ -1,11 +1,14 @@
  // Coded by Bodmer 10/2/18, see license in root directory.
  // This is part of the TFT_eSPI class and is associated with the Touch Screen handlers
 
- #include "../TFT_eSPI.cpp"
 
+#ifndef TOUCH_H
+#define TOUCH_H
 
- //added
-class Touch {
+#include "../TFT_eSPI.h"
+//#include "../Processors/TFT_eSPI_ESP32.cpp"
+
+class Touch : private TFT_eSPI {
 
  public:
            // Get raw x,y ADC values from touch controller
@@ -41,5 +44,6 @@ class Touch {
 
   uint32_t _pressTime;        // Press and hold time-out
   uint16_t _pressX, _pressY;  // For future use (last sampled calibrated coordinates)
-
 };
+
+#endif

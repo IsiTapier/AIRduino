@@ -16,7 +16,7 @@
 #include "TFT_eSPI.h"
 
 #if defined (ESP32)
-//  #include "Processors/TFT_eSPI_ESP32.cpp"
+  //#include "Processors/TFT_eSPI_ESP32.cpp"
 #elif defined (ESP8266)
 //  #include "Processors/TFT_eSPI_ESP8266.cpp"
 #elif defined (STM32) // (_VARIANT_ARDUINO_STM32_) stm32_def.h
@@ -4585,7 +4585,7 @@ void TFT_eSPI::getSetup(setup_t &tft_settings)
 ////////////////////////////////////////////////////////////////////////////////////////
 #ifdef TOUCH_CS
   //#include "Extensions/Touch.cpp"
-  #include "Extensions/Button.cpp"
+ //#include "Extensions/Button.cpp"
 #endif
 
 //#include "Extensions/Sprite.cpp"

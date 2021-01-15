@@ -6,7 +6,7 @@
 // within button
 ***************************************************************************************/
 
-#include "../TFT_eSPI.h"
+#import "../TFT_eSPI.h"
 
 class TFT_eSPI_Button {
 

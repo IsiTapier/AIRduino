@@ -6,24 +6,24 @@
 #include "Calibration.h"
 
 Calibration::Calibration(int lowestSensor, int highestSensor, int lowestPPM, int highestPPM) {
-  this -> lowestSensor = lowestSensor;
-  this -> highestSensor = highestSensor;
-  this -> lowestPPM = lowestPPM;
-  this -> highestPPM = highestPPM;
+  _lowestSensor = lowestSensor;
+  _highestSensor = highestSensor;
+  _lowestPPM = lowestPPM;
+  _highestPPM = highestPPM;
 }
 
 int Calibration::getLowestSensor() {
-  return(lowestSensor);
+  return(_lowestSensor);
 }
 
 int Calibration::getHighestSensor() {
-  return(highestSensor);
+  return(_highestSensor);
 }
 
 int Calibration::getLowestPPM() {
-  return(lowestPPM);
+  return(_lowestPPM);
 }
 
 int Calibration::getHighestPPM() {
-  return(highestPPM);
+  return(_highestPPM);
 }

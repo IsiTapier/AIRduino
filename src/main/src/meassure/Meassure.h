@@ -8,33 +8,6 @@
 #include "Arduino.h"
 #include "../util/Util.h"
 
-//settings
-#define DEBUG false
-
-#define FACTOR 4.631578947368421
-#define STAGE_TIME 1*1000
-#define VENTILATING_TIMEOUT 5*1000
-
-#define AVERAGING_MEASUREMENTS 100
-#define AVERAGING_GRADIENT 10
-#define ALPHA_MEASUREMENTS 0.7
-#define ALPHA_LOWEST 0.5
-
-
-#define MAX_SENSOR 1023
-#define MAX_PPM 5000
-
-#define MAX_INCREASE 1.5
-#define MAX_DECREASE 0.9
-#define MAX_INCREASE_LOWEST 50
-
-
-
-
-//pins
-#define GAS_SENSOR 36
-#define PIEZO      21
-
 
 class Meassure {
 
@@ -49,7 +22,7 @@ class Meassure {
     static int getLowest();
 
   private:
-    static void debug();
+    static void debugMeassure();
     //meassure
     static void meassureAirCondition();
     //data
@@ -57,7 +30,6 @@ class Meassure {
     static void calculateGradient();
     static void checkVentilating();
     static void setState();
-    static void writeLed();
 
     static float airCondition;
     static float airConditionRaw;
@@ -73,11 +45,7 @@ class Meassure {
     static int ppmSinceVentilation;
     static State state;
     static int colorState;
-    static int led;
     static int lowest;
-    static int red;
-    static int green;
-    static int blue;
 
 };
 
