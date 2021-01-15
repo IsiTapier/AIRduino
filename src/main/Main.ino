@@ -1,6 +1,9 @@
 
-  #include "src/display/Display.h"
-  
+  #include "src/meassure/meassure.h"
+  #include "src/display/displayV1/DisplayV1.h"
+  #include "src/display/displayV2/DisplayV2.h"
+
+
 
 
 //                                      ,,               ,,
@@ -12,6 +15,7 @@
 //  A'     VML    MM    MM   `Mb.`Mb    MM   MM    MM    MM    MM    MM YA.   ,A9
 //.AMA.   .AMMA..JMML..JMML. .JMM.`Wbmd"MML. `Mbod"YML..JMML..JMML  JMML.`Ybmd9'
 //
+
 
 
 //   _____      _
@@ -30,7 +34,9 @@ void setup() {
   Serial.println("SETUP:");
   Serial.println("Serial communication started at 9600 baud");
   Serial.println();
-  Display::setup();
+  //DisplayV1::setup();
+  DisplayV2::setup();
+  Meassure::setup();
 }
 
 
@@ -43,5 +49,7 @@ void setup() {
 //                   | |
 //                   |_|
 void loop() {
-  Display::loop();
+  Meassure::loop();
+  //DisplayV1::loop();
+  DisplayV2::loop();
 }
