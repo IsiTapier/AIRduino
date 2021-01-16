@@ -14,6 +14,7 @@ class Menu {
     static void setup();
     static void loop();
     static void checkTouch(TSPoint p);
+    static void reset();
 
   private:
     static void drawDisplay();

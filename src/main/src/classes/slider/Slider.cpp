@@ -14,6 +14,9 @@
   extern String text;
   extern String oldText;
 
+
+  extern Slider::Slider(void) {}
+  
   extern Slider::Slider(int section, String textOff, String textOn, boolean value, boolean colored, String debugMessage) {
     _section = section;
     _value = value;
@@ -24,7 +27,6 @@
   }
 
   extern void Slider::init() {
-    drawBorder(0, MENU_SECTION_Y(_section) - MENU_SECTION_BORDER_SHIFT, MENU_SECTION_LENGTH, MENU_SECTION_HEIGHT + MENU_SECTION_BORDER_SHIFT, MENU_SECTION_BORDER_THICKNESS, TEXT_COLOR);
     text = _value ? _textOn : _textOff;
     dPrint(text, MENU_MARGIN_LEFT, MENU_SECTION_TEXT_Y(_section), MENU_SECTION_SIZE, TEXT_COLOR, 3);
     draw();

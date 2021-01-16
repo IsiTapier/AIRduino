@@ -78,13 +78,13 @@
         p.print();
         if(p.isTouching(MENU_ICON_START_X, MENU_ICON_END_X, MENU_ICON_START_Y, MENU_ICON_END_Y)) {
           Serial.println("change Mode");
-          if(mode == 1)
-            mode = (Mode) 2;
-          else if(mode == 2)
-            mode = (Mode) 1;
+          if(mode == MENU)
+            mode = (Mode) CHART;
+          else if(mode == CHART)
+            mode = (Mode) MENU;
         } else if(p.isTouching(MENU_ICON_MARGIN, (MENU_ICON_MARGIN + MENU_ICON_LENGTH), MENU_ICON_MARGIN, (MENU_ICON_MARGIN + MENU_ICON_HEIGHT))) {
           Serial.println("reset");
-          version = V1;
+          Menu::reset();
         } else if(false) {
 
         } else if(mode == MENU) {

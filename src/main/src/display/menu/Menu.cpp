@@ -4,7 +4,7 @@
 
 #include "Menu.h"
 
-  extern Slider Menu::firstSection(0, "Version 1", "Version2", false, true, "Version changed");
+  extern Slider Menu::firstSection(0, "Version 1", "Version 2", false, true, "Version changed");
   extern Slider Menu::secondSection(1, "test1", "test2");
   extern Slider Menu::thirdSection(2, "test1", "test2");
   extern Slider Menu::fourthSection(3, "test1", "test2");
@@ -46,5 +46,14 @@
     fourthSection.checkTouch(p);
     fifthSection.checkTouch(p);
     sixthSection.checkTouch(p);
-    version = (Version) firstSection.getValue();
+    version = firstSection.getValue() ? V2 : V1;
+  }
+
+  extern void Menu::reset() {
+    firstSection.setValue(false);
+    secondSection.setValue(false);
+    thirdSection.setValue(false);
+    fourthSection.setValue(false);
+    fifthSection.setValue(false);
+    sixthSection.setValue(false);
   }

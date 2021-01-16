@@ -10,6 +10,7 @@
 
 class Slider {
   public:
+    Slider(void);
     Slider(int section, String textOff, String testOn, boolean value = false, boolean colored = true, String debugMessage = "");
     void init();
     void checkTouch(TSPoint p);

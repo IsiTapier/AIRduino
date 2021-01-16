@@ -38,6 +38,25 @@
     MENU = 2
   };
 
+  enum InputType {
+    SLIDER,
+    EMPTY
+  };
+
+  template<class T>
+  struct _init_list_with_square_brackets {
+    const std::initializer_list<T>& list;
+    _init_list_with_square_brackets(const std::initializer_list<T>& _list): list(_list) {}
+    T operator[](unsigned int index) {
+      return *(list.begin() + index);
+    }
+  };
+
+  template<class T>
+  _init_list_with_square_brackets<T> _(const std::initializer_list<T>& list) {
+    return _init_list_with_square_brackets<T>(list);
+  }
+
   //State
   State getStateOf(int value);
 
