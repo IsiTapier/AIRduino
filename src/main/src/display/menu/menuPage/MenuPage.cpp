@@ -4,43 +4,33 @@
 
 #include "MenuPage.h"
 
-extern int _page;
-extern Input _inputOne;
-extern Input _inputTwo;
-extern Input _inputThree;
-extern Input _inputFour;
-extern Input _inputFive;
-extern Input _inputSix;
-
-
-extern MenuPage::MenuPage(int number, Input inputOne, Input inputTwo, Input inputThree, Input inputFour, Input inputFive, Input inputSix) {
-  _page = number;
+MenuPage::MenuPage(Input inputOne, Input inputTwo, Input inputThree, Input inputFour, Input inputFive, Input inputSix) {
   _inputOne = inputOne;
   _inputTwo = inputTwo;
   _inputThree = inputThree;
   _inputFour = inputFour;
   _inputFive = inputFive;
   _inputSix = inputSix;
-  _inputOne.setup(0);
-  _inputTwo.setup(1);
-  _inputThree.setup(2);
-  _inputFour.setup(3);
-  _inputFive.setup(4);
-  _inputSix.setup(5);
+  _inputOne.setSection(0);
+  _inputTwo.setSection(1);
+  _inputThree.setSection(2);
+  _inputFour.setSection(3);
+  _inputFive.setSection(4);
+  _inputSix.setSection(5);
 }
 
-extern void MenuPage::init() {
+void MenuPage::setup() {
   if(mode == MENU) {   //TODO page check
-    _inputOne.init();
-    _inputTwo.init();
-    _inputThree.init();
-    _inputFour.init();
-    _inputFive.init();
-    _inputSix.init();
+    _inputOne.setup();
+    _inputTwo.setup();
+    _inputThree.setup();
+    _inputFour.setup();
+    _inputFive.setup();
+    _inputSix.setup();
   }
 }
 
-extern void MenuPage::handleTouch(TSPoint p) {
+void MenuPage::handleTouch(TSPoint p) {
   if(mode == MENU) {   //TODO page check
     _inputOne.handleTouch(p);
     _inputTwo.handleTouch(p);
@@ -49,4 +39,13 @@ extern void MenuPage::handleTouch(TSPoint p) {
     _inputFive.handleTouch(p);
     _inputSix.handleTouch(p);
   }
+}
+
+void MenuPage::reset() {
+  _inputOne.reset();
+  _inputTwo.reset();
+  _inputThree.reset();
+  _inputFour.reset();
+  _inputFive.reset();
+  _inputSix.reset();
 }

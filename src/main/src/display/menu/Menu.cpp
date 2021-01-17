@@ -4,16 +4,30 @@
 
 #include "Menu.h"
 
-  extern Slider Menu::firstSection(0, "Version 1", "Version 2", false, true, "Version changed");
-  extern Slider Menu::secondSection(1, "test1", "test2");
-  extern Slider Menu::thirdSection(2, "test1", "test2");
-  extern Slider Menu::fourthSection(3, "test1", "test2");
-  extern Slider Menu::fifthSection(4, "test1", "test2");
-  extern Slider Menu::sixthSection(5, "test1", "test2");
+
+  extern int Menu::currentSubMenu = 0;
+  extern SubMenu Menu::subMenus[] = {
+    {SubMenu("test 1", std::initializer_list<MenuPage> {
+        MenuPage(Input(SLIDER, "off", "on", false, true, "value changed"), Input(SLIDER, "Version 1", "Version 2", true, true, "version changed"), Input(EMPTY), Input(SLIDER, "offoffoffoff", "on", false, false, "changed"), Input(EMPTY), Input(SLIDER, "test 1", "test 2", false, true, "Value changed")),
+        MenuPage(Input(EMPTY), Input(SLIDER, "off", "on", false, true, "value changed")),
+        MenuPage(Input(SLIDER, "off", "on", false, true, "value changed"))
+    })},
+    {SubMenu("test 2", std::initializer_list<MenuPage> {
+        MenuPage(Input(SLIDER, "off", "on", false, true, "value changed")),
+        MenuPage(Input(EMPTY), Input(SLIDER, "off", "on")),
+        MenuPage(Input(SLIDER))
+    })},
+    {SubMenu("test 3", std::initializer_list<MenuPage> {
+        MenuPage(Input(SLIDER, "off", "on", false, true, "value changed")),
+        MenuPage(Input(EMPTY), Input(SLIDER, "off", "on")),
+        MenuPage(Input(SLIDER))
+    })}
+  };
 
   extern void Menu::setup() {
     Serial.println("Menu SETUP started");
-    drawDisplay();
+    draw();
+    subMenus[currentSubMenu].setup();
     Serial.println("Menu SETUP complete");
     Serial.println();
   }
@@ -22,38 +36,60 @@
     delay(100);
   }
 
-  extern void Menu::drawDisplay() {
+  extern void Menu::draw() {
     if(lastMode != mode && mode == MENU) {
       display.fillScreen(BACKGROUND_COLOR);
-      dPrint("Menu", DISPLAY_LENGTH/2, STATUS_MARGIN_TOP, MENU_TITLE_SIZE, TEXT_COLOR, 1);
       display.fillRect(0, TOP_BAR_HEIGHT, DISPLAY_LENGTH, TOP_BAR_THICKNESS, TEXT_COLOR);
       display.pushImage(MENU_ICON_START_X, MENU_ICON_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, menuArrow, WHITE);
       display.pushImage(MENU_ICON_MARGIN, MENU_ICON_MARGIN, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, resetArrow, BLACK);
       Serial.println("Display drawn");
-      firstSection.init();
-      secondSection.init();
-      thirdSection.init();
-      fourthSection.init();
-      fifthSection.init();
-      sixthSection.init();
     }
   }
 
-  extern void Menu::checkTouch(TSPoint p) {
-    firstSection.checkTouch(p);
-    secondSection.checkTouch(p);
-    thirdSection.checkTouch(p);
-    fourthSection.checkTouch(p);
-    fifthSection.checkTouch(p);
-    sixthSection.checkTouch(p);
-    version = firstSection.getValue() ? V2 : V1;
+  extern void Menu::setSubMenu(int subMenu) {
+    if(subMenu < 0)
+      subMenu = 0;
+    if(subMenu >= sizeof(subMenus))
+      subMenu = sizeof(subMenus)-1;
+
+    currentSubMenu = subMenu;
+    subMenus[currentSubMenu].setup();
+  }
+
+  extern void Menu::shiftSubMenu(boolean left) {
+    if(left) {
+      if(currentSubMenu <= 0)
+        setSubMenu(sizeof(subMenus)-1);
+      else
+        setSubMenu(currentSubMenu-1);
+    } else {
+      if(currentSubMenu >= sizeof(subMenus)-1)
+        setSubMenu(0);
+      else
+        setSubMenu(currentSubMenu+1);
+    }
+  }
+
+  extern void Menu::handleTouch(TSPoint p) {
+    if(!checkTouch(p)) {
+      subMenus[currentSubMenu].handleTouch(p);
+    }
+  }
+
+  extern boolean Menu::checkTouch(TSPoint p) {
+    if(false) {
+      shiftSubMenu(true);
+      return(true);
+    } else if(false) {
+      shiftSubMenu(false);
+      return(true);
+    } else
+      return(false);
   }
 
   extern void Menu::reset() {
-    firstSection.setValue(false);
-    secondSection.setValue(false);
-    thirdSection.setValue(false);
-    fourthSection.setValue(false);
-    fifthSection.setValue(false);
-    sixthSection.setValue(false);
+    if(currentSubMenu != DEFAULT_SUB_MENU)
+      setSubMenu(DEFAULT_SUB_MENU);
+    else
+      subMenus[currentSubMenu].reset();
   }

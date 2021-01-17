@@ -85,10 +85,8 @@
         } else if(p.isTouching(MENU_ICON_MARGIN, (MENU_ICON_MARGIN + MENU_ICON_LENGTH), MENU_ICON_MARGIN, (MENU_ICON_MARGIN + MENU_ICON_HEIGHT))) {
           Serial.println("reset");
           Menu::reset();
-        } else if(false) {
-
         } else if(mode == MENU) {
-          Menu::checkTouch(p);
+          Menu::handleTouch(p);
         }
       }
     } else {

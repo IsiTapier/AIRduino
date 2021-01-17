@@ -10,17 +10,22 @@
 
 class SubMenu {
   public:
-    SubMenu(String title, std::initializer_list<MenuPage> pages, int currentPage, int defaultPage = 1);
-    void init();
-    void drawTop();
-    void drawSide();
+    SubMenu(void);
+    SubMenu(String title, std::vector<MenuPage> pages, int defaultPage = 0);
+    void setup();
+    void reset();
     void handleTouch(TSPoint p);
 
   private:
+    void draw();
+    void setPage(int page);
+    void shiftPage(boolean left);
+    boolean checkTouch(TSPoint p);
+
     int _currentPage;
     int _defaultPage;
     String _title;
-    std::initializer_list<MenuPage> _pages;
+    std::vector<MenuPage> _pages;
 };
 
 #endif

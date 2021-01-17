@@ -4,34 +4,69 @@
 
 #include "SubMenu.h"
 
-extern int _currentPage;
-extern int _defaultPage;
-extern String _title;
-extern std::initializer_list<MenuPage> _pages;
-
-extern SubMenu::SubMenu(String title, std::initializer_list<MenuPage> pages, int currentPage, int defaultPage) {
+SubMenu::SubMenu(void) {}
+SubMenu::SubMenu(String title, std::vector<MenuPage> pages, int defaultPage) {
   _title = title;
   _pages = pages;
-  _currentPage = currentPage;
+  _currentPage = defaultPage;
   _defaultPage = defaultPage;
 }
 
-extern void SubMenu::init() {
-  drawTop();
-  drawSide();
-  _(_pages)[_currentPage].init();
+void SubMenu::setup() {
+  draw();
+  _pages.at(_currentPage).setup();
 }
 
-extern void SubMenu::drawTop() {
-
+void SubMenu::draw() {
+  dPrint(_title, DISPLAY_LENGTH/2, STATUS_MARGIN_TOP, MENU_TITLE_SIZE, TEXT_COLOR, 1); //TODO Title size
+   //TODO side
+  Serial.println("Page "+String(_currentPage)+" drawn");
 }
 
-extern void SubMenu::drawSide() {
+void SubMenu::setPage(int page) {
+  if(page < 0)
+    page = 0;
+  if(page >= _pages.size())
+    page = _pages.size()-1;
 
+  _currentPage = page;
+  _pages.at(_currentPage).setup();
 }
 
-extern void SubMenu::handleTouch(TSPoint p) {
-  if(!checkTouch(p)) {
-    _(_pages)[_currentPage].handleTouch(p);
+void SubMenu::shiftPage(boolean left) {
+  if(left) {
+    if(_currentPage <= 0)
+      setPage(_pages.size()-1);
+    else
+      setPage(_currentPage-1);
+  } else {
+    if(_currentPage >= _pages.size()-1)
+      setPage(0);
+    else
+      setPage(_currentPage+1);
   }
+}
+
+void SubMenu::handleTouch(TSPoint p) {
+  if(!checkTouch(p)) {
+    _pages.at(_currentPage).handleTouch(p);
+  }
+}
+
+boolean SubMenu::checkTouch(TSPoint p) {
+  if(false) {
+    shiftPage(true);
+    return(true);
+  } else if(false) {
+    shiftPage(false);
+    return(true);
+  } else
+    return(false);
+}
+
+void SubMenu::reset() {
+  if(_currentPage != _defaultPage)
+    setPage(_defaultPage);
+  else
+    _pages.at(_currentPage).reset();
 }

@@ -10,12 +10,12 @@
 
 class MenuPage {
   public:
-    MenuPage(int number, Input inputOne = Input(EMPTY), Input inputTwo = Input(EMPTY), Input inputThree = Input(EMPTY), Input inputFour = Input(EMPTY), Input inputFive = Input(EMPTY), Input inputSix = Input(EMPTY));
-    void init();
+    MenuPage(Input inputOne = Input(EMPTY), Input inputTwo = Input(EMPTY), Input inputThree = Input(EMPTY), Input inputFour = Input(EMPTY), Input inputFive = Input(EMPTY), Input inputSix = Input(EMPTY));
+    void setup();
+    void reset();
     void handleTouch(TSPoint p);
 
   private:
-    int _page;
     Input _inputOne;
     Input _inputTwo;
     Input _inputThree;

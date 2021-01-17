@@ -7,24 +7,28 @@
 
 #include "Arduino.h"
 #include "../../util/Util.h"
-#include "../../classes/slider/Slider.h"
+#include "subMenu/SubMenu.h"
+
+//temporary
+#define DEFAULT_SUB_MENU 0
 
 class Menu {
+
   public:
     static void setup();
     static void loop();
-    static void checkTouch(TSPoint p);
     static void reset();
+    static void handleTouch(TSPoint p);
 
   private:
-    static void drawDisplay();
+    static void draw();
+    static void setSubMenu(int subMenu);
+    static void shiftSubMenu(boolean left);
+    static boolean checkTouch(TSPoint p);
 
-    static Slider firstSection;
-    static Slider secondSection;
-    static Slider thirdSection;
-    static Slider fourthSection;
-    static Slider fifthSection;
-    static Slider sixthSection;
+    static SubMenu subMenus[];
+    static int currentSubMenu;
+
 };
 
 #endif

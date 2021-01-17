@@ -9,24 +9,23 @@
 #include "../../util/Util.h"
 #include "../slider/Slider.h"
 
+
 class Input {
   public:
     Input(void);
-    Input(InputType type, String textOff = "", String testOn = "", boolean value = false, boolean colored = true, String debugMessage = "");
-    void setup(int section);
-    void init();
+    Input(InputType type, String textOff = "", String testOn = "", boolean defaultValue = false, boolean colored = true, String debugMessage = "");
+    Input(Input input, int section);
+    void setSection(int section);
+    void setup();
+    void reset();
     void handleTouch(TSPoint p);
 
   private:
-    int _section;
+    void draw();
+
+    int _inputSection;
     InputType _type;
     Slider _slider;
-
-    String _textOff;
-    String _textOn;
-    boolean _value;
-    boolean _colored;
-    String _debugMessage;
 
 };
 

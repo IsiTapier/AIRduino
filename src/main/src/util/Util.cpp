@@ -117,6 +117,9 @@
     if(backgroundColor == 0)
       backgroundColor = BACKGROUND_COLOR;
     if(oldText.length() != 0) {
+      while(oldText.length() > text.length()) {
+        text += " ";
+      }
       if(datum % 3 == 2)
         x -= LETTER_LENGTH*scale*(text.length()-1);
       for(int i = 0; i < text.length(); i++) {

@@ -11,18 +11,23 @@
 class Slider {
   public:
     Slider(void);
-    Slider(int section, String textOff, String testOn, boolean value = false, boolean colored = true, String debugMessage = "");
+    Slider(String textOff, String testOn, boolean defaultValue = false, boolean colored = true, String debugMessage = "");
+    Slider& setSection(int section);
+    int getSection();
     void init();
+    void reset();
     void checkTouch(TSPoint p);
+
+  private:
     boolean getValue();
     void setValue(boolean value);
     void changeValue();
     void draw();
 
-  private:
     String _textOff;
     String _textOn;
     boolean _value;
+    boolean _defaultValue;
     boolean _colored;
     int _section;
     String _debugMessage;
