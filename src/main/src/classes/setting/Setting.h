@@ -19,7 +19,7 @@ enum SettingType {
 class Setting {
   public:
     Setting(void);
-    Setting(SettingType type, String title = "", short defaultValue = 0, boolean colored = false, String debugMessage = "", std::vector<String> names = {});  //TODO DATATYPE
+    Setting(SettingType type, String title = "", short defaultValue = 0, boolean colored = false, String debugMessage = "", String nameOn = "", String nameOff = "");  //TODO DATATYPE
     short getValue();
     boolean getValueb();
     short getDefaultValue();

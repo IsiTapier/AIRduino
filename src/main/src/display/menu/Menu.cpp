@@ -4,6 +4,7 @@
 
 #include "Menu.h"
 
+
 using namespace test;
 
   extern int Menu::currentSubMenu = 0;
@@ -36,12 +37,6 @@ using namespace test;
         MenuPage(
           Input(test13),
           Input(test14)),
-
-        MenuPage(
-          Input(test15),
-          Input(test16),
-          Input(test17),
-          Input(test18)),
 
         MenuPage(
           Input(test19),

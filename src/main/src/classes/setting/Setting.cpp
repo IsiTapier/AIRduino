@@ -6,15 +6,17 @@
 #include "Setting.h"
 
 Setting::Setting(void) {}
-Setting::Setting(SettingType type, String title, short defaultValue, boolean colored,  String debugMessage, std::vector<String> names) { //TODO DATATYPE
+Setting::Setting(SettingType type, String title, short defaultValue, boolean colored,  String debugMessage, String nameOn, String nameOff) { //TODO DATATYPE
   _type = type;
   _title = title;
   _value = defaultValue;
   _defaultValue = defaultValue;
   _colored = colored;
-  for(int i = 0; i < names.size(); i++) {
+  /*for(int i = 0; i < names.size(); i++) {
     _names[i] = names.at(i);
-  }
+  }*/
+  _names[0] = nameOn;
+  _names[1] = nameOff;
   _debugMessage = debugMessage;
 }
 
