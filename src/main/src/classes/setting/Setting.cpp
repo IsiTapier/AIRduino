@@ -6,7 +6,7 @@
 #include "Setting.h"
 
 Setting::Setting(void) {}
-Setting::Setting(SettingType type, String title, short defaultValue, boolean colored,  String debugMessage, String nameOn, String nameOff) { //TODO DATATYPE
+Setting::Setting(SettingType type, char* title, short defaultValue, boolean colored,  char* debugMessage, char* nameOn, char* nameOff) { //TODO DATATYPE
   _type = type;
   _title = title;
   _value = defaultValue;
@@ -15,8 +15,8 @@ Setting::Setting(SettingType type, String title, short defaultValue, boolean col
   /*for(int i = 0; i < names.size(); i++) {
     _names[i] = names.at(i);
   }*/
-  _names[0] = nameOn;
-  _names[1] = nameOff;
+  _nameOn = nameOn;
+  _nameOff = nameOff;
   _debugMessage = debugMessage;
 }
 
@@ -64,21 +64,28 @@ SettingType Setting::getType() {
   return _type;
 }
 
-String Setting::getTitle() {
+char* Setting::getTitle() {
   return _title;
 }
 
-String Setting::getName(boolean reverse) {
-  if(reverse)
-    return _names[(int)!(boolean)_value];
-  else
-    return _names[_value];
+char* Setting::getName(boolean reverse) {
+  if(reverse) {
+    if((boolean) _value)
+      return(_nameOn);
+    else
+      return(_nameOff);
+  } else {
+    if((boolean) _value)
+      return(_nameOff);
+    else
+      return(_nameOn);
+  }
 }
 
 boolean Setting::getColored() {
   return _colored;
 }
 
-String Setting::getDebugMessage() {
+char* Setting::getDebugMessage() {
   return _debugMessage;
 }

@@ -39,6 +39,12 @@ using namespace test;
           Input(test14)),
 
         MenuPage(
+          Input(test15),
+          Input(test16),
+          Input(test17),
+          Input(test18)),
+
+        MenuPage(
           Input(test19),
           Input(test20),
           Input(test21))
@@ -51,6 +57,8 @@ using namespace test;
     Serial.println(currentSubMenu);
     subMenus[currentSubMenu].setup();
     Serial.println("Menu SETUP complete");
+    Serial.println(sizeof(SubMenu));
+    Serial.println(sizeof(subMenus));
     Serial.println();
   }
 

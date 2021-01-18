@@ -19,7 +19,7 @@ enum SettingType {
 class Setting {
   public:
     Setting(void);
-    Setting(SettingType type, String title = "", short defaultValue = 0, boolean colored = false, String debugMessage = "", String nameOn = "", String nameOff = "");  //TODO DATATYPE
+    Setting(SettingType type, char* title = "", short defaultValue = 0, boolean colored = false, char* debugMessage = "", char* nameOn = "", char* nameOff = "");  //TODO DATATYPE
     short getValue();
     boolean getValueb();
     short getDefaultValue();
@@ -27,18 +27,19 @@ class Setting {
     void setValue(short value);
     void setValue(boolean value);
     SettingType getType();
-    String getTitle();
+    char* getTitle();
     boolean getColored();
-    String getName(boolean reverse = false);
-    String getDebugMessage();
+    char* getName(boolean reverse = false);
+    char* getDebugMessage();
 
   private:
     SettingType _type;
-    String _title;
+    char* _title;
     short _value;
     short _defaultValue;
-    String _debugMessage;
-    String _names[2];
+    char* _debugMessage;
+    char* _nameOn;
+    char* _nameOff;
     boolean _colored;
 };
 

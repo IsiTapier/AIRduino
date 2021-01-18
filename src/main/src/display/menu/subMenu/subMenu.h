@@ -11,7 +11,7 @@
 class SubMenu {
   public:
     SubMenu(void);
-    SubMenu(char title[15], std::vector<MenuPage> pages, short defaultPage = 0);
+    SubMenu(char* title, std::vector<MenuPage> pages, short defaultPage = 0);
     void setup();
     void reset();
     void handleTouch(TSPoint p);
@@ -25,7 +25,7 @@ class SubMenu {
 
     short _currentPage;
     short _defaultPage;
-    String _title;
+    char* _title;
     std::vector<MenuPage> _pages;
 };
 
