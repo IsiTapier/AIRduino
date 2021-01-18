@@ -8,6 +8,7 @@
 
   extern void Display::setup() {
     Serial.println("DISPLAY SETUP started");
+    yield();
     display.begin();
     Serial.println("Display connection started");
     display.fillScreen(BACKGROUND_COLOR);
@@ -73,16 +74,17 @@
       p = ts.getPoint();
       // we have some minimum pressure we consider 'valid'
       // pressure of 0 means no pressing!
+      //template:: p.isTouching(PLACEHOLDER_PLACE_START_X, PLACEHOLDER_PLACE_END_X, PLACEHOLDER_PLACE_START_Y, PLACEHOLDER_PLACE_END_Y)
       if(p.isTouching()) {
         p.calibrate();
         p.print();
-        if(p.isTouching(MENU_ICON_START_X, MENU_ICON_END_X, MENU_ICON_START_Y, MENU_ICON_END_Y)) {
+        if(p.isTouching(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_END_X, MENU_ARROW_BACK_START_Y, MENU_ARROW_BACK_END_Y)) {
           Serial.println("change Mode");
           if(mode == MENU)
             mode = (Mode) CHART;
           else if(mode == CHART)
             mode = (Mode) MENU;
-        } else if(p.isTouching(MENU_ICON_MARGIN, (MENU_ICON_MARGIN + MENU_ICON_LENGTH), MENU_ICON_MARGIN, (MENU_ICON_MARGIN + MENU_ICON_HEIGHT))) {
+        } else if(p.isTouching(MENU_ARROW_RESET_START_X, MENU_ARROW_RESET_END_X, MENU_ARROW_RESET_START_Y, MENU_ARROW_RESET_END_Y)) {
           Serial.println("reset");
           Menu::reset();
         } else if(mode == MENU) {

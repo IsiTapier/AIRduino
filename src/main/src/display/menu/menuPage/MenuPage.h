@@ -10,7 +10,7 @@
 
 class MenuPage {
   public:
-    MenuPage(Input inputOne = Input(EMPTY), Input inputTwo = Input(EMPTY), Input inputThree = Input(EMPTY), Input inputFour = Input(EMPTY), Input inputFive = Input(EMPTY), Input inputSix = Input(EMPTY));
+    MenuPage(Input inputOne = Input(Setting(EMPTY)), Input inputTwo = Input(Setting(EMPTY)), Input inputThree = Input(Setting(EMPTY)), Input inputFour = Input(Setting(EMPTY)), Input inputFive = Input(Setting(EMPTY)), Input inputSix = Input(Setting(EMPTY)));
     void setup();
     void reset();
     void handleTouch(TSPoint p);

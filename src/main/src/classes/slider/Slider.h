@@ -7,31 +7,25 @@
 
 #include "Arduino.h"
 #include "../../util/Util.h"
+#include "../../util/settings/Settings.h"
 
 class Slider {
   public:
     Slider(void);
-    Slider(String textOff, String testOn, boolean defaultValue = false, boolean colored = true, String debugMessage = "");
-    Slider& setSection(int section);
-    int getSection();
+    Slider(Setting setting);
+    Slider& setSection(byte section);
+    byte getSection();
     void init();
     void reset();
     void checkTouch(TSPoint p);
 
   private:
-    boolean getValue();
     void setValue(boolean value);
     void changeValue();
     void draw();
 
-    String _textOff;
-    String _textOn;
-    boolean _value;
-    boolean _defaultValue;
-    boolean _colored;
-    int _section;
-    String _debugMessage;
-
+    Setting _setting;
+    byte _section;
     String text;
     String oldText;
 };

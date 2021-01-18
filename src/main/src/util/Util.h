@@ -38,10 +38,10 @@
     MENU = 2
   };
 
-  enum InputType {
+  /*enum InputType {
     SLIDER,
     EMPTY
-  };
+  };*/
 
   template<class T>
   struct _init_list_with_square_brackets {
@@ -57,6 +57,11 @@
     return _init_list_with_square_brackets<T>(list);
   }
 
+  template<class T, size_t size>
+  int sizeOf(const T (&array)[size]) {
+    return (sizeof(array)/sizeof(T));
+  }
+
   //State
   State getStateOf(int value);
 
@@ -67,8 +72,8 @@
   void drawBorder(int x, int y, int length, int height, int thickness, int color);
   void drawLine(int x, int y, int length, int height, int color, int a = 0, int b = 0, boolean filter1 = false, int filtervalue1 = 0, boolean filter2 = false, State filtervalue2 = GOOD);
   void showBoxes();
-  void dPrint(String text, int x, int y, int scale, int color, int datum = 0, int backgroundColor = -1, String oldText = "", int padding = 0);
-  void dPrint(int text, int x, int y, int scale, int color, int datum = 0, int backgroundColor = -1, int oldText = -1, int padding = 0);
+  void dPrint(String text, int x, int y, int scale, int color, int datum = 0, int backgroundColor = -1, String oldText = "", int oldTextSize = -1, int padding = 0);
+  void dPrint(int text, int x, int y, int scale, int color, int datum = 0, int backgroundColor = -1, int oldText = -1, int oldTextSize = -1, int padding = 0);
   void loadingScreen();
   void writeLoadingScreenTitle();
   void writeLoadingAnimation(int c1, int c2, int c3);

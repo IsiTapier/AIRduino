@@ -13,18 +13,18 @@
 class Input {
   public:
     Input(void);
-    Input(InputType type, String textOff = "", String testOn = "", boolean defaultValue = false, boolean colored = true, String debugMessage = "");
-    Input(Input input, int section);
-    void setSection(int section);
+    Input(Setting setting);
+    void setSection(byte section);
     void setup();
     void reset();
     void handleTouch(TSPoint p);
 
   private:
     void draw();
+    void clear();
 
-    int _inputSection;
-    InputType _type;
+    byte _inputSection;
+    Setting _settings;
     Slider _slider;
 
 };

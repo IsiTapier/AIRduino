@@ -5,7 +5,7 @@
 #include "SubMenu.h"
 
 SubMenu::SubMenu(void) {}
-SubMenu::SubMenu(String title, std::vector<MenuPage> pages, int defaultPage) {
+SubMenu::SubMenu(char title[15], std::vector<MenuPage> pages, short defaultPage) {
   _title = title;
   _pages = pages;
   _currentPage = defaultPage;
@@ -19,8 +19,16 @@ void SubMenu::setup() {
 
 void SubMenu::draw() {
   dPrint(_title, DISPLAY_LENGTH/2, STATUS_MARGIN_TOP, MENU_TITLE_SIZE, TEXT_COLOR, 1); //TODO Title size
-   //TODO side
-  Serial.println("Page "+String(_currentPage)+" drawn");
+  dPrint(_currentPage+1, MENU_SIDE_CENTER_X, MENU_SIDE_CENTER_Y, MENU_SIDE_SIZE, TEXT_COLOR, 7);
+  dPrint(_pages.size(), (MENU_SIDE_CENTER_X + MENU_SIDE_BAR_THICKNESS + MENU_SIDE_SIZE), MENU_SIDE_CENTER_Y, MENU_SIDE_SIZE, TEXT_COLOR, 1);
+  Serial.println("Submenu "+_title+" drawn");
+}
+
+void SubMenu::clear() {
+  dPrint(_title, DISPLAY_LENGTH/2, STATUS_MARGIN_TOP, MENU_TITLE_SIZE, BACKGROUND_COLOR, 1); //TODO Title size
+  dPrint(_currentPage+1, MENU_SIDE_CENTER_X, MENU_SIDE_CENTER_Y, MENU_SIDE_SIZE, BACKGROUND_COLOR, 7);
+  dPrint(_pages.size(), MENU_SIDE_CENTER_X, MENU_SIDE_CENTER_Y, MENU_SIDE_SIZE, BACKGROUND_COLOR, 1);
+  Serial.println("Submenu "+_title+" cleared");
 }
 
 void SubMenu::setPage(int page) {
@@ -28,13 +36,14 @@ void SubMenu::setPage(int page) {
     page = 0;
   if(page >= _pages.size())
     page = _pages.size()-1;
-
+  dPrint(_currentPage+1, MENU_SIDE_CENTER_X, MENU_SIDE_CENTER_Y, MENU_SIDE_SIZE, BACKGROUND_COLOR, 7);
   _currentPage = page;
   _pages.at(_currentPage).setup();
+  dPrint(_currentPage+1, MENU_SIDE_CENTER_X, MENU_SIDE_CENTER_Y, MENU_SIDE_SIZE, TEXT_COLOR, 7);
 }
 
-void SubMenu::shiftPage(boolean left) {
-  if(left) {
+void SubMenu::shiftPage(boolean up) {
+  if(up) {
     if(_currentPage <= 0)
       setPage(_pages.size()-1);
     else
@@ -54,10 +63,10 @@ void SubMenu::handleTouch(TSPoint p) {
 }
 
 boolean SubMenu::checkTouch(TSPoint p) {
-  if(false) {
+  if(p.isTouching(MENU_ARROW_UP_START_X, MENU_ARROW_UP_END_X, MENU_ARROW_UP_START_Y, MENU_ARROW_UP_END_Y)) {
     shiftPage(true);
     return(true);
-  } else if(false) {
+  } else if(p.isTouching(MENU_ARROW_DOWN_START_X, MENU_ARROW_DOWN_END_X, MENU_ARROW_DOWN_START_Y, MENU_ARROW_DOWN_END_Y)) {
     shiftPage(false);
     return(true);
   } else
@@ -65,8 +74,10 @@ boolean SubMenu::checkTouch(TSPoint p) {
 }
 
 void SubMenu::reset() {
-  if(_currentPage != _defaultPage)
+  /*if(_currentPage != _defaultPage)
     setPage(_defaultPage);
   else
-    _pages.at(_currentPage).reset();
+    _pages.at(_currentPage).reset();*/
+  for(int i = 0; i < _pages.size(); i++)
+    _pages.at(i).reset();
 }

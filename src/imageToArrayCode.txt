@@ -1,0 +1,79 @@
+package ImageToArray.main;
+
+
+import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
+
+import javax.imageio.ImageIO;
+
+public class Main {
+	
+	final static String sourceInput = "img\\arrow2.png";
+	final static String sourceOutput = "img\\output.txt";
+	final static boolean swapx = false;
+	final static boolean swapy = false;
+	
+	//Initiation
+	static BufferedImage image;
+	static int imageWidth;
+	static int imageHeight;
+	static FileWriter writer;
+	static BufferedWriter bWriter;
+	static PrintWriter pWriter;
+	static String out;
+	
+	public static void main(String[] args) {
+		//load image
+		try {
+			image = ImageIO.read(new File(sourceInput));
+			imageWidth = image.getWidth();
+			imageHeight = image.getHeight();
+			writer = new FileWriter(sourceOutput);
+		    bWriter = new BufferedWriter(writer);
+			pWriter = new PrintWriter(bWriter);
+			//get pixel colors
+			int row;
+			int col;
+			int buf;
+			for (int x = 0; x < imageWidth; x++) {
+				out = "";
+				for (int y = 0; y < imageHeight; y++) {
+					if(swapx) {
+						col = imageWidth - x -1;
+						row = imageHeight - y -1;
+					} else {
+						col = x;
+						row = y;
+					}
+					if(swapy) {
+						buf = row;
+						row = col;
+						col = buf;
+					}
+					int rgb = image.getRGB(row, col);
+					int a = ((0xF0000000 & rgb) >> 16) & 0x0000F000;
+					int r = ((0x00F00000 & rgb) >> 12);
+					int g = ((0x0000F000 & rgb) >> 8);
+					int b = ((0x000000F0 & rgb) >> 4);
+					int argb = a + r + g + b;
+					String color16 = Integer.toHexString(argb);
+					String color32 = Integer.toHexString(rgb);
+					System.out.println("32bit: " + color32 + " 16bit: " + color16);
+					out += "0x" + color16 + ", ";
+				}
+				pWriter.println(out);
+				pWriter.flush();
+			}
+			pWriter.close();
+			bWriter.close();
+			writer.close();
+		} catch(Exception exception) {
+			
+		}
+		
+	}
+}

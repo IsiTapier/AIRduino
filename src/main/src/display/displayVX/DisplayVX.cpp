@@ -55,7 +55,7 @@ extern boolean DisplayVX::drop = false;
   extern void DisplayVX::drawDisplay() {
     display.fillScreen(BACKGROUND_COLOR);
     display.fillRect(0, DATABOX_Y, DISPLAY_LENGTH, DATABOX_HEIGHT, DATABOX_BACKGROUND_COLOR);
-    display.pushImage(MENU_ICON_START_X, MENU_ICON_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, menuGear, WHITE);
+    display.pushImage(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, gear, WHITE);
     display.fillRect(0, TOP_BAR_HEIGHT, DISPLAY_LENGTH, TOP_BAR_THICKNESS, TEXT_COLOR);
     Serial.println("Display drawn");
   }

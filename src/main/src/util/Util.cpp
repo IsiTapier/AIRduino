@@ -5,7 +5,6 @@
 #include "Arduino.h"
 #include "Util.h"
 
-
   TFT_eSPI display(DISPLAY_HEIGHT, DISPLAY_LENGTH);
   TouchScreen ts(TFT_D1, TFT_DC, TFT_CS, TFT_D0, TOUCH_RESISTANCE);
 
@@ -110,8 +109,7 @@
     display.fillRect((DISPLAY_LENGTH - STATUS_LENGTH)/2, STATUS_MARGIN_TOP, STATUS_LENGTH, STATUS_HEIGHT, RED);
   }
 
-  void dPrint(String text, int x, int y, int scale, int color, int datum, int backgroundColor, String oldText, int padding) {
-    display.setTextSize(scale);
+  void dPrint(String text, int x, int y, int scale, int color, int datum, int backgroundColor, String oldText, int oldTextSize, int padding) {
     display.setTextPadding(padding);
     display.setTextDatum(datum);
     if(backgroundColor == 0)
@@ -120,17 +118,23 @@
       while(oldText.length() > text.length()) {
         text += " ";
       }
+      if(oldTextSize < 0) {
+        oldTextSize = scale;
+      }
       if(datum % 3 == 2)
         x -= LETTER_LENGTH*scale*(text.length()-1);
       for(int i = 0; i < text.length(); i++) {
         if(text.charAt(i) != oldText.charAt(i)) {
           display.setTextColor(backgroundColor);
-          display.drawString((String) oldText.charAt(i), x+LETTER_LENGTH*scale*i, y);
+          display.setTextSize(oldTextSize);
+          display.drawString((String) oldText.charAt(i), x+LETTER_LENGTH*oldTextSize*i, y);
           display.setTextColor(color);
+          display.setTextSize(scale);
           display.drawString((String) text.charAt(i), x+LETTER_LENGTH*scale*i, y);
         }
       }
     } else {
+      display.setTextSize(scale);
       display.setCursor(x, y);
       if(backgroundColor > 0)
         display.setTextColor(color, backgroundColor);
@@ -141,8 +145,8 @@
   }
 
   //Verkürzung: Writing mit Integern
-  void dPrint(int text, int x, int y, int scale, int color, int datum, int backgroundColor, int oldText, int padding) {
-    dPrint(String(text), x, y, scale, color, datum, backgroundColor, (oldText == -1) ? "" : String(oldText), padding);
+  void dPrint(int text, int x, int y, int scale, int color, int datum, int backgroundColor, int oldText, int oldTextSize, int padding) {
+    dPrint(String(text), x, y, scale, color, datum, backgroundColor, (oldText == -1) ? "" : String(oldText), oldTextSize, padding);
   }
 
   //Loading Screen

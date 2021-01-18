@@ -8,12 +8,14 @@
 #include "Arduino.h"
 #include "../../util/Util.h"
 #include "subMenu/SubMenu.h"
+#include "../../util/settings/Settings.h"
+
+extern SubMenu subMenus[];
 
 //temporary
 #define DEFAULT_SUB_MENU 0
 
 class Menu {
-
   public:
     static void setup();
     static void loop();
@@ -26,7 +28,6 @@ class Menu {
     static void shiftSubMenu(boolean left);
     static boolean checkTouch(TSPoint p);
 
-    static SubMenu subMenus[];
     static int currentSubMenu;
 
 };

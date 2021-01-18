@@ -290,6 +290,7 @@ void TouchScreen::calibration(void) {
   TSPoint topleft = getPoint();
   while(topleft.isTouching()) {
     delay(10);
+    yield();
     topleft = getPoint();
   }
   delay(1000);
@@ -304,11 +305,13 @@ void TouchScreen::calibration(void) {
   TSPoint topright = topleft;
   while(topright.isTouching()) {
     delay(10);
+    yield();
     topright = getPoint();
   }
   delay(1000);
   while(!topright.isTouching()) {
     delay(100);
+    yield();
     topright = getPoint();
   }
 
@@ -318,11 +321,13 @@ void TouchScreen::calibration(void) {
   TSPoint bottomleft = topright;
   while(bottomleft.isTouching()) {
     delay(10);
+    yield();
     bottomleft = getPoint();
   }
   delay(1000);
   while(!bottomleft.isTouching()) {
     delay(100);
+    yield();
     bottomleft = getPoint();
   }
 
@@ -332,11 +337,13 @@ void TouchScreen::calibration(void) {
   TSPoint bottomright = bottomleft;
   while(bottomright.isTouching()) {
     delay(10);
+    yield();
     bottomright = getPoint();
   }
   delay(1000);
   while(!bottomright.isTouching()) {
     delay(100);
+    yield();
     bottomright = getPoint();
   }
 
