@@ -4,12 +4,12 @@
 #define LOADING_SCREEN_TIME 1
 
 //settings
-#define DEBUG false
+#define DEBUG true
 
 #define STAGE_TIME 1*800
 #define VENTILATING_TIMEOUT 5*1000
 
-#define AVERAGING_MEASUREMENTS 100
+#define AVERAGING_MEASUREMENTS 10000
 #define AVERAGING_GRADIENT 10
 #define ALPHA_MEASUREMENTS 0.7
 #define ALPHA_LOWEST 0.5
@@ -33,7 +33,7 @@
 #define TOUCH_INACCURACY_Y TOUCH_INACCURACY
 
 //DisplayV1
-#define AVERAGING_GRAPH 1
+#define AVERAGING_GRAPH 10
 #define ALPHA_GRAPH 0.7
 
 //DisplayV2
@@ -47,8 +47,9 @@
 #define COLORED_CHART true
 
 
-#define DISPLAYED_PPM_LOWEST  400
+#define DISPLAYED_PPM_LOWEST 400
 #define DISPLAYED_PPM_HIGHEST 1000
+
 
 //display
 #define DISPLAY_LENGTH             320

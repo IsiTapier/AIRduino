@@ -5,33 +5,49 @@
 #include "Arduino.h"
 #include "Settings.h"
 
-namespace test {
+
   Setting empty = Setting(EMPTY);
-  Setting versions = Setting(SWITCH, "Version", 0, true, "Version changed", "Version 1", "Version 2");
-  Setting test1 = Setting(SWITCH, "Version3", 0, true, "Version changed", "Version 1", "Version 2");
-  Setting test2 = Setting(SWITCH, "Version3", 0, true, "Version changed", "Version 1", "Version 2");
-  Setting test3 = Setting(SWITCH, "Version3", 0, true, "Version changed", "Version 1", "Version 2");
-  Setting test4 = Setting(SWITCH, "Version3", 0, true, "Version changed", "Version 1", "Version 2");
-  Setting test5 = Setting(SWITCH, "Version3", 0, true, "Version changed", "Version 1", "Version 2");
-  Setting test6 = Setting(SWITCH, "Version3", 0, true, "Version changed", "Version 1", "Version 2");
-  Setting test7 = Setting(SWITCH, "Version3", 0, true, "Version changed", "Version 1", "Version 2");
-  Setting test8 = Setting(SWITCH, "Version3", 0, true, "Version changed", "Version 1", "Version 2");
-  Setting test9 = Setting(SWITCH, "Version3", 0, true, "Version changed", "Version 1", "Version 2");
-  Setting test10 = Setting(SWITCH, "Version3", 0, true, "Version changed", "Version 1", "Version 2");
-  Setting test11 = Setting(SWITCH, "Version3", 0, true, "Version changed", "Version 1", "Version 2");
-  Setting test12 = Setting(SWITCH, "Version3", 0, true, "Version changed", "Version 1", "Version 2");
-  Setting test13 = Setting(SWITCH, "Version3", 0, true, "Version changed", "Version 1", "Version 2");
-  Setting test14 = Setting(SWITCH, "Version3", 0, true, "Version changed", "Version 1", "Version 2");
-  Setting test15 = Setting(SWITCH, "Version3", 0, true, "Version changed", "Version 1", "Version 2");
-  Setting test16 = Setting(SWITCH, "Version3", 0, true, "Version changed", "Version 1", "Version 2");
-  Setting test17 = Setting(SWITCH, "Version3", 0, true, "Version changed", "Version 1", "Version 2");
-  Setting test18 = Setting(SWITCH, "Version3", 0, true, "Version changed", "Version 1", "Version 2");
-  Setting test19 = Setting(SWITCH, "Version3", 0, true, "Version changed", "Version 1", "Version 2");
-  Setting test20 = Setting(SWITCH, "Version3", 0, true, "Version changed", "Version 1", "Version 2");
-  Setting test21 = Setting(SWITCH, "Version3", 0, true, "Version changed", "Version 1", "Version 2");
-  Setting test22 = Setting(SWITCH, "Version3", 0, true, "Version changed", "Version 1", "Version 2");
-  Setting test23 = Setting(SWITCH, "Version3", 0, true, "Version changed", "Version 1", "Version 2");
-  Setting test24 = Setting(SWITCH, "Version3", 0, true, "Version changed", "Version 1", "Version 2");
-  Setting test25 = Setting(SWITCH, "Version3", 0, true, "Version changed", "Version 1", "Version 2");
-  Setting test26 = Setting(SWITCH, "Version3", 0, true, "Version changed", "Version 1", "Version 2");
+
+namespace general {
+  Setting versions = Setting(SWITCH, "Version", 0, false, "'Version' changed", "Version 1", "Version 2");
+  //Setting darkMode = Setting(SELECT, "Theme", 0, true, "'Theme' changed", "light mode", "dark mode");
+  Setting piezo = Setting(SWITCH, "Piepser", 1, true, "'Pieser' changed"); //TODO
+  Setting blink = Setting(SWITCH, "Blink", 1, true, "'Blink' changed");
+  //Setting status = Setting(MULTISELECT, "Blink", 0, false, "'Status' changed");
+  //Setting calibrateTouch = Setting(ACTIVATOR, "Touch kalibrieren", 1, true, "Touch changed");
+  Setting graphSpeed = Setting(EMPTY); //TODO
+  Setting kernMode = Setting(SWITCH, "Kern Modus", 0, false, "'Kern Modus' changed");
+  Setting segments = Setting(EMPTY); //TODO
+  Setting blinkThickness = Setting(EMPTY); //TODO
+  Setting ventilatingTimeout = Setting(EMPTY); //TODO
+  Setting debugSensor = Setting(SWITCH, "Debug Sensor", 0, true, "'Debug Sensor' changed");
 }
+
+namespace colorModes {
+  Setting variousColors = Setting(SWITCH, "farbiges Design", 0, true, "'farbiges Disign' changed");
+  Setting coloredGraph = Setting(SWITCH, "farbiger Graph", 0, true, "'farbiger Graph' changed");
+  Setting coloredBar = Setting(SWITCH, "farbige Leiste", 1, true, "'farbige Leiste' changed");
+  Setting coloredState = Setting(SWITCH, "farbiger Status", 1, true, "'farbiger Status' changed");
+  Setting coloredTime = Setting(SWITCH, "farbige Zeit", 0, true, "'farbige Zeit' changed");
+  Setting coloredValue = Setting(SWITCH, "farbiger Wert", 1, true, "'farbiger Wert' changed");
+  Setting coloredSlider = Setting(SWITCH, "farbiger Toggle", 0, true, "'farbiger Toggle' changed");
+}
+
+/*namespace colors {
+  Setting graphColor = Setting(COLOR "Graphfarbe", 0, true, "'Graphfarbe' changed");
+  Setting valueNormal = Setting(COLOR, "Farbe 'Gut'", 0, true, "'' changed");
+  Setting valueRisk = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
+  Setting valueWarning = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
+  Setting valueAlarm = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
+  Setting barColor = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
+
+  Setting barSectionColor = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
+  Setting DataboxColor = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
+  Setting defaultTextColor = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
+  Setting ChartBorderColor = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
+  Setting SliderDotColorOn = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
+  Setting SliderDotColorOn = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
+
+  Setting SliderColorStrip = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
+  Setting SliderBackgroundColor = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
+} */

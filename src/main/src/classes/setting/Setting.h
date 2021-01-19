@@ -10,8 +10,9 @@
 
 enum SettingType {
   EMPTY,
-  AKTIVATOR,
+  ACTIVATOR,
   SELECT,
+  MUTLISELECT,
   SWITCH,
   COLOR
 };

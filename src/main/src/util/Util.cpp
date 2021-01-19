@@ -15,7 +15,7 @@
 
 
   Calibration calibration[] = {
-      Calibration(700, 1000, 400, 1000),
+      Calibration(476, 576, 478, 1424), //576 1424 496 478
       Calibration(55, 65, 400, 1000),
       Calibration(40, 60, 400, 1000)
   };

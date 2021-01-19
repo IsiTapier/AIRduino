@@ -31,6 +31,7 @@ class Meassure {
     static void checkVentilating();
     static void setState();
 
+    static unsigned long tempAirCondition;
     static float airCondition;
     static float airConditionRaw;
     static float airConditionLast;

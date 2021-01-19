@@ -15,6 +15,7 @@
   //                       | |
   //                       |_|
 
+  extern unsigned long Meassure::tempAirCondition;
   extern float Meassure::airCondition;
   extern float Meassure::airConditionRaw;
   extern float Meassure::airConditionLast;
@@ -42,6 +43,7 @@
     Serial.println("Variables initialized");
     Serial.println("MEASSURE SETUP complete");
     Serial.println();
+    Serial.println(EEPROM.read(0));
   }
 
   extern void Meassure::loop() {
@@ -100,28 +102,38 @@
 
   extern void Meassure::meassureAirCondition() {
     //Messung
-    airCondition = 0;
-    for (int i = 0; i < AVERAGING_MEASUREMENTS; i++) {
+    int timeLeft = 1000-(millis()%1000);
+    if(timeLeft < 600) {
+      timeLeft += 1000;
+      Serial.println("WARNING: Timing error!");
+    }
+    timeLeft-10;
+
+    tempAirCondition = 0;
+    for (long i = 0; i < AVERAGING_MEASUREMENTS; i++) {
       value = analogRead(GAS_SENSOR);
 
       //Fehlmessungen überschreiben
       if (airConditionRaw * MAX_INCREASE < value && i == 0)
-        airCondition = airCondition + airConditionRaw;
+        tempAirCondition = tempAirCondition + airConditionRaw;
       else if (airCondition / i * MAX_INCREASE < value && i != 0)
-        airCondition = airCondition + airCondition / i;
+        tempAirCondition = tempAirCondition + tempAirCondition / i;
       else
-        airCondition = airCondition + value;
+        tempAirCondition = tempAirCondition + value;
 
-      delay(STAGE_TIME / AVERAGING_MEASUREMENTS);
+      delay(timeLeft/ AVERAGING_MEASUREMENTS);
     }
 
-    airCondition = airCondition / AVERAGING_MEASUREMENTS;
+    airCondition = tempAirCondition / AVERAGING_MEASUREMENTS;
     airConditionRaw = airCondition;
 
     //Wert smoothen;
     airCondition = ALPHA_MEASUREMENTS * airCondition + (1 - ALPHA_MEASUREMENTS) * airConditionLast;
 
     airConditionLast = airCondition;
+
+    while(millis()%1000 > 100) {
+    }
   }
 
 

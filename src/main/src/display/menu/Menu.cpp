@@ -4,50 +4,32 @@
 
 #include "Menu.h"
 
-
-using namespace test;
-
   extern int Menu::currentSubMenu = 0;
   SubMenu subMenus[] = {
     {SubMenu("test 1", {
-        MenuPage(
-          Input(test1),
-          Input(test2)),
+        MenuPage(),
 
-        MenuPage(
-          Input(test3),
-          Input(test4),
-          Input(test5),
-          Input(test6))
+
+        MenuPage()
+
     })},
 
     {SubMenu("test 2", {
-        MenuPage(
-          Input(test7),
-          Input(test8)),
+        MenuPage(),
 
-        MenuPage(
-          Input(test9),
-          Input(test10),
-          Input(test11),
-          Input(test12))
+
+        MenuPage()
+
     })},
 
     {SubMenu("test 3", {
-        MenuPage(
-          Input(test13),
-          Input(test14)),
+        MenuPage(),
 
-        MenuPage(
-          Input(test15),
-          Input(test16),
-          Input(test17),
-          Input(test18)),
 
-        MenuPage(
-          Input(test19),
-          Input(test20),
-          Input(test21))
+        MenuPage(),
+
+        MenuPage()
+
     })}
   };
 
