@@ -22,11 +22,8 @@ class Setting {
     Setting(void);
     Setting(SettingType type, char* title = "", short defaultValue = 0, boolean colored = false, char* debugMessage = "", char* nameOn = "", char* nameOff = "");  //TODO DATATYPE
     short getValue();
-    boolean getValueb();
     short getDefaultValue();
-    boolean getDefaultValueb();
     void setValue(short value);
-    void setValue(boolean value);
     SettingType getType();
     char* getTitle();
     boolean getColored();

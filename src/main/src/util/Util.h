@@ -28,8 +28,8 @@
 #define PIEZO      21
 
   enum Version {
-    V1 = 1,
-    V2 = 2
+    V1 = false,
+    V2 = true
   };
 
   enum Mode {
@@ -82,7 +82,6 @@
   extern TouchScreen ts;
   extern Calibration calibration[];
   extern Mode mode;
-  extern Version version;
   extern Mode lastMode;
   extern Version lastVersion;
 

@@ -36,12 +36,10 @@
     } else if(mode == CHART) {
       Meassure::loop();
       handleTouch();
-      if(version == V1) {
+      if(!general::version.getValue()) {
         DisplayV1::loop();
-      } else if(version == V2) {
-        DisplayV2::loop();
       } else {
-
+        DisplayV2::loop();
       }
     } else {
 
@@ -49,14 +47,12 @@
   }
 
   extern void Display::initDisplay() {
-    if(lastMode != mode || lastVersion != version) {
+    if(lastMode != mode || lastVersion != general::version.getValue()) {
       if(mode == CHART) {
-        if(version == V1) {
+        if(!general::version.getValue()) {
           DisplayV1::setup();
-        } else if(version == V2) {
-          DisplayV2::setup();
         } else {
-
+          DisplayV2::setup();
         }
       } else if(mode == MENU) {
         Menu::setup();
@@ -65,7 +61,7 @@
       }
     }
     lastMode = mode;
-    lastVersion = version;
+    lastVersion = (Version) general::version.getValue();
   }
 
   extern void Display::handleTouch() {

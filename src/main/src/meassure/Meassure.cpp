@@ -146,8 +146,8 @@
 
   extern void Meassure::mapAirCondition() {
     //to PPM
-    if (airCondition <= calibration[EEPROM.read(0)].getLowestSensor())
-      airCondition = calibration[EEPROM.read(0)].getLowestSensor();
+  /*  if (airCondition <= calibration[EEPROM.read(0)].getLowestSensor())
+      airCondition = calibration[EEPROM.read(0)].getLowestSensor();*/
 
     airCondition = map(airCondition, calibration[EEPROM.read(0)].getLowestSensor(), calibration[EEPROM.read(0)].getHighestSensor(), calibration[EEPROM.read(0)].getLowestPPM(), calibration[EEPROM.read(0)].getHighestPPM());
   }

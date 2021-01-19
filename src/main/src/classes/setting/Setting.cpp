@@ -21,43 +21,15 @@ Setting::Setting(SettingType type, char* title, short defaultValue, boolean colo
 }
 
 short Setting::getValue() {
-  if(_type != SWITCH) {
-    return _value;
-  }
-}
-
-boolean Setting::getValueb() {
-  if(_type == SWITCH) {
-    if(_value > 0)
-      return true;
-    else
-      return false;
-  }
+  return _value;
 }
 
 short Setting::getDefaultValue() {
-  if(_type != SWITCH) {
-    return _defaultValue;
-  }
-}
-
-boolean Setting::getDefaultValueb() {
-  if(_type == SWITCH) {
-    if(_defaultValue > 0)
-      return true;
-    else
-      return false;
-  }
+  return _defaultValue;
 }
 
 void Setting::setValue(short value) {
-  if(_type != SWITCH)
-    _value = value;
-}
-
-void Setting::setValue(boolean value) {
-  if(_type == SWITCH)
-    _value = value;
+  _value = value;
 }
 
 SettingType Setting::getType() {

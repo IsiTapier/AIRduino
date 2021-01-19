@@ -9,13 +9,12 @@
   TouchScreen ts(TFT_D1, TFT_DC, TFT_CS, TFT_D0, TOUCH_RESISTANCE);
 
   Mode mode = LOADINGSCREEN;
-  Version version = V1;
   Mode lastMode;
   Version lastVersion;
 
 
   Calibration calibration[] = {
-      Calibration(476, 576, 478, 1424), //576 1424 496 478
+      Calibration(449, 514, 576, 1184), //576 1424 496 478
       Calibration(55, 65, 400, 1000),
       Calibration(40, 60, 400, 1000)
   };

@@ -5,11 +5,9 @@
 #include "Arduino.h"
 #include "Settings.h"
 
-
-  Setting empty = Setting(EMPTY);
-
 namespace general {
-  Setting versions = Setting(SWITCH, "Version", 0, false, "'Version' changed", "Version 1", "Version 2");
+  Setting empty = Setting(EMPTY);
+  Setting version = Setting(SWITCH, "Version", 0, false, "'Version' changed", "Version 1", "Version 2");
   //Setting darkMode = Setting(SELECT, "Theme", 0, true, "'Theme' changed", "light mode", "dark mode");
   Setting piezo = Setting(SWITCH, "Piepser", 1, true, "'Pieser' changed"); //TODO
   Setting blink = Setting(SWITCH, "Blink", 1, true, "'Blink' changed");

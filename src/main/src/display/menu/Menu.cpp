@@ -6,29 +6,55 @@
 
   extern int Menu::currentSubMenu = 0;
   SubMenu subMenus[] = {
-    {SubMenu("test 1", {
-        MenuPage(),
+    {SubMenu("General", {
+        MenuPage(
+          Input(general::version),
+          Input(general::empty),
+          Input(general::piezo),
+          Input(general::blink),
+          Input(general::empty),
+          Input(general::empty)
+        ),
 
-
-        MenuPage()
+        MenuPage(
+          Input(general::graphSpeed),
+          Input(general::kernMode),
+          Input(general::segments),
+          Input(general::blinkThickness),
+          Input(general::ventilatingTimeout),
+          Input(general::debugSensor)
+        )
 
     })},
 
-    {SubMenu("test 2", {
-        MenuPage(),
+    {SubMenu("Farb-Modus", {
+        MenuPage(
+          Input(colorModes::variousColors),
+          Input(colorModes::coloredGraph),
+          Input(colorModes::coloredBar),
+          Input(colorModes::coloredState),
+          Input(colorModes::coloredTime),
+          Input(colorModes::coloredValue)
+        ),
 
-
-        MenuPage()
+        MenuPage(
+          Input(colorModes::coloredSlider)
+        )
 
     })},
 
-    {SubMenu("test 3", {
-        MenuPage(),
+    {SubMenu("Farben", {
+        MenuPage(
 
+        ),
 
-        MenuPage(),
+        MenuPage(
 
-        MenuPage()
+        ),
+
+        MenuPage(
+
+        )
 
     })}
   };

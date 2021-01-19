@@ -8,9 +8,9 @@
 #include "Arduino.h"
 #include "../../classes/Setting/Setting.h"
 
-  extern Setting empty;
 namespace general {
-  extern Setting versions;
+  extern Setting empty;
+  extern Setting version;
   extern Setting darkMode;
   extern Setting piezo;
   extern Setting blink;
@@ -34,7 +34,7 @@ namespace colorModes {
 
   extern Setting coloredSlider;
 }
-
+/*
 namespace colors {
   extern Setting graphColor;
   extern Setting valueNormal;
@@ -51,7 +51,7 @@ namespace colors {
   extern Setting SliderDotColorOn;
   extern Setting SliderColorStrip;
   extern Setting SliderBackgroundColor;
-}
+}*/
 
 
 
