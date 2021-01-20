@@ -5,16 +5,16 @@
 #include "Input.h"
 
   Input::Input(void) {}
-  Input::Input(Setting setting) {
-    _settings = setting;
-    if(_settings.getType() == SWITCH) {
-      _slider = Slider(_settings);
+  Input::Input(Setting* setting) {
+    _setting = setting;
+    if(_setting->getType() == SWITCH) {
+      _slider = Slider(_setting);
     }
   }
 
   void Input::setSection(byte section) {
     _inputSection = section;
-    if(_settings.getType() == SWITCH) {
+    if(_setting->getType() == SWITCH) {
       _slider.setSection(section);
     }
   }
@@ -25,7 +25,7 @@
         clear();
       else
         draw();
-      if(_settings.getType() == SWITCH) {
+      if(_setting->getType() == SWITCH) {
         _slider.init();
       }
     }
@@ -34,7 +34,7 @@
   void Input::draw() {
     if(mode == MENU && lastMode != MENU) {
       drawBorder(0, MENU_SECTION_Y(_inputSection), MENU_SECTION_LENGTH, MENU_SECTION_HEIGHT + MENU_SECTION_BORDER_SHIFT, MENU_SECTION_BORDER_THICKNESS, TEXT_COLOR);
-      Serial.println("Input "+String(_inputSection)+" drawn. Inputtype: "+((_settings.getType()==SWITCH)?"slider":"empty"));
+      Serial.println("Input "+String(_inputSection)+" drawn. Inputtype: "+((_setting->getType()==SWITCH)?"slider":"empty"));
     }
   }
 
@@ -44,7 +44,7 @@
 
   void Input::handleTouch(TSPoint p) {
     if(mode == MENU) {
-      if(_settings.getType() == SWITCH) {
+      if(_setting->getType() == SWITCH) {
         _slider.checkTouch(p);
       }
     }
@@ -52,7 +52,7 @@
 
   void Input::reset() {
     if(mode == MENU) {
-      if(_settings.getType() == SWITCH) {
+      if(_setting->getType() == SWITCH) {
         _slider.reset();
       }
     }

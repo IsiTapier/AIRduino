@@ -8,11 +8,11 @@
 namespace general {
   Setting empty = Setting(EMPTY);
   Setting version = Setting(SWITCH, "Version", 0, false, "'Version' changed", "Version 1", "Version 2");
-  //Setting darkMode = Setting(SELECT, "Theme", 0, true, "'Theme' changed", "light mode", "dark mode");
+  //Setting* darkMode = Setting(SELECT, "Theme", 0, true, "'Theme' changed", "light mode", "dark mode");
   Setting piezo = Setting(SWITCH, "Piepser", 1, true, "'Pieser' changed"); //TODO
   Setting blink = Setting(SWITCH, "Blink", 1, true, "'Blink' changed");
-  //Setting status = Setting(MULTISELECT, "Blink", 0, false, "'Status' changed");
-  //Setting calibrateTouch = Setting(ACTIVATOR, "Touch kalibrieren", 1, true, "Touch changed");
+  //Setting* status = Setting(MULTISELECT, "Blink", 0, false, "'Status' changed");
+  //Setting* calibrateTouch = Setting(ACTIVATOR, "Touch kalibrieren", 1, true, "Touch changed");
   Setting graphSpeed = Setting(EMPTY); //TODO
   Setting kernMode = Setting(SWITCH, "Kern Modus", 0, false, "'Kern Modus' changed");
   Setting segments = Setting(EMPTY); //TODO
@@ -32,20 +32,20 @@ namespace colorModes {
 }
 
 /*namespace colors {
-  Setting graphColor = Setting(COLOR "Graphfarbe", 0, true, "'Graphfarbe' changed");
-  Setting valueNormal = Setting(COLOR, "Farbe 'Gut'", 0, true, "'' changed");
-  Setting valueRisk = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
-  Setting valueWarning = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
-  Setting valueAlarm = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
-  Setting barColor = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
+  Setting* graphColor = Setting(COLOR "Graphfarbe", 0, true, "'Graphfarbe' changed");
+  Setting* valueNormal = Setting(COLOR, "Farbe 'Gut'", 0, true, "'' changed");
+  Setting* valueRisk = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
+  Setting* valueWarning = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
+  Setting* valueAlarm = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
+  Setting* barColor = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
 
-  Setting barSectionColor = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
-  Setting DataboxColor = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
-  Setting defaultTextColor = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
-  Setting ChartBorderColor = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
-  Setting SliderDotColorOn = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
-  Setting SliderDotColorOn = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
+  Setting* barSectionColor = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
+  Setting* DataboxColor = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
+  Setting* defaultTextColor = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
+  Setting* ChartBorderColor = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
+  Setting* SliderDotColorOn = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
+  Setting* SliderDotColorOn = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
 
-  Setting SliderColorStrip = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
-  Setting SliderBackgroundColor = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
+  Setting* SliderColorStrip = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
+  Setting* SliderBackgroundColor = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
 } */

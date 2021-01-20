@@ -12,7 +12,7 @@
 class Slider {
   public:
     Slider(void);
-    Slider(Setting setting);
+    Slider(Setting* setting);
     Slider& setSection(byte section);
     byte getSection();
     void init();
@@ -24,7 +24,7 @@ class Slider {
     void changeValue();
     void draw();
 
-    Setting _setting;
+    Setting* _setting;
     byte _section;
     String text;
     String oldText;

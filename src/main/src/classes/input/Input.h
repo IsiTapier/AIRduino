@@ -13,7 +13,7 @@
 class Input {
   public:
     Input(void);
-    Input(Setting setting);
+    Input(Setting* setting);
     void setSection(byte section);
     void setup();
     void reset();
@@ -24,7 +24,7 @@ class Input {
     void clear();
 
     byte _inputSection;
-    Setting _settings;
+    Setting* _setting;
     Slider _slider;
 
 };

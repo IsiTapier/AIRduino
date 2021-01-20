@@ -36,21 +36,21 @@ namespace colorModes {
 }
 /*
 namespace colors {
-  extern Setting graphColor;
-  extern Setting valueNormal;
-  extern Setting valueRisk;
-  extern Setting valueWarning;
-  extern Setting valueAlarm;
-  extern Setting barColor;
+  extern Setting* graphColor;
+  extern Setting* valueNormal;
+  extern Setting* valueRisk;
+  extern Setting* valueWarning;
+  extern Setting* valueAlarm;
+  extern Setting* barColor;
 
-  extern Setting barSectionColor;
-  extern Setting DataboxColor;
-  extern Setting defaultTextColor;
-  extern Setting ChartBorderColor;
-  extern Setting SliderDotColorOn;
-  extern Setting SliderDotColorOn;
-  extern Setting SliderColorStrip;
-  extern Setting SliderBackgroundColor;
+  extern Setting* barSectionColor;
+  extern Setting* DataboxColor;
+  extern Setting* defaultTextColor;
+  extern Setting* ChartBorderColor;
+  extern Setting* SliderDotColorOn;
+  extern Setting* SliderDotColorOn;
+  extern Setting* SliderColorStrip;
+  extern Setting* SliderBackgroundColor;
 }*/
 
 

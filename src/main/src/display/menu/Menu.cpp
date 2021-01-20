@@ -8,37 +8,37 @@
   SubMenu subMenus[] = {
     {SubMenu("General", {
         MenuPage(
-          Input(general::version),
-          Input(general::empty),
-          Input(general::piezo),
-          Input(general::blink),
-          Input(general::empty),
-          Input(general::empty)
+          Input(&general::version),
+          Input(&general::empty),
+          Input(&general::piezo),
+          Input(&general::blink),
+          Input(&general::empty),
+          Input(&general::empty)
         ),
 
         MenuPage(
-          Input(general::graphSpeed),
-          Input(general::kernMode),
-          Input(general::segments),
-          Input(general::blinkThickness),
-          Input(general::ventilatingTimeout),
-          Input(general::debugSensor)
+          Input(&general::graphSpeed),
+          Input(&general::kernMode),
+          Input(&general::segments),
+          Input(&general::blinkThickness),
+          Input(&general::ventilatingTimeout),
+          Input(&general::debugSensor)
         )
 
     })},
 
     {SubMenu("Farb-Modus", {
         MenuPage(
-          Input(colorModes::variousColors),
-          Input(colorModes::coloredGraph),
-          Input(colorModes::coloredBar),
-          Input(colorModes::coloredState),
-          Input(colorModes::coloredTime),
-          Input(colorModes::coloredValue)
+          Input(&colorModes::variousColors),
+          Input(&colorModes::coloredGraph),
+          Input(&colorModes::coloredBar),
+          Input(&colorModes::coloredState),
+          Input(&colorModes::coloredTime),
+          Input(&colorModes::coloredValue)
         ),
 
         MenuPage(
-          Input(colorModes::coloredSlider)
+          Input(&colorModes::coloredSlider)
         )
 
     })},
