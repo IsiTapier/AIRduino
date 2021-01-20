@@ -6,7 +6,6 @@
 #define Setting_h
 
 #include "Arduino.h"
-#include "../../util/Util.h"
 
 enum SettingType {
   EMPTY,

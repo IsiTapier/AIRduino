@@ -23,11 +23,12 @@ namespace general {
 
 namespace colorModes {
   Setting variousColors = Setting(SWITCH, "farbiges Design", 0, true, "'farbiges Disign' changed");
-  Setting coloredGraph = Setting(SWITCH, "farbiger Graph", 0, true, "'farbiger Graph' changed");
+  Setting coloredChart = Setting(SWITCH, "farbiger Graph", 1, true, "'farbiger Graph' changed");
   Setting coloredBar = Setting(SWITCH, "farbige Leiste", 1, true, "'farbige Leiste' changed");
-  Setting coloredState = Setting(SWITCH, "farbiger Status", 1, true, "'farbiger Status' changed");
-  Setting coloredTime = Setting(SWITCH, "farbige Zeit", 0, true, "'farbige Zeit' changed");
+  Setting coloredState = Setting(SWITCH, "farbiger Status", 0, true, "'farbiger Status' changed");
+  Setting coloredTime = Setting(SWITCH, "farbige Zeit", 1, true, "'farbige Zeit' changed");
   Setting coloredValue = Setting(SWITCH, "farbiger Wert", 1, true, "'farbiger Wert' changed");
+
   Setting coloredSlider = Setting(SWITCH, "farbiger Toggle", 0, true, "'farbiger Toggle' changed");
 }
 

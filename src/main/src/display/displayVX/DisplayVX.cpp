@@ -88,13 +88,13 @@ extern boolean DisplayVX::drop = false;
       display.drawLine(0, DATABOX_BAR_Y, 0, DATABOX_Y-1, state.getColor(COLORED_BAR));
       display.drawLine(DISPLAY_LENGTH-1, DATABOX_BAR_Y, DISPLAY_LENGTH-1, DATABOX_Y-1, state.getColor(COLORED_BAR));
       //createLines();
-      digitalWrite(PIEZO, LOW);
+        digitalWrite(PIEZO, LOW);
       blinkSwitch = false;
     } else if (state >= 3) {
-      drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, 1, WHITE);
-      if (state == PIEP)
+      if(general::blink.getValue())
+        drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, 1, WHITE);
+      if (state == PIEP && general::piezo.getValue())
         digitalWrite(PIEZO, HIGH); //TODO: PIEP
-
       blinkSwitch = true;
     }
   }

@@ -4,6 +4,7 @@
 
 #include "Arduino.h"
 #include "Meassure.h"
+#include "../util/settings/Settings.h"
 
 
   //   _____      _
@@ -79,7 +80,7 @@
   }
 
   extern void Meassure::debugMeassure() {
-    if (DEBUG) {
+    if (general::debugSensor.getValue()) {
       Serial.println("");
       Serial.println("Sensor");
       Serial.println("");
@@ -175,9 +176,6 @@
       state = VENTILATING;
       ppmSinceVentilation = airCondition;
       startTime = millis();
-      digitalWrite(2, HIGH);
-      delay(1000);
-      digitalWrite(2, LOW);
     }
 
     //stop Ventilating

@@ -16,6 +16,7 @@
 #include "../util/data/Images.h"
 #include "Colors.h"
 #include "../display/Design.h"
+#include "settings/Settings.h"
 
 #define LIMIT_GOOD 600
 #define LIMIT_MEDIUM 800

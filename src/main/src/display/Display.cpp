@@ -54,7 +54,7 @@
         } else {
           DisplayV2::setup();
         }
-      } else if(mode == MENU) {
+      } else if(mode == MENU && lastMode != MENU) {
         Menu::setup();
       } else {
 

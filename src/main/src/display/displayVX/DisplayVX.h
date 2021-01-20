@@ -9,7 +9,6 @@
 #include "Wire.h"
 #include "../../meassure/Meassure.h"
 #include "../../util/Util.h"
-#include "../Design.h"
 
 class DisplayVX {
 

@@ -10,12 +10,14 @@
 
 namespace general {
   extern Setting empty;
+
   extern Setting version;
   extern Setting darkMode;
   extern Setting piezo;
   extern Setting blink;
   extern Setting status;
   extern Setting calibrateTouch;
+
   extern Setting graphSpeed; //TODO
   extern Setting kernMode;
   extern Setting segments;
@@ -26,7 +28,7 @@ namespace general {
 
 namespace colorModes {
   extern Setting variousColors;
-  extern Setting coloredGraph;
+  extern Setting coloredChart;
   extern Setting coloredBar;
   extern Setting coloredState;
   extern Setting coloredTime;
@@ -52,7 +54,5 @@ namespace colors {
   extern Setting* SliderColorStrip;
   extern Setting* SliderBackgroundColor;
 }*/
-
-
 
 #endif

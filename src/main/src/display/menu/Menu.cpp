@@ -30,7 +30,7 @@
     {SubMenu("Farb-Modus", {
         MenuPage(
           Input(&colorModes::variousColors),
-          Input(&colorModes::coloredGraph),
+          Input(&colorModes::coloredChart),
           Input(&colorModes::coloredBar),
           Input(&colorModes::coloredState),
           Input(&colorModes::coloredTime),
@@ -62,12 +62,8 @@
   extern void Menu::setup() {
     Serial.println("Menu SETUP started");
     draw();
-    Serial.println(currentSubMenu);
     subMenus[currentSubMenu].setup();
     Serial.println("Menu SETUP complete");
-    Serial.println(sizeof(SubMenu));
-    Serial.println(sizeof(subMenus));
-    Serial.println();
   }
 
   extern void Menu::loop() {

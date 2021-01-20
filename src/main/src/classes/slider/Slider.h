@@ -23,11 +23,10 @@ class Slider {
     void setValue(boolean value);
     void changeValue();
     void draw();
+    void write(boolean init = false);
 
     Setting* _setting;
     byte _section;
-    String text;
-    String oldText;
 };
 
 #endif

@@ -1,11 +1,10 @@
+
 //general
 #define ROTATION 3
 #define DISPLAY_BRIGHTNESS 0.7
 #define LOADING_SCREEN_TIME 1
 
 //settings
-#define DEBUG true
-
 #define STAGE_TIME 1*800
 #define VENTILATING_TIMEOUT 5*1000
 
@@ -39,12 +38,12 @@
 //DisplayV2
 
 //settings
-#define COLOR_MODE true
-#define COLORED_BAR true
-#define COLORED_STATE true
-#define COLORED_TIME true
-#define COLORED_PPM true
-#define COLORED_CHART true
+#define COLOR_MODE colorModes::variousColors.getValue()
+#define COLORED_BAR colorModes::coloredBar.getValue()
+#define COLORED_STATE colorModes::coloredState.getValue()
+#define COLORED_TIME colorModes::coloredTime.getValue()
+#define COLORED_PPM colorModes::coloredValue.getValue()
+#define COLORED_CHART colorModes::coloredChart.getValue()
 
 
 #define DISPLAYED_PPM_LOWEST 400
