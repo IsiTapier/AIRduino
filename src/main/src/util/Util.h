@@ -18,11 +18,19 @@
 #include "../display/Design.h"
 #include "settings/Settings.h"
 
+
 #define LIMIT_GOOD 600
 #define LIMIT_MEDIUM 800
 #define LIMIT_BAD 900
 #define LIMIT_BLINK 1000
 #define LIMIT_PIEP 1200
+
+#define EEPROM_SIZE (1+4*sizeof(short))
+
+#define XMIN (1)
+#define XMAX (1+1*sizeof(short))
+#define YMIN (1+2*sizeof(short))
+#define YMAX (1+3*sizeof(short))
 
 //pins
 #define GAS_SENSOR 36

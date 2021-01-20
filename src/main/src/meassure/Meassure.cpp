@@ -4,8 +4,6 @@
 
 #include "Arduino.h"
 #include "Meassure.h"
-#include "../util/settings/Settings.h"
-
 
   //   _____      _
   //  / ____|    | |
@@ -34,17 +32,20 @@
   extern int Meassure::lowest;
 
   extern void Meassure::setup() {
-    Serial.println("MEASSURE SETUP started");
+    if(general::debugSetup.getValue() && general::debug.getValue())
+      Serial.println("MEASSURE SETUP started");
     pinMode(PIEZO, OUTPUT);
     digitalWrite(PIEZO, LOW);
-    Serial.println("Pins initialized");
+    if(general::debugSetup.getValue() && general::debug.getValue())
+      Serial.println("Pins initialized");
     airConditionRaw = analogRead(GAS_SENSOR);
     airConditionLast = analogRead(GAS_SENSOR);
     startTime = millis();
-    Serial.println("Variables initialized");
-    Serial.println("MEASSURE SETUP complete");
-    Serial.println();
-    Serial.println(EEPROM.read(0));
+    if(general::debugSetup.getValue() && general::debug.getValue()) {
+      Serial.println("Variables initialized");
+      Serial.println("MEASSURE SETUP complete");
+      Serial.println();
+    }
   }
 
   extern void Meassure::loop() {
@@ -80,7 +81,7 @@
   }
 
   extern void Meassure::debugMeassure() {
-    if (general::debugSensor.getValue()) {
+    if (general::debugSensor.getValue() && general::debug.getValue()) {
       Serial.println("");
       Serial.println("Sensor");
       Serial.println("");

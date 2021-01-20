@@ -7,18 +7,26 @@
 
 namespace general {
   Setting empty = Setting(EMPTY);
+
   Setting version = Setting(SWITCH, "Version", 0, false, "'Version' changed", "Version 1", "Version 2");
-  //Setting* darkMode = Setting(SELECT, "Theme", 0, true, "'Theme' changed", "light mode", "dark mode");
+  //Setting darkMode = Setting(SELECT, "Theme", 0, true, "'Theme' changed", "light mode", "dark mode");
   Setting piezo = Setting(SWITCH, "Piepser", 1, true, "'Pieser' changed"); //TODO
   Setting blink = Setting(SWITCH, "Blink", 1, true, "'Blink' changed");
-  //Setting* status = Setting(MULTISELECT, "Blink", 0, false, "'Status' changed");
-  //Setting* calibrateTouch = Setting(ACTIVATOR, "Touch kalibrieren", 1, true, "Touch changed");
+  //Setting status = Setting(MULTISELECT, "Blink", 0, false, "'Status' changed");
+  Setting calibrateTouch = Setting(ACTIVATOR, "Touch kalibrieren");
+
   Setting graphSpeed = Setting(EMPTY); //TODO
   Setting kernMode = Setting(SWITCH, "Kern Modus", 0, false, "'Kern Modus' changed");
   Setting segments = Setting(EMPTY); //TODO
   Setting blinkThickness = Setting(EMPTY); //TODO
   Setting ventilatingTimeout = Setting(EMPTY); //TODO
+
+  Setting debug = Setting(SWITCH, "Debug", 1, true, "'Debug' changed");
+  Setting debugSetup = Setting(SWITCH, "Debug Setup", 1, true, "'Debug Setup' changed");
   Setting debugSensor = Setting(SWITCH, "Debug Sensor", 0, true, "'Debug Sensor' changed");
+  Setting debugDisplay = Setting(SWITCH, "Debug Display", 0, true, "'Debug Display' changed");
+  Setting debugMenu = Setting(SWITCH, "Debug Menu", 0, true, "'Debug Menu' changed");
+  Setting debugTouch = Setting(SWITCH, "Debug Touch", 0, true, "'Debug Touch' changed");
 }
 
 namespace colorModes {

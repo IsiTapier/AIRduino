@@ -15,6 +15,7 @@
 class Display {
   public:
     static void setup();
+    static void eeprom();
     static void loop();
     static void initDisplay();
     static void handleTouch(); //TODO relocate

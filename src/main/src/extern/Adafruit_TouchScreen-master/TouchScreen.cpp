@@ -29,38 +29,27 @@ TSPoint::TSPoint(int16_t x0, int16_t y0, int16_t z0) {
   z = z0;
   xc = 0;
   yc = 0;
-  xmin = 0;
-  xmax = 0;
-  ymin = 0;
-  ymax = 0;
-}
-
-TSPoint::TSPoint(int16_t x0, int16_t y0, int16_t z0, TouchScreen *ts) {
-  x = x0;
-  y = y0;
-  z = z0;
-  xc = 0;
-  yc = 0;
-  xmin = ts->xmin;
-  xmax = ts->xmax;
-  ymin = ts->ymin;
-  ymax = ts->ymax;
 }
 
 void TSPoint::calibrate() {
-  xc = map(x, xmin, xmax, TOUCH_CALIBRATION_BOX_MARGIN + TOUCH_CALIBRATION_BOX_SIZE/2, DISPLAY_LENGTH - TOUCH_CALIBRATION_BOX_MARGIN - TOUCH_CALIBRATION_BOX_SIZE/2);
-  yc = map(y, ymin, ymax, TOUCH_CALIBRATION_BOX_MARGIN + TOUCH_CALIBRATION_BOX_SIZE/2, DISPLAY_HEIGHT - TOUCH_CALIBRATION_BOX_MARGIN - TOUCH_CALIBRATION_BOX_SIZE/2);
+  xc = map(x, EEPROM.readShort(XMIN), EEPROM.readShort(XMAX), TOUCH_CALIBRATION_BOX_MARGIN + TOUCH_CALIBRATION_BOX_SIZE/2, DISPLAY_LENGTH - TOUCH_CALIBRATION_BOX_MARGIN - TOUCH_CALIBRATION_BOX_SIZE/2);
+  yc = map(y, EEPROM.readShort(YMIN), EEPROM.readShort(YMAX), TOUCH_CALIBRATION_BOX_MARGIN + TOUCH_CALIBRATION_BOX_SIZE/2, DISPLAY_HEIGHT - TOUCH_CALIBRATION_BOX_MARGIN - TOUCH_CALIBRATION_BOX_SIZE/2);
+  if(xc < 0 || xc > DISPLAY_LENGTH || yc < 0 || yc > DISPLAY_HEIGHT)
+    ts.calibration();
+  print();
 }
 
 void TSPoint::print() {
-  Serial.print("point: ");
-  Serial.print("\traw: ");
-  Serial.print(" X = "); Serial.print(x);
-  Serial.print(" Y = "); Serial.print(y);
-  Serial.print("\tcalibrated: ");
-  Serial.print(" X = "); Serial.print(xc);
-  Serial.print(" Y = "); Serial.print(yc);
-  Serial.print(" Pressure = "); Serial.println(z);
+  if(general::debugTouch.getValue() && general::debug.getValue()) {
+    Serial.print("point: ");
+    Serial.print("\traw: ");
+    Serial.print(" X = "); Serial.print(x);
+    Serial.print(" Y = "); Serial.print(y);
+    Serial.print("\tcalibrated: ");
+    Serial.print(" X = "); Serial.print(xc);
+    Serial.print(" Y = "); Serial.print(yc);
+    Serial.print(" Pressure = "); Serial.println(z);
+  }
 }
 
 boolean TSPoint::isTouching(int startx, int endx, int starty, int endy) {
@@ -233,7 +222,7 @@ TSPoint TouchScreen::getPoint(void) {
   pinMode(_xm, OUTPUT);
   pinMode(_yp, OUTPUT);
   pinMode(_ym, OUTPUT);
-  return TSPoint(x, y, z, this);
+  return TSPoint(x, y, z);
 }
 
 TouchScreen::TouchScreen() {}
@@ -244,10 +233,6 @@ TouchScreen::TouchScreen(uint8_t xp, uint8_t yp, uint8_t xm, uint8_t ym, uint16_
   _ym = ym;
   _xp = xp;
   _rxplate = rxplate;
-  xmin = 0;
-  xmax = 0;
-  ymin = 0;
-  ymax = 0;
 #if defined(USE_FAST_PINIO)
   xp_port = portOutputRegister(digitalPinToPort(_xp));
   yp_port = portOutputRegister(digitalPinToPort(_yp));
@@ -264,10 +249,6 @@ TouchScreen::TouchScreen(uint8_t xp, uint8_t yp, uint8_t xm, uint8_t ym, uint16_
 
 TouchScreen TouchScreen::operator=(TouchScreen touchscreen)  {
   pressureThreshhold = touchscreen.pressureThreshhold;
-  xmin = touchscreen.xmin;
-  xmax = touchscreen.xmax;
-  ymin = touchscreen.ymin;
-  ymax = touchscreen.ymax;
   _yp = touchscreen._yp;
   _ym = touchscreen._ym;
   _xm = touchscreen._xm;
@@ -281,7 +262,10 @@ boolean TouchScreen::isTouching(void) {
 }
 
 void TouchScreen::calibration(void) {
-  display.setRotation(ROTATION);
+  Serial.println("Touch calibration started");
+  display.fillScreen(BACKGROUND_COLOR);
+  dPrint("Calibration", round(DISPLAY_LENGTH/2), round(DISPLAY_HEIGHT/2), TOUCH_CALIBRATION_HEADER_SIZE, TEXT_COLOR, 7);
+  dPrint("press blue box", round(DISPLAY_LENGTH/2), round(DISPLAY_HEIGHT/2), TOUCH_CALIBRATION_TEXT_SIZE, TEXT_COLOR, 1);
   //get upper left corner
   display.fillRect(TOUCH_CALIBRATION_BOX_MARGIN, TOUCH_CALIBRATION_BOX_MARGIN, TOUCH_CALIBRATION_BOX_SIZE, TOUCH_CALIBRATION_BOX_SIZE, TOUCH_CALIBRATION_BOX_CALIBRATION_COLOR);
   display.fillRect(TOUCH_CALIBRATION_BOX_CHANGE_X, TOUCH_CALIBRATION_BOX_MARGIN, TOUCH_CALIBRATION_BOX_SIZE, TOUCH_CALIBRATION_BOX_SIZE, TOUCH_CALIBRATION_BOX_COLOR);
@@ -349,13 +333,17 @@ void TouchScreen::calibration(void) {
 
   display.fillRect(TOUCH_CALIBRATION_BOX_CHANGE_X, TOUCH_CALIBRATION_BOX_CHANGE_Y, TOUCH_CALIBRATION_BOX_SIZE, TOUCH_CALIBRATION_BOX_SIZE, TOUCH_CALIBRATION_BOX_COLOR);
 
-  this->xmin = (topleft.x + bottomleft.x)/2;
-  this->xmax = (topright.x + bottomright.x)/2;
-  this->ymin = (topleft.y + topright.y)/2;
-  this->ymax = (bottomleft.y + bottomright.y)/2;
+  EEPROM.writeShort(XMIN, ((topleft.x + bottomleft.x)/2));
+  EEPROM.writeShort(XMAX, ((topright.x + bottomright.x)/2));
+  EEPROM.writeShort(YMIN, ((topleft.y + topright.y)/2));
+  EEPROM.writeShort(YMAX, ((bottomleft.y + bottomright.y)/2));
+  EEPROM.commit();
+  Serial.println("Touch calibrated");
   Serial.println("the calibration values are:");
-  Serial.print("x:"); Serial.print("\t min: "); Serial.print(xmin); Serial.print(" max: "); Serial.println(xmax);
-  Serial.print("y:"); Serial.print("\t min: "); Serial.print(ymin); Serial.print(" max: "); Serial.println(ymax);
+  Serial.print("x:"); Serial.print("\t min: "); Serial.print(EEPROM.readShort(XMIN)); Serial.print(" max: "); Serial.println(EEPROM.readShort(XMAX));
+  Serial.print("y:"); Serial.print("\t min: "); Serial.print(EEPROM.readShort(YMIN)); Serial.print(" max: "); Serial.println(EEPROM.readShort(YMAX));
+  display.fillScreen(BACKGROUND_COLOR);
+  lastMode = LOADINGSCREEN;
 }
 
 

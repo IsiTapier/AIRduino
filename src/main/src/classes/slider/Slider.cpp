@@ -27,7 +27,7 @@
   void Slider::checkTouch(TSPoint p) {
     if(p.isTouching(MENU_SLIDER_START_X, MENU_SLIDER_END_X, MENU_SLIDER_START_Y(_section), MENU_SLIDER_END_Y(_section))) {
       changeValue();
-      if(_setting->getDebugMessage() != "")
+      if(_setting->getDebugMessage() != "" && general::debugMenu.getValue() && general::debug.getValue())
         Serial.println(_setting->getDebugMessage());
     }
   }

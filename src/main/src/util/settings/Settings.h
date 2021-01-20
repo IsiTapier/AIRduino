@@ -23,7 +23,13 @@ namespace general {
   extern Setting segments;
   extern Setting blinkThickness; //TODO
   extern Setting ventilatingTimeout;
+
+  extern Setting debug;
+  extern Setting debugSetup;
   extern Setting debugSensor;
+  extern Setting debugDisplay;
+  extern Setting debugMenu;
+  extern Setting debugTouch;
 }
 
 namespace colorModes {

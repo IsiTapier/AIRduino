@@ -9,6 +9,8 @@
     _setting = setting;
     if(_setting->getType() == SWITCH) {
       _slider = Slider(_setting);
+    } else if(_setting->getType() == ACTIVATOR) {
+      _button = Button(_setting);
     }
   }
 
@@ -16,6 +18,8 @@
     _inputSection = section;
     if(_setting->getType() == SWITCH) {
       _slider.setSection(section);
+    } else if(_setting->getType() == ACTIVATOR) {
+      _button.setSection(section);
     }
   }
 
@@ -27,6 +31,8 @@
         draw();
       if(_setting->getType() == SWITCH) {
         _slider.init();
+      } else if(_setting->getType() == ACTIVATOR) {
+        _button.init();
       }
     }
   }
@@ -34,7 +40,8 @@
   void Input::draw() {
     if(mode == MENU && lastMode != MENU) {
       drawBorder(0, MENU_SECTION_Y(_inputSection), MENU_SECTION_LENGTH, MENU_SECTION_HEIGHT + MENU_SECTION_BORDER_SHIFT, MENU_SECTION_BORDER_THICKNESS, TEXT_COLOR);
-      Serial.println("Input "+String(_inputSection)+" drawn. Inputtype: "+((_setting->getType()==SWITCH)?"slider":"empty"));
+      if(general::debugMenu.getValue() && general::debug.getValue())
+        Serial.println("Input "+String(_inputSection)+" drawn. Inputtype: "+((_setting->getType()==SWITCH)?"slider":"empty"));
     }
   }
 
@@ -46,6 +53,8 @@
     if(mode == MENU) {
       if(_setting->getType() == SWITCH) {
         _slider.checkTouch(p);
+      } else if(_setting->getType() == ACTIVATOR) {
+        _button.checkTouch(p);
       }
     }
   }

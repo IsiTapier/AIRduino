@@ -22,10 +22,13 @@ extern int DisplayV1::lastPixel = 0;
 
   extern void DisplayV1::setup() {
     DisplayVX::setup();
-    Serial.println("DisplayV1-Setup started");
+    if(general::debugSetup.getValue() && general::debug.getValue())
+      Serial.println("DisplayV1-Setup started");
     graphData[0] = GRAPH_START_Y;
-    Serial.println("DisplayV1-Setup complete");
-    Serial.println();
+    if(general::debugSetup.getValue() && general::debug.getValue()) {
+      Serial.println("DisplayV1-Setup complete");
+      Serial.println();
+    }
     if(lastMode != LOADINGSCREEN)
       loop();
   }

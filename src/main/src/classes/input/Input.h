@@ -8,7 +8,7 @@
 #include "Arduino.h"
 #include "../../util/Util.h"
 #include "../slider/Slider.h"
-
+#include "../button/Button.h"
 
 class Input {
   public:
@@ -26,6 +26,7 @@ class Input {
     byte _inputSection;
     Setting* _setting;
     Slider _slider;
+    Button _button;
 
 };
 

@@ -7,25 +7,48 @@
   extern TSPoint Display::p;
 
   extern void Display::setup() {
-    Serial.println("DISPLAY SETUP started");
-    yield();
+    if(general::debugSetup.getValue() && general::debug.getValue())
+      Serial.println("DISPLAY SETUP started");
     display.begin();
-    Serial.println("Display connection started");
+    if(general::debugSetup.getValue() && general::debug.getValue())
+      Serial.println("Display connection started");
     display.fillScreen(BACKGROUND_COLOR);
     display.setTextWrap(false);
     display.setRotation(ROTATION);
-    Serial.println("Display initialized");
-    Serial.println("Touch calibration started");
-    dPrint("Calibration", round(DISPLAY_LENGTH/2), round(DISPLAY_HEIGHT/2), TOUCH_CALIBRATION_HEADER_SIZE, TEXT_COLOR, 7);
-    dPrint("press blue box", round(DISPLAY_LENGTH/2), round(DISPLAY_HEIGHT/2), TOUCH_CALIBRATION_TEXT_SIZE, TEXT_COLOR, 1);
-    ts.calibration();
-    Serial.println("Touch calibrated");
+    if(general::debugSetup.getValue() && general::debug.getValue())
+      Serial.println("Display initialized");
+    eeprom();
     loadingScreen();
     lastMode = mode;
     mode = CHART;
-    Serial.println("DISPLAY SETUP complete");
+    if(general::debugSetup.getValue() && general::debug.getValue())
+      Serial.println("DISPLAY SETUP complete");
     Serial.println();
     Meassure::setup();
+  }
+
+  extern void Display::eeprom() {
+    EEPROM.begin(EEPROM_SIZE);
+    //   RESET EEPROM   //
+    /*EEPROM.write(0, 255);
+    EEPROM.writeShort(XMIN, 0);
+    EEPROM.writeShort(XMAX, 0);
+    EEPROM.writeShort(YMIN, 0);
+    EEPROM.writeShort(YMAX, 0);
+    EEPROM.commit();*/
+    if(EEPROM.read(0) == 255) {
+      EEPROM.write(0, 0);
+      EEPROM.commit();
+    }
+    if((EEPROM.readShort(XMIN) == 0 && EEPROM.readShort(XMAX) == 0) || (EEPROM.readShort(YMIN) == 0 && EEPROM.readShort(YMAX) == 0))
+      ts.calibration();
+    if(general::debugSetup.getValue() && general::debug.getValue()) {
+      Serial.println("EEPROM: sensor: "+String(EEPROM.read(0)));
+      Serial.println("EEPROM: xmin: "+String(EEPROM.readShort(XMIN)));
+      Serial.println("EEPROM: xmax: "+String(EEPROM.readShort(XMAX)));
+      Serial.println("EEPROM: ymin: "+String(EEPROM.readShort(YMIN)));
+      Serial.println("EEPORM: ymax: "+String(EEPROM.readShort(YMAX)));
+    }
   }
 
   extern void Display::loop() {
@@ -73,15 +96,16 @@
       //template:: p.isTouching(PLACEHOLDER_PLACE_START_X, PLACEHOLDER_PLACE_END_X, PLACEHOLDER_PLACE_START_Y, PLACEHOLDER_PLACE_END_Y)
       if(p.isTouching()) {
         p.calibrate();
-        p.print();
         if(p.isTouching(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_END_X, MENU_ARROW_BACK_START_Y, MENU_ARROW_BACK_END_Y)) {
-          Serial.println("change Mode");
+          if(general::debugSetup.getValue() && general::debug.getValue())
+            Serial.println("change Mode");
           if(mode == MENU)
             mode = (Mode) CHART;
           else if(mode == CHART)
             mode = (Mode) MENU;
         } else if(p.isTouching(MENU_ARROW_RESET_START_X, MENU_ARROW_RESET_END_X, MENU_ARROW_RESET_START_Y, MENU_ARROW_RESET_END_Y)) {
-          Serial.println("reset");
+          if(general::debugSetup.getValue() && general::debug.getValue())
+            Serial.println("reset");
           Menu::reset();
         } else if(mode == MENU) {
           Menu::handleTouch(p);

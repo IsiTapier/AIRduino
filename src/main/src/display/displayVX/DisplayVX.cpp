@@ -32,10 +32,13 @@ extern boolean DisplayVX::drop = false;
 
 
   extern void DisplayVX::setup() {
-    Serial.println("DISPLAY SETUP started");
+    if(general::debugSetup.getValue() && general::debug.getValue())
+      Serial.println("DISPLAY SETUP started");
     start = true;
-    Serial.println("DISPLAY SETUP complete");
-    Serial.println();
+    if(general::debugSetup.getValue() && general::debug.getValue()) {
+      Serial.println("DISPLAY SETUP complete");
+      Serial.println();
+    }
   }
 
   TFT_eSPI DisplayVX::getDisplay() {
@@ -57,7 +60,8 @@ extern boolean DisplayVX::drop = false;
     display.fillRect(0, DATABOX_Y, DISPLAY_LENGTH, DATABOX_HEIGHT, DATABOX_BACKGROUND_COLOR);
     display.pushImage(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, gear, WHITE);
     display.fillRect(0, TOP_BAR_HEIGHT, DISPLAY_LENGTH, TOP_BAR_THICKNESS, TEXT_COLOR);
-    Serial.println("Display drawn");
+    if(general::debugSetup.getValue() && general::debug.getValue())
+      Serial.println("Display drawn");
   }
 
   extern void DisplayVX::getData() {

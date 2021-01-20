@@ -7,7 +7,7 @@
 #define _ADAFRUIT_TOUCHSCREEN_H_
 #include <stdint.h>
 #include "../../display/Design.h"
-#include "../TFT_eSPI-master/TFT_eSPI.h"
+
 class TouchScreen;
 #include "../../util/Util.h"
 
@@ -58,8 +58,7 @@ public:
   int readTouchY();
   int readTouchX();
   TSPoint getPoint();
-  int16_t pressureThreshhold, ///< Pressure threshold for `isTouching`
-          xmin, xmax, ymin, ymax;
+  int16_t pressureThreshhold; ///< Pressure threshold for `isTouching`
 
 private:
   uint8_t _yp, _ym, _xm, _xp;
@@ -77,7 +76,6 @@ class TSPoint {
 public:
   TSPoint(void);
   TSPoint(int16_t x0, int16_t y0, int16_t z0);
-  TSPoint(int16_t x0, int16_t y0, int16_t z0, TouchScreen *ts);
   void calibrate(void);
   void print(void);
   bool isTouching(int startx = 0, int endx = DISPLAY_LENGTH, int starty = 0, int endy = DISPLAY_HEIGHT);
@@ -92,10 +90,7 @@ public:
           yc;
 
 private:
-  int16_t xmin,
-          xmax,
-          ymin,
-          ymax;
+
 };
 
 #endif

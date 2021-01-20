@@ -23,7 +23,6 @@
 //                       | |
 //                       |_|
 void setup() {
-  //EEPROM.write(0, 0);
   Serial.begin(9600);
   Serial.println();
   Serial.println();

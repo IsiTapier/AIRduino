@@ -13,20 +13,24 @@
           Input(&general::piezo),
           Input(&general::blink),
           Input(&general::empty),
-          Input(&general::empty)
+          Input(&general::calibrateTouch)
         ),
-
         MenuPage(
           Input(&general::graphSpeed),
           Input(&general::kernMode),
           Input(&general::segments),
           Input(&general::blinkThickness),
-          Input(&general::ventilatingTimeout),
-          Input(&general::debugSensor)
+          Input(&general::ventilatingTimeout)
+        ),
+        MenuPage(
+          Input(&general::debug),
+          Input(&general::debugSetup),
+          Input(&general::debugSensor),
+          Input(&general::debugDisplay),
+          Input(&general::debugMenu),
+          Input(&general::debugTouch)
         )
-
     })},
-
     {SubMenu("Farb-Modus", {
         MenuPage(
           Input(&colorModes::variousColors),
@@ -36,34 +40,30 @@
           Input(&colorModes::coloredTime),
           Input(&colorModes::coloredValue)
         ),
-
         MenuPage(
           Input(&colorModes::coloredSlider)
         )
-
     })},
-
     {SubMenu("Farben", {
         MenuPage(
 
         ),
-
         MenuPage(
 
         ),
-
         MenuPage(
 
         )
-
     })}
   };
 
   extern void Menu::setup() {
-    Serial.println("Menu SETUP started");
+    if(general::debugSetup.getValue() && general::debug.getValue())
+      Serial.println("Menu SETUP started");
     draw();
     subMenus[currentSubMenu].setup();
-    Serial.println("Menu SETUP complete");
+    if(general::debugSetup.getValue() && general::debug.getValue())
+      Serial.println("Menu SETUP complete");
   }
 
   extern void Menu::loop() {
@@ -84,7 +84,8 @@
       display.pushImage(MENU_ARROW_UP_START_X, MENU_ARROW_UP_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, arrowUp, WHITE);
       display.pushImage(MENU_ARROW_DOWN_START_X, MENU_ARROW_DOWN_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, arrowDown, WHITE);
       //draw menu bottom
-      Serial.println("Display drawn");
+      if(general::debugMenu.getValue() && general::debug.getValue())
+        Serial.println("Display drawn");
     }
   }
 
