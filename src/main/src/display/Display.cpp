@@ -40,7 +40,7 @@
       EEPROM.write(0, 0);
       EEPROM.commit();
     }
-    if((EEPROM.readShort(XMIN) == 0 && EEPROM.readShort(XMAX) == 0) || (EEPROM.readShort(YMIN) == 0 && EEPROM.readShort(YMAX) == 0))
+    if(EEPROM.readShort(XMIN) == EEPROM.readShort(XMAX) || EEPROM.readShort(YMIN) == EEPROM.readShort(YMAX))
       ts.calibration();
     if(general::debugSetup.getValue() && general::debug.getValue()) {
       Serial.println("EEPROM: sensor: "+String(EEPROM.read(0)));
@@ -70,14 +70,14 @@
   }
 
   extern void Display::initDisplay() {
-    if(lastMode != mode || lastVersion != general::version.getValue()) {
+    if(lastMode != mode || lastVersion != general::version.getValue() || general::darkMode.getValue() != general::darkMode.getOldValue()) {
       if(mode == CHART) {
         if(!general::version.getValue()) {
           DisplayV1::setup();
         } else {
           DisplayV2::setup();
         }
-      } else if(mode == MENU && lastMode != MENU) {
+      } else if(mode == MENU && lastMode != MENU || general::darkMode.getValue() != general::darkMode.getOldValue()) {
         Menu::setup();
       } else {
 
@@ -85,6 +85,7 @@
     }
     lastMode = mode;
     lastVersion = (Version) general::version.getValue();
+    general::darkMode.setValue(general::darkMode.getValue());
   }
 
   extern void Display::handleTouch() {

@@ -11,6 +11,7 @@
 #include "../button/Button.h"
 #include "../multiselect/Multiselect.h"
 #include "../number/Number.h"
+#include "../select/Select.h"
 
 class Input {
   public:
@@ -31,6 +32,7 @@ class Input {
     Button _button;
     Multiselect _multiselect;
     Number _number;
+    Select _select;
 };
 
 #endif

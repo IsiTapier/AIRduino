@@ -46,18 +46,27 @@
   }
 
   void Number::draw() {
-    display.pushImage(MENU_NUMBER_PLUS_START_X, MENU_INPUT_ICON_START_Y(_section), MENU_INPUT_ICON_LENGTH, MENU_INPUT_ICON_HEIGHT, plus, BLACK);
-    display.pushImage(MENU_NUMBER_MINUS_START_X, MENU_INPUT_ICON_START_Y(_section), MENU_INPUT_ICON_LENGTH, MENU_INPUT_ICON_HEIGHT, minus, BLACK);
+    if(general::darkMode.getValue()) {
+      display.pushImage(MENU_NUMBER_PLUS_START_X, MENU_INPUT_ICON_START_Y(_section), MENU_INPUT_ICON_LENGTH, MENU_INPUT_ICON_HEIGHT, plusDark, BLACK);
+      display.pushImage(MENU_NUMBER_MINUS_START_X, MENU_INPUT_ICON_START_Y(_section), MENU_INPUT_ICON_LENGTH, MENU_INPUT_ICON_HEIGHT, minusDark, BLACK);
+    } else {
+      display.pushImage(MENU_NUMBER_PLUS_START_X, MENU_INPUT_ICON_START_Y(_section), MENU_INPUT_ICON_LENGTH, MENU_INPUT_ICON_HEIGHT, plusLight, WHITE);
+      display.pushImage(MENU_NUMBER_MINUS_START_X, MENU_INPUT_ICON_START_Y(_section), MENU_INPUT_ICON_LENGTH, MENU_INPUT_ICON_HEIGHT, minusLight, WHITE);
+    }
+
     write(true);
   }
 
   void Number::write(boolean init) {
+    String text;
+    String oldText;
     if(init) {
-      String text = _setting->getTitle();
+      text = _setting->getTitle();
+      oldText = " ";
       dPrint(text, MENU_MARGIN_LEFT, MENU_SECTION_TEXT_Y(_section), MENU_NUMBER_TITLE_SIZE, TEXT_COLOR, 3);
-    }
-    String text = String(_setting->getValue());
-    String oldText = String(_setting->getOldValue());
+    } else
+      oldText = String(_setting->getOldValue());
+    text = String(_setting->getValue());
     dPrint(text, MENU_NUMBER_NUMBER_START_X, MENU_SECTION_TEXT_Y(_section), MENU_NUMBER_NUMBER_SIZE, TEXT_COLOR, 3, BACKGROUND_COLOR, oldText);
   }
 

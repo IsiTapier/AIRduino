@@ -15,6 +15,8 @@
       _multiselect = Multiselect(_setting);
     else if(_setting->getType() == NUMBER)
       _number = Number(_setting);
+    else if(_setting->getType() == SELECT)
+      _select = Select(_setting);
   }
 
   void Input::setSection(byte section) {
@@ -27,11 +29,13 @@
       _multiselect.setSection(section);
     else if(_setting->getType() == NUMBER)
       _number.setSection(section);
+    else if(_setting->getType() == SELECT)
+      _select.setSection(section);
   }
 
   void Input::setup() {
     if(mode == MENU) {
-      if(lastMode == MENU)
+      if(lastMode == MENU && general::darkMode.getValue() == general::darkMode.getOldValue())
         clear();
       else
         draw();
@@ -43,11 +47,13 @@
         _multiselect.init();
       else if(_setting->getType() == NUMBER)
         _number.init();
+      else if(_setting->getType() == SELECT)
+        _select.init();
     }
   }
 
   void Input::draw() {
-    if(mode == MENU && lastMode != MENU) {
+    if(mode == MENU && lastMode != MENU || general::darkMode.getValue() != general::darkMode.getOldValue()) {
       drawBorder(0, MENU_SECTION_Y(_inputSection), MENU_SECTION_LENGTH, MENU_SECTION_HEIGHT + MENU_SECTION_BORDER_SHIFT, MENU_SECTION_BORDER_THICKNESS, TEXT_COLOR);
       if(general::debugMenu.getValue() && general::debug.getValue())
         Serial.println("Input "+String(_inputSection)+" drawn. Inputtype: "+(String)_setting->getType()/*(_setting->getType()==SWITCH)?"slider":(_setting->getType())"empty")*/);
@@ -68,6 +74,8 @@
         _multiselect.checkTouch(p);
       else if(_setting->getType() == NUMBER)
         _number.checkTouch(p);
+      else if(_setting->getType() == SELECT)
+        _select.checkTouch(p);
     }
   }
 
@@ -79,5 +87,7 @@
         _multiselect.reset();
       else if(_setting->getType() == NUMBER)
         _number.reset();
+      else if(_setting->getType() == SELECT)
+        _select.reset();
     }
   }

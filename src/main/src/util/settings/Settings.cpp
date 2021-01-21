@@ -9,7 +9,7 @@ namespace general {
   Setting empty = Setting(EMPTY);
 
   Setting version = Setting(SWITCH, "Version", 0, "'Version' changed", 0, 1, {"Version 1", "Version 2"}, false);
-  //Setting darkMode = Setting(SELECT, "Theme", 0, true, "'Theme' changed", "light mode", "dark mode");
+  Setting darkMode = Setting(SELECT, "Theme", 1, "'Theme' changed", 0, 1, {"light mode", "dark mode"});
   Setting piezo = Setting(SWITCH, "Piepser", 1, "'Pieser' changed");
   Setting blink = Setting(SWITCH, "Blink", 1, "'Blink' changed");
   Setting data = Setting(SWITCH, "Data", 1, "Data gettering changed", 0, 1, {"generierte Daten", "Sensor Daten"});

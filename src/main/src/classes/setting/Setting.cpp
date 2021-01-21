@@ -10,6 +10,7 @@ Setting::Setting(SettingType type, char* title, short defaultValue, char* debugM
   _type = type;
   _title = title;
   _value = defaultValue;
+  _oldValue = defaultValue;
   _defaultValue = defaultValue;
   _minValue = minValue;
   _maxValue = maxValue;
