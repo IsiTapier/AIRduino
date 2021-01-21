@@ -17,8 +17,8 @@
         ),
         MenuPage(
           Input(&general::state),
-          Input(&general::graphSpeed),
           Input(&general::kernMode),
+          Input(&general::graphSpeed),
           Input(&general::segments),
           Input(&general::blinkThickness),
           Input(&general::ventilatingTimeout)

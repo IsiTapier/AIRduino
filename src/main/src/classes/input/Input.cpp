@@ -13,6 +13,8 @@
       _button = Button(_setting);
     else if(_setting->getType() == MULTISELECT)
       _multiselect = Multiselect(_setting);
+    else if(_setting->getType() == NUMBER)
+      _number = Number(_setting);
   }
 
   void Input::setSection(byte section) {
@@ -23,6 +25,8 @@
       _button.setSection(section);
     else if(_setting->getType() == MULTISELECT)
       _multiselect.setSection(section);
+    else if(_setting->getType() == NUMBER)
+      _number.setSection(section);
   }
 
   void Input::setup() {
@@ -37,6 +41,8 @@
         _button.init();
       else if(_setting->getType() == MULTISELECT)
         _multiselect.init();
+      else if(_setting->getType() == NUMBER)
+        _number.init();
     }
   }
 
@@ -60,6 +66,8 @@
         _button.checkTouch(p);
       else if(_setting->getType() == MULTISELECT)
         _multiselect.checkTouch(p);
+      else if(_setting->getType() == NUMBER)
+        _number.checkTouch(p);
     }
   }
 
@@ -69,5 +77,7 @@
         _slider.reset();
       else if(_setting->getType() == MULTISELECT)
         _multiselect.reset();
+      else if(_setting->getType() == NUMBER)
+        _number.reset();
     }
   }

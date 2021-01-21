@@ -10,6 +10,7 @@
 #include "../slider/Slider.h"
 #include "../button/Button.h"
 #include "../multiselect/Multiselect.h"
+#include "../number/Number.h"
 
 class Input {
   public:
@@ -29,6 +30,7 @@ class Input {
     Slider _slider;
     Button _button;
     Multiselect _multiselect;
+    Number _number;
 };
 
 #endif

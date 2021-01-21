@@ -61,9 +61,9 @@ extern int DisplayV1::lastPixel = 0;
   extern boolean DisplayV1::averageData() {
     valuesGraph[counter] = airCondition;
     counter ++;
-    if (!(counter < AVERAGING_GRAPH)) {
+    if (!(counter < general::graphSpeed.getValue())) {
       lastPixel = pixel;
-      pixel = average(valuesGraph, 0, AVERAGING_GRAPH);
+      pixel = average(valuesGraph, 0, general::graphSpeed.getValue());
       pixel = map(pixel, DISPLAYED_PPM_LOWEST, DISPLAYED_PPM_HIGHEST, GRAPH_START_Y, GRAPH_END_Y);
       if(lastPixel != 0)
         pixel = ALPHA_GRAPH * pixel + (1 - ALPHA_GRAPH) * lastPixel;

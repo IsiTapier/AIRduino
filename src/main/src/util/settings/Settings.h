@@ -19,10 +19,10 @@ namespace general {
   extern Setting calibrateTouch;
 
   extern Setting state;
-  extern Setting graphSpeed; //TODO
   extern Setting kernMode;
+  extern Setting graphSpeed;
   extern Setting segments;
-  extern Setting blinkThickness; //TODO
+  extern Setting blinkThickness;
   extern Setting ventilatingTimeout;
 
   extern Setting debug;

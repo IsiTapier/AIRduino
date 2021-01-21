@@ -34,8 +34,8 @@
 
   void Slider::setValue(boolean value) {
     _setting->setValue(value);
-  /*  if(general::debugMenu.getValue() && general::debug.getValue())
-      Serial.println("Value changed to "+String(_setting->getValue()));*/
+    if(general::debugMenu.getValue() && general::debug.getValue())
+      Serial.println("Value changed to "+String(_setting->getValue()));
     if(mode == MENU)
       draw();
   }

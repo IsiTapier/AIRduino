@@ -8,37 +8,37 @@
 namespace general {
   Setting empty = Setting(EMPTY);
 
-  Setting version = Setting(SWITCH, "Version", 0, false, "'Version' changed", {"Version 1", "Version 2"});
+  Setting version = Setting(SWITCH, "Version", 0, "'Version' changed", 0, 1, {"Version 1", "Version 2"}, false);
   //Setting darkMode = Setting(SELECT, "Theme", 0, true, "'Theme' changed", "light mode", "dark mode");
-  Setting piezo = Setting(SWITCH, "Piepser", 1, true, "'Pieser' changed"); //TODO
-  Setting blink = Setting(SWITCH, "Blink", 1, true, "'Blink' changed");
-  Setting data = Setting(SWITCH, "Data", 1, true, "Data gettering changed", {"generierte Daten", "Sensor Daten"});
+  Setting piezo = Setting(SWITCH, "Piepser", 1, "'Pieser' changed");
+  Setting blink = Setting(SWITCH, "Blink", 1, "'Blink' changed");
+  Setting data = Setting(SWITCH, "Data", 1, "Data gettering changed", 0, 1, {"generierte Daten", "Sensor Daten"});
   Setting calibrateTouch = Setting(ACTIVATOR, "Touch kalibrieren");
 
-  Setting state = Setting(MULTISELECT, "Status", 0, false, "'Status' changed", {"deutsch", "englisch", "französisch", "java", "spanisch", "special"});
-  Setting graphSpeed = Setting(EMPTY); //TODO
-  Setting kernMode = Setting(SWITCH, "Kern Modus", 0, false, "'Kern Modus' changed");
-  Setting segments = Setting(EMPTY); //TODO
-  Setting blinkThickness = Setting(EMPTY); //TODO
-  Setting ventilatingTimeout = Setting(EMPTY); //TODO
+  Setting state = Setting(MULTISELECT, "Status", 0, "'Status' changed", 0, 5, {"deutsch", "englisch", "französisch", "java", "spanisch", "special"});
+  Setting kernMode = Setting(SWITCH, "Kern Modus", 0, "'Kern Modus' changed");
+  Setting graphSpeed = Setting(NUMBER, "Graph Dauer", 5, "'Graph Speed' changed", 1, 9);
+  Setting segments = Setting(NUMBER, "Menu Felder", 6, "'Segments' changed", 1, 6);
+  Setting blinkThickness = Setting(NUMBER, "Blink Dicke", 2, "'Blink Boarder Thickness' changed", 1, 9);
+  Setting ventilatingTimeout = Setting(NUMBER, "Timeout", 5, "'ventilatingTimeout' changed", 1, 9);
 
-  Setting debug = Setting(SWITCH, "Debug", 1, true, "'Debug' changed");
-  Setting debugSetup = Setting(SWITCH, "Debug Setup", 1, true, "'Debug Setup' changed");
-  Setting debugSensor = Setting(SWITCH, "Debug Sensor", 0, true, "'Debug Sensor' changed");
-  Setting debugDisplay = Setting(SWITCH, "Debug Display", 0, true, "'Debug Display' changed");
-  Setting debugMenu = Setting(SWITCH, "Debug Menu", 0, true, "'Debug Menu' changed");
-  Setting debugTouch = Setting(SWITCH, "Debug Touch", 0, true, "'Debug Touch' changed");
+  Setting debug = Setting(SWITCH, "Debug", 1, "'Debug' changed");
+  Setting debugSetup = Setting(SWITCH, "Debug Setup", 1, "'Debug Setup' changed");
+  Setting debugSensor = Setting(SWITCH, "Debug Sensor", 0, "'Debug Sensor' changed");
+  Setting debugDisplay = Setting(SWITCH, "Debug Display", 0, "'Debug Display' changed");
+  Setting debugMenu = Setting(SWITCH, "Debug Menu", 0, "'Debug Menu' changed");
+  Setting debugTouch = Setting(SWITCH, "Debug Touch", 0, "'Debug Touch' changed");
 }
 
 namespace colorModes {
-  Setting variousColors = Setting(SWITCH, "farbiges Design", 0, true, "'farbiges Disign' changed");
-  Setting coloredChart = Setting(SWITCH, "farbiger Graph", 1, true, "'farbiger Graph' changed");
-  Setting coloredBar = Setting(SWITCH, "farbige Leiste", 1, true, "'farbige Leiste' changed");
-  Setting coloredState = Setting(SWITCH, "farbiger Status", 0, true, "'farbiger Status' changed");
-  Setting coloredTime = Setting(SWITCH, "farbige Zeit", 1, true, "'farbige Zeit' changed");
-  Setting coloredValue = Setting(SWITCH, "farbiger Wert", 1, true, "'farbiger Wert' changed");
+  Setting variousColors = Setting(SWITCH, "farbiges Design", 0, "'farbiges Disign' changed");
+  Setting coloredChart = Setting(SWITCH, "farbiger Graph", 1, "'farbiger Graph' changed");
+  Setting coloredBar = Setting(SWITCH, "farbige Leiste", 1, "'farbige Leiste' changed");
+  Setting coloredState = Setting(SWITCH, "farbiger Status", 0, "'farbiger Status' changed");
+  Setting coloredTime = Setting(SWITCH, "farbige Zeit", 1, "'farbige Zeit' changed");
+  Setting coloredValue = Setting(SWITCH, "farbiger Wert", 1, "'farbiger Wert' changed");
 
-  Setting coloredSlider = Setting(SWITCH, "farbiger Toggle", 0, true, "'farbiger Toggle' changed");
+  Setting coloredSlider = Setting(SWITCH, "farbiger Toggle", 0, "'farbiger Toggle' changed");
 }
 
 /*namespace colors {

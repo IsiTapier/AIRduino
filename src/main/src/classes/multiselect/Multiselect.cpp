@@ -24,7 +24,7 @@
   }
 
   void Multiselect::checkTouch(TSPoint p) {
-    if(p.isTouching(0, MENU_SECTION_LENGTH, MENU_SECTION_Y(_section), (MENU_SECTION_Y(_section) + MENU_SIDE_HEIGHT))) {
+    if(p.isTouching(0, MENU_SECTION_LENGTH, MENU_SECTION_Y(_section), (MENU_SECTION_Y(_section) + MENU_SECTION_HEIGHT))) {
       changeValue();
       if(_setting->getDebugMessage() != "")
         Serial.println(_setting->getDebugMessage());

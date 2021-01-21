@@ -6,16 +6,15 @@
 #include "Setting.h"
 
 Setting::Setting(void) {}
-Setting::Setting(SettingType type, char* title, short defaultValue, boolean colored,  char* debugMessage, std::vector<String> names) { //TODO DATATYPE
+Setting::Setting(SettingType type, char* title, short defaultValue, char* debugMessage, short minValue, short maxValue, std::vector<String> names,  boolean colored) { //TODO DATATYPE
   _type = type;
   _title = title;
   _value = defaultValue;
   _defaultValue = defaultValue;
+  _minValue = minValue;
+  _maxValue = maxValue;
   _colored = colored;
   _names = names;
-  /*for(int i = 0; i < names.size(); i++) {
-    _names[i] = names.at(i);
-  }*/
   _debugMessage = debugMessage;
 }
 
@@ -23,11 +22,24 @@ short Setting::getValue() {
   return _value;
 }
 
+short Setting::getOldValue() {
+  return _oldValue;
+}
+
 short Setting::getDefaultValue() {
   return _defaultValue;
 }
 
+short Setting::getMinValue() {
+  return _minValue;
+}
+
+short Setting::getMaxValue() {
+  return _maxValue;
+}
+
 void Setting::setValue(short value) {
+  _oldValue = _value;
   _value = value;
 }
 
