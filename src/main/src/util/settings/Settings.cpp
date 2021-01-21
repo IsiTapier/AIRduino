@@ -12,9 +12,10 @@ namespace general {
   //Setting darkMode = Setting(SELECT, "Theme", 0, true, "'Theme' changed", "light mode", "dark mode");
   Setting piezo = Setting(SWITCH, "Piepser", 1, true, "'Pieser' changed"); //TODO
   Setting blink = Setting(SWITCH, "Blink", 1, true, "'Blink' changed");
-  //Setting status = Setting(MULTISELECT, "Blink", 0, false, "'Status' changed");
+  Setting data = Setting(SWITCH, "Data", 1, true, "Data gettering changed", "generierte Daten", "Sensor Daten");
   Setting calibrateTouch = Setting(ACTIVATOR, "Touch kalibrieren");
 
+  Setting status = Setting(MULTISELECT, "Status", 0, false, "'Status' changed", "deutsch", "englisch", "französisch", "java", "spanisch", "special");
   Setting graphSpeed = Setting(EMPTY); //TODO
   Setting kernMode = Setting(SWITCH, "Kern Modus", 0, false, "'Kern Modus' changed");
   Setting segments = Setting(EMPTY); //TODO

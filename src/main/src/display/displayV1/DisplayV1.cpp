@@ -34,9 +34,6 @@ extern int DisplayV1::lastPixel = 0;
   }
 
   extern void DisplayV1::loop() {
-    getData();
-    //generateData(400, 1100, 20);
-    //setup
     if(start) {
       drawDisplay();
       createLines();
@@ -46,13 +43,8 @@ extern int DisplayV1::lastPixel = 0;
       fillData();
       drawGraph();
     }
-    //info
-    writeInfo();
-    checkState();
 
-    //end setup
-    if(start)
-      start = false;
+    DisplayVX::loop();
   }
 
 

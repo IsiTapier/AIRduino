@@ -12,10 +12,11 @@
           Input(&general::empty),
           Input(&general::piezo),
           Input(&general::blink),
-          Input(&general::empty),
+          Input(&general::data),
           Input(&general::calibrateTouch)
         ),
         MenuPage(
+          Input(&general::empty),
           Input(&general::graphSpeed),
           Input(&general::kernMode),
           Input(&general::segments),

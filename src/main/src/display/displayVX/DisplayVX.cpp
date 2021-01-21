@@ -41,9 +41,21 @@ extern boolean DisplayVX::drop = false;
     }
   }
 
-  TFT_eSPI DisplayVX::getDisplay() {
-    return(display);
+  extern void DisplayVX::loop() {
+    if(general::data.getValue())
+      getData();
+    else
+      generateData(400, 1000, 30);
+
+    //info
+    writeInfo();
+    checkState();
+
+    //end setup
+    if(start)
+      start = false;
   }
+
 
   //  _____  _           _
   // |  __ \(_)         | |
@@ -65,6 +77,8 @@ extern boolean DisplayVX::drop = false;
   }
 
   extern void DisplayVX::getData() {
+    lastState = state;
+    lastAirCondition = airCondition;
     state = Meassure::getState();
     airCondition = Meassure::getAirCondition();
   }
@@ -126,8 +140,6 @@ extern boolean DisplayVX::drop = false;
       }
     }
 
-    lastState = state;
-
     //Verhindert überschreiben von "ppm"
     if (airCondition < 1000 && lastAirCondition >= 1000 || airCondition < 1000 && start) {
       dPrint(String(airCondition) + " ", PPM_MARGIN_LEFT, PPM_Y, PPM_SIZE, state.getColor(COLORED_PPM), 6, DATABOX_BACKGROUND_COLOR, String(lastAirCondition));
@@ -172,8 +184,5 @@ extern boolean DisplayVX::drop = false;
 
     //Set new lasttime
     lastTime = time; //Setzt letzten Wert
-
-
-    lastAirCondition = airCondition;
 
   }

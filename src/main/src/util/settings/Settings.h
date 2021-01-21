@@ -15,9 +15,10 @@ namespace general {
   extern Setting darkMode;
   extern Setting piezo;
   extern Setting blink;
-  extern Setting status;
+  extern Setting data;
   extern Setting calibrateTouch;
 
+  extern Setting status;
   extern Setting graphSpeed; //TODO
   extern Setting kernMode;
   extern Setting segments;

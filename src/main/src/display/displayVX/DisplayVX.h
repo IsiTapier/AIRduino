@@ -14,7 +14,7 @@ class DisplayVX {
 
   public:
     static void setup();
-    static TFT_eSPI getDisplay();
+    static void loop();
 
   protected:
     static void drawDisplay();

@@ -30,7 +30,7 @@
   extern void Display::eeprom() {
     EEPROM.begin(EEPROM_SIZE);
     //   RESET EEPROM   //
-    /*EEPROM.write(0, 255);
+    /*EEPROM.write(0, 0);
     EEPROM.writeShort(XMIN, 0);
     EEPROM.writeShort(XMAX, 0);
     EEPROM.writeShort(YMIN, 0);

@@ -27,33 +27,18 @@ extern void DisplayV2::setup() {
   }
   if(lastMode != LOADINGSCREEN)
     loop();
+  start = false;
+
 }
 
 extern void DisplayV2::loop() {
-  //showBoxes();
-  //getData();
-  generateData(400, 1000, 30);
-
   if(start) {
     drawDisplay();
     drawBarBorder();
   }
   drawBar();
-  writeInfo();
-  checkState();
-  if(start)
-    start = false;
 
-
-
-
-  //writeAnalogValue();
-  /*if(airCondition == lastAirCondition || airCondition > LIMIT_BAD && lastAirCondition > calibration[EEPROM.read(0)].getHighestPPM())
-    return;*/
-  //drawBarBorder();
-
-
-  //showBoxes();
+  DisplayVX::loop();
 }
 
 
