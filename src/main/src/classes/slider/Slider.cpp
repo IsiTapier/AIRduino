@@ -34,7 +34,8 @@
 
   void Slider::setValue(boolean value) {
     _setting->setValue(value);
-    //Serial.println("Value changed to "+String(_setting->getValue()));
+  /*  if(general::debugMenu.getValue() && general::debug.getValue())
+      Serial.println("Value changed to "+String(_setting->getValue()));*/
     if(mode == MENU)
       draw();
   }
@@ -54,7 +55,7 @@
   }
 
   void Slider::write(boolean init) {
-    String text;
+    String text = "";
     String oldText = "";
     if(_setting->getName() == "") {
       text = _setting->getTitle();
@@ -66,7 +67,6 @@
          oldText = _setting->getName(true);
     }
     dPrint(text, MENU_MARGIN_LEFT, MENU_SECTION_TEXT_Y(_section), MENU_SECTION_SIZE, TEXT_COLOR, 3, BACKGROUND_COLOR, oldText, MENU_SECTION_OLD_SIZE);
-
   }
 
   void Slider::reset() {

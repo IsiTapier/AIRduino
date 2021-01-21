@@ -120,15 +120,19 @@
       if(oldTextSize < 0) {
         oldTextSize = scale;
       }
-      if(datum % 3 == 2)
-        x -= LETTER_LENGTH*scale*(text.length()-1);
+      int xold = x;
+      if(datum % 3 == 1) {
+        x -= LETTER_LENGTH*scale*(text.length()-1)/2;
+        xold -= LETTER_LENGTH*oldTextSize*(oldText.length()-1)/2;
+      }
       for(int i = 0; i < text.length(); i++) {
         if(text.charAt(i) != oldText.charAt(i)) {
           display.setTextColor(backgroundColor);
           display.setTextSize(oldTextSize);
-          display.drawString((String) oldText.charAt(i), x+LETTER_LENGTH*oldTextSize*i, y);
+          display.drawString((String) oldText.charAt(i), xold+LETTER_LENGTH*oldTextSize*i, y);
           display.setTextColor(color);
           display.setTextSize(scale);
+          display.setTextDatum(datum);
           display.drawString((String) text.charAt(i), x+LETTER_LENGTH*scale*i, y);
         }
       }

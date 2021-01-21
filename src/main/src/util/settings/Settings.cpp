@@ -8,14 +8,14 @@
 namespace general {
   Setting empty = Setting(EMPTY);
 
-  Setting version = Setting(SWITCH, "Version", 0, false, "'Version' changed", "Version 1", "Version 2");
+  Setting version = Setting(SWITCH, "Version", 0, false, "'Version' changed", {"Version 1", "Version 2"});
   //Setting darkMode = Setting(SELECT, "Theme", 0, true, "'Theme' changed", "light mode", "dark mode");
   Setting piezo = Setting(SWITCH, "Piepser", 1, true, "'Pieser' changed"); //TODO
   Setting blink = Setting(SWITCH, "Blink", 1, true, "'Blink' changed");
-  Setting data = Setting(SWITCH, "Data", 1, true, "Data gettering changed", "generierte Daten", "Sensor Daten");
+  Setting data = Setting(SWITCH, "Data", 1, true, "Data gettering changed", {"generierte Daten", "Sensor Daten"});
   Setting calibrateTouch = Setting(ACTIVATOR, "Touch kalibrieren");
 
-  Setting status = Setting(MULTISELECT, "Status", 0, false, "'Status' changed", "deutsch", "englisch", "französisch", "java", "spanisch", "special");
+  Setting state = Setting(MULTISELECT, "Status", 0, false, "'Status' changed", {"deutsch", "englisch", "französisch", "java", "spanisch", "special"});
   Setting graphSpeed = Setting(EMPTY); //TODO
   Setting kernMode = Setting(SWITCH, "Kern Modus", 0, false, "'Kern Modus' changed");
   Setting segments = Setting(EMPTY); //TODO

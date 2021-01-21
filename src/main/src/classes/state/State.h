@@ -1,4 +1,12 @@
+/*
+  State.h - State-Library for Airduino.
+*/
+
+#ifndef State_h
+#define State_h
+
 #include "../../util/Colors.h"
+#include "../../util/settings/Settings.h"
 
 enum States {
   VENTILATING = -1,
@@ -9,13 +17,23 @@ enum States {
   PIEP = 4
 };
 
-#define AE char(142)
-#define ae char(132)
-#define OE char(153)
-#define oe char(148)
-#define UE char(154)
+#define AE String(char(142))
+#define ae String(char(132))
+#define OE String(char(153))
+#define oe String(char(148))
+#define UE String(char(154))
 #define ue String(char(129))
-#define SS char(225)
+#define SS String(char(223))
+#define ag String(char(224))
+#define aa String(char(225))
+#define ac String(char(226))
+#define eg String(char(232))
+#define ea String(char(233))
+#define ec String(char(234))
+#define oa String(char(243))
+
+
+extern String stateTitles[6][5];
 
 
 class State {
@@ -34,18 +52,7 @@ public:
   constexpr State operator=(const int a) const { return State((States) a); }
 
   String getTitle() {
-    if(_state == VENTILATING)
-      return("L"+ue+"ftet");
-    if(_state == GOOD)
-      return("bon");
-    if(_state == MEDIUM)
-      return("mal");
-    if(_state == BAD)
-      return("gammlig");
-    if(_state == BLINK)
-      return("sehr gammlig");
-    if(_state == PIEP)
-      return(ue+"ber gammlig");
+    return stateTitles[general::state.getValue()][_state+1];
   }
 
   int getColor(boolean colored) {
@@ -72,3 +79,5 @@ public:
 private:
   States _state;
 };
+
+#endif

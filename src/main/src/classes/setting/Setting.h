@@ -11,22 +11,24 @@ enum SettingType {
   EMPTY,
   ACTIVATOR,
   SELECT,
-  MUTLISELECT,
+  MULTISELECT,
   SWITCH,
-  COLOR
+  COLOR,
+  NUMBER
 };
 
 class Setting {
   public:
     Setting(void);
-    Setting(SettingType type, char* title = "", short defaultValue = 0, boolean colored = false, char* debugMessage = "", char* nameOn = "", char* nameOff = "");  //TODO DATATYPE
+    Setting(SettingType type, char* title = "", short defaultValue = 0, boolean colored = false, char* debugMessage = "", std::vector<String> names = {"", ""});  //TODO DATATYPE
     short getValue();
     short getDefaultValue();
     void setValue(short value);
     SettingType getType();
     char* getTitle();
+    short getSize();
     boolean getColored();
-    char* getName(boolean reverse = false);
+    String getName(boolean reverse = false);
     char* getDebugMessage();
 
   private:
@@ -38,6 +40,7 @@ class Setting {
     char* _nameOn;
     char* _nameOff;
     boolean _colored;
+    std::vector<String> _names;
 };
 
 #endif
