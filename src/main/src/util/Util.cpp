@@ -107,36 +107,38 @@
     display.fillRect((DISPLAY_LENGTH - STATUS_LENGTH)/2, STATUS_MARGIN_TOP, STATUS_LENGTH, STATUS_HEIGHT, RED);
   }
 
-  void dPrint(String text, int x, int y, int scale, int color, int datum, int backgroundColor, String oldText, int oldTextSize, int padding) {
+  void dPrint(String text, int x, int y, int size, int color, int datum, int backgroundColor, String oldText, int oldTextSize, int padding) {
     display.setTextPadding(padding);
     display.setTextDatum(datum);
     if(backgroundColor == 0)
       backgroundColor = BACKGROUND_COLOR;
     if(oldText.length() != 0) {
-      while(oldText.length() > text.length()) {
-        text += " ";
-      }
-      if(oldTextSize < 0) {
-        oldTextSize = scale;
-      }
+      if(oldTextSize < 0)
+        oldTextSize = size;
       int xold = x;
       if(datum % 3 == 1) {
-        x -= LETTER_LENGTH*scale*(text.length()-1)/2;
-        xold -= LETTER_LENGTH*oldTextSize*(oldText.length()-1)/2;
+        x -= size*(LETTER_LENGTH*text.length())/2;
+        xold -= oldTextSize*(LETTER_LENGTH*oldText.length())/2;
+      } else if(datum % 3 == 2) {
+        x -= LETTER_LENGTH*size*(text.length()-1);
+        xold -= LETTER_LENGTH*oldTextSize*(oldText.length()-1);
       }
+      display.setTextColor(backgroundColor);
+      display.setTextSize(oldTextSize);
+      for(int i = 0; i < oldText.length(); i++) {
+        if(text.charAt(i) != oldText.charAt(i) || text.length() != oldText.length()) {
+          display.drawString((String) oldText.charAt(i), (xold+LETTER_LENGTH*oldTextSize*i), y);
+        }
+      }
+      display.setTextColor(color);
+      display.setTextSize(size);
       for(int i = 0; i < text.length(); i++) {
-        if(text.charAt(i) != oldText.charAt(i)) {
-          display.setTextColor(backgroundColor);
-          display.setTextSize(oldTextSize);
-          display.drawString((String) oldText.charAt(i), xold+LETTER_LENGTH*oldTextSize*i, y);
-          display.setTextColor(color);
-          display.setTextSize(scale);
-          display.setTextDatum(datum);
-          display.drawString((String) text.charAt(i), x+LETTER_LENGTH*scale*i, y);
+        if(text.charAt(i) != oldText.charAt(i) || text.length() != oldText.length()) {
+          display.drawString((String) text.charAt(i), x+LETTER_LENGTH*size*i, y);
         }
       }
     } else {
-      display.setTextSize(scale);
+      display.setTextSize(size);
       display.setCursor(x, y);
       if(backgroundColor > 0)
         display.setTextColor(color, backgroundColor);
@@ -147,8 +149,8 @@
   }
 
   //Verkürzung: Writing mit Integern
-  void dPrint(int text, int x, int y, int scale, int color, int datum, int backgroundColor, int oldText, int oldTextSize, int padding) {
-    dPrint(String(text), x, y, scale, color, datum, backgroundColor, (oldText == -1) ? "" : String(oldText), oldTextSize, padding);
+  void dPrint(int text, int x, int y, int size, int color, int datum, int backgroundColor, int oldText, int oldTextSize, int padding) {
+    dPrint(String(text), x, y, size, color, datum, backgroundColor, (oldText == -1) ? "" : String(oldText), oldTextSize, padding);
   }
 
   //Loading Screen

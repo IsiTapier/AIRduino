@@ -93,6 +93,8 @@ extern void DisplayV2::drawBar() {
   lastBarPixel = map(lastAirCondition, DISPLAYED_PPM_LOWEST, DISPLAYED_PPM_HIGHEST, BAR_START_X, BAR_END_X);
   if(barPixel <= BAR_START_X && lastAirCondition <= BAR_START_X || barPixel == lastBarPixel)
     return;
+  if(barPixel < BAR_START_X)
+    barPixel = BAR_START_X;
   if(barPixel > BAR_END_X)
     barPixel = BAR_END_X;
   if(lastBarPixel > BAR_END_X)

@@ -1,3 +1,19 @@
+//SONDER ZEICHEN
+#define AE String(char(142))
+#define ae String(char(132))
+#define OE String(char(153))
+#define oe String(char(148))
+#define UE String(char(154))
+#define ue String(char(129))
+#define SS String(char(223))
+#define ag String(char(224))
+#define aa String(char(225))
+#define ac String(char(226))
+#define eg String(char(232))
+#define ea String(char(233))
+#define ec String(char(234))
+#define oa String(char(243))
+
 
 //general
 #define ROTATION 3

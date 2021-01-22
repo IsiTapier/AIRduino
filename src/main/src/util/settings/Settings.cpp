@@ -15,7 +15,7 @@ namespace general {
   Setting data = Setting(SWITCH, "Data", 1, "Data gettering changed", 0, 1, {"generierte Daten", "Sensor Daten"});
   Setting calibrateTouch = Setting(ACTIVATOR, "Touch kalibrieren");
 
-  Setting state = Setting(MULTISELECT, "Status", 0, "'Status' changed", 0, 5, {"deutsch", "englisch", "französisch", "java", "spanisch", "special"});
+  Setting state = Setting(MULTISELECT, "Status", 0, "'Status' changed", 0, 5, {"deutsch", "englisch", "franz"+oe+"sisch", "java", "spanisch", "special"});
   Setting kernMode = Setting(SWITCH, "Kern Modus", 0, "'Kern Modus' changed");
   Setting graphSpeed = Setting(NUMBER, "Graph Dauer", 5, "'Graph Speed' changed", 1, 9);
   Setting segments = Setting(NUMBER, "Menu Felder", 6, "'Segments' changed", 1, 6);

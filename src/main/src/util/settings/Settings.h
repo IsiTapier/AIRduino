@@ -7,6 +7,7 @@
 
 #include "Arduino.h"
 #include "../../classes/Setting/Setting.h"
+#include "../../display/Design.h"
 
 namespace general {
   extern Setting empty;

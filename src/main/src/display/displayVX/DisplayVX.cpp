@@ -99,14 +99,16 @@ extern boolean DisplayVX::drop = false;
 
   extern void DisplayVX::checkState() {
     if (blinkSwitch) {
+      //restore Border
       drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, 1, BACKGROUND_COLOR);
       display.drawLine(0, DISPLAY_HEIGHT-1, DISPLAY_LENGTH-1, DISPLAY_HEIGHT-1, DATABOX_BACKGROUND_COLOR);
       display.drawLine(0, DATABOX_Y, 0, DISPLAY_HEIGHT-1, DATABOX_BACKGROUND_COLOR);
       display.drawLine(DISPLAY_LENGTH-1, DATABOX_Y, DISPLAY_LENGTH-1, DISPLAY_HEIGHT-1, DATABOX_BACKGROUND_COLOR);
       display.drawLine(0, DATABOX_BAR_Y, 0, DATABOX_Y-1, state.getColor(COLORED_BAR));
       display.drawLine(DISPLAY_LENGTH-1, DATABOX_BAR_Y, DISPLAY_LENGTH-1, DATABOX_Y-1, state.getColor(COLORED_BAR));
-      //createLines();
-        digitalWrite(PIEZO, LOW);
+      display.drawLine(0, TOP_BAR_HEIGHT, 0, STATUS_END_HEIGHT-1, TEXT_COLOR);
+      display.drawLine(DISPLAY_LENGTH-1, TOP_BAR_HEIGHT, DISPLAY_LENGTH-1, STATUS_END_HEIGHT-1, TEXT_COLOR);
+      digitalWrite(PIEZO, LOW);
       blinkSwitch = false;
     } else if (state >= 3) {
       if(general::blink.getValue())
@@ -133,6 +135,8 @@ extern boolean DisplayVX::drop = false;
         display.fillRect(0, DATABOX_BAR_Y, DISPLAY_LENGTH, DATABOX_BAR_THICKNESS, state.getColor(COLORED_BAR));
 
       //Draw PPM
+      if(airCondition < 0)
+        airCondition = 0;
       dPrint(lastAirCondition, PPM_MARGIN_LEFT, PPM_Y, PPM_SIZE, DATABOX_BACKGROUND_COLOR, 6);
       dPrint(String(airCondition) + " ", PPM_MARGIN_LEFT, PPM_Y, PPM_SIZE, state.getColor(COLORED_PPM), 6);
       if (airCondition < 1000) {
@@ -154,7 +158,6 @@ extern boolean DisplayVX::drop = false;
 
     //calculate time since last ventilating
     long startTime = Meassure::getStartTime();
-
     seconds = (millis() - startTime) / 1000 % 60;
     minutes = ((millis() - startTime) / 1000 - seconds) / 60;
 
@@ -173,12 +176,12 @@ extern boolean DisplayVX::drop = false;
     //write new Pixels
     if (minutes >= 20 && COLORED_TIME) {
       if(seconds == 0 && minutes == 20 || start)
-        dPrint(time, TIMER_X, TIMER_Y, TIMER_SIZE, TIME_COLOR_CRITICAL, 8, DATABOX_BACKGROUND_COLOR);
+        dPrint(time, TIMER_X, TIMER_Y, TIMER_SIZE, TIME_COLOR_CRITICAL, 8);
       else
         dPrint(time, TIMER_X, TIMER_Y, TIMER_SIZE, TIME_COLOR_CRITICAL, 8, DATABOX_BACKGROUND_COLOR, lastTime);
     } else {
       if(start)
-        dPrint(time, TIMER_X, TIMER_Y, TIMER_SIZE, TIME_COLOR_NORMAL, 8, DATABOX_BACKGROUND_COLOR);
+        dPrint(time, TIMER_X, TIMER_Y, TIMER_SIZE, TIME_COLOR_NORMAL, 8);
       else
         dPrint(time, TIMER_X, TIMER_Y, TIMER_SIZE, TIME_COLOR_NORMAL, 8, DATABOX_BACKGROUND_COLOR, lastTime);
     }
