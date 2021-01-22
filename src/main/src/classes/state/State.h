@@ -8,6 +8,7 @@
 #include "../../util/Colors.h"
 #include "../../util/settings/Settings.h"
 #include "../../display/Design.h"
+#include "arduino.h"
 
 enum States {
   VENTILATING = -1,
@@ -19,7 +20,6 @@ enum States {
 };
 
 extern String stateTitles[6][5];
-
 
 class State {
 public:
