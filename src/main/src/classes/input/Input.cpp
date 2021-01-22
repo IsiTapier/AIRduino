@@ -54,7 +54,7 @@
 
   void Input::draw() {
     if(mode == MENU && lastMode != MENU || general::darkMode.getValue() != general::darkMode.getOldValue()) {
-      drawBorder(0, MENU_SECTION_Y(_inputSection), MENU_SECTION_LENGTH, MENU_SECTION_HEIGHT + MENU_SECTION_BORDER_SHIFT, MENU_SECTION_BORDER_THICKNESS, TEXT_COLOR);
+      display.fillRect(0, MENU_SECTION_Y(_inputSection), MENU_SECTION_LENGTH, MENU_SECTION_BORDER_THICKNESS, TEXT_COLOR);
       if(general::debugMenu.getValue() && general::debug.getValue())
         Serial.println("Input "+String(_inputSection)+" drawn. Inputtype: "+(String)_setting->getType()/*(_setting->getType()==SWITCH)?"slider":(_setting->getType())"empty")*/);
     }

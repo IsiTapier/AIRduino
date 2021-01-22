@@ -145,4 +145,3 @@ To select a new setup you then edit your own my_setup_select.h file (which will 
 The library was intended to support only TFT displays but using a Sprite as a 1 bit per pixel screen buffer permits support for the Waveshare 2 and 3 colour SPI ePaper displays. This addition to the library is experimental and only one example is provided. Further examples will be added.
 
 ![Example](https://i.imgur.com/L2tV129.jpg?1)
-

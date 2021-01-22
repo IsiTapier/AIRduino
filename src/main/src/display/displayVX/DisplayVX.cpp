@@ -154,6 +154,7 @@ extern boolean DisplayVX::drop = false;
 
     //calculate time since last ventilating
     long startTime = Meassure::getStartTime();
+
     seconds = (millis() - startTime) / 1000 % 60;
     minutes = ((millis() - startTime) / 1000 - seconds) / 60;
 

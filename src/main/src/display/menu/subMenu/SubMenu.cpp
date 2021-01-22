@@ -19,16 +19,16 @@ void SubMenu::setup() {
 
 void SubMenu::draw() {
   dPrint(_title, DISPLAY_LENGTH/2, STATUS_MARGIN_TOP, MENU_TITLE_SIZE, TEXT_COLOR, 1); //TODO Title size
-  dPrint(_currentPage+1, MENU_SIDE_CENTER_X, MENU_SIDE_CENTER_Y, MENU_SIDE_SIZE, TEXT_COLOR, 7);
-  dPrint(_pages.size(), (MENU_SIDE_CENTER_X + MENU_SIDE_BAR_THICKNESS + MENU_SIDE_SIZE), MENU_SIDE_CENTER_Y, MENU_SIDE_SIZE, TEXT_COLOR, 1);
+  dPrint(_currentPage+1, MENU_SIDE_CENTER_X, (MENU_SIDE_CENTER_Y-MENU_SIDE_SIZE), MENU_SIDE_SIZE, TEXT_COLOR, 7);
+  dPrint(_pages.size(), MENU_SIDE_CENTER_X, (MENU_SIDE_CENTER_Y+2*MENU_SIDE_SIZE), MENU_SIDE_SIZE, TEXT_COLOR, 1);
   if(general::debugMenu.getValue() && general::debug.getValue())
     Serial.println("Submenu "+(String)_title+" drawn");
 }
 
 void SubMenu::clear() {
   dPrint(_title, DISPLAY_LENGTH/2, STATUS_MARGIN_TOP, MENU_TITLE_SIZE, BACKGROUND_COLOR, 1); //TODO Title size
-  dPrint(_currentPage+1, MENU_SIDE_CENTER_X, MENU_SIDE_CENTER_Y, MENU_SIDE_SIZE, BACKGROUND_COLOR, 7);
-  dPrint(_pages.size(), MENU_SIDE_CENTER_X, MENU_SIDE_CENTER_Y, MENU_SIDE_SIZE, BACKGROUND_COLOR, 1);
+  dPrint(_currentPage+1, MENU_SIDE_CENTER_X, (MENU_SIDE_CENTER_Y-MENU_SIDE_SIZE), MENU_SIDE_SIZE, BACKGROUND_COLOR, 7);
+  dPrint(_pages.size(), MENU_SIDE_CENTER_X, (MENU_SIDE_CENTER_Y+2*MENU_SIDE_SIZE), MENU_SIDE_SIZE, BACKGROUND_COLOR, 1);
   if(general::debugMenu.getValue() && general::debug.getValue())
     Serial.println("Submenu "+(String)_title+" cleared");
 }
@@ -38,10 +38,10 @@ void SubMenu::setPage(int page) {
     page = 0;
   if(page >= _pages.size())
     page = _pages.size()-1;
-  dPrint(_currentPage+1, MENU_SIDE_CENTER_X, MENU_SIDE_CENTER_Y, MENU_SIDE_SIZE, BACKGROUND_COLOR, 7);
+  int oldPage = _currentPage;
   _currentPage = page;
   _pages.at(_currentPage).setup();
-  dPrint(_currentPage+1, MENU_SIDE_CENTER_X, MENU_SIDE_CENTER_Y, MENU_SIDE_SIZE, TEXT_COLOR, 7);
+  dPrint(_currentPage+1, MENU_SIDE_CENTER_X, (MENU_SIDE_CENTER_Y-MENU_SIDE_SIZE), MENU_SIDE_SIZE, TEXT_COLOR, 7, BACKGROUND_COLOR, oldPage+1);
 }
 
 void SubMenu::shiftPage(boolean up) {

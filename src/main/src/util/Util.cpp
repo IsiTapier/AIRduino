@@ -63,8 +63,8 @@
 
   }
   void drawBorder(int x, int y, int length, int height, int thickness, int color) {
-    length -= (thickness-1);
-    height -= (thickness-1);
+    length -= thickness;
+    height -= thickness;
     for(int i = 0; i < thickness; i++) {
       for(int i = 0; i < thickness; i++) {
         display.drawLine(x, y, x+length, y, color);
@@ -77,7 +77,6 @@
       x -= thickness;
     }
   }
-
 
   void drawLine(int x, int y, int length, int height, int color, int a, int b, boolean filter1, int filtervalue1, boolean filter2, State filtervalue2) {
     length += x;

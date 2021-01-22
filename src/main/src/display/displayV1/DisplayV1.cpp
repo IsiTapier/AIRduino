@@ -104,7 +104,7 @@ extern int DisplayV1::lastPixel = 0;
     if(COLORED_BAR && airCondition < DISPLAYED_PPM_HIGHEST && lastAirCondition >= DISPLAYED_PPM_HIGHEST)
       display.drawLine(0, GRAPH_END_Y, DISPLAY_LENGTH, GRAPH_END_Y, state.getColor(false));
     //draw Graph
-    if(currentPosition >= DISPLAY_LENGTH-1 || state.getColor(COLORED_CHART) != lastState.getColor(COLORED_CHART) && !COLOR_MODE || COLORED_BAR && airCondition < DISPLAYED_PPM_HIGHEST && lastAirCondition >= DISPLAYED_PPM_HIGHEST) {
+    if(currentPosition >= DISPLAY_LENGTH-1 || state.getColor(COLORED_CHART) != lastState.getColor(COLORED_CHART) && !COLOR_MODE || COLORED_BAR && airCondition < DISPLAYED_PPM_HIGHEST && lastAirCondition >= DISPLAYED_PPM_HIGHEST || mode == CHART && lastMode != CHART) {
       for (short x = 1; x <= currentPosition; x++) {
         drawConnection(x);
         if(currentPosition >= DISPLAY_LENGTH)
