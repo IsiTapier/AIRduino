@@ -117,11 +117,13 @@
         oldTextSize = size;
       int xold = x;
       if(datum % 3 == 1) {
-        x -= size*(LETTER_LENGTH*text.length())/2;
-        xold -= oldTextSize*(LETTER_LENGTH*oldText.length())/2;
+        x -= size*LETTER_LENGTH*text.length()/2;
+        xold -= oldTextSize*LETTER_LENGTH*oldText.length()/2;
+        display.setTextDatum(datum-1);
       } else if(datum % 3 == 2) {
-        x -= LETTER_LENGTH*size*(text.length()-1);
-        xold -= LETTER_LENGTH*oldTextSize*(oldText.length()-1);
+        x -= LETTER_LENGTH*size*text.length();
+        xold -= LETTER_LENGTH*oldTextSize*oldText.length();
+        display.setTextDatum(datum-2);
       }
       display.setTextColor(backgroundColor);
       display.setTextSize(oldTextSize);

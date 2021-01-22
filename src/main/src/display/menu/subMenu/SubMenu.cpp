@@ -18,7 +18,7 @@ void SubMenu::setup() {
 }
 
 void SubMenu::draw() {
-  dPrint(_title, DISPLAY_LENGTH/2, STATUS_MARGIN_TOP, MENU_TITLE_SIZE, TEXT_COLOR, 1); //TODO Title size
+  dPrint(_title, (DISPLAY_LENGTH+MENU_TITLE_SIZE)/2, STATUS_MARGIN_TOP, MENU_TITLE_SIZE, TEXT_COLOR, 1); //TODO Title size
   dPrint(_currentPage+1, MENU_SIDE_CENTER_X, (MENU_SIDE_CENTER_Y-MENU_SIDE_SIZE), MENU_SIDE_SIZE, TEXT_COLOR, 7);
   dPrint(_pages.size(), MENU_SIDE_CENTER_X, (MENU_SIDE_CENTER_Y+2*MENU_SIDE_SIZE), MENU_SIDE_SIZE, TEXT_COLOR, 1);
   if(general::debugMenu.getValue() && general::debug.getValue())
@@ -26,7 +26,7 @@ void SubMenu::draw() {
 }
 
 void SubMenu::clear() {
-  dPrint(_title, DISPLAY_LENGTH/2, STATUS_MARGIN_TOP, MENU_TITLE_SIZE, BACKGROUND_COLOR, 1); //TODO Title size
+  dPrint(_title, (DISPLAY_LENGTH+MENU_TITLE_SIZE)/2, STATUS_MARGIN_TOP, MENU_TITLE_SIZE, BACKGROUND_COLOR, 1); //TODO Title size
   dPrint(_currentPage+1, MENU_SIDE_CENTER_X, (MENU_SIDE_CENTER_Y-MENU_SIDE_SIZE), MENU_SIDE_SIZE, BACKGROUND_COLOR, 7);
   dPrint(_pages.size(), MENU_SIDE_CENTER_X, (MENU_SIDE_CENTER_Y+2*MENU_SIDE_SIZE), MENU_SIDE_SIZE, BACKGROUND_COLOR, 1);
   if(general::debugMenu.getValue() && general::debug.getValue())
