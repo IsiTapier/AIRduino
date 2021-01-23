@@ -30,7 +30,7 @@
   extern void Display::eeprom() {
     EEPROM.begin(EEPROM_SIZE);
     //   RESET EEPROM   //
-    EEPROM.write(0, 0);/*
+    EEPROM.write(0, 1);/*
     EEPROM.writeShort(XMIN, 0);
     EEPROM.writeShort(XMAX, 0);
     EEPROM.writeShort(YMIN, 0);
@@ -41,7 +41,7 @@
       EEPROM.commit();
     }
     if(EEPROM.readShort(XMIN) == EEPROM.readShort(XMAX) || EEPROM.readShort(YMIN) == EEPROM.readShort(YMAX))
-      //ts.calibration();
+    //  ts.calibration();
     if(general::debugSetup.getValue() && general::debug.getValue()) {
       Serial.println("EEPROM: sensor: "+String(EEPROM.read(0)));
       Serial.println("EEPROM: xmin: "+String(EEPROM.readShort(XMIN)));

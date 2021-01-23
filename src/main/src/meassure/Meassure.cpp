@@ -109,7 +109,7 @@
     int timeLeft = 1000-(millis()%1000);
     if(timeLeft < 600) {
       timeLeft += 1000;
-      Serial.println("WARNING: Timing error!");
+      //Serial.println("WARNING: Timing error!");
     }
     timeLeft-10;
 
@@ -118,19 +118,19 @@
       value = analogRead(GAS_SENSOR);
 
       //Fehlmessungen überschreiben
-      if (airConditionRaw * MAX_INCREASE < value && i == 0)
+    /*  if (airConditionRaw * MAX_INCREASE < value && i == 0)
         tempAirCondition = tempAirCondition + airConditionRaw;
       else if (airCondition / i * MAX_INCREASE < value && i != 0)
         tempAirCondition = tempAirCondition + tempAirCondition / i;
-      else
+      else*/
         tempAirCondition = tempAirCondition + value;
 
       delay(timeLeft/ AVERAGING_MEASUREMENTS);
     }
 
-    airCondition = tempAirCondition / AVERAGING_MEASUREMENTS;
+    airCondition = (float) tempAirCondition / AVERAGING_MEASUREMENTS;
     airConditionRaw = airCondition;
-
+    Serial.println(airCondition*1000);
     //Wert smoothen;
     airCondition = ALPHA_MEASUREMENTS * airCondition + (1 - ALPHA_MEASUREMENTS) * airConditionLast;
 
@@ -139,7 +139,6 @@
     while(millis()%1000 > 100) {
     }
   }
-
 
   //  _____        _
   // |  __ \      | |
@@ -154,7 +153,7 @@
       airCondition = calibration[EEPROM.read(0)].getLowestSensor();*/
 
     airCondition = map(airCondition, calibration[EEPROM.read(0)].getLowestSensor(), calibration[EEPROM.read(0)].getHighestSensor(), calibration[EEPROM.read(0)].getLowestPPM(), calibration[EEPROM.read(0)].getHighestPPM());
-    sd.saveValuesToSD(millis()/1000, airConditionRaw, airConditionLast, airCondition);
+    //sd.saveValuesToSD(millis()/1000, airConditionRaw, airConditionLast, airCondition);
   }
 
 
