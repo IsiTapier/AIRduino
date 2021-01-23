@@ -1,15 +1,11 @@
 #include "SD_Card_Extension.h"
 
-#if ARDUINO >= 100
- #include "Arduino.h"
-#else
- #include "WProgram.h"
-#endif
+
 
 #include"SD.h"
 #include"SPI.h"
 
-SD_Card_Extension::SD_Card_Extension(int CSPin, String filename)
+SD_Card_Extension::SD_Card_Extension(int CSPin, const String filename)
 : _filename(filename),
   _CSPin(CSPin),
   _initialized(false) {
@@ -42,7 +38,7 @@ bool SD_Card_Extension::saveData(const String & dataString) {
       return true;
     }
   } else {
-    Serial.print("Error writing to file "); Serial.print(_filename);
+    Serial.print("Error writing to file "); Serial.println(_filename);
     return false;
   }
 }

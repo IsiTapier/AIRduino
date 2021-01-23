@@ -8,10 +8,18 @@
 #ifndef SD_Card_Extension_H
 #define SD_Card_Extension_H
 
+#if ARDUINO >= 100
+ #include "Arduino.h"
+#else
+ #include "WProgram.h"
+#endif
+
+
 class SD_Card_Extension {
 
 public:
   SD_Card_Extension(int CSPin, String filename);   //Uno 10  for filename please chose sth. like "filename.csv"
+
   bool saveValuesToSD(int value1, int value2, int value3, int value4); //insert values to save. If SD Card or File is not working function returns false
 
 private:
