@@ -31,6 +31,8 @@
   extern int Meassure::colorState;
   extern int Meassure::lowest;
 
+  extern SD_Card_Extension Meassure::sd = SD_Card_Extension(15, "messungen.csv");
+
   extern void Meassure::setup() {
     if(general::debugSetup.getValue() && general::debug.getValue())
       Serial.println("MEASSURE SETUP started");
@@ -152,6 +154,7 @@
       airCondition = calibration[EEPROM.read(0)].getLowestSensor();*/
 
     airCondition = map(airCondition, calibration[EEPROM.read(0)].getLowestSensor(), calibration[EEPROM.read(0)].getHighestSensor(), calibration[EEPROM.read(0)].getLowestPPM(), calibration[EEPROM.read(0)].getHighestPPM());
+    sd.saveValuesToSD(millis()/1000, airConditionRaw, airConditionLast, airCondition);
   }
 
 

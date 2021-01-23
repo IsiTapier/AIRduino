@@ -8,6 +8,7 @@
 #include "Arduino.h"
 #include "../util/Util.h"
 #include "../util/settings/Settings.h"
+#include "../util/SDcardExtension/SD_Card_Extension.h"
 
 class Meassure {
 
@@ -47,6 +48,8 @@ class Meassure {
     static State state;
     static int colorState;
     static int lowest;
+
+    static SD_Card_Extension sd;
 
 };
 

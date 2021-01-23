@@ -24,7 +24,7 @@ namespace general {
 
   Setting debug = Setting(SWITCH, "Debug", 1, "'Debug' changed");
   Setting debugSetup = Setting(SWITCH, "Debug Setup", 1, "'Debug Setup' changed");
-  Setting debugSensor = Setting(SWITCH, "Debug Sensor", 0, "'Debug Sensor' changed");
+  Setting debugSensor = Setting(SWITCH, "Debug Sensor", 1, "'Debug Sensor' changed");
   Setting debugDisplay = Setting(SWITCH, "Debug Display", 0, "'Debug Display' changed");
   Setting debugMenu = Setting(SWITCH, "Debug Menu", 0, "'Debug Menu' changed");
   Setting debugTouch = Setting(SWITCH, "Debug Touch", 0, "'Debug Touch' changed");

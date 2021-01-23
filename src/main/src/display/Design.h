@@ -5,7 +5,7 @@
 #define oe String(char(148))
 #define UE String(char(154))
 #define ue String(char(129))
-#define SS String(char(225))
+//#define ss String(char(225))
 #define ag String(char(138))
 #define aa String(char(160))
 #define ac String(char(131))
@@ -303,7 +303,7 @@
 #define SH  STATUS_HEIGHT
 #define SW  STATUS_LENGTH
 #define STM STATUS_MARGIN_TOP
-#define SS  STATUS_SIZE
+//#define SS  STATUS_SIZE
 //PPM
 #define PLM PPM_MARGIN_LEFT
 #define PBM PPM_MARGIN_BOTTOM
