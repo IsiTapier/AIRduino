@@ -27,14 +27,13 @@
     if(p.isTouching(0, MENU_SECTION_LENGTH, MENU_SECTION_Y(_section), MENU_SECTION_END_Y(_section))) {
       changeValue();
       if(_setting->getDebugMessage() != "")
-        Serial.println(_setting->getDebugMessage());
+        debug(DEBUG, MENUD, _setting->getDebugMessage());
     }
   }
 
   void Multiselect::setValue(int value) {
     _setting->setValue(value);
-    if(general::debugMenu.getValue() && general::debug.getValue())
-      Serial.println("Value changed to "+String(_setting->getValue()));
+    debug(INFO, MENUD, "Value changed to", _setting->getValue());
     if(mode == MENU)
       write();
   }

@@ -27,15 +27,15 @@
   void Slider::checkTouch(TSPoint p) {
     if(p.isTouching(MENU_SLIDER_START_X, MENU_SLIDER_END_X, MENU_SLIDER_START_Y(_section), MENU_SLIDER_END_Y(_section))) {
       changeValue();
-      if(_setting->getDebugMessage() != "" && general::debugMenu.getValue() && general::debug.getValue())
-        Serial.println(_setting->getDebugMessage());
+      if(_setting->getDebugMessage() != "")
+        debug(DEBUG, MENUD, _setting->getDebugMessage());
     }
   }
 
   void Slider::setValue(boolean value) {
     _setting->setValue(value);
-    if(general::debugMenu.getValue() && general::debug.getValue())
-      Serial.println("Value changed to "+String(_setting->getValue()));
+    if(general::debugMenu.getValue() && general::debugPriority.getValue())
+      debug(INFO, MENUD, "Value changed to", _setting->getValue());
     if(mode == MENU)
       draw();
   }

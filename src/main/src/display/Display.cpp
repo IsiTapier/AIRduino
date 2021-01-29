@@ -7,30 +7,26 @@
   extern TSPoint Display::p;
 
   extern void Display::setup() {
-    if(general::debugSetup.getValue() && general::debug.getValue())
-      Serial.println("DISPLAY SETUP started");
+    debug(DEBUG, SETUP, "Display SETUP started");
     display.begin();
-    if(general::debugSetup.getValue() && general::debug.getValue())
-      Serial.println("Display connection started");
+    debug(INFO, SETUP, "Display connection started");
     display.fillScreen(BACKGROUND_COLOR);
     display.setTextWrap(false);
     display.setRotation(ROTATION);
-    if(general::debugSetup.getValue() && general::debug.getValue())
-      Serial.println("Display initialized");
+    debug(INFO, SETUP, "Display initialized");
     eeprom();
     loadingScreen();
     lastMode = mode;
     mode = CHART;
-    if(general::debugSetup.getValue() && general::debug.getValue())
-      Serial.println("DISPLAY SETUP complete");
-    Serial.println();
+    debug(DEBUG, SETUP, "Display SETUP completed");
+    debug(DEBUG, SETUP, "");
     Meassure::setup();
   }
 
   extern void Display::eeprom() {
     EEPROM.begin(EEPROM_SIZE);
     //   RESET EEPROM   //
-    EEPROM.write(0, 1);/*
+    EEPROM.write(0, 0);/*
     EEPROM.writeShort(XMIN, 0);
     EEPROM.writeShort(XMAX, 0);
     EEPROM.writeShort(YMIN, 0);
@@ -42,12 +38,12 @@
     }
     if(EEPROM.readShort(XMIN) == EEPROM.readShort(XMAX) || EEPROM.readShort(YMIN) == EEPROM.readShort(YMAX))
     //  ts.calibration();
-    if(general::debugSetup.getValue() && general::debug.getValue()) {
-      Serial.println("EEPROM: sensor: "+String(EEPROM.read(0)));
-      Serial.println("EEPROM: xmin: "+String(EEPROM.readShort(XMIN)));
-      Serial.println("EEPROM: xmax: "+String(EEPROM.readShort(XMAX)));
-      Serial.println("EEPROM: ymin: "+String(EEPROM.readShort(YMIN)));
-      Serial.println("EEPORM: ymax: "+String(EEPROM.readShort(YMAX)));
+    if(general::debugSetup.getValue() && general::debugPriority.getValue()) {
+      debug(INFO, SETUP, "EEPROM: sensor", EEPROM.read(0));
+      debug(INFO, SETUP, "EEPROM: xmin", EEPROM.readShort(XMIN));
+      debug(INFO, SETUP, "EEPROM: xmax", EEPROM.readShort(XMAX));
+      debug(INFO, SETUP, "EEPROM: ymin", EEPROM.readShort(YMIN));
+      debug(INFO, SETUP, "EEPORM: ymax", EEPROM.readShort(YMAX));
     }
   }
 
@@ -98,15 +94,15 @@
       if(p.isTouching()) {
         p.calibrate();
         if(p.isTouching(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_END_X, MENU_ARROW_BACK_START_Y, MENU_ARROW_BACK_END_Y)) {
-          if(general::debugSetup.getValue() && general::debug.getValue())
-            Serial.println("change Mode");
+          if(general::debugSetup.getValue() && general::debugPriority.getValue())
+            debug(INFO, SETUP, "change Mode");
           if(mode == MENU)
             mode = (Mode) CHART;
           else if(mode == CHART)
             mode = (Mode) MENU;
         } else if(p.isTouching(MENU_ARROW_RESET_START_X, MENU_ARROW_RESET_END_X, MENU_ARROW_RESET_START_Y, MENU_ARROW_RESET_END_Y)) {
-          if(general::debugSetup.getValue() && general::debug.getValue())
-            Serial.println("reset");
+          if(general::debugSetup.getValue() && general::debugPriority.getValue())
+            debug(INFO, SETUP, "reset");
           Menu::reset();
         } else if(mode == MENU) {
           Menu::handleTouch(p);

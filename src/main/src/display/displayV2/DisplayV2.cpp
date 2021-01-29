@@ -19,12 +19,9 @@ extern int DisplayV2::lastBarPixel;
 
 extern void DisplayV2::setup() {
   DisplayVX::setup();
-  if(general::debugSetup.getValue() && general::debug.getValue())
-    Serial.println("DisplayV2-Setup started");
-  if(general::debugSetup.getValue() && general::debug.getValue()) {
-    Serial.println("DisplayV2-Setup complete");
-    Serial.println();
-  }
+  debug(DEBUG, SETUP, "DisplayV2 SETUP started");
+  debug(DEBUG, SETUP, "DisplayV2 SETUP completed");
+  debug(DEBUG, SETUP, "");
   if(lastMode != LOADINGSCREEN)
     loop();
   start = false;

@@ -14,43 +14,47 @@
   //                       | |
   //                       |_|
 
+  extern MQ135 Meassure::sensor = MQ135(GAS_SENSOR);
+  extern Adafruit_BME280 Meassure::bme = Adafruit_BME280();
   extern unsigned long Meassure::tempAirCondition;
   extern float Meassure::airCondition;
   extern float Meassure::airConditionRaw;
   extern float Meassure::airConditionLast;
-  extern int Meassure::airConditionLowest;
   extern unsigned long Meassure::startTime;
   extern unsigned long Meassure::timer;
-  extern float Meassure::gradient;
+  extern int Meassure::gradient;
   extern int Meassure::value;
   extern int Meassure::values[AVERAGING_GRADIENT * 2];
   extern int Meassure::now;
   extern int Meassure::last;
-  extern int Meassure::ppmSinceVentilation;
+  extern int Meassure::minPPM = 400;
+  extern int Meassure::maxPPM;
   extern State Meassure::state;
   extern int Meassure::colorState;
-  extern int Meassure::lowest;
-
-  extern SD_Card_Extension Meassure::sd = SD_Card_Extension(15, "messungen.csv");
+  extern int Meassure::temperature;
+  extern int Meassure::pressure;
+  extern int Meassure::humidity;
 
   extern void Meassure::setup() {
-    if(general::debugSetup.getValue() && general::debug.getValue())
-      Serial.println("MEASSURE SETUP started");
+    debug(DEBUG, SETUP, "Meassure SETUP started");
     pinMode(PIEZO, OUTPUT);
     digitalWrite(PIEZO, LOW);
-    if(general::debugSetup.getValue() && general::debug.getValue())
-      Serial.println("Pins initialized");
+    debug(INFO, SETUP, "Pins initialized");
     airConditionRaw = analogRead(GAS_SENSOR);
     airConditionLast = analogRead(GAS_SENSOR);
     startTime = millis();
-    if(general::debugSetup.getValue() && general::debug.getValue()) {
-      Serial.println("Variables initialized");
-      Serial.println("MEASSURE SETUP complete");
-      Serial.println();
+    debug(INFO, SETUP, "Variables initialized");
+    if (bme.begin(0x76)) {
+      debug(INFO, SETUP, "BME-Sensor initialized");
+    } else {
+      debug(WARNING, SETUP, "Could not find a valid BME280 sensor, check wiring!");
     }
+    debug(DEBUG, SETUP, "Meassure SETUP ended");
+    debug(DEBUG, SETUP, "");
   }
 
   extern void Meassure::loop() {
+    meassureEnvironment();
     meassureAirCondition();
     mapAirCondition();
     calculateGradient();
@@ -71,11 +75,11 @@
   }
 
   extern int Meassure::getLowest() {
-    return(lowest);
+    return(minPPM);
   }
 
-  extern int Meassure::getPpmSinceVentilation() {
-    return(ppmSinceVentilation);
+  extern int Meassure::getHighest() {
+    return(maxPPM);
   }
 
   extern unsigned long Meassure::getStartTime() {
@@ -83,7 +87,7 @@
   }
 
   extern void Meassure::debugMeassure() {
-    if (general::debugSensor.getValue() && general::debug.getValue()) {
+/*    if (general::debugSensor.getValue() && general::debugPriority.getValue()) {
       Serial.println("");
       Serial.println("Sensor");
       Serial.println("");
@@ -92,9 +96,10 @@
       debug("Smoothed", airConditionLast);
       debug("PPM", airCondition);
       debug("gradient", gradient);
-      debug("airConditionLowest", airConditionLowest);
+      debug("min PPM", minPPM);
+      debug("max PPM", maxPPM);
       debug("Status", (int) state);
-    }
+    }*/
   }
 
   //  __  __
@@ -130,14 +135,23 @@
 
     airCondition = (float) tempAirCondition / AVERAGING_MEASUREMENTS;
     airConditionRaw = airCondition;
-    Serial.println(airCondition*1000);
     //Wert smoothen;
     airCondition = ALPHA_MEASUREMENTS * airCondition + (1 - ALPHA_MEASUREMENTS) * airConditionLast;
 
     airConditionLast = airCondition;
+//    airCondition = sensor.getPPM(temperature, humidity);
 
     while(millis()%1000 > 100) {
     }
+  }
+
+  extern void Meassure::meassureEnvironment() {
+    temperature = bme.readTemperature();
+    pressure = bme.readPressure();
+    humidity = bme.readHumidity();
+    debug(INFO, SETUP, "Temperature", temperature, "°C");
+    debug(INFO, SETUP, "Pressure", pressure / 100.0F, "mbar");
+    debug(INFO, SETUP, "Humidity", humidity, "%");
   }
 
   //  _____        _
@@ -147,13 +161,23 @@
   // | |__| | (_| | || (_| |
   // |_____/ \__,_|\__\__,_|
 
+
   extern void Meassure::mapAirCondition() {
     //to PPM
   /*  if (airCondition <= calibration[EEPROM.read(0)].getLowestSensor())
       airCondition = calibration[EEPROM.read(0)].getLowestSensor();*/
-
-    airCondition = map(airCondition, calibration[EEPROM.read(0)].getLowestSensor(), calibration[EEPROM.read(0)].getHighestSensor(), calibration[EEPROM.read(0)].getLowestPPM(), calibration[EEPROM.read(0)].getHighestPPM());
+  /*  airCondition = map(airCondition*100, calibration[EEPROM.read(0)].getLowestSensor()*100, calibration[EEPROM.read(0)].getHighestSensor()*100, calibration[EEPROM.read(0)].getLowestPPM(), calibration[EEPROM.read(0)].getHighestPPM());
+    airCondition += 400 - minPPM;*/
     //sd.saveValuesToSD(millis()/1000, airConditionRaw, airConditionLast, airCondition);
+    airCondition = map(airConditionRaw, 205,	221, 400, 1000);
+    Serial.print(airConditionRaw); Serial.print("\t");
+    Serial.print(airCondition); Serial.print("\t");
+    Serial.print(sensor.getPPM(airConditionRaw)); Serial.print("\t");
+    Serial.print(sensor.getPPM(airConditionRaw, 1)); Serial.print("\t");
+    Serial.print(sensor.getPPM(airConditionRaw, "1")); Serial.print("\t");
+    Serial.print(sensor.getPPM(airConditionRaw, temperature, humidity)); Serial.print("\t");
+    Serial.print(sensor.getPPM(airConditionRaw, temperature, humidity, 1)); Serial.print("\t");
+    Serial.println(sensor.getPPM(airConditionRaw, temperature, humidity, "1"));
   }
 
 
@@ -170,45 +194,50 @@
     last = average(values, AVERAGING_GRADIENT, AVERAGING_GRADIENT * 2);
 
     //gradient
-    gradient = (float) now / last;
+    gradient = now - last;
   }
 
   extern void Meassure::checkVentilating() {
     //start Ventilating
     if (gradient < MAX_DECREASE && state != VENTILATING) { // Wenn die Differenz die Hemmschwelle übersteigt: Wird Ventilating erkannt
-      state = VENTILATING;
-      ppmSinceVentilation = airCondition;
+      state = (State) VENTILATING;
+      maxPPM = airCondition;
       startTime = millis();
+      debug(DEBUG, SENSOR, "VENTILATING");
     }
 
     //stop Ventilating
-    if ((gradient > 1 && state == VENTILATING) || (millis() - timer >= VENTILATING_TIMEOUT && state == VENTILATING && timer != 0)) {
+    else if ((gradient > MAX_INCREASE && state == VENTILATING) || (millis() - timer >= VENTILATING_TIMEOUT && state == VENTILATING && timer != 0)) {
       // Wenn der Graph nach oben Steigt oder der Timer abgelaufen ist
-      if (airCondition - airConditionLowest < MAX_INCREASE_LOWEST) {
+      debug(DEBUG, SENSOR, "NOT VENTILATING");
+      if (airCondition - minPPM < MAX_INCREASE_LOWEST && gradient < 3) {
         //Wenn
-        airConditionLowest = ALPHA_LOWEST * airCondition + (1 - ALPHA_LOWEST) * airConditionLowest;
+        minPPM = ALPHA_LOWEST * airCondition + (1 - ALPHA_LOWEST) * minPPM;
       }
 
-      state =  0;
+      state = (State) (States) 0;
       timer = 0;
       startTime = millis();
 
 
-    } else if (gradient == 1 && timer == 0 && state == VENTILATING) {
+    } else if (gradient == 0 && timer == 0 && state == VENTILATING) {
       //Wenn der Graph nicht mehr steigt und der Timer noch nicht gestartet wurde
       //Ziel nach gewisser Zeit kein Abstieg -> Timer für Timeout wird gestartet
       timer = millis();
+    } else if (gradient != 0) {
+      timer = 0;
     }
     last = now;
   }
 
   extern void Meassure::setState() {
-
     // define colorState  -changed
-  state = getStateOf(airCondition);
+    if(state != -1) {
+      state = getStateOf(airCondition);
+    }
 
     //colorState = map(airCondition, calibration[EEPROM.read(0)].getLowestPPM(), calibration[EEPROM.read(0)].getHighestPPM(), 0, 2);
-
+/*
     if (state == -1)
       return;
 
@@ -220,5 +249,5 @@
     if (state < -1)
       state =  -1;
     if (state > 4)
-      state =  4;
+      state =  4;*/
   }

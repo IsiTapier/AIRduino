@@ -42,7 +42,7 @@ void TSPoint::calibrate() {
 }
 
 void TSPoint::print() {
-  if(general::debugTouch.getValue() && general::debug.getValue()) {
+  if(general::debugTouch.getValue() && general::debugPriority.getValue() == SPAMM) {
     Serial.print("point: ");
     Serial.print("\traw: ");
     Serial.print(" X = "); Serial.print(x);

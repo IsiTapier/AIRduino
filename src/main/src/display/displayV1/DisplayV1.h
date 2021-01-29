@@ -18,7 +18,6 @@ class DisplayV1 : public DisplayVX {
     static void createLines();
     static void fillData();
     static void drawGraph();
-    static void drawLoadingBar();
     static void drawConnection(int x, int color=-1, int shift = 0);
 
     static int valuesGraph[AVERAGING_GRAPH];

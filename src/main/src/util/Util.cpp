@@ -14,7 +14,7 @@
 
 
   Calibration calibration[] = {
-      Calibration(564, 576, 400, 960),//(449, 714, 576, 1184), //576 1424 496 478
+      Calibration(189, 216, 400, 975),//(449, 714, 576, 1184), //576 1424 496 478 //216 875 //189 400
       Calibration(710, 784, 550, 900),
       Calibration(40, 60, 400, 1000)
   };
@@ -54,14 +54,6 @@
     return (sum / (averageEnd - averageStart));
   }
 
-  void debug(String title, float value) {
-    Serial.print(title + ": ");
-    if(floor(value) == ceil(value))
-      Serial.println((int) value);
-    else
-      Serial.println(value);
-
-  }
   void drawBorder(int x, int y, int length, int height, int thickness, int color) {
     length -= thickness;
     height -= thickness;
@@ -157,11 +149,11 @@
 
   //Loading Screen
   void loadingScreen() {
-    Serial.println("loadingscreen started");
+    debug(DEBUG, SETUP, "loadingscreen started");
     display.fillScreen(BACKGROUND_COLOR);
     writeLoadingScreenTitle();
 
-    Serial.println("loadingscreen ended");
+    debug(DEBUG, SETUP, "loadingscreen ended");
   }
 
   void writeLoadingScreenTitle() {

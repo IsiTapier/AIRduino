@@ -26,7 +26,7 @@ namespace general {
   extern Setting blinkThickness;
   extern Setting ventilatingTimeout;
 
-  extern Setting debug;
+  extern Setting debugPriority;
   extern Setting debugSetup;
   extern Setting debugSensor;
   extern Setting debugDisplay;

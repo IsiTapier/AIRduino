@@ -23,7 +23,7 @@
     if(p.isTouching(0, MENU_SECTION_LENGTH, MENU_SECTION_Y(_section), (MENU_SECTION_Y(_section) + MENU_SIDE_HEIGHT))) {
       ts.calibration(); // TODO universal
       if(_setting->getDebugMessage() != "")
-        Serial.println(_setting->getDebugMessage());
+        debug(DEBUG, MENUD, _setting->getDebugMessage());
     }
   }
 

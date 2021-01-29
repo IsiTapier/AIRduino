@@ -32,13 +32,10 @@ extern boolean DisplayVX::drop = false;
 
 
   extern void DisplayVX::setup() {
-    if(general::debugSetup.getValue() && general::debug.getValue())
-      Serial.println("DISPLAY SETUP started");
+    debug(DEBUG, SETUP, "DisplayVX SETUP started");
     start = true;
-    if(general::debugSetup.getValue() && general::debug.getValue()) {
-      Serial.println("DISPLAY SETUP complete");
-      Serial.println();
-    }
+    debug(DEBUG, SETUP, "DisplayVX SETUP completed");
+    debug(DEBUG, SETUP, "");
   }
 
   extern void DisplayVX::loop() {
@@ -72,8 +69,7 @@ extern boolean DisplayVX::drop = false;
     display.fillRect(0, DATABOX_Y, DISPLAY_LENGTH, DATABOX_HEIGHT, DATABOX_BACKGROUND_COLOR);
     display.pushImage(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, gear, WHITE);
     display.fillRect(0, TOP_BAR_HEIGHT, DISPLAY_LENGTH, TOP_BAR_THICKNESS, TEXT_COLOR);
-    if(general::debugSetup.getValue() && general::debug.getValue())
-      Serial.println("Display drawn");
+    debug(INFO, SETUP, "Display drawn");
   }
 
   extern void DisplayVX::getData() {
@@ -131,8 +127,10 @@ extern boolean DisplayVX::drop = false;
       //Draw Datatbox
 
       //Draw Bar
-      if(COLORED_BAR || start)
+      if(COLORED_BAR || start) {
         display.fillRect(0, DATABOX_BAR_Y, DISPLAY_LENGTH, DATABOX_BAR_THICKNESS, state.getColor(COLORED_BAR));
+        display.fillRect(0, TOP_BAR_HEIGHT, DISPLAY_LENGTH, TOP_BAR_THICKNESS, state.getColor(COLORED_BAR));
+      }
 
       //Draw PPM
       if(airCondition < 0)
@@ -142,6 +140,16 @@ extern boolean DisplayVX::drop = false;
       if (airCondition < 1000) {
         dPrint("ppm", PPM_STRING_X, PPM_STRING_Y, PPM_STRING_SIZE, state.getColor(COLORED_PPM), 6);
       }
+    }
+
+    if(state == VENTILATING) {
+      short x = map(airCondition, Meassure::getLowest(), Meassure::getHighest(), 0, DISPLAY_LENGTH);
+      display.fillRect(0, DATABOX_BAR_Y, x, DATABOX_BAR_THICKNESS, state.getColor(COLORED_BAR));
+      display.fillRect(0, TOP_BAR_HEIGHT, x, TOP_BAR_THICKNESS, state.getColor(COLORED_BAR));
+
+      display.fillRect(x+1, DATABOX_BAR_Y, DISPLAY_LENGTH, DATABOX_BAR_THICKNESS, GREY);
+      display.fillRect(x+1, TOP_BAR_HEIGHT, DISPLAY_LENGTH, TOP_BAR_THICKNESS, GREY);
+
     }
 
     //Verhindert überschreiben von "ppm"

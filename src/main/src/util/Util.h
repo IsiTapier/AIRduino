@@ -7,7 +7,7 @@
 
 #include "Arduino.h"
 #include "EEPROM.h"
-#include "pgmspace.h"
+#include <pgmspace.h>
 #include "../classes/Pair/Pair.h"
 #include "../classes/calibration/Calibration.h"
 #include "../classes/state/State.h"
@@ -15,6 +15,7 @@
 #include "../extern/TFT_eSPI-master/TFT_eSPI.h"
 #include "../util/data/Images.h"
 #include "Colors.h"
+#include "debug/Debug.h"
 #include "../display/Design.h"
 #include "settings/Settings.h"
 
@@ -77,7 +78,6 @@
   //long map(double x, long in_min, long in_max, long out_min, long out_max);
   int map(int value, int startA, int startB, float factor);
   int average(int averageArray[], int averageStart, int averageEnd);
-  void debug(String title, float value);
   void drawBorder(int x, int y, int length, int height, int thickness, int color);
   void drawLine(int x, int y, int length, int height, int color, int a = 0, int b = 0, boolean filter1 = false, int filtervalue1 = 0, boolean filter2 = false, State filtervalue2 = GOOD);
   void showBoxes();

@@ -26,20 +26,18 @@
   void Select::checkTouch(TSPoint p) {
     if(p.isTouching(0, MENU_SELECT_LENGTH, MENU_SECTION_Y(_section), MENU_SECTION_END_Y(_section))) {
       setValue(false);
-      /*if(_setting->getDebugMessage() != "" && general::debugMenu.getValue() && general::debug.getValue())
-        Serial.println(_setting->getDebugMessage());*/
     } else if(p.isTouching(MENU_SELECT_LENGTH, MENU_SELECT_LENGTH*2, MENU_SECTION_Y(_section), MENU_SECTION_END_Y(_section))) {
       setValue(true);
-      /*if(_setting->getDebugMessage() != "" && general::debugMenu.getValue() && general::debug.getValue())
-        Serial.println(_setting->getDebugMessage());*/
     }
+    if(_setting->getDebugMessage() != "")
+      debug(DEBUG, MENUD, _setting->getDebugMessage());
   }
 
   void Select::setValue(boolean value) {
     if(_setting->getValue() != value) {
       _setting->setValue(value);
-      if(general::debugMenu.getValue() && general::debug.getValue())
-        Serial.println("Value changed to "+String(_setting->getValue()));
+      if(general::debugMenu.getValue() && general::debugPriority.getValue())
+        debug(INFO, MENUD, "Value changed to", _setting->getValue());
     }
   }
 

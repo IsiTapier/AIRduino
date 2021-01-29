@@ -22,13 +22,10 @@ extern int DisplayV1::lastPixel = 0;
 
   extern void DisplayV1::setup() {
     DisplayVX::setup();
-    if(general::debugSetup.getValue() && general::debug.getValue())
-      Serial.println("DisplayV1-Setup started");
+    debug(DEBUG, SETUP, "DisplayV1 SETUP started");
     graphData[0] = GRAPH_START_Y;
-    if(general::debugSetup.getValue() && general::debug.getValue()) {
-      Serial.println("DisplayV1-Setup complete");
-      Serial.println();
-    }
+    debug(DEBUG, SETUP, "DisplayV1 SETUP completed");
+    debug(DEBUG, SETUP, "");
     if(lastMode != LOADINGSCREEN)
       loop();
   }
@@ -153,14 +150,5 @@ extern int DisplayV1::lastPixel = 0;
         color_ = getStateOf(map(y-2, GRAPH_START_Y, GRAPH_END_Y, DISPLAYED_PPM_LOWEST, DISPLAYED_PPM_HIGHEST)).getColor(COLORED_CHART);
       //draw connection
       display.drawPixel(x-1, y, color_);
-    }
-  }
-
-  extern void DisplayV1::drawLoadingBar() {
-    display.fillRect(0, DATABOX_Y, DISPLAY_LENGTH + 1, DATABOX_BAR_THICKNESS, state.getColor(true));
-    //Draw Loading Bar
-    if (state == VENTILATING) {
-      short bar_ventilating_length = map(airCondition, Meassure::getLowest(), Meassure::getPpmSinceVentilation(), 0, DISPLAY_LENGTH);
-      display.fillRect(DISPLAY_LENGTH - bar_ventilating_length, DATABOX_Y, bar_ventilating_length, DATABOX_BAR_THICKNESS, GREY);
     }
   }

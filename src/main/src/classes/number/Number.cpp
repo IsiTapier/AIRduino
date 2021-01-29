@@ -30,8 +30,8 @@
       setValue(_setting->getValue()-1);
     else
       return;
-    if(_setting->getDebugMessage() != "" && general::debugMenu.getValue() && general::debug.getValue())
-      Serial.println(_setting->getDebugMessage());
+    if(_setting->getDebugMessage() != "")
+      debug(DEBUG, MENUD, _setting->getDebugMessage());
   }
 
   void Number::setValue(short value) {
@@ -41,8 +41,7 @@
       value = _setting->getMaxValue();
     _setting->setValue(value);
     write();
-    if(general::debugMenu.getValue() && general::debug.getValue())
-      Serial.println("Value changed to "+String(_setting->getValue()));
+    debug(INFO, MENUD, "Value changed to", _setting->getValue());
   }
 
   void Number::draw() {
