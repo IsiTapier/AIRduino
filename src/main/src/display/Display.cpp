@@ -48,13 +48,13 @@
   }
 
   extern void Display::loop() {
-    handleTouch();
+//    handleTouch();
     initDisplay();
     if(mode == MENU) {
       Menu::loop();
     } else if(mode == CHART) {
       Meassure::loop();
-      handleTouch();
+    //  handleTouch();
       if(!general::version.getValue()) {
         DisplayV1::loop();
       } else {

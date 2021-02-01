@@ -38,6 +38,7 @@
   extern void Meassure::setup() {
     debug(DEBUG, SETUP, "Meassure SETUP started");
     pinMode(PIEZO, OUTPUT);
+    pinMode(SENSOR, INPUT);
     digitalWrite(PIEZO, LOW);
     debug(INFO, SETUP, "Pins initialized");
     airConditionRaw = analogRead(GAS_SENSOR);
@@ -170,7 +171,7 @@
     airCondition += 400 - minPPM;*/
     //sd.saveValuesToSD(millis()/1000, airConditionRaw, airConditionLast, airCondition);
     airCondition = map(airConditionRaw, 205,	221, 400, 1000);
-    Serial.print(airConditionRaw); Serial.print("\t");
+    Serial.println(airConditionRaw);
     Serial.print(airCondition); Serial.print("\t");
     Serial.print(sensor.getPPM(airConditionRaw)); Serial.print("\t");
     Serial.print(sensor.getPPM(airConditionRaw, 1)); Serial.print("\t");

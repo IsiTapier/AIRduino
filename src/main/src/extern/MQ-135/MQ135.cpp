@@ -93,14 +93,14 @@ float MQ135::getResistance(float analog) {
 }
 
 float MQ135::getResistance(float analog, int test) {
-  float back = (((pow(2, RESOLUTION)-1)/analog*3) - 1.)*RLOAD;
+  float back = ((1023/(analog/4095)*3/5) - 1.)*RLOAD;
   if (general::debugSensor.getValue() && general::debugPriority.getValue())
     debug(SPAMM, SENSOR, "resistance", back);
   return back;
 }
 
 float MQ135::getResistance(float analog, String test) {
-  float back = (((pow(2, RESOLUTION)-1)/analog*5) - 1.)*RLOAD;
+  float back = ((1023/(analog/4095)*3) - 1.)*RLOAD;
   if (general::debugSensor.getValue() && general::debugPriority.getValue())
     debug(SPAMM, SENSOR, "resistance", back);
   return back;
