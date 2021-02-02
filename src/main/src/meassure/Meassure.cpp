@@ -171,8 +171,10 @@
     airCondition += 400 - minPPM;*/
     //sd.saveValuesToSD(millis()/1000, airConditionRaw, airConditionLast, airCondition);
     airCondition = map(airConditionRaw, 205,	221, 400, 1000);
-    Serial.println(airConditionRaw);
+    Serial.print(airConditionRaw); Serial.print("\t");
     Serial.print(airCondition); Serial.print("\t");
+    Serial.print(temperature); Serial.print("\t");
+    Serial.print(humidity); Serial.print("\t");
     Serial.print(sensor.getPPM(airConditionRaw)); Serial.print("\t");
     Serial.print(sensor.getPPM(airConditionRaw, 1)); Serial.print("\t");
     Serial.print(sensor.getPPM(airConditionRaw, "1")); Serial.print("\t");

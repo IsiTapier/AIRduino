@@ -27,15 +27,12 @@ v1.0 - First release
 /// The load resistance on the board
 #define RLOAD 20
   /// Calibration resistance at atmospheric CO2 level 222.15	1038.00
-
-
-
-#define RZERO 542.77
-#define RZEROB 1690.58	
-#define RZEROC 2838.39
-#define RZEROD 533.33
-#define RZEROE 1661.18
-#define RZEROF 2789.02
+#define RZERO 708.22
+#define RZEROB 453781.38
+#define RZEROC 2269031.50
+#define RZEROD 712.25
+#define RZEROE 456364.38
+#define RZEROF 2281947.25
 /// Parameters for calculating ppm of CO2 from sensor resistance
 #define PARA 116.6020682
 #define PARB 2.769034857
