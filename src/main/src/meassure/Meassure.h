@@ -37,6 +37,8 @@ class Meassure {
     static Adafruit_BME280 bme;
     static MQ135 sensor;
     static unsigned long tempAirCondition;
+    static unsigned long temptempAirCondition;
+    static float airConditionTemp;
     static float airCondition;
     static float airConditionRaw;
     static float airConditionLast;

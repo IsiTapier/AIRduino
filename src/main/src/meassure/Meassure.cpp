@@ -17,6 +17,8 @@
   extern MQ135 Meassure::sensor = MQ135(GAS_SENSOR);
   extern Adafruit_BME280 Meassure::bme = Adafruit_BME280();
   extern unsigned long Meassure::tempAirCondition;
+  extern unsigned long Meassure::temptempAirCondition;
+  extern float Meassure::airConditionTemp;
   extern float Meassure::airCondition;
   extern float Meassure::airConditionRaw;
   extern float Meassure::airConditionLast;
@@ -120,6 +122,7 @@
     timeLeft-10;
 
     tempAirCondition = 0;
+    temptempAirCondition = 0;
     for (long i = 0; i < AVERAGING_MEASUREMENTS; i++) {
       value = analogRead(GAS_SENSOR);
 
@@ -130,14 +133,15 @@
         tempAirCondition = tempAirCondition + tempAirCondition / i;
       else*/
         tempAirCondition = tempAirCondition + value;
-
+        temptempAirCondition += analogRead(37);
       delay(timeLeft/ AVERAGING_MEASUREMENTS);
     }
 
     airCondition = (float) tempAirCondition / AVERAGING_MEASUREMENTS;
+    airConditionTemp = (float) temptempAirCondition / AVERAGING_MEASUREMENTS;
     airConditionRaw = airCondition;
     //Wert smoothen;
-    airCondition = ALPHA_MEASUREMENTS * airCondition + (1 - ALPHA_MEASUREMENTS) * airConditionLast;
+    //airCondition = ALPHA_MEASUREMENTS * airCondition + (1 - ALPHA_MEASUREMENTS) * airConditionLast;
 
     airConditionLast = airCondition;
 //    airCondition = sensor.getPPM(temperature, humidity);
@@ -170,17 +174,16 @@
   /*  airCondition = map(airCondition*100, calibration[EEPROM.read(0)].getLowestSensor()*100, calibration[EEPROM.read(0)].getHighestSensor()*100, calibration[EEPROM.read(0)].getLowestPPM(), calibration[EEPROM.read(0)].getHighestPPM());
     airCondition += 400 - minPPM;*/
     //sd.saveValuesToSD(millis()/1000, airConditionRaw, airConditionLast, airCondition);
-    airCondition = map(airConditionRaw, 205,	221, 400, 1000);
-    Serial.print(airConditionRaw); Serial.print("\t");
     Serial.print(airCondition); Serial.print("\t");
-    Serial.print(temperature); Serial.print("\t");
-    Serial.print(humidity); Serial.print("\t");
-    Serial.print(sensor.getPPM(airConditionRaw)); Serial.print("\t");
+    Serial.print(0); Serial.print("\t");
+    Serial.print(airConditionTemp); Serial.print("\t");
+    Serial.println(742);
+  /*  Serial.print(sensor.getPPM(airConditionRaw)); Serial.print("\t");
     Serial.print(sensor.getPPM(airConditionRaw, 1)); Serial.print("\t");
     Serial.print(sensor.getPPM(airConditionRaw, "1")); Serial.print("\t");
     Serial.print(sensor.getPPM(airConditionRaw, temperature, humidity)); Serial.print("\t");
     Serial.print(sensor.getPPM(airConditionRaw, temperature, humidity, 1)); Serial.print("\t");
-    Serial.println(sensor.getPPM(airConditionRaw, temperature, humidity, "1"));
+    Serial.println(sensor.getPPM(airConditionRaw, temperature, humidity, "1"));*/
   }
 
 
