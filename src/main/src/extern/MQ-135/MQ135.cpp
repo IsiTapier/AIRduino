@@ -86,21 +86,21 @@ float MQ135::getCorrectionFactor(float t, float h) {
 */
 /**************************************************************************/
 float MQ135::getResistance(float analog) {
-  float back = (((pow(2, RESOLUTION)-1)/analog*1) - 1.)*RLOAD;
+  float back = (((pow(2, RESOLUTION)-1)/analog)*5 - 1.)*RLOAD;
   if (general::debugSensor.getValue() && general::debugPriority.getValue())
     debug(SPAMM, SENSOR, "resistance", back);
   return back;
 }
 
 float MQ135::getResistance(float analog, int test) {
-  float back = ((1023/(analog/4095)*3/5) - 1.)*RLOAD;
+  float back = (((pow(2, RESOLUTION)-1)/analog)*5 - 1.)*RLOADB;
   if (general::debugSensor.getValue() && general::debugPriority.getValue())
     debug(SPAMM, SENSOR, "resistance", back);
   return back;
 }
 
 float MQ135::getResistance(float analog, String test) {
-  float back = ((1023/(analog/4095)*3) - 1.)*RLOAD;
+  float back = (((pow(2, RESOLUTION)-1)/analog)*5 - 1.)*RLOADC;
   if (general::debugSensor.getValue() && general::debugPriority.getValue())
     debug(SPAMM, SENSOR, "resistance", back);
   return back;

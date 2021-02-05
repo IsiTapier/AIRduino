@@ -25,14 +25,16 @@ v1.0 - First release
 //analog read max voltage
 #define VOLTAGE 5
 /// The load resistance on the board
-#define RLOAD 20
-  /// Calibration resistance at atmospheric CO2 level 222.15	1038.00
-#define RZERO 708.22
-#define RZEROB 453781.38
-#define RZEROC 2269031.50
-#define RZEROD 712.25
-#define RZEROE 456364.38
-#define RZEROF 2281947.25
+#define RLOAD 1
+#define RLOADB 10
+#define RLOADC 20
+  /// Calibration resistance at atmospheric CO2 level 165.02	0	18	44
+#define RZERO 22.57	
+#define RZEROB 225.65
+#define RZEROC 451.31
+#define RZEROD 22.57
+#define RZEROE 225.71
+#define RZEROF 451.42
 /// Parameters for calculating ppm of CO2 from sensor resistance
 #define PARA 116.6020682
 #define PARB 2.769034857
@@ -44,7 +46,7 @@ v1.0 - First release
 #define CORD 0.0018
 
 /// Atmospheric CO2 level for calibration purposes
-#define ATMOCO2 397.13
+#define ATMOCO2 447//397.13
 
 class MQ135 {
  private:

@@ -176,14 +176,14 @@
     //sd.saveValuesToSD(millis()/1000, airConditionRaw, airConditionLast, airCondition);
     Serial.print(airCondition); Serial.print("\t");
     Serial.print(0); Serial.print("\t");
-    Serial.print(airConditionTemp); Serial.print("\t");
-    Serial.println(742);
-  /*  Serial.print(sensor.getPPM(airConditionRaw)); Serial.print("\t");
-    Serial.print(sensor.getPPM(airConditionRaw, 1)); Serial.print("\t");
-    Serial.print(sensor.getPPM(airConditionRaw, "1")); Serial.print("\t");
-    Serial.print(sensor.getPPM(airConditionRaw, temperature, humidity)); Serial.print("\t");
-    Serial.print(sensor.getPPM(airConditionRaw, temperature, humidity, 1)); Serial.print("\t");
-    Serial.println(sensor.getPPM(airConditionRaw, temperature, humidity, "1"));*/
+    Serial.print(temperature); Serial.print("\t");
+    Serial.print(humidity); Serial.print("\t");
+    Serial.print(sensor.getRZero(airConditionRaw)); Serial.print("\t");
+    Serial.print(sensor.getRZero(airConditionRaw, 1)); Serial.print("\t");
+    Serial.print(sensor.getRZero(airConditionRaw, "1")); Serial.print("\t");
+    Serial.print(sensor.getRZero(airConditionRaw, temperature, humidity)); Serial.print("\t");
+    Serial.print(sensor.getRZero(airConditionRaw, temperature, humidity, 1)); Serial.print("\t");
+    Serial.println(sensor.getRZero(airConditionRaw, temperature, humidity, "1"));
   }
 
 
