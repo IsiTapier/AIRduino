@@ -227,6 +227,7 @@
     const char* mqtt_server = "192.168.178.57";*/
 
   void setupDatabaseConnection() {
+    getUniqueID();
     setup_wifi();
     client.setServer(mqtt_server, 1883);
     client.setCallback(callback);
@@ -235,7 +236,7 @@
     if (!client.connected()) {
       reconnect();
     }
-    config_request();
+    //config_request();
     subscribeToActivityRequest();
   }
 
