@@ -8,6 +8,7 @@
 
   extern void Display::setup() {
     debug(DEBUG, SETUP, "Display SETUP started");
+    setupDatabaseConnection();
     display.begin();
     debug(INFO, SETUP, "Display connection started");
     display.fillScreen(BACKGROUND_COLOR);
@@ -66,14 +67,14 @@
   }
 
   extern void Display::initDisplay() {
-    if(lastMode != mode || lastVersion != general::version.getValue() || general::darkMode.getValue() != general::darkMode.getOldValue()) {
+    if(lastMode != mode || lastVersion != general::version.getValue() || general::theme.getValue() != general::theme.getOldValue()) {
       if(mode == CHART) {
         if(!general::version.getValue()) {
           DisplayV1::setup();
         } else {
           DisplayV2::setup();
         }
-      } else if(mode == MENU && lastMode != MENU || general::darkMode.getValue() != general::darkMode.getOldValue()) {
+      } else if(mode == MENU && lastMode != MENU || general::theme.getValue() != general::theme.getOldValue()) {
         Menu::setup();
       } else {
 
@@ -81,7 +82,7 @@
     }
     lastMode = mode;
     lastVersion = (Version) general::version.getValue();
-    general::darkMode.setValue(general::darkMode.getValue());
+    general::theme.setValue(general::theme.getValue());
   }
 
   extern void Display::handleTouch() {

@@ -12,7 +12,6 @@
   Mode lastMode;
   Version lastVersion;
 
-
   Calibration calibration[] = {
       Calibration(189, 216, 400, 975),//(449, 714, 576, 1184), //576 1424 496 478 //216 875 //189 400
       Calibration(710, 784, 550, 900),
@@ -212,4 +211,235 @@
     dPrint("A", distanceToFirstLetter, 55, LOADING_SCREEN_TITLE_SIZE, c1);
     dPrint("I", distanceToFirstLetter + 60, 55, LOADING_SCREEN_TITLE_SIZE, c2);
     dPrint("R", distanceToFirstLetter + 120, 55, LOADING_SCREEN_TITLE_SIZE, c3);
+  }
+
+  //Database connection
+  unsigned long lastMsg = 0;
+  char msg[MSG_BUFFER_SIZE];
+  int value = 0;
+  String device_grade;
+
+  const char* ssid = "FRITZ!Box 7590 JG";
+  const char* password = "4400834912335401";
+  const char* mqtt_server = "192.168.178.57";
+  /*const char* ssid = "AG-iOT";
+    const char* password = "#Wlan4iOT#JCBS-AG!";
+    const char* mqtt_server = "192.168.178.57";*/
+
+  void setupDatabaseConnection() {
+    setup_wifi();
+    client.setServer(mqtt_server, 1883);
+    client.setCallback(callback);
+    delay(500);
+    //connect client the first time
+    if (!client.connected()) {
+      reconnect();
+    }
+    config_request();
+    subscribeToActivityRequest();
+  }
+
+  void callback(char* topic_char, byte* payload, unsigned int length) {
+    Serial.print("MQTT: (");
+    Serial.print(topic_char);
+    Serial.print(") ");
+    Serial.print(":: ");
+    for (int i = 0; i < length; i++) {
+      Serial.print((char)payload[i]);
+    }
+    Serial.println();
+
+    //get Topic as a String
+    String topic = "";
+    for (int i = 0; i < strlen(topic_char); i++) {
+      //Serial.print((char)payload[i]);
+      topic = topic + "" + (char)topic_char[i];
+    }
+
+    if (topic == "config/get/" + String(device_id) + "/grade") {
+      device_grade = "";
+      for (int i = 0; i < length; i++) {
+        device_grade = device_grade + "" + (char)payload[i];
+      }
+    }
+
+    if (topic == "config/get/" + String(device_id) + "/version") {
+      general::version.setValue((short) atoi((char*)payload), false);
+    }
+
+    if (topic == "config/get/" + String(device_id) + "/maintenance_mode") {
+      //general: = atoi((char*)payload), false);
+    }
+
+    if (topic == "config/get/" + String(device_id) + "/theme") {
+      general::theme.setValue((short) atoi((char*)payload), false);
+    }
+
+    if (topic == "config/get/" + String(device_id) + "/state") {
+      String language = "";
+      for (int i = 0; i < length; i++) {
+        language = language + "" + (char)payload[i];
+      }
+      if(language == "deutsch")
+        general::state.setValue(0, false);
+      else if(language == "englisch")
+        general::state.setValue(1, false);
+      else if(language == "franzoesisch")
+        general::state.setValue(2, false);
+      else if(language == "java")
+        general::state.setValue(3, false);
+      else if(language == "spanisch")
+        general::state.setValue(4, false);
+      else if(language == "special")
+        general::state.setValue(5, false);
+    }
+
+    if (topic == "config/get/" + String(device_id) + "/peep") {
+      general::piezo.setValue((short) atoi((char*)payload), false);
+    }
+
+    if (topic == "config/get/" + String(device_id) + "/blink") {
+      general::blink.setValue((short) atoi((char*)payload), false);
+    }
+
+    if (topic == "config/get/" + String(device_id) + "/graphSpeed") {
+      general::graphSpeed.setValue((short) atoi((char*)payload), false);
+    }
+
+    if (topic == "config/get/" + String(device_id) + "/menu_segments") {
+      general::segments.setValue((short) atoi((char*)payload), false);
+    }
+
+    if (topic == "config/get/" + String(device_id) + "/blinkThickness") {
+      general::blinkThickness.setValue((short) atoi((char*)payload), false);
+    }
+
+    if (topic == "config/get/" + String(device_id) + "/ventilatingTimeout") {
+      general::ventilatingTimeout.setValue((short) atoi((char*)payload), false); //int x = *payload
+    }
+
+    if (topic == "config/get/" + String(device_id) + "/c_design") {
+      colorModes::variousColors.setValue((short) atoi((char*)payload), false);
+    }
+
+    if (topic == "config/get/" + String(device_id) + "/c_chart") {
+      colorModes::coloredChart.setValue((short) atoi((char*)payload), false);
+    }
+
+    if (topic == "config/get/" + String(device_id) + "/c_bar") {
+      colorModes::coloredBar.setValue((short) atoi((char*)payload), false);
+    }
+
+    if (topic == "config/get/" + String(device_id) + "/c_state") {
+      colorModes::coloredState.setValue((short) atoi((char*)payload), false);
+    }
+
+    if (topic == "config/get/" + String(device_id) + "/c_time") {
+      colorModes::coloredTime.setValue((short) atoi((char*)payload), false);
+    }
+
+    if (topic == "config/get/" + String(device_id) + "/c_value") {
+      colorModes::coloredValue.setValue((short) atoi((char*)payload), false);
+    }
+
+    if (topic == "config/get/" + String(device_id) + "/c_slider") {
+      colorModes::coloredSlider.setValue((short) atoi((char*)payload), false);
+    }
+
+    //check activity
+
+    if ("" + topic == "activity/request") {
+      client.publish("activity/check", String(device_id).c_str());
+    }
+  }
+
+  void config_request() {   //TODO: optimation
+    getUniqueID();
+    subToConfigChannel();
+    Serial.println("Requesting config...");
+    snprintf (msg, sizeof(msg), "%s", String(device_id).c_str());
+    client.publish("config/request", msg);
+    for (short x = 0; x <= 1000; x++) {
+      client.loop();
+      delay(1);
+    }
+  }
+
+  void subToConfigChannel() {
+    String sub_config_get = "config/get/" + String(device_id) + "/#";
+    client.subscribe(sub_config_get.c_str());
+    Serial.println("Subscribed to: " + sub_config_get);
+  }
+
+  void subscribeToActivityRequest() {
+    String sub_topic = "activity/request";
+    client.subscribe(sub_topic.c_str());
+    Serial.println("Subscribed to: " + sub_topic);
+  }
+
+  void config_update(String column, String value) {
+    String config_update = "UPDATE `device_overview` SET `" + column + "` = '" + value + "' WHERE `device_overview`.`String(device_id)` = " + String(device_id);
+    client.publish("config/update", config_update.c_str());
+  }
+
+
+  void mysql_insert(String grade, int co2, double temp, double humidity, double pressure, double altitude) {
+    snprintf (msg, sizeof(msg), "INSERT INTO `device_log`(`grade`, `co2`, `temp`, `humidity`, `pressure`, `altitude`, `time`) VALUES ('%s',%ld,%f,%f,%f,%f,CURRENT_TIMESTAMP())", grade.c_str(), co2, temp, humidity, pressure, altitude);
+    client.publish("mysql/insert", msg);
+    Serial.println("INSERTED into LOG grade: " + grade + " co2: " + co2 + " temp: " + temp + " humidity: " + humidity + " pressure: " + pressure + " altitude: " + altitude);
+  }
+
+
+  void getUniqueID() {
+    String(device_id) = "";
+    //for loop provided by the librarie to get a Unique ID of an arduino board
+    for (size_t i = 0; i < UniqueIDsize; i++) {
+      if (UniqueID[i] < 0x10)
+        //Serial.print("0");
+        String(device_id) = String(device_id) + "0";
+      String(device_id) = String(device_id) + "" + UniqueID[i];
+    }
+  }
+
+  void setup_wifi() {
+    delay(10);
+    // We start by connecting to a WiFi network
+    Serial.println();
+    Serial.print("Connecting to ");
+    Serial.println(ssid);
+
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(ssid, password);
+
+    while (WiFi.status() != WL_CONNECTED) {
+      delay(500);
+      Serial.print(".");
+    }
+    randomSeed(micros());
+    Serial.println("");
+    Serial.println("WiFi connected");
+    Serial.println("IP address: ");
+    Serial.println(WiFi.localIP());
+  }
+
+  void reconnect() {
+    // Loop until we're reconnected
+    while (!client.connected()) {
+      Serial.print("Attempting MQTT connection...");
+      // Create a random client ID
+      String clientId = "ESP8266Client-";
+      clientId += String(random(0xffff), HEX);
+      // Attempt to connect
+      if (client.connect(clientId.c_str())) {
+        Serial.println("connected");
+        client.subscribe("msg");
+
+      } else {
+        Serial.print("failed, rc=");
+        Serial.print(client.state());
+        Serial.println(" try again in 5 seconds");
+        // Wait 5 seconds before retrying
+        delay(5000);
+      }
+    }
   }

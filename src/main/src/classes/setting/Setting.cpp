@@ -5,9 +5,14 @@
 #include "Arduino.h"
 #include "Setting.h"
 
+WiFiClient espClient;
+PubSubClient client(espClient);
+int device_id;
+
 Setting::Setting(void) {}
-Setting::Setting(SettingType type, char* title, short defaultValue, char* debugMessage, short minValue, short maxValue, std::vector<String> names,  boolean colored) { //TODO DATATYPE
+Setting::Setting(SettingType type, String key, char* title, short defaultValue, char* debugMessage, short minValue, short maxValue, std::vector<String> names,  boolean colored) { //TODO DATATYPE
   _type = type;
+  _key = key;
   _title = title;
   _value = defaultValue;
   _oldValue = defaultValue;
@@ -39,9 +44,13 @@ short Setting::getMaxValue() {
   return _maxValue;
 }
 
-void Setting::setValue(short value) {
+void Setting::setValue(short value, boolean upload) {
   _oldValue = _value;
   _value = value;
+  if(_key != "" && upload) {
+    String config_update = "UPDATE `device_overview` SET `" + _key + "` = '" + _value + "' WHERE `device_overview`.`device_id` = " + device_id;
+    client.publish("config/update", config_update.c_str());
+  }
 }
 
 SettingType Setting::getType() {

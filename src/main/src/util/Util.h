@@ -19,7 +19,6 @@
 #include "../display/Design.h"
 #include "settings/Settings.h"
 
-
 #define LIMIT_GOOD 600
 #define LIMIT_MEDIUM 800
 #define LIMIT_BAD 900
@@ -93,5 +92,27 @@
   extern Mode mode;
   extern Mode lastMode;
   extern Version lastVersion;
+
+  //Database connection
+  extern unsigned long lastMsg;
+  #define MSG_BUFFER_SIZE  (250)
+  extern char msg[MSG_BUFFER_SIZE];
+  extern int value;
+  extern String device_grade;
+
+  extern const char* ssid;
+  extern const char* password;
+  extern const char* mqtt_server;
+
+  void setupDatabaseConnection();
+  void callback(char* topic_char, byte* payload, unsigned int length);
+  void config_request();
+  void subToConfigChannel();
+  void subscribeToActivityRequest();
+  void config_update(String column, String value);
+  void mysql_insert(String grade, int co2, double temp, double humidity, double pressure, double altitude);
+  void getUniqueID();
+  void setup_wifi();
+  void reconnect();
 
 #endif

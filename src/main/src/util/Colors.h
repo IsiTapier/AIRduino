@@ -30,7 +30,7 @@
 
 
 
-#define BLACK_MODE general::darkMode.getValue()
+#define BLACK_MODE general::theme.getValue()
 
 #define GRAPH_COLOR TEXT_COLOR //WHITE//MAGENTA
 #define BACKGROUND_COLOR (BLACK_MODE) ? BACKGROUND_COLOR_BLACK : BACKGROUND_COLOR_LIGHT

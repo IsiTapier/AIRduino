@@ -7,6 +7,17 @@
 
 #include "Arduino.h"
 
+#include "WiFi.h"
+#include "WiFiClient.h"
+#include "WiFiServer.h"
+#include "../../extern/PubSubClient/src/PubSubClient.h"
+#include "../../extern/ArduinoUniqueID/src/ArduinoUniqueID.h"
+
+extern WiFiClient espClient;
+extern PubSubClient client;
+
+extern int device_id;
+
 enum SettingType {
   EMPTY,
   ACTIVATOR,
@@ -20,13 +31,13 @@ enum SettingType {
 class Setting {
   public:
     Setting(void);
-    Setting(SettingType type, char* title = "", short defaultValue = 0, char* debugMessage = "", short minValue = 0, short maxValue = 1, std::vector<String> names = {"", ""}, boolean colored = true);
+    Setting(SettingType type, String key, char* title = "", short defaultValue = 0, char* debugMessage = "", short minValue = 0, short maxValue = 1, std::vector<String> names = {"", ""}, boolean colored = true);
     short getValue();
     short getOldValue();
     short getDefaultValue();
     short getMinValue();
     short getMaxValue();
-    void setValue(short value);
+    void setValue(short value, boolean upload = true);
     SettingType getType();
     char* getTitle();
     short getSize();
@@ -36,6 +47,7 @@ class Setting {
 
   private:
     SettingType _type;
+    String _key;
     char* _title;
     short _value;
     short _oldValue;

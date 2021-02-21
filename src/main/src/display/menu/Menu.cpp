@@ -9,7 +9,7 @@
     {SubMenu("General", {
         MenuPage(
           Input(&general::version),
-          Input(&general::darkMode),
+          Input(&general::theme),
           Input(&general::piezo),
           Input(&general::blink),
           Input(&general::data),
@@ -70,7 +70,7 @@
   }
 
   extern void Menu::draw() {
-    if(lastMode != mode && mode == MENU || general::darkMode.getValue() != general::darkMode.getOldValue()) {
+    if(lastMode != mode && mode == MENU || general::theme.getValue() != general::theme.getOldValue()) {
       //draw menu top
       display.fillScreen(BACKGROUND_COLOR);
       display.fillRect(0, TOP_BAR_HEIGHT, DISPLAY_LENGTH, TOP_BAR_THICKNESS, TEXT_COLOR);
@@ -80,7 +80,7 @@
       display.pushImage(MENU_ARROW_RIGHT_START_X, MENU_ARROW_RIGHT_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, arrowRight, WHITE);
       display.pushImage(MENU_ARROW_UP_START_X, MENU_ARROW_UP_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, arrowUp, WHITE);
       display.pushImage(MENU_ARROW_DOWN_START_X, MENU_ARROW_DOWN_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, arrowDown, WHITE);
-      if(general::darkMode.getValue()) {
+      if(general::theme.getValue()) {
         display.pushImage(MENU_ARROW_RESET_START_X, MENU_ARROW_RESET_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, arrowResetDark, BLACK);
         display.pushImage(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, homeDark, BLACK);
       } else {

@@ -35,7 +35,7 @@
 
   void Input::setup() {
     if(mode == MENU) {
-      if(lastMode == MENU && general::darkMode.getValue() == general::darkMode.getOldValue())
+      if(lastMode == MENU && general::theme.getValue() == general::theme.getOldValue())
         clear();
       else
         draw();
@@ -53,7 +53,7 @@
   }
 
   void Input::draw() {
-    if(mode == MENU && lastMode != MENU || general::darkMode.getValue() != general::darkMode.getOldValue()) {
+    if(mode == MENU && lastMode != MENU || general::theme.getValue() != general::theme.getOldValue()) {
       display.fillRect(0, MENU_SECTION_Y(_inputSection), MENU_SECTION_LENGTH, MENU_SECTION_BORDER_THICKNESS, TEXT_COLOR);
       debug(INFO, MENUD, "Input:", _inputSection, "drawn");
     }

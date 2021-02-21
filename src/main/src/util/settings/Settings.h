@@ -13,7 +13,7 @@ namespace general {
   extern Setting empty;
 
   extern Setting version;
-  extern Setting darkMode;
+  extern Setting theme;
   extern Setting piezo;
   extern Setting blink;
   extern Setting data;

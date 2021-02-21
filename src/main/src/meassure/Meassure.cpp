@@ -133,7 +133,7 @@
         tempAirCondition = tempAirCondition + tempAirCondition / i;
       else*/
         tempAirCondition = tempAirCondition + value;
-        temptempAirCondition += analogRead(37);
+        temptempAirCondition += analogRead(39);
       delay(timeLeft/ AVERAGING_MEASUREMENTS);
     }
 
@@ -176,14 +176,17 @@
     //sd.saveValuesToSD(millis()/1000, airConditionRaw, airConditionLast, airCondition);
     Serial.print(airCondition); Serial.print("\t");
     Serial.print(0); Serial.print("\t");
+  /*  Serial.print(airConditionTemp); Serial.print("\t");
+    Serial.println(0);*/
     Serial.print(temperature); Serial.print("\t");
-    Serial.print(humidity); Serial.print("\t");
-    Serial.print(sensor.getRZero(airConditionRaw)); Serial.print("\t");
+    Serial.println(humidity); /*Serial.print("\t");
+  /*  Serial.print(sensor.getRZero(airConditionRaw)); Serial.print("\t");
     Serial.print(sensor.getRZero(airConditionRaw, 1)); Serial.print("\t");
     Serial.print(sensor.getRZero(airConditionRaw, "1")); Serial.print("\t");
     Serial.print(sensor.getRZero(airConditionRaw, temperature, humidity)); Serial.print("\t");
     Serial.print(sensor.getRZero(airConditionRaw, temperature, humidity, 1)); Serial.print("\t");
-    Serial.println(sensor.getRZero(airConditionRaw, temperature, humidity, "1"));
+    Serial.println(sensor.getRZero(airConditionRaw, temperature, humidity, "1"));*/
+    mysql_insert(device_grade, airCondition, temperature, humidity, pressure, 234.5);
   }
 
 

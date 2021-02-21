@@ -45,7 +45,7 @@
   }
 
   void Number::draw() {
-    if(general::darkMode.getValue()) {
+    if(general::theme.getValue()) {
       display.pushImage(MENU_NUMBER_PLUS_START_X, MENU_INPUT_ICON_START_Y(_section), MENU_INPUT_ICON_LENGTH, MENU_INPUT_ICON_HEIGHT, plusDark, BLACK);
       display.pushImage(MENU_NUMBER_MINUS_START_X, MENU_INPUT_ICON_START_Y(_section), MENU_INPUT_ICON_LENGTH, MENU_INPUT_ICON_HEIGHT, minusDark, BLACK);
     } else {

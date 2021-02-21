@@ -19,13 +19,12 @@
 #define ig String(char(141))
 #define ia String(char(161))
 #define ic String(char(140))
-#define ip String(char(139))
+#define iP String(char(139))
 #define ug String(char(151))
 #define ua String(char(163))
 #define uc String(char(150))
-#define cc String(char(135))
+#define cC String(char(135))
 #define CC String(char(128))
-
 
 //general
 #define ROTATION 3
