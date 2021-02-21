@@ -16,7 +16,7 @@
 extern WiFiClient espClient;
 extern PubSubClient client;
 
-extern int device_id;
+extern String device_id;
 
 enum SettingType {
   EMPTY,

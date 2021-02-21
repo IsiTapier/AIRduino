@@ -221,8 +221,8 @@
 
   const char* ssid = "DESKTOP-Q7HRET5 8763";
   const char* password = "12345678";
-  const char* mqtt_server = "192.168.178.57";
-  /*/const char* ssid = "FRITZ!Box 7590 JG";
+  const char* mqtt_server = "87.143.106.137";
+  /*const char* ssid = "FRITZ!Box 7590 JG";
   const char* password = "4400834912335401";
   const char* mqtt_server = "192.168.178.57";*/
   /*const char* ssid = "AG-iOT";
@@ -231,19 +231,17 @@
 
   void setupDatabaseConnection() {
     getUniqueID();
+    Serial.println(device_id);
     setup_wifi();
     client.setServer(mqtt_server, 1883);
-    //client.setCallback(callback);
+    client.setCallback(callback);
     delay(500);
     //connect client the first time
     if (!client.connected()) {
-      //reconnect();
+      reconnect();
     }
-    if(client.connected()) {
-      //config_request();
-      Serial.println("test");
-      subscribeToActivityRequest();
-    }
+    config_request();
+    subscribeToActivityRequest();
   }
 
   void callback(char* topic_char, byte* payload, unsigned int length) {
@@ -263,26 +261,26 @@
       topic = topic + "" + (char)topic_char[i];
     }
 
-    if (topic == "config/get/" + String(device_id) + "/grade") {
+    if (topic == "config/get/" + device_id + "/grade") {
       device_grade = "";
       for (int i = 0; i < length; i++) {
         device_grade = device_grade + "" + (char)payload[i];
       }
     }
 
-    if (topic == "config/get/" + String(device_id) + "/version") {
+    if (topic == "config/get/" + device_id + "/version") {
       general::version.setValue((short) atoi((char*)payload), false);
     }
 
-    if (topic == "config/get/" + String(device_id) + "/maintenance_mode") {
+    if (topic == "config/get/" + device_id + "/maintenance_mode") {
       //general: = atoi((char*)payload), false);
     }
 
-    if (topic == "config/get/" + String(device_id) + "/theme") {
+    if (topic == "config/get/" + device_id + "/theme") {
       general::theme.setValue((short) atoi((char*)payload), false);
     }
 
-    if (topic == "config/get/" + String(device_id) + "/state") {
+    if (topic == "config/get/" + device_id + "/state") {
       String language = "";
       for (int i = 0; i < length; i++) {
         language = language + "" + (char)payload[i];
@@ -301,62 +299,62 @@
         general::state.setValue(5, false);
     }
 
-    if (topic == "config/get/" + String(device_id) + "/peep") {
+    if (topic == "config/get/" + device_id + "/peep") {
       general::piezo.setValue((short) atoi((char*)payload), false);
     }
 
-    if (topic == "config/get/" + String(device_id) + "/blink") {
+    if (topic == "config/get/" + device_id + "/blink") {
       general::blink.setValue((short) atoi((char*)payload), false);
     }
 
-    if (topic == "config/get/" + String(device_id) + "/graphSpeed") {
+    if (topic == "config/get/" + device_id + "/graphSpeed") {
       general::graphSpeed.setValue((short) atoi((char*)payload), false);
     }
 
-    if (topic == "config/get/" + String(device_id) + "/menu_segments") {
+    if (topic == "config/get/" + device_id + "/menu_segments") {
       general::segments.setValue((short) atoi((char*)payload), false);
     }
 
-    if (topic == "config/get/" + String(device_id) + "/blinkThickness") {
+    if (topic == "config/get/" + device_id + "/blinkThickness") {
       general::blinkThickness.setValue((short) atoi((char*)payload), false);
     }
 
-    if (topic == "config/get/" + String(device_id) + "/ventilatingTimeout") {
+    if (topic == "config/get/" + device_id + "/ventilatingTimeout") {
       general::ventilatingTimeout.setValue((short) atoi((char*)payload), false); //int x = *payload
     }
 
-    if (topic == "config/get/" + String(device_id) + "/c_design") {
+    if (topic == "config/get/" + device_id + "/c_design") {
       colorModes::variousColors.setValue((short) atoi((char*)payload), false);
     }
 
-    if (topic == "config/get/" + String(device_id) + "/c_chart") {
+    if (topic == "config/get/" + device_id + "/c_chart") {
       colorModes::coloredChart.setValue((short) atoi((char*)payload), false);
     }
 
-    if (topic == "config/get/" + String(device_id) + "/c_bar") {
+    if (topic == "config/get/" + device_id + "/c_bar") {
       colorModes::coloredBar.setValue((short) atoi((char*)payload), false);
     }
 
-    if (topic == "config/get/" + String(device_id) + "/c_state") {
+    if (topic == "config/get/" + device_id + "/c_state") {
       colorModes::coloredState.setValue((short) atoi((char*)payload), false);
     }
 
-    if (topic == "config/get/" + String(device_id) + "/c_time") {
+    if (topic == "config/get/" + device_id + "/c_time") {
       colorModes::coloredTime.setValue((short) atoi((char*)payload), false);
     }
 
-    if (topic == "config/get/" + String(device_id) + "/c_value") {
+    if (topic == "config/get/" + device_id + "/c_value") {
       colorModes::coloredValue.setValue((short) atoi((char*)payload), false);
     }
 
-    if (topic == "config/get/" + String(device_id) + "/c_slider") {
+    if (topic == "config/get/" + device_id + "/c_slider") {
       colorModes::coloredSlider.setValue((short) atoi((char*)payload), false);
     }
 
     //check activity
 
     if ("" + topic == "activity/request") {
-      client.publish("activity/check", String(device_id).c_str());
+      client.publish("activity/check", device_id.c_str());
     }
   }
 
@@ -364,7 +362,7 @@
     getUniqueID();
     subToConfigChannel();
     Serial.println("Requesting config...");
-    snprintf (msg, sizeof(msg), "%s", String(device_id).c_str());
+    snprintf (msg, sizeof(msg), "%s", device_id.c_str());
     client.publish("config/request", msg);
     for (short x = 0; x <= 1000; x++) {
       client.loop();
@@ -373,7 +371,7 @@
   }
 
   void subToConfigChannel() {
-    String sub_config_get = "config/get/" + String(device_id) + "/#";
+    String sub_config_get = "config/get/" + device_id + "/#";
     client.subscribe(sub_config_get.c_str());
     Serial.println("Subscribed to: " + sub_config_get);
   }
@@ -385,7 +383,7 @@
   }
 
   void config_update(String column, String value) {
-    String config_update = "UPDATE `device_overview` SET `" + column + "` = '" + value + "' WHERE `device_overview`.`String(device_id)` = " + String(device_id);
+    String config_update = "UPDATE `device_overview` SET `" + column + "` = '" + value + "' WHERE `device_overview`.`device_id` = " + device_id;
     client.publish("config/update", config_update.c_str());
   }
 
@@ -398,13 +396,13 @@
 
 
   void getUniqueID() {
-    String(device_id) = "";
+    device_id = "";
     //for loop provided by the librarie to get a Unique ID of an arduino board
     for (size_t i = 0; i < UniqueIDsize; i++) {
       if (UniqueID[i] < 0x10)
         //Serial.print("0");
-        String(device_id) = String(device_id) + "0";
-      String(device_id) = String(device_id) + "" + UniqueID[i];
+        device_id = device_id + "0";
+      device_id = device_id + "" + UniqueID[i];
     }
   }
 

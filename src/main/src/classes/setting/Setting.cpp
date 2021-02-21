@@ -7,7 +7,7 @@
 
 WiFiClient espClient;
 PubSubClient client(espClient);
-int device_id;
+String device_id;
 
 Setting::Setting(void) {}
 Setting::Setting(SettingType type, String key, char* title, short defaultValue, char* debugMessage, short minValue, short maxValue, std::vector<String> names,  boolean colored) { //TODO DATATYPE

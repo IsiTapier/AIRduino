@@ -38,7 +38,7 @@
       EEPROM.commit();
     }
     if(EEPROM.readShort(XMIN) == EEPROM.readShort(XMAX) || EEPROM.readShort(YMIN) == EEPROM.readShort(YMAX))
-      ts.calibration();
+      //ts.calibration();
     if(general::debugSetup.getValue() && general::debugPriority.getValue()) {
       debug(INFO, SETUP, "EEPROM: sensor", EEPROM.read(0));
       debug(INFO, SETUP, "EEPROM: xmin", EEPROM.readShort(XMIN));
