@@ -26,19 +26,19 @@
 
   extern void Display::eeprom() {
     EEPROM.begin(EEPROM_SIZE);
-    //   RESET EEPROM   //
-    EEPROM.write(0, 0);/*
+    //    RESET EEPROM    //
+    /*EEPROM.write(0, 0);
     EEPROM.writeShort(XMIN, 0);
     EEPROM.writeShort(XMAX, 0);
     EEPROM.writeShort(YMIN, 0);
-    EEPROM.writeShort(YMAX, 0);*/
-    EEPROM.commit();
+    EEPROM.writeShort(YMAX, 0);
+    EEPROM.commit();*/
     if(EEPROM.read(0) == 255) {
       EEPROM.write(0, 0);
       EEPROM.commit();
     }
     if(EEPROM.readShort(XMIN) == EEPROM.readShort(XMAX) || EEPROM.readShort(YMIN) == EEPROM.readShort(YMAX))
-    //  ts.calibration();
+      ts.calibration();
     if(general::debugSetup.getValue() && general::debugPriority.getValue()) {
       debug(INFO, SETUP, "EEPROM: sensor", EEPROM.read(0));
       debug(INFO, SETUP, "EEPROM: xmin", EEPROM.readShort(XMIN));
@@ -49,13 +49,13 @@
   }
 
   extern void Display::loop() {
-//    handleTouch();
+    handleTouch();
     initDisplay();
     if(mode == MENU) {
       Menu::loop();
     } else if(mode == CHART) {
       Meassure::loop();
-    //  handleTouch();
+      handleTouch();
       if(!general::version.getValue()) {
         DisplayV1::loop();
       } else {

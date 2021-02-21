@@ -47,6 +47,7 @@ short Setting::getMaxValue() {
 void Setting::setValue(short value, boolean upload) {
   _oldValue = _value;
   _value = value;
+  Serial.println(device_id);
   if(_key != "" && upload) {
     String config_update = "UPDATE `device_overview` SET `" + _key + "` = '" + _value + "' WHERE `device_overview`.`device_id` = " + device_id;
     client.publish("config/update", config_update.c_str());

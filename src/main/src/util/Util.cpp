@@ -219,9 +219,12 @@
   int value = 0;
   String device_grade;
 
-  const char* ssid = "FRITZ!Box 7590 JG";
-  const char* password = "4400834912335401";
+  const char* ssid = "DESKTOP-Q7HRET5 8763";
+  const char* password = "12345678";
   const char* mqtt_server = "192.168.178.57";
+  /*/const char* ssid = "FRITZ!Box 7590 JG";
+  const char* password = "4400834912335401";
+  const char* mqtt_server = "192.168.178.57";*/
   /*const char* ssid = "AG-iOT";
     const char* password = "#Wlan4iOT#JCBS-AG!";
     const char* mqtt_server = "192.168.178.57";*/
@@ -230,14 +233,17 @@
     getUniqueID();
     setup_wifi();
     client.setServer(mqtt_server, 1883);
-    client.setCallback(callback);
+    //client.setCallback(callback);
     delay(500);
     //connect client the first time
     if (!client.connected()) {
-      reconnect();
+      //reconnect();
     }
-    //config_request();
-    subscribeToActivityRequest();
+    if(client.connected()) {
+      //config_request();
+      Serial.println("test");
+      subscribeToActivityRequest();
+    }
   }
 
   void callback(char* topic_char, byte* payload, unsigned int length) {

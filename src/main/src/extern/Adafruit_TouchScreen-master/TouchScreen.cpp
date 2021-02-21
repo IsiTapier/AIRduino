@@ -38,7 +38,7 @@ void TSPoint::calibrate() {
   yc = map(y, EEPROM.readShort(YMIN), EEPROM.readShort(YMAX), TOUCH_CALIBRATION_BOX_MARGIN + TOUCH_CALIBRATION_BOX_SIZE/2, DISPLAY_HEIGHT - TOUCH_CALIBRATION_BOX_MARGIN - TOUCH_CALIBRATION_BOX_SIZE/2);
   if(xc < 0 || xc > DISPLAY_LENGTH || yc < 0 || yc > DISPLAY_HEIGHT)
     ts.calibration();
-  print();
+  //print();
 }
 
 void TSPoint::print() {
@@ -55,10 +55,10 @@ void TSPoint::print() {
 }
 
 boolean TSPoint::isTouching(int startx, int endx, int starty, int endy) {
+//  Serial.println(z);
   if (z < MINPRESSURE || z > MAXPRESSURE) {
-    if((xc + TOUCH_INACCURACY >= startx && xc - TOUCH_INACCURACY <= endx || xc == 0) && (yc + TOUCH_INACCURACY >= starty && yc - TOUCH_INACCURACY <= endy || yc == 0)) {
+    if((xc + TOUCH_INACCURACY >= startx && xc - TOUCH_INACCURACY <= endx || xc == 0) && (yc + TOUCH_INACCURACY >= starty && yc - TOUCH_INACCURACY <= endy || yc == 0))
       return(true);
-    }
   }
   return(false);
 }
