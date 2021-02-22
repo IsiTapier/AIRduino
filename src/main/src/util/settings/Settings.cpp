@@ -28,6 +28,9 @@ namespace general {
   Setting debugDisplay = Setting(SWITCH, "", "Debug Display", 0, "'Debug Display' changed");
   Setting debugMenu = Setting(SWITCH, "", "Debug Menu", 0, "'Debug Menu' changed");
   Setting debugTouch = Setting(SWITCH, "", "Debug Touch", 0, "'Debug Touch' changed");
+
+  Setting maintenance_mode = Setting(MULTISELECT, "maintenance_mode", "Wartungsmodus", 0, "'Wartungsmodus' geändert", 0, 3);
+
 }
 
 namespace colorModes {

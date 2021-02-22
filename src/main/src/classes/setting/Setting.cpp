@@ -4,10 +4,8 @@
 
 #include "Arduino.h"
 #include "Setting.h"
+#include "../../util/Util.h"
 
-WiFiClient espClient;
-PubSubClient client(espClient);
-String device_id;
 
 Setting::Setting(void) {}
 Setting::Setting(SettingType type, String key, char* title, short defaultValue, char* debugMessage, short minValue, short maxValue, std::vector<String> names,  boolean colored) { //TODO DATATYPE
@@ -47,10 +45,8 @@ short Setting::getMaxValue() {
 void Setting::setValue(short value, boolean upload) {
   _oldValue = _value;
   _value = value;
-  Serial.println(device_id);
   if(_key != "" && upload) {
-    String config_update = "UPDATE `device_overview` SET `" + _key + "` = '" + _value + "' WHERE `device_overview`.`device_id` = " + device_id;
-    client.publish("config/update", config_update.c_str());
+    config_update(_key, _value);
   }
 }
 

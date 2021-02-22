@@ -10,10 +10,7 @@
 #include "../../extern/PubSubClient/src/PubSubClient.h"
 #include "../../extern/ArduinoUniqueID/src/ArduinoUniqueID.h"
 
-extern WiFiClient espClient;
-extern PubSubClient client;
 
-extern String device_id;
 
 enum SettingType {
   EMPTY,

@@ -23,7 +23,8 @@ enum DebugType {
   SENSOR,
   DISPLAYD,
   MENUD,
-  TOUCH
+  TOUCH,
+  DATABASE
 };
 
 void debug(DebugPriority priority, DebugType type, String title, double value, String end = "");

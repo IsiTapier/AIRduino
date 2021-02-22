@@ -32,6 +32,8 @@ namespace general {
   extern Setting debugDisplay;
   extern Setting debugMenu;
   extern Setting debugTouch;
+
+  extern Setting maintenance_mode;
 }
 
 namespace colorModes {

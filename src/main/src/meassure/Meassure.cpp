@@ -174,12 +174,12 @@
   /*  airCondition = map(airCondition*100, calibration[EEPROM.read(0)].getLowestSensor()*100, calibration[EEPROM.read(0)].getHighestSensor()*100, calibration[EEPROM.read(0)].getLowestPPM(), calibration[EEPROM.read(0)].getHighestPPM());
     airCondition += 400 - minPPM;*/
     //sd.saveValuesToSD(millis()/1000, airConditionRaw, airConditionLast, airCondition);
-    Serial.print(airCondition); Serial.print("\t");
-    Serial.print(0); Serial.print("\t");
+    //Serial.print(airCondition); Serial.print("\t");
+    //Serial.print(0); Serial.print("\t");
   /*  Serial.print(airConditionTemp); Serial.print("\t");
     Serial.println(0);*/
-    Serial.print(temperature); Serial.print("\t");
-    Serial.println(humidity); /*Serial.print("\t");
+    //Serial.print(temperature); Serial.print("\t");
+    //Serial.println(humidity); /*Serial.print("\t");
   /*  Serial.print(sensor.getRZero(airConditionRaw)); Serial.print("\t");
     Serial.print(sensor.getRZero(airConditionRaw, 1)); Serial.print("\t");
     Serial.print(sensor.getRZero(airConditionRaw, "1")); Serial.print("\t");

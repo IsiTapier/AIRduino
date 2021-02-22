@@ -85,6 +85,8 @@
   void loadingScreen();
   void writeLoadingScreenTitle();
   void writeLoadingAnimation(int c1, int c2, int c3);
+  void maintenanceMode(int variant);
+  void subscribeToMaintenanceCheck();
 
   extern TFT_eSPI display;
   extern TouchScreen ts;
@@ -100,6 +102,10 @@
   extern int value;
   extern String device_grade;
 
+  extern WiFiClient espClient;
+  extern PubSubClient client;
+  extern String device_id;
+
   extern const char* ssid;
   extern const char* password;
   extern const char* mqtt_server;
@@ -110,6 +116,7 @@
   void subToConfigChannel();
   void subscribeToActivityRequest();
   void config_update(String column, String value);
+  void config_update(String column, int value);
   void mysql_insert(String grade, int co2, double temp, double humidity, double pressure, double altitude);
   void getUniqueID();
   void setup_wifi();

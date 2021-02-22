@@ -219,15 +219,10 @@
   int value = 0;
   String device_grade;
 
-  const char* ssid = "DESKTOP-Q7HRET5 8763";
-  const char* password = "12345678";
-  const char* mqtt_server = "87.143.106.137";
-  /*const char* ssid = "FRITZ!Box 7590 JG";
-  const char* password = "4400834912335401";
-  const char* mqtt_server = "192.168.178.57";*/
-  /*const char* ssid = "AG-iOT";
-    const char* password = "#Wlan4iOT#JCBS-AG!";
-    const char* mqtt_server = "192.168.178.57";*/
+  WiFiClient espClient;
+  PubSubClient client(espClient);
+  String device_id;
+
 
   void setupDatabaseConnection() {
     getUniqueID();
@@ -238,7 +233,7 @@
     delay(500);
     //connect client the first time
     if (!client.connected()) {
-    //  reconnect();
+      reconnect();
     }
     config_request();
     subscribeToActivityRequest();
@@ -265,6 +260,11 @@
       device_grade = "";
       for (int i = 0; i < length; i++) {
         device_grade = device_grade + "" + (char)payload[i];
+      }
+      if (device_grade[0] == 'a' && device_grade[1] == 'u' && device_grade[2] == 't') { //if the grade is auto generated
+        debug(ERROR, DATABASE, "///////////////////// CONFIG ///////////////////////////");
+        debug(ERROR, DATABASE, "Please enter the grade of your device into the database");
+        debug(ERROR, DATABASE, "////////////////////////////////////////////////////////");
       }
     }
 
@@ -352,46 +352,102 @@
     }
 
     //check activity
+
     if ("" + topic == "activity/request") {
-      client.publish("activity/check", device_id.c_str());
+      if ("" + topic == "activity/request") {
+        String output = device_grade;
+        if (general::maintenance_mode.getValue() == 0) {
+          output = output + ",1";
+        }
+        if (general::maintenance_mode.getValue() == 1) {
+          output = output + ",2";
+        }
+        client.publish("activity/check", output.c_str());
+      }
+    }
+
+    if (topic == "maintenance/" + device_id) {
+      Serial.println((char)payload[0]);
+      int rValue = (char)payload[0] - 48;
+      if (rValue != general::maintenance_mode.getValue()) {
+        if ((rValue == 1 || rValue == 3) && general::maintenance_mode.getValue() == 0) {
+          general::maintenance_mode.setValue(rValue, false);
+          debug(IMPORTANT, SETUP, "/////////////////////////////////");
+          debug(IMPORTANT, SETUP, "Maintenance Mode activated");
+          debug(IMPORTANT, SETUP, "/////////////////////////////////");
+          maintenanceMode(rValue);
+        }
+        if (rValue == 0 && general::maintenance_mode.getValue() == 1) {
+          general::maintenance_mode.setValue(rValue, false);
+        }
+      }
     }
   }
+
+void maintenanceMode(int variant) {
+  general::maintenance_mode.setValue(1, false);
+  while (general::maintenance_mode.getValue() == 1) {
+    Serial.println("Maintenance Mode");
+    reconnect();
+
+    delay(5000);
+    client.loop();
+  }
+  debug(IMPORTANT, SETUP, "/////////////////////////////////");
+  debug(IMPORTANT, SETUP, "Maintenance Mode disabled");
+  debug(IMPORTANT, SETUP, "/////////////////////////////////");
+
+  if (variant == 3) { //implemented to restart the arduino remotely by will
+    ESP.restart();
+  }
+}
 
   void config_request() {   //TODO: optimation
     getUniqueID();
     subToConfigChannel();
-    Serial.println("Requesting config...");
-    snprintf (msg, sizeof(msg), "%s", device_id.c_str());
-    client.publish("config/request", msg);
+    subscribeToMaintenanceCheck();
+    debug(IMPORTANT, SETUP, "Requesting config...");
+    client.publish("config/request", device_id.c_str());
+    delay(100);
     for (short x = 0; x <= 1000; x++) {
       client.loop();
-      delay(1);
     }
   }
 
   void subToConfigChannel() {
     String sub_config_get = "config/get/" + device_id + "/#";
     client.subscribe(sub_config_get.c_str());
-    Serial.println("Subscribed to: " + sub_config_get);
+    debug(INFO, SETUP, "Subscribed to: " + sub_config_get);
   }
 
   void subscribeToActivityRequest() {
     String sub_topic = "activity/request";
     client.subscribe(sub_topic.c_str());
+    debug(INFO, SETUP, "Subscribed to: " + sub_topic);
+  }
+
+  void subscribeToMaintenanceCheck() {
+    String sub_topic = "maintenance/" + device_id;
+    client.subscribe(sub_topic.c_str());
     Serial.println("Subscribed to: " + sub_topic);
   }
 
   void config_update(String column, String value) {
-    String config_update = "UPDATE `device_overview` SET `" + column + "` = '" + value + "' WHERE `device_overview`.`device_id` = " + device_id;
+    String config_update = column + " = '" +  value + "' WHERE `device_overview`.`device_id` = " + device_id;
     client.publish("config/update", config_update.c_str());
   }
-
+  void config_update(String column, int value) {
+    config_update(column, (String)value);
+  }
 
   void mysql_insert(String grade, int co2, double temp, double humidity, double pressure, double altitude) {
-    snprintf (msg, sizeof(msg), "INSERT INTO `device_log`(`grade`, `co2`, `temp`, `humidity`, `pressure`, `altitude`, `time`) VALUES ('%s',%ld,%f,%f,%f,%f,CURRENT_TIMESTAMP())", grade.c_str(), co2, temp, humidity, pressure, altitude);
-    client.publish("mysql/insert", msg);
-    Serial.println("INSERTED into LOG grade: " + grade + " co2: " + co2 + " temp: " + temp + " humidity: " + humidity + " pressure: " + pressure + " altitude: " + altitude);
-  }
+    if (!(grade[0] == 'a' && grade[1] == 'u' && grade[2] == 't')) {
+      String output = "VALUES ('" + grade + "', " + co2 + ", " + temp + ", " + humidity + ", " + pressure + ", " + altitude + ")";
+      client.publish("mysql/insert", output.c_str());
+      debug(INFO, DATABASE, "INSERTED into LOG grade: " + grade + " co2: " + co2 + " temp: " + temp + " humidity: " + humidity + " pressure: " + pressure + " altitude: " + altitude);
+      //Serial.println("INSERTED into LOG grade: " + grade + " co2: " + co2 + " temp: " + temp + " humidity: " + humidity + " pressure: " + pressure + " altitude: " + altitude);
+    }
+}
 
 
   void getUniqueID() {
