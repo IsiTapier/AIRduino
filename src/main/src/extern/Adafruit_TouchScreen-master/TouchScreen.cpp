@@ -55,7 +55,6 @@ void TSPoint::print() {
 }
 
 boolean TSPoint::isTouching(int startx, int endx, int starty, int endy) {
-//  Serial.println(z);
   if (z < MINPRESSURE || z > MAXPRESSURE) {
     if((xc + TOUCH_INACCURACY >= startx && xc - TOUCH_INACCURACY <= endx || xc == 0) && (yc + TOUCH_INACCURACY >= starty && yc - TOUCH_INACCURACY <= endy || yc == 0))
       return(true);
@@ -112,8 +111,8 @@ TSPoint TouchScreen::getPoint(void) {
 
   valid = 1;
 
-  pinMode(_yp, INPUT);
-  pinMode(_ym, INPUT);
+  pinMode(_ypr, INPUT);
+  pinMode(_ymr, INPUT);
   pinMode(_xp, OUTPUT);
   pinMode(_xm, OUTPUT);
 
@@ -123,6 +122,7 @@ TSPoint TouchScreen::getPoint(void) {
 #else
   digitalWrite(_xp, HIGH);
   digitalWrite(_xm, LOW);
+  digitalWrite(_yp, LOW);
 #endif
 
 #ifdef __arm__
@@ -130,7 +130,7 @@ TSPoint TouchScreen::getPoint(void) {
 #endif
 
   for (i = 0; i < NUMSAMPLES; i++) {
-    samples[i] = analogRead(_yp);
+    samples[i] = analogRead(_ypr);
   }
 
 #if NUMSAMPLES > 2
@@ -148,8 +148,8 @@ TSPoint TouchScreen::getPoint(void) {
 
   x = (1023 - samples[NUMSAMPLES / 2]);
 
-  pinMode(_xp, INPUT);
-  pinMode(_xm, INPUT);
+  pinMode(_xpr, INPUT);
+  pinMode(_xmr, INPUT);
   pinMode(_yp, OUTPUT);
   pinMode(_ym, OUTPUT);
 
@@ -166,7 +166,7 @@ TSPoint TouchScreen::getPoint(void) {
 #endif
 
   for (i = 0; i < NUMSAMPLES; i++) {
-    samples[i] = analogRead(_xm);
+    samples[i] = analogRead(_xmr);
   }
 
 #if NUMSAMPLES > 2
@@ -188,7 +188,7 @@ TSPoint TouchScreen::getPoint(void) {
   // Set Y- to VCC
   // Hi-Z X- and Y+
   pinMode(_xp, OUTPUT);
-  pinMode(_yp, INPUT);
+  pinMode(_ypr, INPUT);
 
 #if defined(USE_FAST_PINIO)
   *xp_port &= ~xp_pin;
@@ -198,8 +198,8 @@ TSPoint TouchScreen::getPoint(void) {
   digitalWrite(_ym, HIGH);
 #endif
 
-  int z1 = analogRead(_xm);
-  int z2 = analogRead(_yp);
+  int z1 = analogRead(_xmr);
+  int z2 = analogRead(_ypr);
 
   if (_rxplate != 0) {
     // now read the x
@@ -229,11 +229,23 @@ TSPoint TouchScreen::getPoint(void) {
 
 TouchScreen::TouchScreen() {}
 
-TouchScreen::TouchScreen(uint8_t xp, uint8_t yp, uint8_t xm, uint8_t ym, uint16_t rxplate) {
+TouchScreen::TouchScreen(uint8_t xp, uint8_t yp, uint8_t xm, uint8_t ym, uint8_t xpr, uint8_t ypr, uint8_t xmr, uint8_t ymr, uint16_t rxplate) {
   _yp = yp;
   _xm = xm;
   _ym = ym;
   _xp = xp;
+  _ypr = _yp;
+  _xmr = _xm;
+  _ymr = _ym;
+  _xpr = _xp;
+  if(xpr != 0)
+    _xpr = xpr;
+  if(ypr != 0)
+    _ypr = ypr;
+  if(xmr != 0)
+    _xmr = xmr;
+  if(ymr != 0)
+    _ymr = ymr;
   _rxplate = rxplate;
 #if defined(USE_FAST_PINIO)
   xp_port = portOutputRegister(digitalPinToPort(_xp));
@@ -255,6 +267,10 @@ TouchScreen TouchScreen::operator=(TouchScreen touchscreen)  {
   _ym = touchscreen._ym;
   _xm = touchscreen._xm;
   _xp = touchscreen._xp;
+  _ypr = touchscreen._ypr;
+  _ymr = touchscreen._ymr;
+  _xmr = touchscreen._xmr;
+  _xpr = touchscreen._xpr;
   _rxplate = touchscreen._rxplate;
   return(*this);
 }

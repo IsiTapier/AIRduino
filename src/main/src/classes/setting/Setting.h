@@ -6,10 +6,7 @@
 #define Setting_h
 
 #include "Arduino.h"
-
-#include "WiFi.h"
-#include "WiFiClient.h"
-#include "WiFiServer.h"
+#include <WiFi.h>
 #include "../../extern/PubSubClient/src/PubSubClient.h"
 #include "../../extern/ArduinoUniqueID/src/ArduinoUniqueID.h"
 

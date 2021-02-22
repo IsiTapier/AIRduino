@@ -57,7 +57,7 @@
   }
 
   extern void Meassure::loop() {
-    meassureEnvironment();
+    //meassureEnvironment();
     meassureAirCondition();
     mapAirCondition();
     calculateGradient();

@@ -6,7 +6,7 @@
 #include "Util.h"
 
   TFT_eSPI display(DISPLAY_HEIGHT, DISPLAY_LENGTH);
-  TouchScreen ts(TFT_D1, TFT_DC, TFT_CS, TFT_D0, TOUCH_RESISTANCE);
+  TouchScreen ts(TFT_D1, TFT_DC, TFT_CS, TFT_D0, TFT_D1, 34, TFT_CS, TFT_D0, TOUCH_RESISTANCE);
 
   Mode mode = LOADINGSCREEN;
   Mode lastMode;
@@ -238,7 +238,7 @@
     delay(500);
     //connect client the first time
     if (!client.connected()) {
-      reconnect();
+    //  reconnect();
     }
     config_request();
     subscribeToActivityRequest();
@@ -352,7 +352,6 @@
     }
 
     //check activity
-
     if ("" + topic == "activity/request") {
       client.publish("activity/check", device_id.c_str());
     }
@@ -416,9 +415,13 @@
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, password);
 
+    int timeout = 0;
     while (WiFi.status() != WL_CONNECTED) {
       delay(500);
       Serial.print(".");
+      timeout++;
+      if(timeout > 10)
+        break;
     }
     randomSeed(micros());
     Serial.println("");
