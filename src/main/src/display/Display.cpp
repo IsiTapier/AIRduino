@@ -8,7 +8,7 @@
 
   extern void Display::setup() {
     debug(DEBUG, SETUP, "Display SETUP started");
-    setupDatabaseConnection();
+  //  setupDatabaseConnection();
     display.begin();
     debug(INFO, SETUP, "Display connection started");
     display.fillScreen(BACKGROUND_COLOR);
@@ -65,7 +65,7 @@
 
     }
     for(short x = 0; x <= 100; x++) {
-        client.loop();
+      //  client.loop();
     }
 
   }

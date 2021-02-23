@@ -45,7 +45,7 @@ public:
    * sensing
    */
   TouchScreen(void);
-  TouchScreen(uint8_t xp, uint8_t yp, uint8_t xm, uint8_t ym, uint8_t xpr = 0, uint8_t ypr = 0, uint8_t xmr = 0, uint8_t ymr = 0, uint16_t rxplate = 0);
+  TouchScreen(uint8_t xp, uint8_t yp, uint8_t xm, uint8_t ym, uint8_t xpr = 0, uint8_t ypr = 0, uint8_t xmr = 0, uint8_t ymr = 0, uint8_t transistor = 0, uint16_t rxplate = 0);
   TouchScreen operator=(TouchScreen touchscreen);
   /**
    * @brief **NOT IMPLEMENTED** Test if the screen has been touched
@@ -61,7 +61,7 @@ public:
   int16_t pressureThreshhold; ///< Pressure threshold for `isTouching`
 
 private:
-  uint8_t _yp, _ym, _xm, _xp, _ypr, _ymr, _xmr, _xpr;
+  uint8_t _yp, _ym, _xm, _xp, _ypr, _ymr, _xmr, _xpr, _transistor;
   uint16_t _rxplate;
 
 #if defined(USE_FAST_PINIO)

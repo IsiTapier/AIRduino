@@ -15,6 +15,18 @@
 //
 
 
+  const char* ssid = "DESKTOP-Q7HRET5 8763";
+  const char* password = "12345678";
+  const char* mqtt_server = "87.143.106.137";
+ /* const char* ssid = "FRITZ!Box 7590 JG";
+  const char* password = "4400834912335401";
+  const char* mqtt_server = "192.168.178.57";
+ /*const char* ssid = "AG-iOT";
+    const char* password = "#Wlan4iOT#JCBS-AG!";
+    const char* mqtt_server = "192.168.178.57";*/
+
+
+
 //   _____      _
 //  / ____|    | |
 // | (___   ___| |_ _   _ _ __
@@ -31,6 +43,7 @@ void setup() {
   Serial.println("Serial communication started at 9600 baud");
   Serial.println();
   Display::setup();
+  general::debugPriority.setValue(INFO);
 }
 
 

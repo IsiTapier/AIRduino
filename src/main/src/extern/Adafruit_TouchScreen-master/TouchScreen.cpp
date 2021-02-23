@@ -115,6 +115,7 @@ TSPoint TouchScreen::getPoint(void) {
   pinMode(_ymr, INPUT);
   pinMode(_xp, OUTPUT);
   pinMode(_xm, OUTPUT);
+  pinMode(_transistor, OUTPUT);
 
 #if defined(USE_FAST_PINIO)
   *xp_port |= xp_pin;
@@ -122,7 +123,7 @@ TSPoint TouchScreen::getPoint(void) {
 #else
   digitalWrite(_xp, HIGH);
   digitalWrite(_xm, LOW);
-  digitalWrite(_yp, LOW);
+  digitalWrite(_transistor, LOW);
 #endif
 
 #ifdef __arm__
@@ -132,6 +133,8 @@ TSPoint TouchScreen::getPoint(void) {
   for (i = 0; i < NUMSAMPLES; i++) {
     samples[i] = analogRead(_ypr);
   }
+
+  digitalWrite(_transistor, HIGH);
 
 #if NUMSAMPLES > 2
   insert_sort(samples, NUMSAMPLES);
@@ -224,12 +227,13 @@ TSPoint TouchScreen::getPoint(void) {
   pinMode(_xm, OUTPUT);
   pinMode(_yp, OUTPUT);
   pinMode(_ym, OUTPUT);
+  
   return TSPoint(x, y, z);
 }
 
 TouchScreen::TouchScreen() {}
 
-TouchScreen::TouchScreen(uint8_t xp, uint8_t yp, uint8_t xm, uint8_t ym, uint8_t xpr, uint8_t ypr, uint8_t xmr, uint8_t ymr, uint16_t rxplate) {
+TouchScreen::TouchScreen(uint8_t xp, uint8_t yp, uint8_t xm, uint8_t ym, uint8_t xpr, uint8_t ypr, uint8_t xmr, uint8_t ymr, uint8_t transistor, uint16_t rxplate) {
   _yp = yp;
   _xm = xm;
   _ym = ym;
@@ -238,6 +242,7 @@ TouchScreen::TouchScreen(uint8_t xp, uint8_t yp, uint8_t xm, uint8_t ym, uint8_t
   _xmr = _xm;
   _ymr = _ym;
   _xpr = _xp;
+  _transistor = transistor;
   if(xpr != 0)
     _xpr = xpr;
   if(ypr != 0)
@@ -259,6 +264,8 @@ TouchScreen::TouchScreen(uint8_t xp, uint8_t yp, uint8_t xm, uint8_t ym, uint8_t
   ym_pin = digitalPinToBitMask(_ym);
 #endif
   pressureThreshhold = 10;
+  pinMode(_transistor, OUTPUT);
+  digitalWrite(_transistor, HIGH);
 }
 
 TouchScreen TouchScreen::operator=(TouchScreen touchscreen)  {
@@ -271,6 +278,7 @@ TouchScreen TouchScreen::operator=(TouchScreen touchscreen)  {
   _ymr = touchscreen._ymr;
   _xmr = touchscreen._xmr;
   _xpr = touchscreen._xpr;
+  _transistor = touchscreen._transistor;
   _rxplate = touchscreen._rxplate;
   return(*this);
 }
