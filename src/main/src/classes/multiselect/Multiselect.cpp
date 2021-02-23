@@ -39,10 +39,10 @@
   }
 
   void Multiselect::changeValue() {
-    if(_setting->getValue() < _setting->getSize())
+    if(_setting->getValue() < _setting->getMaxValue())
       setValue(_setting->getValue()+1);
     else
-      setValue(0);
+      setValue(_setting->getMinValue());
   }
 
   void Multiselect::write(boolean init) {

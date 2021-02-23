@@ -6,11 +6,6 @@
 #define Setting_h
 
 #include "Arduino.h"
-#include <WiFi.h>
-#include "../../extern/PubSubClient/src/PubSubClient.h"
-#include "../../extern/ArduinoUniqueID/src/ArduinoUniqueID.h"
-
-
 
 enum SettingType {
   EMPTY,
@@ -25,7 +20,7 @@ enum SettingType {
 class Setting {
   public:
     Setting(void);
-    Setting(SettingType type, String key, char* title = "", short defaultValue = 0, char* debugMessage = "", short minValue = 0, short maxValue = 1, std::vector<String> names = {"", ""}, boolean colored = true);
+    Setting(SettingType type, String key = "", char* title = "", short defaultValue = 0, char* debugMessage = "", short minValue = 0, short maxValue = 1, std::vector<String> names = {}, boolean colored = true);
     short getValue();
     short getOldValue();
     short getDefaultValue();

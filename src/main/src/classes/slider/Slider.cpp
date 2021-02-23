@@ -57,15 +57,9 @@
   void Slider::write(boolean init) {
     String text = "";
     String oldText = "";
-    if(_setting->getName() == "") {
-      text = _setting->getTitle();
-      if(!init)
-         oldText = _setting->getTitle();
-    } else {
-      text = _setting->getName();
-      if(!init)
-         oldText = _setting->getName(true);
-    }
+    text = _setting->getName();
+    if(!init)
+      oldText = _setting->getName(true);
     dPrint(text, MENU_MARGIN_LEFT, MENU_SECTION_TEXT_Y(_section), MENU_SECTION_SIZE, TEXT_COLOR, 3, BACKGROUND_COLOR, oldText, MENU_SECTION_OLD_SIZE);
   }
 

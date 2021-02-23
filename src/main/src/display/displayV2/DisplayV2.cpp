@@ -22,10 +22,10 @@ extern void DisplayV2::setup() {
   debug(DEBUG, SETUP, "DisplayV2 SETUP started");
   debug(DEBUG, SETUP, "DisplayV2 SETUP completed");
   debug(DEBUG, SETUP, "");
-  if(lastMode != LOADINGSCREEN)
+  if(lastMode != LOADINGSCREEN) {
     loop();
-  start = false;
-
+    start = false;
+  }
 }
 
 extern void DisplayV2::loop() {

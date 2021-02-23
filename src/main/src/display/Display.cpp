@@ -8,7 +8,6 @@
 
   extern void Display::setup() {
     debug(DEBUG, SETUP, "Display SETUP started");
-  //  setupDatabaseConnection();
     display.begin();
     debug(INFO, SETUP, "Display connection started");
     display.fillScreen(BACKGROUND_COLOR);
@@ -16,6 +15,7 @@
     display.setRotation(ROTATION);
     debug(INFO, SETUP, "Display initialized");
     eeprom();
+    setupDatabaseConnection();
     loadingScreen();
     lastMode = mode;
     mode = CHART;
@@ -38,7 +38,7 @@
       EEPROM.commit();
     }
     if(EEPROM.readShort(XMIN) == EEPROM.readShort(XMAX) || EEPROM.readShort(YMIN) == EEPROM.readShort(YMAX))
-      //ts.calibration();
+      ts.calibration();
     if(general::debugSetup.getValue() && general::debugPriority.getValue()) {
       debug(INFO, SETUP, "EEPROM: sensor", EEPROM.read(0));
       debug(INFO, SETUP, "EEPROM: xmin", EEPROM.readShort(XMIN));
@@ -65,9 +65,8 @@
 
     }
     for(short x = 0; x <= 100; x++) {
-      //  client.loop();
+    //  client.loop();
     }
-
   }
 
   extern void Display::initDisplay() {
@@ -83,10 +82,10 @@
       } else {
 
       }
+      general::theme.setValue(general::theme.getValue(), false);
     }
     lastMode = mode;
     lastVersion = (Version) general::version.getValue();
-    general::theme.setValue(general::theme.getValue());
   }
 
   extern void Display::handleTouch() {

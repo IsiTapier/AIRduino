@@ -38,7 +38,7 @@ void TSPoint::calibrate() {
   yc = map(y, EEPROM.readShort(YMIN), EEPROM.readShort(YMAX), TOUCH_CALIBRATION_BOX_MARGIN + TOUCH_CALIBRATION_BOX_SIZE/2, DISPLAY_HEIGHT - TOUCH_CALIBRATION_BOX_MARGIN - TOUCH_CALIBRATION_BOX_SIZE/2);
   if(xc < 0 || xc > DISPLAY_LENGTH || yc < 0 || yc > DISPLAY_HEIGHT)
     ts.calibration();
-  //print();
+  print();
 }
 
 void TSPoint::print() {
@@ -227,7 +227,7 @@ TSPoint TouchScreen::getPoint(void) {
   pinMode(_xm, OUTPUT);
   pinMode(_yp, OUTPUT);
   pinMode(_ym, OUTPUT);
-  
+
   return TSPoint(x, y, z);
 }
 

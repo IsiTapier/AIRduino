@@ -57,7 +57,7 @@
   }
 
   extern void Meassure::loop() {
-    //meassureEnvironment();
+    meassureEnvironment();
     meassureAirCondition();
     mapAirCondition();
     calculateGradient();
@@ -66,9 +66,7 @@
     debugMeassure();
   }
 
-
   //Getter
-
   extern State Meassure::getState() {
     return(state);
   }
@@ -154,9 +152,9 @@
     temperature = bme.readTemperature();
     pressure = bme.readPressure();
     humidity = bme.readHumidity();
-    debug(INFO, SETUP, "Temperature", temperature, "°C");
-    debug(INFO, SETUP, "Pressure", pressure / 100.0F, "mbar");
-    debug(INFO, SETUP, "Humidity", humidity, "%");
+    debug(INFO, SENSOR, "Temperature", temperature, "°C");
+    debug(INFO, SENSOR, "Pressure", pressure / 100.0F, "mbar");
+    debug(INFO, SENSOR, "Humidity", humidity, "%");
   }
 
   //  _____        _

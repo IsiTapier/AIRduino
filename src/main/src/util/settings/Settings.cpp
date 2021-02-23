@@ -22,8 +22,8 @@ namespace general {
   Setting blinkThickness = Setting(NUMBER, "blinkThickness", "Blink Dicke", 2, "'Blink Boarder Thickness' changed", 1, 9);
   Setting ventilatingTimeout = Setting(NUMBER, "ventilatingTimeout", "Timeout", 5, "'ventilatingTimeout' changed", 1, 9);
 
-  Setting debugPriority = Setting(MULTISELECT, "", "Debug", 0, "'Debug' changed", 0, 5, {"None", "Error", "Warning", "Important", "Debug", "Spamm"});
-  Setting debugSetup = Setting(SWITCH, "", "Debug Setup", 1, "'Debug Setup' changed");
+  Setting debugPriority = Setting(MULTISELECT, "", "Debug", 0, "'Debug' changed", 0, 6, {"None", "Error", "Warning", "Important", "Debug", "Info", "Spamm"});
+  Setting debugSetup = Setting(SWITCH, "", "Debug Setup", 0, "'Debug Setup' changed");
   Setting debugSensor = Setting(SWITCH, "", "Debug Sensor", 0, "'Debug Sensor' changed");
   Setting debugDisplay = Setting(SWITCH, "", "Debug Display", 0, "'Debug Display' changed");
   Setting debugMenu = Setting(SWITCH, "", "Debug Menu", 0, "'Debug Menu' changed");
