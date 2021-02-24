@@ -35,15 +35,16 @@ extern int DisplayV1::lastPixel = 0;
       drawDisplay();
       createLines();
     }
+    DisplayVX::loop();
     //graph
     if (averageData()) {
       fillData();
       drawGraph();
     }
-
-    DisplayVX::loop();
+    //end setup
+    if(start)
+      start = false;
   }
-
 
   //  _____  _           _
   // |  __ \(_)         | |
@@ -80,7 +81,7 @@ extern int DisplayV1::lastPixel = 0;
       graphData[currentPosition] = pixel;
     } else {
       if(graphData[0] != graphData[1])
-        drawConnection(1, BACKGROUND_COLOR);
+        drawConnection(1, state >= BLINK && blinkSwitch ? TEXT_COLOR : BACKGROUND_COLOR);
       for (short x = 0; x < DISPLAY_LENGTH; x++) {
         graphData[x] = graphData[x + 1];
       }
@@ -91,19 +92,20 @@ extern int DisplayV1::lastPixel = 0;
   extern void DisplayV1::createLines() {
     drawLine(0, FIRST_SECTION_Y, DISPLAY_LENGTH, 1, GRAPH_COLOR, GRAPH_SECTIONS_STRIPE_DISTANCE, 1, true, airCondition);
     drawLine(0, SECOND_SECTION_Y, DISPLAY_LENGTH, 1, GRAPH_COLOR, GRAPH_SECTIONS_STRIPE_DISTANCE, 1, true, airCondition);
-    drawLine(0, TOP_BAR_HEIGHT, DISPLAY_LENGTH, TOP_BAR_THICKNESS, GRAPH_COLOR, 1, 1, true, airCondition, true, state);
+  //  drawLine(0, TOP_BAR_HEIGHT, DISPLAY_LENGTH, TOP_BAR_THICKNESS, GRAPH_COLOR, 1, 1, true, airCondition, true, state);
   }
 
   extern void DisplayV1::drawGraph() {
-    //draw Graph Top
+    /*//draw Graph Top
     if(COLORED_BAR && airCondition >= DISPLAYED_PPM_HIGHEST && lastAirCondition < DISPLAYED_PPM_HIGHEST)
       display.drawLine(0, GRAPH_END_Y, DISPLAY_LENGTH, GRAPH_END_Y, state.getColor(true));
     if(COLORED_BAR && airCondition < DISPLAYED_PPM_HIGHEST && lastAirCondition >= DISPLAYED_PPM_HIGHEST)
-      display.drawLine(0, GRAPH_END_Y, DISPLAY_LENGTH, GRAPH_END_Y, state.getColor(false));
+      display.drawLine(0, GRAPH_END_Y, DISPLAY_LENGTH, GRAPH_END_Y, state.getColor(false));*/
     //draw Graph
     if(currentPosition >= DISPLAY_LENGTH-1 || state.getColor(COLORED_CHART) != lastState.getColor(COLORED_CHART) && !COLOR_MODE || COLORED_BAR && airCondition < DISPLAYED_PPM_HIGHEST && lastAirCondition >= DISPLAYED_PPM_HIGHEST || mode == CHART && lastMode != CHART) {
       for (short x = 1; x <= currentPosition; x++) {
-        drawConnection(x);
+        if(state < BLINK || !blinkSwitch || x != 1)
+          drawConnection(x);
         if(currentPosition >= DISPLAY_LENGTH)
           drawConnection(x, BACKGROUND_COLOR, 1);
       }
@@ -124,8 +126,8 @@ extern int DisplayV1::lastPixel = 0;
     int i;
     int j;
     if(graphData[x] < graphData[x-1]) {
-      i = graphData[x];
-      j = graphData[x-1];
+      i = graphData[x]+1;
+      j = graphData[x-1]+1;
     } else {
       i = graphData[x-1];
       j = graphData[x];

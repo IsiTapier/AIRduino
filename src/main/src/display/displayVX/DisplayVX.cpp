@@ -42,15 +42,10 @@ extern boolean DisplayVX::drop = false;
     if(general::data.getValue())
       getData();
     else
-      generateData(400, 1000, 30);
-
+      generateData(400, 1100, 30);
     //info
     writeInfo();
     checkState();
-
-    //end setup
-    if(start)
-      start = false;
   }
 
 
@@ -80,6 +75,8 @@ extern boolean DisplayVX::drop = false;
   }
 
   extern void DisplayVX::generateData(int startPPM, int endPPM, int changePPM) {
+    lastState = state;
+    lastAirCondition = airCondition;
     if(start)
       airCondition = startPPM;
     if(drop)
@@ -102,8 +99,8 @@ extern boolean DisplayVX::drop = false;
       display.drawLine(DISPLAY_LENGTH-1, DATABOX_Y, DISPLAY_LENGTH-1, DISPLAY_HEIGHT-1, DATABOX_BACKGROUND_COLOR);
       display.drawLine(0, DATABOX_BAR_Y, 0, DATABOX_Y-1, state.getColor(COLORED_BAR));
       display.drawLine(DISPLAY_LENGTH-1, DATABOX_BAR_Y, DISPLAY_LENGTH-1, DATABOX_Y-1, state.getColor(COLORED_BAR));
-      display.drawLine(0, TOP_BAR_HEIGHT, 0, STATUS_END_HEIGHT-1, TEXT_COLOR);
-      display.drawLine(DISPLAY_LENGTH-1, TOP_BAR_HEIGHT, DISPLAY_LENGTH-1, STATUS_END_HEIGHT-1, TEXT_COLOR);
+      display.drawLine(0, TOP_BAR_HEIGHT, 0, STATUS_END_HEIGHT-1, state.getColor(COLORED_BAR));
+      display.drawLine(DISPLAY_LENGTH-1, TOP_BAR_HEIGHT, DISPLAY_LENGTH-1, STATUS_END_HEIGHT-1, state.getColor(COLORED_BAR));
       digitalWrite(PIEZO, LOW);
       blinkSwitch = false;
     } else if (state >= 3) {

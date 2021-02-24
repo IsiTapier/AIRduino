@@ -54,13 +54,15 @@
 
   void Input::draw() {
     if(mode == MENU && lastMode != MENU || general::theme.getValue() != general::theme.getOldValue()) {
-      display.fillRect(0, MENU_SECTION_Y(_inputSection), MENU_SECTION_LENGTH, MENU_SECTION_BORDER_THICKNESS, TEXT_COLOR);
+      if(_inputSection != 0)
+        display.fillRect(0, MENU_SECTION_Y(_inputSection), MENU_SECTION_LENGTH+1, MENU_SECTION_BORDER_THICKNESS, TEXT_COLOR);
       debug(INFO, MENUD, "Input:", _inputSection, "drawn");
     }
   }
 
   void Input::clear() {
-    display.fillRect(MENU_SECTION_BORDER_THICKNESS, (MENU_SECTION_Y(_inputSection) + MENU_SECTION_BORDER_THICKNESS), (MENU_SECTION_LENGTH - MENU_SECTION_BORDER_THICKNESS - MENU_SECTION_BORDER_SHIFT), (MENU_SECTION_HEIGHT - MENU_SECTION_BORDER_THICKNESS), BACKGROUND_COLOR);
+    if(_inputSection != 0)
+      display.fillRect(MENU_SECTION_BORDER_THICKNESS, (MENU_SECTION_Y(_inputSection) + MENU_SECTION_BORDER_THICKNESS), (MENU_SECTION_LENGTH+1 - MENU_SECTION_BORDER_THICKNESS - MENU_SECTION_BORDER_SHIFT), (MENU_SECTION_HEIGHT - MENU_SECTION_BORDER_THICKNESS), BACKGROUND_COLOR);
   }
 
   void Input::handleTouch(TSPoint p) {

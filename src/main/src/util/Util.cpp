@@ -6,7 +6,7 @@
 #include "Util.h"
 
   TFT_eSPI display(DISPLAY_HEIGHT, DISPLAY_LENGTH);
-  TouchScreen ts(TFT_D1, TFT_DC, TFT_CS, TFT_D0, TFT_D1, TFT_DC, TFT_CS, TFT_D0, 26, TOUCH_RESISTANCE);
+  TouchScreen ts(TFT_D1, TFT_DC, TFT_CS, TFT_D0, TOUCH_RESISTANCE);
 
   Mode mode = LOADINGSCREEN;
   Mode lastMode;

@@ -22,12 +22,10 @@
     setup_wifi();
     client.setServer(mqtt_server, 1883);
     client.setCallback(callback);
-    delay(500);
     //connect client the first time
     if (!client.connected())
       reconnect();
     config_request();
-    subscribeToActivityRequest();
   }
 
   void callback(char* topic_char, byte* payload, unsigned int length) {
@@ -143,21 +141,6 @@
       colorModes::coloredSlider.setValue((short) atoi((char*)payload), false);
     }
 
-    //check activity
-
-    if ("" + topic == "activity/request") {
-      if ("" + topic == "activity/request") {
-        String output = device_grade;
-        if (general::maintenance_mode.getValue() == 0) {
-          output = output + ",1";
-        }
-        if (general::maintenance_mode.getValue() == 1) {
-          output = output + ",2";
-        }
-        client.publish("activity/check", output.c_str());
-      }
-    }
-
     if (topic == "maintenance/" + device_id) {
       Serial.println((char)payload[0]);
       int rValue = (char)payload[0] - 48;
@@ -200,7 +183,7 @@ void maintenanceMode(int variant) {
     subscribeToMaintenanceCheck();
     debug(NONE, SETUP, "Requesting config...");
     client.publish("config/request", device_id.c_str());
-    delay(200);
+    delay(500);
     for (short x = 0; x <= 1000; x++) {
       client.loop();
     }
@@ -210,12 +193,6 @@ void maintenanceMode(int variant) {
     String sub_config_get = "config/get/" + device_id + "/#";
     client.subscribe(sub_config_get.c_str());
     debug(INFO, SETUP, "Subscribed to: " + sub_config_get);
-  }
-
-  void subscribeToActivityRequest() {
-    String sub_topic = "activity/request";
-    client.subscribe(sub_topic.c_str());
-    debug(INFO, SETUP, "Subscribed to: " + sub_topic);
   }
 
   void subscribeToMaintenanceCheck() {
@@ -257,7 +234,6 @@ void maintenanceMode(int variant) {
   }
 
   void setup_wifi() {
-    delay(10);
     // We start by connecting to a WiFi network
     Serial.println();
     Serial.print("Connecting to ");
@@ -284,7 +260,7 @@ void maintenanceMode(int variant) {
   void reconnect() {
     // Loop until we're reconnected
     int timeout = 0;
-    while (!client.connected() && timeout < 2) {
+    while (!client.connected() && timeout < 1) {
       timeout++;
       Serial.print("Attempting MQTT connection...");
       // Create a random client ID
@@ -297,9 +273,9 @@ void maintenanceMode(int variant) {
       } else {
         Serial.print("failed, rc=");
         Serial.print(client.state());
-        Serial.println(" try again in 5 seconds");
-        // Wait 5 seconds before retrying
-        delay(5000);
+        Serial.println(" try again in 1 seconds");
+        // Wait 1 seconds before retrying
+        //delay(1000);
       }
     }
     if(!client.connected())

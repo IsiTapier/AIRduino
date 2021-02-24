@@ -25,7 +25,7 @@ const String stateTitles[6][5] = {
   {"a"+ea+"rer", "bon", "agr"+ea+"able", "dang"+ea+"reux", "terrible"},
   {"ventilasi", "Nggih", "ditrima", "ala", "bejat"},
   {"ventilacion", "bien", "agradable", "malo", "catastr"+oa+"fico"},
-  {"es ist nicht kalt", "lötig", "bon", "zut", "d"+ea+"gueulasse"}
+  {"es ist nicht kalt", "l"+oe+"tig", "bon", "zut", "d"+ea+"gueulasse"}
 };
 
 class State {

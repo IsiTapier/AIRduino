@@ -33,9 +33,11 @@ extern void DisplayV2::loop() {
     drawDisplay();
     drawBarBorder();
   }
-  drawBar();
-
   DisplayVX::loop();
+  drawBar();
+  //end setup
+  if(start)
+    start = false;
 }
 
 
@@ -67,6 +69,7 @@ extern void DisplayV2::drawBarBorder() { //x,y,breite, höhe, dicke
   //drawBorder(BAR_BORDER_X, BAR_BORDER_Y, BAR_BORDER_LENGTH, BAR_BORDER_HEIGHT, BAR_BORDER_THICKNESS, WHITE);
   //display.fillRect(BAR_START_X, BAR_Y, BAR_LENGTH, BAR_HEIGHT, BACKGROUND_COLOR);
   drawBorder(BAR_BORDER_X, BAR_BORDER_Y, BAR_BORDER_LENGTH, BAR_BORDER_HEIGHT, BAR_BORDER_THICKNESS, CHART_BORDER_COLOR);
+  drawSections();
 }
 
 
@@ -96,6 +99,8 @@ extern void DisplayV2::drawBar() {
     barPixel = BAR_END_X;
   if(lastBarPixel > BAR_END_X)
     lastBarPixel = BAR_END_X;
+  if(lastBarPixel < BAR_START_X)
+    lastBarPixel = BAR_START_X;
 
   //TODO: vereinfachen
   if(COLOR_MODE) {
@@ -121,13 +126,19 @@ extern void DisplayV2::drawBar() {
     else
       display.fillRect(barPixel, BAR_Y, lastBarPixel - barPixel, BAR_HEIGHT, CHART_BACKGROUND_COLOR);
   } else if(lastState.getColor(COLORED_CHART) == state.getColor(COLORED_CHART) && !start) {
-    if(lastAirCondition < airCondition)
+    if(lastAirCondition < airCondition) {
       display.fillRect(lastBarPixel, BAR_Y, barPixel - lastBarPixel, BAR_HEIGHT, state.getColor(COLORED_CHART));
-  else
-    display.fillRect(barPixel, BAR_Y, lastBarPixel - barPixel, BAR_HEIGHT, CHART_BACKGROUND_COLOR);
-  } else {
-    if(lastAirCondition > airCondition)
+      Serial.println("add");
+    } else {
       display.fillRect(barPixel, BAR_Y, lastBarPixel - barPixel, BAR_HEIGHT, CHART_BACKGROUND_COLOR);
+      Serial.println("renove");
+    }
+  } else {
+    if(lastAirCondition > airCondition) {
+      Serial.println("remove2");
+      display.fillRect(barPixel, BAR_Y, lastBarPixel - barPixel, BAR_HEIGHT, CHART_BACKGROUND_COLOR);
+    } else
+      Serial.println("add2");
     display.fillRect(BAR_START_X, BAR_Y, barPixel - BAR_START_X, BAR_HEIGHT, state.getColor(COLORED_CHART));
   }
   drawSections();
