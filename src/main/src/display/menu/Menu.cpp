@@ -16,7 +16,7 @@
           Input(&general::calibrateTouch)
         ),
         MenuPage(
-          Input(&general::state),
+          Input(&general::language),
           Input(&general::kernMode),
           Input(&general::graphSpeed),
           Input(&general::segments),

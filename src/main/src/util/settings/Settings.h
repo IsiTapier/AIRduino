@@ -19,7 +19,7 @@ namespace general {
   extern Setting data;
   extern Setting calibrateTouch;
 
-  extern Setting state;
+  extern Setting language;
   extern Setting kernMode;
   extern Setting graphSpeed;
   extern Setting segments;

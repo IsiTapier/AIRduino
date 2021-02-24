@@ -72,6 +72,11 @@
     return (sizeof(array)/sizeof(T));
   }
 
+  template<class T>
+  int sizeOf(T* (&array)) {
+    return (sizeof(array)/sizeof(T));
+  }
+
   //global variables
   extern TFT_eSPI display;
   extern TouchScreen ts;

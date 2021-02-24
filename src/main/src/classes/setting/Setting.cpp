@@ -6,7 +6,7 @@
 #include "../../util/Util.h"
 
 Setting::Setting(void) {}
-Setting::Setting(SettingType type, String key, char* title, short defaultValue, char* debugMessage, short minValue, short maxValue, std::vector<String> names,  boolean colored) { //TODO DATATYPE
+Setting::Setting(SettingType type, String key, std::vector<String> title, short defaultValue, char* debugMessage, short minValue, short maxValue, std::vector<String>* names,  boolean colored) { //TODO DATATYPE
   _type = type;
   _key = key;
   _title = title;
@@ -56,29 +56,29 @@ SettingType Setting::getType() {
   return _type;
 }
 
-char* Setting::getTitle() {
-  return _title;
+String Setting::getTitle() {
+  return GETLANGUAGE(_title);
 }
 
 short Setting::getSize() {
-  return _names.size()-1;
+  return sizeOf(_names);
 }
 
 String Setting::getName(boolean reverse) {
-  if(_names.size() > _value) {
+  if(getSize() > _value) {
     if(reverse) {
       if(_type == SWITCH) {
-        return _names.at(!_value);
+        return GETLANGUAGE(_names[!_value]);
       } else if(_value > 0) {
-        return _names.at(_value-1);
+        return GETLANGUAGE(_names[_value-1]);
       } else {
-        return _names.back();
+        return GETLANGUAGE(_names[getSize()]);
       }
     } else {
-      return _names.at(_value);
+      return GETLANGUAGE(_names[_value]);
     }
   } else {
-    return _title;
+    return GETLANGUAGE(_title);
   }
 }
 
