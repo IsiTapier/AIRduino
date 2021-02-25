@@ -10,7 +10,7 @@
   PubSubClient client(espClient);
 
   String device_id;
-  String device_grade;
+  String device_class;
   unsigned long lastMsg = 0;
   char msg[MSG_BUFFER_SIZE];
   int value = 0;
@@ -45,101 +45,72 @@
       topic = topic + "" + (char)topic_char[i];
     }
 
-    if (topic == "config/get/" + device_id + "/grade") {
-      device_grade = "";
-      for (int i = 0; i < length; i++) {
-        device_grade = device_grade + "" + (char)payload[i];
+//get config via a single String
+
+  if (topic == "config/get/" + device_id) {
+    int digit = 0;
+    for (int x = 0; digit < length; x++) { //loop for every setting
+      String output = "";
+      if (digit <= length) {
+        for (int d = 0; (d < 100) && ((char)payload[digit] != ',') && ((char)payload[digit] != ';'); d++) { //loop to loop the single digits
+          output = output + "" + (char)payload[digit];
+          //Serial.println((char)payload[digit]);
+          digit++;
+          delay(1);
+        }
+        digit++;
       }
-      if (device_grade[0] == 'a' && device_grade[1] == 'u' && device_grade[2] == 't') { //if the grade is auto generated
-        debug(ERROR, DATABASE, "///////////////////// CONFIG ///////////////////////////");
-        debug(ERROR, DATABASE, "Please enter the grade of your device into the database");
-        debug(ERROR, DATABASE, "////////////////////////////////////////////////////////");
+      switch (x) {
+        case 0: { //grade
+          device_class = output;
+          Serial.print("Grade ");
+          Serial.println(device_class);
+          if (device_class[0] == 'a' && device_class[1] == 'u' && device_class[2] == 't') { //if the grade is auto generated
+            debug(ERROR, DATABASE, "///////////////////// CONFIG ///////////////////////////");
+            debug(ERROR, DATABASE, "Please enter the grade of your device into the database");
+            debug(ERROR, DATABASE, "////////////////////////////////////////////////////////");
+          }
+        }
+          break;
+        case 1: general::version.setValue((short) atoi(output.c_str()), false);
+          break;
+        case 2: general::maintenance_mode.setValue((short) atoi(output.c_str()), false);
+          break;
+        case 3: general::theme.setValue((short) atoi(output.c_str()), false);
+          break;
+        case 4: general::language.setValue((short) atoi(output.c_str()), false);
+          break;
+        case 5: general::sound.setValue((short) atoi(output.c_str()), false);
+          break;
+        case 6: general::blink.setValue((short) atoi(output.c_str()), false);
+          break;
+        case 7: general::graph_speed.setValue((short) atoi(output.c_str()), false);
+          break;
+        case 8: general::segments.setValue((short) atoi(output.c_str()), false);
+          break;
+        case 9: general::blink_thickness.setValue((short) atoi(output.c_str()), false);
+          break;
+        case 10: general::ventilating_timeout.setValue((short) atoi(output.c_str()), false);
+          break;
+        case 11: colorModes::c_design.setValue((short) atoi(output.c_str()), false);
+          break;
+        case 12: colorModes::c_chart.setValue((short) atoi(output.c_str()), false);
+          break;
+        case 13: colorModes::c_bar.setValue((short) atoi(output.c_str()), false);
+          break;
+        case 14: colorModes::c_state.setValue((short) atoi(output.c_str()), false);
+          break;
+        case 15: colorModes::c_time.setValue((short) atoi(output.c_str()), false);
+          break;
+        case 16: colorModes::c_value.setValue((short) atoi(output.c_str()), false);
+          break;
+        case 17: colorModes::c_slider.setValue((short) atoi(output.c_str()), false);
+          break;
       }
+      Serial.println();
     }
-
-    if (topic == "config/get/" + device_id + "/version") {
-      general::version.setValue((short) atoi((char*)payload), false);
-    }
-
-    if (topic == "config/get/" + device_id + "/maintenance_mode") {
-      //general: = atoi((char*)payload), false);
-    }
-
-    if (topic == "config/get/" + device_id + "/theme") {
-      general::theme.setValue((short) atoi((char*)payload), false);
-    }
-
-    if (topic == "config/get/" + device_id + "/state") {
-      general::state.setValue((short) atoi((char*)payload), false);
-      /*String language = "";
-      for (int i = 0; i < length; i++) {
-        language = language + "" + (char)payload[i];
-      }
-      if(language == "deutsch")
-        general::state.setValue(0, false);
-      else if(language == "englisch")
-        general::state.setValue(1, false);
-      else if(language == "franzoesisch")
-        general::state.setValue(2, false);
-      else if(language == "java")
-        general::state.setValue(3, false);
-      else if(language == "spanisch")
-        general::state.setValue(4, false);
-      else if(language == "special")
-        general::state.setValue(5, false);*/
-    }
-
-    if (topic == "config/get/" + device_id + "/peep") {
-      general::piezo.setValue((short) atoi((char*)payload), false);
-    }
-
-    if (topic == "config/get/" + device_id + "/blink") {
-      general::blink.setValue((short) atoi((char*)payload), false);
-    }
-
-    if (topic == "config/get/" + device_id + "/graphSpeed") {
-      general::graphSpeed.setValue((short) atoi((char*)payload), false);
-    }
-
-    if (topic == "config/get/" + device_id + "/menu_segments") {
-      general::segments.setValue((short) atoi((char*)payload), false);
-    }
-
-    if (topic == "config/get/" + device_id + "/blinkThickness") {
-      general::blinkThickness.setValue((short) atoi((char*)payload), false);
-    }
-
-    if (topic == "config/get/" + device_id + "/ventilatingTimeout") {
-      general::ventilatingTimeout.setValue((short) atoi((char*)payload), false); //int x = *payload
-    }
-
-    if (topic == "config/get/" + device_id + "/c_design") {
-      colorModes::variousColors.setValue((short) atoi((char*)payload), false);
-    }
-
-    if (topic == "config/get/" + device_id + "/c_chart") {
-      colorModes::coloredChart.setValue((short) atoi((char*)payload), false);
-    }
-
-    if (topic == "config/get/" + device_id + "/c_bar") {
-      colorModes::coloredBar.setValue((short) atoi((char*)payload), false);
-    }
-
-    if (topic == "config/get/" + device_id + "/c_state") {
-      colorModes::coloredState.setValue((short) atoi((char*)payload), false);
-    }
-
-    if (topic == "config/get/" + device_id + "/c_time") {
-      colorModes::coloredTime.setValue((short) atoi((char*)payload), false);
-    }
-
-    if (topic == "config/get/" + device_id + "/c_value") {
-      colorModes::coloredValue.setValue((short) atoi((char*)payload), false);
-    }
-
-    if (topic == "config/get/" + device_id + "/c_slider") {
-      colorModes::coloredSlider.setValue((short) atoi((char*)payload), false);
-    }
+    Serial.println("Config getting closed");
+  }
 
     if (topic == "maintenance/" + device_id) {
       Serial.println((char)payload[0]);
@@ -190,7 +161,7 @@ void maintenanceMode(int variant) {
   }
 
   void subToConfigChannel() {
-    String sub_config_get = "config/get/" + device_id + "/#";
+    String sub_config_get = "config/get/" + device_id;
     client.subscribe(sub_config_get.c_str());
     debug(INFO, SETUP, "Subscribed to: " + sub_config_get);
   }

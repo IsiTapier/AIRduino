@@ -14,17 +14,17 @@ namespace general {
 
   extern Setting version;
   extern Setting theme;
-  extern Setting piezo;
+  extern Setting sound;
   extern Setting blink;
   extern Setting data;
   extern Setting calibrateTouch;
 
-  extern Setting state;
+  extern Setting language;
   extern Setting kernMode;
-  extern Setting graphSpeed;
+  extern Setting graph_speed;
   extern Setting segments;
-  extern Setting blinkThickness;
-  extern Setting ventilatingTimeout;
+  extern Setting blink_thickness;
+  extern Setting ventilating_timeout;
 
   extern Setting debugPriority;
   extern Setting debugSetup;
@@ -37,14 +37,14 @@ namespace general {
 }
 
 namespace colorModes {
-  extern Setting variousColors;
-  extern Setting coloredChart;
-  extern Setting coloredBar;
-  extern Setting coloredState;
-  extern Setting coloredTime;
-  extern Setting coloredValue;
+  extern Setting c_design;
+  extern Setting c_chart;
+  extern Setting c_bar;
+  extern Setting c_state;
+  extern Setting c_time;
+  extern Setting c_value;
 
-  extern Setting coloredSlider;
+  extern Setting c_slider;
 }
 /*
 namespace colors {

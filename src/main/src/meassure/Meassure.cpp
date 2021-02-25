@@ -184,7 +184,7 @@
     Serial.print(sensor.getRZero(airConditionRaw, temperature, humidity)); Serial.print("\t");
     Serial.print(sensor.getRZero(airConditionRaw, temperature, humidity, 1)); Serial.print("\t");
     Serial.println(sensor.getRZero(airConditionRaw, temperature, humidity, "1"));*/
-    mysql_insert(device_grade, airCondition, temperature, humidity, pressure, 234.5);
+    mysql_insert(device_class, airCondition, temperature, humidity, pressure, 234.5);
   }
 
 

@@ -10,18 +10,18 @@
         MenuPage(
           Input(&general::version),
           Input(&general::theme),
-          Input(&general::piezo),
+          Input(&general::sound),
           Input(&general::blink),
           Input(&general::data),
           Input(&general::calibrateTouch)
         ),
         MenuPage(
-          Input(&general::state),
+          Input(&general::language),
           Input(&general::kernMode),
-          Input(&general::graphSpeed),
+          Input(&general::graph_speed),
           Input(&general::segments),
-          Input(&general::blinkThickness),
-          Input(&general::ventilatingTimeout)
+          Input(&general::blink_thickness),
+          Input(&general::ventilating_timeout)
         ),
         MenuPage(
           Input(&general::debugPriority),
@@ -34,15 +34,15 @@
     })},
     {SubMenu("Farb-Modi", {
         MenuPage(
-          Input(&colorModes::variousColors),
-          Input(&colorModes::coloredChart),
-          Input(&colorModes::coloredBar),
-          Input(&colorModes::coloredState),
-          Input(&colorModes::coloredTime),
-          Input(&colorModes::coloredValue)
+          Input(&colorModes::c_design),
+          Input(&colorModes::c_chart),
+          Input(&colorModes::c_bar),
+          Input(&colorModes::c_state),
+          Input(&colorModes::c_time),
+          Input(&colorModes::c_value)
         ),
         MenuPage(
-          Input(&colorModes::coloredSlider)
+          Input(&colorModes::c_slider)
         )
     })},
     {SubMenu("Farben", {

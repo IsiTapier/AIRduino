@@ -47,6 +47,11 @@ void Setting::setValue(short value, boolean upload) {
     value = _minValue;
   _oldValue = _value;
   _value = value;
+
+  debug(SPAMM, DATABASE, "Updated " + _key + ", " + _value);
+  Serial.print(_key);
+  Serial.print(_value);
+  Serial.println();
   if(_key != "" && upload) {
     config_update(_key, _value);
   }

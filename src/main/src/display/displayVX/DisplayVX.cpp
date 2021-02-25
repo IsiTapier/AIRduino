@@ -106,7 +106,7 @@ extern boolean DisplayVX::drop = false;
     } else if (state >= 3) {
       if(general::blink.getValue())
         drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, 1, WHITE);
-      if (state == PIEP && general::piezo.getValue())
+      if (state == PIEP && general::sound.getValue())
         digitalWrite(PIEZO, HIGH); //TODO: PIEP
       blinkSwitch = true;
     }

@@ -65,8 +65,9 @@
 
     }
     for(short x = 0; x <= 100; x++) {
-    //  client.loop();
+      client.loop();
     }
+
   }
 
   extern void Display::initDisplay() {

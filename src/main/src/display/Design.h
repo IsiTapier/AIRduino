@@ -33,7 +33,7 @@
 
 //settings
 #define STAGE_TIME 1*600
-#define VENTILATING_TIMEOUT general::ventilatingTimeout.getValue()*1000
+#define VENTILATING_TIMEOUT general::ventilating_timeout.getValue()*1000
 
 #define AVERAGING_MEASUREMENTS 5000
 #define AVERAGING_GRADIENT 20
@@ -65,12 +65,12 @@
 //DisplayV2
 
 //settings
-#define COLOR_MODE colorModes::variousColors.getValue()
-#define COLORED_BAR colorModes::coloredBar.getValue()
-#define COLORED_STATE colorModes::coloredState.getValue()
-#define COLORED_TIME colorModes::coloredTime.getValue()
-#define COLORED_PPM colorModes::coloredValue.getValue()
-#define COLORED_CHART colorModes::coloredChart.getValue()
+#define COLOR_MODE colorModes::c_design.getValue()
+#define COLORED_BAR colorModes::c_bar.getValue()
+#define COLORED_STATE colorModes::c_state.getValue()
+#define COLORED_TIME colorModes::c_time.getValue()
+#define COLORED_PPM colorModes::c_value.getValue()
+#define COLORED_CHART colorModes::c_chart.getValue()
 
 
 #define DISPLAYED_PPM_LOWEST 400
