@@ -6,7 +6,7 @@
 #include "Settings.h"
 
 namespace general {
-  Setting empty = Setting(EMPTY, "");
+  Setting empty = Setting(EMPTY);  
 
   Setting version = Setting(SWITCH, "version", "Version", 0, "'Version' changed", 0, 1, {"Version 1", "Version 2"}, false);
   Setting theme = Setting(SELECT, "theme", "Theme", 1, "'Theme' changed", 0, 1, {"light mode", "dark mode"});
@@ -22,14 +22,14 @@ namespace general {
   Setting blink_thickness = Setting(NUMBER, "blink_thickness", "Blink Dicke", 2, "'Blink Boarder Thickness' changed", 1, 9);
   Setting ventilating_timeout = Setting(NUMBER, "ventilating_timeout", "Timeout", 5, "'ventilatingTimeout' changed", 1, 9);
 
-  Setting debugPriority = Setting(MULTISELECT, "", "Debug", 0, "'Debug' changed", 0, 6, {"None", "Error", "Warning", "Important", "Debug", "Info", "Spamm"});
-  Setting debugSetup = Setting(SWITCH, "", "Debug Setup", 0, "'Debug Setup' changed");
-  Setting debugSensor = Setting(SWITCH, "", "Debug Sensor", 0, "'Debug Sensor' changed");
-  Setting debugDisplay = Setting(SWITCH, "", "Debug Display", 0, "'Debug Display' changed");
-  Setting debugMenu = Setting(SWITCH, "", "Debug Menu", 0, "'Debug Menu' changed");
-  Setting debugTouch = Setting(SWITCH, "", "Debug Touch", 0, "'Debug Touch' changed");
+  Setting debugPriority = Setting(MULTISELECT, "", {"Debug"}, 0, "'Debug' changed", 0, 6, {{"None"}, {"Error"}, {"Warning"}, {"Important"}, {"Debug"}, {"Info"}, {"Spamm"}});
+  Setting debugSetup = Setting(SWITCH, "", {"Debug Setup"}, 0, "'Debug Setup' changed");
+  Setting debugSensor = Setting(SWITCH, "", {"Debug Sensor"}, 0, "'Debug Sensor' changed");
+  Setting debugDisplay = Setting(SWITCH, "", {"Debug Display"}, 0, "'Debug Display' changed");
+  Setting debugMenu = Setting(SWITCH, "", {"Debug Menu"}, 0, "'Debug Menu' changed");
+  Setting debugTouch = Setting(SWITCH, "", {"Debug Touch"}, 0, "'Debug Touch' changed");
 
-  Setting maintenance_mode = Setting(MULTISELECT, "maintenance_mode", "Wartungsmodus", 0, "'Wartungsmodus' geändert", 0, 3);
+  Setting maintenance_mode = Setting(MULTISELECT, "maintenance_mode", {"Wartungsmodus"}, 0, "'Wartungsmodus' geändert", 0, 3);
 
 }
 

@@ -150,15 +150,14 @@ extern boolean DisplayVX::drop = false;
     }
 
     //Verhindert überschreiben von "ppm"
-    if (airCondition < 1000 && lastAirCondition >= 1000 || airCondition < 1000 && start) {
-      dPrint(String(airCondition) + " ", PPM_MARGIN_LEFT, PPM_Y, PPM_SIZE, state.getColor(COLORED_PPM), 6, DATABOX_BACKGROUND_COLOR, String(lastAirCondition));
-      dPrint("ppm", PPM_STRING_X, PPM_STRING_Y, PPM_STRING_SIZE, state.getColor(COLORED_PPM), 6);
-    } else if(airCondition >= 1000 && lastAirCondition < 1000)
+    if(airCondition >= 1000 && lastAirCondition < 1000)
       dPrint("ppm", PPM_STRING_X, PPM_STRING_Y, PPM_STRING_SIZE, DATABOX_BACKGROUND_COLOR, 6);
 
     //write new Pixels
     dPrint(airCondition, PPM_MARGIN_LEFT, PPM_Y, PPM_SIZE, state.getColor(COLORED_PPM), 6, DATABOX_BACKGROUND_COLOR, lastAirCondition);
 
+    if (airCondition < 1000 && lastAirCondition >= 1000 || airCondition < 1000 && start)
+      dPrint("ppm", PPM_STRING_X, PPM_STRING_Y, PPM_STRING_SIZE, state.getColor(COLORED_PPM), 6);
     //drawLoadingBar();
 
     //calculate time since last ventilating

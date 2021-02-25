@@ -7,6 +7,8 @@
 
 #include "Arduino.h"
 
+#define GETLANGUAGE(vector) (vector.empty() ? "" : vector.at(vector.size() > general::language.getValue() ? general::language.getValue() : 0))
+
 enum SettingType {
   EMPTY,
   ACTIVATOR,
@@ -20,7 +22,7 @@ enum SettingType {
 class Setting {
   public:
     Setting(void);
-    Setting(SettingType type, String key = "", char* title = "", short defaultValue = 0, char* debugMessage = "", short minValue = 0, short maxValue = 1, std::vector<String> names = {}, boolean colored = true);
+    Setting(SettingType type, String key = "", std::vector<String> title = {}, short defaultValue = 0, char* debugMessage = "", short minValue = 0, short maxValue = 1, std::vector<std::vector<String>> names = {}, boolean colored = true);
     short getValue();
     short getOldValue();
     short getDefaultValue();
@@ -28,7 +30,7 @@ class Setting {
     short getMaxValue();
     void setValue(short value, boolean upload = true);
     SettingType getType();
-    char* getTitle();
+    String getTitle();
     short getSize();
     boolean getColored();
     String getName(boolean reverse = false);
@@ -37,7 +39,7 @@ class Setting {
   private:
     SettingType _type;
     String _key;
-    char* _title;
+    std::vector<String> _title;
     short _value;
     short _oldValue;
     short _defaultValue;
@@ -47,7 +49,7 @@ class Setting {
     char* _nameOn;
     char* _nameOff;
     boolean _colored;
-    std::vector<String> _names;
+    std::vector<std::vector<String>> _names;
 };
 
 #endif
