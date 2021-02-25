@@ -31,14 +31,14 @@ extern boolean DisplayVX::drop = false;
   //                       |_|
 
 
-  extern void DisplayVX::setup() {
+  void DisplayVX::setup() {
     debug(DEBUG, SETUP, "DisplayVX SETUP started");
     start = true;
     debug(DEBUG, SETUP, "DisplayVX SETUP completed");
     debug(DEBUG, SETUP, "");
   }
 
-  extern void DisplayVX::loop() {
+  void DisplayVX::loop() {
     if(general::data.getValue())
       getData();
     else
@@ -59,7 +59,7 @@ extern boolean DisplayVX::drop = false;
   //              |_|            |___/
   //
 
-  extern void DisplayVX::drawDisplay() {
+  void DisplayVX::drawDisplay() {
     display.fillScreen(BACKGROUND_COLOR);
     display.fillRect(0, DATABOX_Y, DISPLAY_LENGTH, DATABOX_HEIGHT, DATABOX_BACKGROUND_COLOR);
     display.pushImage(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, gear, WHITE);
@@ -67,14 +67,14 @@ extern boolean DisplayVX::drop = false;
     debug(INFO, SETUP, "Display drawn");
   }
 
-  extern void DisplayVX::getData() {
+  void DisplayVX::getData() {
     lastState = state;
     lastAirCondition = airCondition;
     state = Meassure::getState();
     airCondition = Meassure::getAirCondition();
   }
 
-  extern void DisplayVX::generateData(int startPPM, int endPPM, int changePPM) {
+  void DisplayVX::generateData(int startPPM, int endPPM, int changePPM) {
     lastState = state;
     lastAirCondition = airCondition;
     if(start)
@@ -90,7 +90,7 @@ extern boolean DisplayVX::drop = false;
     state = getStateOf(airCondition);
   }
 
-  extern void DisplayVX::checkState() {
+  void DisplayVX::checkState() {
     if (blinkSwitch) {
       //restore Border
       drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, 1, BACKGROUND_COLOR);
@@ -113,7 +113,7 @@ extern boolean DisplayVX::drop = false;
   }
 
   //Write PPM, Time
-  extern void DisplayVX::writeInfo() {
+  void DisplayVX::writeInfo() {
     //ppm zeichnen
     if (lastState != state || start) {
       //Wenn sich der Wert geändert hat oder state sich geändert hat

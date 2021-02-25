@@ -4,6 +4,8 @@
 
 #include "Slider.h"
 
+using namespace general;
+
   Slider::Slider(void) {}
 
   Slider::Slider(Setting* setting) {
@@ -34,9 +36,9 @@
 
   void Slider::setValue(boolean value) {
     _setting->setValue(value);
-    if(general::debugMenu.getValue() && general::debugPriority.getValue())
+    if(debugMenu.getValue())
       debug(INFO, MENUD, "Value changed to", _setting->getValue());
-    if(mode == MENU)
+    if(mode.equals(MENU))
       draw();
   }
 

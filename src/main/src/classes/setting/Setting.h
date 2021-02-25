@@ -25,6 +25,9 @@ class Setting {
     Setting(SettingType type, String key = "", std::vector<String> title = {}, short defaultValue = 0, char* debugMessage = "", short minValue = 0, short maxValue = 1, std::vector<std::vector<String>> names = {}, boolean colored = true);
     short getValue();
     short getOldValue();
+    boolean hasChanged();
+    boolean equals(short value);
+    boolean equaled(short value);
     short getDefaultValue();
     short getMinValue();
     short getMaxValue();

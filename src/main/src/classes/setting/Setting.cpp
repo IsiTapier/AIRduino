@@ -28,6 +28,18 @@ short Setting::getOldValue() {
   return _oldValue;
 }
 
+boolean Setting::hasChanged() {
+  return _value == _oldValue ? false : true;
+}
+
+boolean Setting::equals(short value) {
+  return _value == value ? true : false;
+}
+
+boolean Setting::equaled(short value) {
+  return _oldValue == value ? true : false;
+}
+
 short Setting::getDefaultValue() {
   return _defaultValue;
 }

@@ -8,10 +8,6 @@
   TFT_eSPI display(DISPLAY_HEIGHT, DISPLAY_LENGTH);
   TouchScreen ts(TFT_D1, TFT_DC, TFT_CS, TFT_D0, TOUCH_RESISTANCE);
 
-  Mode mode = LOADINGSCREEN;
-  Mode lastMode;
-  Version lastVersion;
-
   Calibration calibration[] = {
       Calibration(189, 216, 400, 975),//(449, 714, 576, 1184), //576 1424 496 478 //216 875 //189 400
       Calibration(710, 784, 550, 900),

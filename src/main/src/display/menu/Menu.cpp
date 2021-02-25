@@ -70,7 +70,7 @@
   }
 
   void Menu::draw() {
-    if(lastMode != mode && mode == MENU || general::theme.getValue() != general::theme.getOldValue()) {
+    if(general::mode.hasChanged() && general::mode.equals(MENU) || general::theme.hasChanged()) {
       //draw menu top
       display.fillScreen(BACKGROUND_COLOR);
       display.fillRect(0, TOP_BAR_HEIGHT, DISPLAY_LENGTH, TOP_BAR_THICKNESS, TEXT_COLOR);

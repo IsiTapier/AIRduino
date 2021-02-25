@@ -17,18 +17,18 @@ extern int DisplayV2::lastBarPixel;
 //                        | |
 //                       |_|
 
-extern void DisplayV2::setup() {
+void DisplayV2::setup() {
   DisplayVX::setup();
   debug(DEBUG, SETUP, "DisplayV2 SETUP started");
   debug(DEBUG, SETUP, "DisplayV2 SETUP completed");
   debug(DEBUG, SETUP, "");
-  if(lastMode != LOADINGSCREEN) {
+  if(general::mode.equaled(LOADINGSCREEN)) {
     loop();
     start = false;
   }
 }
 
-extern void DisplayV2::loop() {
+void DisplayV2::loop() {
   if(start) {
     drawDisplay();
     drawBarBorder();
@@ -54,7 +54,7 @@ extern void DisplayV2::loop() {
 
 
 
-extern void DisplayV2::drawBarBorder() { //x,y,breite, höhe, dicke
+void DisplayV2::drawBarBorder() { //x,y,breite, höhe, dicke
   /*for(short z = 0; z < BAR_BORDER_THICKNESS; z++) {
     display.drawRect(BAR_BORDER_X - z, BAR_BORDER_Y - z, BAR_BORDER_LENGTH + z + 2, BAR_BORDER_HEIGHT + z + 2 , BAR_COLOR);
   }
@@ -73,7 +73,7 @@ extern void DisplayV2::drawBarBorder() { //x,y,breite, höhe, dicke
 }
 
 
-extern void DisplayV2::drawSections() {
+void DisplayV2::drawSections() {
   //    - Draw Sections -
   //display.drawLine(FIRST_SECTION_X, BAR_Y - 10, FIRST_SECTION_X, BAR_Y + 10 + BAR_HIGHT, WHITE);
   //display.drawLine(SECOND_SECTION_X, BAR_Y - 10, SECOND_SECTION_X, BAR_Y + 10 + BAR_HIGHT, WHITE);
@@ -87,7 +87,7 @@ extern void DisplayV2::drawSections() {
   drawLine(SECOND_SECTION_START_X, BAR_SECTIONS_Y, BAR_SECTIONS_LENGTH, BAR_SECTIONS_HEIGHT, BAR_SECTIONS_COLOR, 1, BAR_SECTIONS_STRIPE_DISTANCE);
 }
 
-extern void DisplayV2::drawBar() {
+void DisplayV2::drawBar() {
   //   - search position of the bar -
   barPixel = map(airCondition, DISPLAYED_PPM_LOWEST, DISPLAYED_PPM_HIGHEST, BAR_START_X, BAR_END_X);
   lastBarPixel = map(lastAirCondition, DISPLAYED_PPM_LOWEST, DISPLAYED_PPM_HIGHEST, BAR_START_X, BAR_END_X);
@@ -144,7 +144,7 @@ extern void DisplayV2::drawBar() {
   drawSections();
 }
 
-extern void DisplayV2::writeAnalogValue() {
+void DisplayV2::writeAnalogValue() {
     display.fillRect(0, 0, 25, 10, BACKGROUND_COLOR);
     dPrint(0, 0, 1, WHITE, analogRead(A0));
 }

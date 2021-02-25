@@ -4,9 +4,11 @@
 
 #include "Display.h"
 
+using namespace general;
+
   extern TSPoint Display::p;
 
-  extern void Display::setup() {
+  void Display::setup() {
     debug(DEBUG, SETUP, "Display SETUP started");
     display.begin();
     debug(INFO, SETUP, "Display connection started");
@@ -17,14 +19,13 @@
     eeprom();
     setupDatabaseConnection();
     loadingScreen();
-    lastMode = mode;
-    mode = CHART;
+    mode.setValue(CHART);
     debug(DEBUG, SETUP, "Display SETUP completed");
     debug(DEBUG, SETUP, "");
     Meassure::setup();
   }
 
-  extern void Display::eeprom() {
+  void Display::eeprom() {
     EEPROM.begin(EEPROM_SIZE);
     //    RESET EEPROM    //
     /*EEPROM.write(0, 0);
@@ -39,7 +40,7 @@
     }
     if(EEPROM.readShort(XMIN) == EEPROM.readShort(XMAX) || EEPROM.readShort(YMIN) == EEPROM.readShort(YMAX))
       ts.calibration();
-    if(general::debugSetup.getValue() && general::debugPriority.getValue()) {
+    if(debugSetup.getValue() && debugPriority.getValue()) {
       debug(INFO, SETUP, "EEPROM: sensor", EEPROM.read(0));
       debug(INFO, SETUP, "EEPROM: xmin", EEPROM.readShort(XMIN));
       debug(INFO, SETUP, "EEPROM: xmax", EEPROM.readShort(XMAX));
@@ -48,15 +49,15 @@
     }
   }
 
-  extern void Display::loop() {
+  void Display::loop() {
     handleTouch();
     initDisplay();
-    if(mode == MENU) {
+    if(mode.getValue() == MENU) {
       Menu::loop();
-    } else if(mode == CHART) {
+    } else if(mode.getValue() == CHART) {
       Meassure::loop();
       handleTouch();
-      if(!general::version.getValue()) {
+      if(!version.getValue()) {
         DisplayV1::loop();
       } else {
         DisplayV2::loop();
@@ -70,26 +71,27 @@
 
   }
 
-  extern void Display::initDisplay() {
-    if(lastMode != mode || lastVersion != general::version.getValue() || general::theme.getValue() != general::theme.getOldValue()) {
-      if(mode == CHART) {
-        if(!general::version.getValue()) {
+  void Display::initDisplay() {
+    if(mode.hasChanged() || (version.hasChanged() && !mode.equals(MENU)) || theme.hasChanged() || language.hasChanged()) {
+      if(mode.getValue() == CHART) {
+        if(!version.getValue()) {
           DisplayV1::setup();
         } else {
           DisplayV2::setup();
         }
-      } else if(mode == MENU && lastMode != MENU || general::theme.getValue() != general::theme.getOldValue()) {
+      } else if(mode.getValue() == MENU) {
         Menu::setup();
       } else {
 
       }
-      general::theme.setValue(general::theme.getValue(), false);
+      version.setValue(version.getValue(), false);
+      theme.setValue(theme.getValue(), false);
+      language.setValue(language.getValue(), false);
+      mode.setValue(mode.getValue(), false);
     }
-    lastMode = mode;
-    lastVersion = (Version) general::version.getValue();
   }
 
-  extern void Display::handleTouch() {
+  void Display::handleTouch() {
     if(!p.isTouching()) {
       // a point object holds x y and z coordinates
       p = ts.getPoint();
@@ -99,17 +101,17 @@
       if(p.isTouching()) {
         p.calibrate();
         if(p.isTouching(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_END_X, MENU_ARROW_BACK_START_Y, MENU_ARROW_BACK_END_Y)) {
-          if(general::debugSetup.getValue() && general::debugPriority.getValue())
+          if(debugSetup.getValue())
             debug(INFO, SETUP, "change Mode");
-          if(mode == MENU)
-            mode = (Mode) CHART;
-          else if(mode == CHART)
-            mode = (Mode) MENU;
+          if(mode.equals(MENU))
+            mode.setValue(CHART);
+          else if(mode.equals(CHART))
+            mode.setValue(MENU);
         } else if(p.isTouching(MENU_ARROW_RESET_START_X, MENU_ARROW_RESET_END_X, MENU_ARROW_RESET_START_Y, MENU_ARROW_RESET_END_Y)) {
-          if(general::debugSetup.getValue() && general::debugPriority.getValue())
+          if(debugSetup.getValue())
             debug(INFO, SETUP, "reset");
           Menu::reset();
-        } else if(mode == MENU) {
+        } else if(mode.equals(MENU)) {
           Menu::handleTouch(p);
         }
       }

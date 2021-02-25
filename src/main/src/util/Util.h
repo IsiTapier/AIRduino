@@ -48,11 +48,6 @@
     MENU = 2
   };
 
-  /*enum InputType {
-    SLIDER,
-    EMPTY
-  };*/
-
   template<class T>
   struct _init_list_with_square_brackets {
     const std::initializer_list<T>& list;
@@ -81,9 +76,6 @@
   extern TFT_eSPI display;
   extern TouchScreen ts;
   extern Calibration calibration[];
-  extern Mode mode;
-  extern Mode lastMode;
-  extern Version lastVersion;
 
   //State
   State getStateOf(int value);

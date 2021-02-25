@@ -25,6 +25,8 @@
 #define uc String(char(150))
 #define cC String(char(135))
 #define CC String(char(128))
+#define nw String(char(164))
+#define NW String(char(165))
 
 //general
 #define ROTATION 3

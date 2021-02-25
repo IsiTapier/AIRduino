@@ -346,7 +346,8 @@ void TouchScreen::calibration(void) {
   Serial.print("x:"); Serial.print("\t min: "); Serial.print(EEPROM.readShort(XMIN)); Serial.print(" max: "); Serial.println(EEPROM.readShort(XMAX));
   Serial.print("y:"); Serial.print("\t min: "); Serial.print(EEPROM.readShort(YMIN)); Serial.print(" max: "); Serial.println(EEPROM.readShort(YMAX));
   display.fillScreen(BACKGROUND_COLOR);
-  lastMode = LOADINGSCREEN;
+  general::mode.setValue(LOADINGSCREEN);
+  general::mode.setValue(general::mode.getOldValue());
 }
 
 

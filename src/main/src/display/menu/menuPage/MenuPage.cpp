@@ -4,6 +4,8 @@
 
 #include "MenuPage.h"
 
+using namespace general;
+
 MenuPage::MenuPage(Input inputOne, Input inputTwo, Input inputThree, Input inputFour, Input inputFive, Input inputSix) {
   _inputOne = inputOne;
   _inputTwo = inputTwo;
@@ -20,7 +22,7 @@ MenuPage::MenuPage(Input inputOne, Input inputTwo, Input inputThree, Input input
 }
 
 void MenuPage::setup() {
-  if(mode == MENU) {   //TODO page check
+  if(mode.equals(MENU)) {   //TODO page check
     _inputOne.setup();
     _inputTwo.setup();
     _inputThree.setup();
@@ -31,7 +33,7 @@ void MenuPage::setup() {
 }
 
 void MenuPage::handleTouch(TSPoint p) {
-  if(mode == MENU) {   //TODO page check
+  if(mode.equals(MENU)) {   //TODO page check
     _inputOne.handleTouch(p);
     _inputTwo.handleTouch(p);
     _inputThree.handleTouch(p);

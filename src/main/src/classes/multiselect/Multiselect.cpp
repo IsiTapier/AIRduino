@@ -4,6 +4,8 @@
 
 #include "Multiselect.h"
 
+using namespace general;
+
   Multiselect::Multiselect(void) {}
 
   Multiselect::Multiselect(Setting* setting) {
@@ -34,7 +36,7 @@
   void Multiselect::setValue(int value) {
     _setting->setValue(value);
     debug(INFO, MENUD, "Value changed to", _setting->getValue());
-    if(mode == MENU)
+    if(mode.equals(MENU))
       write();
   }
 

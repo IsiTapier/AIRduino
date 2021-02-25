@@ -4,6 +4,8 @@
 
 #include "Select.h"
 
+using namespace general;
+
   Select::Select(void) {}
 
   Select::Select(Setting* setting) {
@@ -36,7 +38,7 @@
   void Select::setValue(boolean value) {
     if(_setting->getValue() != value) {
       _setting->setValue(value);
-      if(general::debugMenu.getValue() && general::debugPriority.getValue())
+      if(debugMenu.getValue() && debugPriority.getValue())
         debug(INFO, MENUD, "Value changed to", _setting->getValue());
     }
   }

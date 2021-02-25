@@ -4,6 +4,8 @@
 
 #include "Input.h"
 
+using namespace general;
+
   Input::Input(void) {}
   Input::Input(Setting* setting) {
     _setting = setting;
@@ -34,8 +36,8 @@
   }
 
   void Input::setup() {
-    if(mode == MENU) {
-      if(lastMode == MENU && general::theme.getValue() == general::theme.getOldValue())
+    if(mode.equals(MENU)) {
+      if(!mode.hasChanged() && !theme.hasChanged())
         clear();
       else
         draw();
@@ -53,7 +55,7 @@
   }
 
   void Input::draw() {
-    if(mode == MENU && lastMode != MENU || general::theme.getValue() != general::theme.getOldValue()) {
+    if(mode.hasChanged() || theme.hasChanged()) {
       if(_inputSection != 0)
         display.fillRect(0, MENU_SECTION_Y(_inputSection), MENU_SECTION_LENGTH+1, MENU_SECTION_BORDER_THICKNESS, TEXT_COLOR);
       debug(INFO, MENUD, "Input:", _inputSection, "drawn");
@@ -65,7 +67,7 @@
   }
 
   void Input::handleTouch(TSPoint p) {
-    if(mode == MENU) {
+    if(mode.equals(MENU)) {
       if(_setting->getType() == SWITCH)
         _slider.checkTouch(p);
       else if(_setting->getType() == ACTIVATOR)
@@ -80,7 +82,7 @@
   }
 
   void Input::reset() {
-    if(mode == MENU) {
+    if(mode.equals(MENU)) {
       if(_setting->getType() == SWITCH)
         _slider.reset();
       else if(_setting->getType() == MULTISELECT)

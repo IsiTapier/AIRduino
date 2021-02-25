@@ -33,6 +33,7 @@ namespace general {
   extern Setting debugMenu;
   extern Setting debugTouch;
 
+  extern Setting mode;
   extern Setting maintenance_mode;
 }
 
