@@ -8,19 +8,19 @@
 namespace general {
   Setting empty = Setting(EMPTY);  
 
-  Setting version = Setting(SWITCH, "version", "Version", 0, "'Version' changed", 0, 1, {"Version 1", "Version 2"}, false);
-  Setting theme = Setting(SELECT, "theme", "Theme", 1, "'Theme' changed", 0, 1, {"light mode", "dark mode"});
-  Setting sound = Setting(SWITCH, "sound", "Piepser", 1, "'Pieser' changed");
-  Setting blink = Setting(SWITCH, "blink", "Blink", 1, "'Blink' changed");
-  Setting data = Setting(SWITCH, "", "Data", 1, "Data gettering changed", 0, 1, {"generierte Daten", "Sensor Daten"}); //TODO: connect to database
-  Setting calibrateTouch = Setting(ACTIVATOR, "", "Touch kalibrieren");
+  Setting version = Setting(SWITCH, "version", {"Version"}, 0, "'Version' changed", 0, 1, {{"Version 1"}, {"Version 2"}}, false);
+  Setting theme = Setting(SELECT, "theme", {"Theme"}, 1, "'Theme' changed", 0, 1, {{"light mode"}, {"dark mode"}});
+  Setting sound = Setting(SWITCH, "sound", {"Piepser"}, 1, "'Pieser' changed");
+  Setting blink = Setting(SWITCH, "blink", {"Blink"}, 1, "'Blink' changed");
+  Setting data = Setting(SWITCH, "", {"Data"}, 1, "Data gettering changed", 0, 1, {{"generierte Daten"}, {"Sensor Daten"}}); //TODO: connect to database
+  Setting calibrateTouch = Setting(ACTIVATOR, "", {"Touch kalibrieren"});
 
-  Setting language = Setting(MULTISELECT, "language", "Status", 0, "'Status' changed", 0, 5, {"deutsch", "englisch", "franz"+oe+"sisch", "java", "spanisch", "special"});
-  Setting kernMode = Setting(SWITCH, "", "Kern Modus", 0, "'Kern Modus' changed");
-  Setting graph_speed = Setting(NUMBER, "graph_speed", "Graph Dauer", 5, "'Graph Speed' changed", 1, 9);
-  Setting segments = Setting(NUMBER, "segments", "Menu Felder", 6, "'Segments' changed", 1, 6);
-  Setting blink_thickness = Setting(NUMBER, "blink_thickness", "Blink Dicke", 2, "'Blink Boarder Thickness' changed", 1, 9);
-  Setting ventilating_timeout = Setting(NUMBER, "ventilating_timeout", "Timeout", 5, "'ventilatingTimeout' changed", 1, 9);
+  Setting language = Setting(MULTISELECT, "language", {"Status"}, 0, "'Status' changed", 0, 5, {{"deutsch"}, {"englisch"}, {"franz"+oe+"sisch"}, {"java"}, {"spanisch"}, {"special"}});
+  Setting kernMode = Setting(SWITCH, "", {"Kern Modus"}, 0, "'Kern Modus' changed");
+  Setting graph_speed = Setting(NUMBER, "graph_speed", {"Graph Dauer"}, 5, "'Graph Speed' changed", 1, 9);
+  Setting segments = Setting(NUMBER, "segments", {"Menu Felder"}, 6, "'Segments' changed", 1, 6);
+  Setting blink_thickness = Setting(NUMBER, "blink_thickness", {"Blink Dicke"}, 2, "'Blink Boarder Thickness' changed", 1, 9);
+  Setting ventilating_timeout = Setting(NUMBER, "ventilating_timeout", {"Timeout"}, 5, "'ventilatingTimeout' changed", 1, 9);
 
   Setting debugPriority = Setting(MULTISELECT, "", {"Debug"}, 0, "'Debug' changed", 0, 6, {{"None"}, {"Error"}, {"Warning"}, {"Important"}, {"Debug"}, {"Info"}, {"Spamm"}});
   Setting debugSetup = Setting(SWITCH, "", {"Debug Setup"}, 0, "'Debug Setup' changed");
@@ -34,14 +34,14 @@ namespace general {
 }
 
 namespace colorModes {
-  Setting c_design = Setting(SWITCH, "c_design", "farbiges Design", 0, "'farbiges Disign' changed");
-  Setting c_chart = Setting(SWITCH, "c_chart", "farbiger Graph", 1, "'farbiger Graph' changed");
-  Setting c_bar = Setting(SWITCH, "c_bar", "farbige Leiste", 1, "'farbige Leiste' changed");
-  Setting c_state = Setting(SWITCH, "c_state", "farbiger Status", 0, "'farbiger Status' changed");
-  Setting c_time = Setting(SWITCH, "c_time", "farbige Zeit", 1, "'farbige Zeit' changed");
-  Setting c_value = Setting(SWITCH, "c_value", "farbiger Wert", 1, "'farbiger Wert' changed");
+  Setting c_design = Setting(SWITCH, "c_design", {"farbiges Design"}, 0, "'farbiges Disign' changed");
+  Setting c_chart = Setting(SWITCH, "c_chart", {"farbiger Graph"}, 1, "'farbiger Graph' changed");
+  Setting c_bar = Setting(SWITCH, "c_bar", {"farbige Leiste"}, 1, "'farbige Leiste' changed");
+  Setting c_state = Setting(SWITCH, "c_state", {"farbiger Status"}, 0, "'farbiger Status' changed");
+  Setting c_time = Setting(SWITCH, "c_time", {"farbige Zeit"}, 1, "'farbige Zeit' changed");
+  Setting c_value = Setting(SWITCH, "c_value", {"farbiger Wert"}, 1, "'farbiger Wert' changed");
 
-  Setting c_slider = Setting(SWITCH, "c_slider", "farbiger Toggle", 0, "'farbiger Toggle' changed");
+  Setting c_slider = Setting(SWITCH, "c_slider", {"farbiger Toggle"}, 0, "'farbiger Toggle' changed");
 }
 
 /*namespace colors {
