@@ -70,7 +70,7 @@
     }
 
     if (topic == "config/get/" + device_id + "/state") {
-      general::state.setValue((short) atoi((char*)payload), false);
+      general::language.setValue((short) atoi((char*)payload), false);
       /*String language = "";
       for (int i = 0; i < length; i++) {
         language = language + "" + (char)payload[i];

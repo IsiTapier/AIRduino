@@ -58,18 +58,18 @@
     })}
   };
 
-  extern void Menu::setup() {
+  void Menu::setup() {
     debug(DEBUG, SETUP, "Menu SETUP started");
     draw();
     subMenus[currentSubMenu].setup();
     debug(DEBUG, SETUP, "Menu SETUP completed");
   }
 
-  extern void Menu::loop() {
+  void Menu::loop() {
     delay(100);
   }
 
-  extern void Menu::draw() {
+  void Menu::draw() {
     if(lastMode != mode && mode == MENU || general::theme.getValue() != general::theme.getOldValue()) {
       //draw menu top
       display.fillScreen(BACKGROUND_COLOR);
@@ -92,7 +92,7 @@
     }
   }
 
-  extern void Menu::setSubMenu(int subMenu) {
+  void Menu::setSubMenu(int subMenu) {
     if(subMenu < 0)
       subMenu = 0;
     if(subMenu >= sizeOf(subMenus))
@@ -102,7 +102,7 @@
     subMenus[currentSubMenu].setup();
   }
 
-  extern void Menu::shiftSubMenu(boolean left) {
+  void Menu::shiftSubMenu(boolean left) {
     if(left) {
       if(currentSubMenu <= 0)
         setSubMenu(sizeOf(subMenus)-1);
@@ -116,13 +116,13 @@
     }
   }
 
-  extern void Menu::handleTouch(TSPoint p) {
+  void Menu::handleTouch(TSPoint p) {
     if(!checkTouch(p)) {
       subMenus[currentSubMenu].handleTouch(p);
     }
   }
 
-  extern boolean Menu::checkTouch(TSPoint p) {
+  boolean Menu::checkTouch(TSPoint p) {
     if(p.isTouching(MENU_ARROW_LEFT_START_X, MENU_ARROW_LEFT_END_X, MENU_ARROW_LEFT_START_Y, MENU_ARROW_LEFT_END_Y)) {
       shiftSubMenu(true);
       return(true);
@@ -133,7 +133,7 @@
       return(false);
   }
 
-  extern void Menu::reset() {          //TODO reset
+  void Menu::reset() {          //TODO reset
     /*if(currentSubMenu != DEFAULT_SUB_MENU)
       setSubMenu(DEFAULT_SUB_MENU);
     else*/
