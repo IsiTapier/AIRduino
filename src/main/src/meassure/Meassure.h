@@ -57,6 +57,9 @@ class Meassure {
     static int pressure;
     static int humidity;
 
+    static int testCounter;
+    static unsigned long lasttime;
+
 };
 
 #endif

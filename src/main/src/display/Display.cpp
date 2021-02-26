@@ -51,25 +51,23 @@ using namespace general;
   }
 
   void Display::loop() {
-    handleTouch();
     initDisplay();
-    if(mode.getValue() == MENU) {
+    handleTouch();
+    Meassure::loop();
+    boolean changed = DisplayV1::getGraphData();
+    /*if(mode.getValue() == MENU) {
       Menu::loop();
-    } else if(mode.getValue() == CHART) {
-      Meassure::loop();
-      handleTouch();
+    } else */
+    if(mode.getValue() == CHART) {
       if(!version.getValue()) {
-        DisplayV1::loop();
+        DisplayV1::loop(changed);
       } else {
         DisplayV2::loop();
       }
     } else {
 
     }
-    for(short x = 0; x <= 100; x++) {
-      client.loop();
-    }
-
+    client.loop();
   }
 
   void Display::initDisplay() {

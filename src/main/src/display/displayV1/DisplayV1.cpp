@@ -27,20 +27,29 @@ extern int DisplayV1::lastPixel = 0;
     debug(DEBUG, SETUP, "DisplayV1 SETUP completed");
     debug(DEBUG, SETUP, "");
     if(general::mode.equaled(LOADINGSCREEN))
-      loop();
+      loop(false);
   }
 
-  void DisplayV1::loop() {
+  boolean DisplayV1::getGraphData() {
+    DisplayVX::loop(general::mode.equals(CHART) && general::mode.equaled(CHART));
+    if(averageData()) {
+      fillData();
+      return true;
+    }
+    return false;
+  }
+
+  void DisplayV1::loop(boolean changed) {
     if(start) {
       drawDisplay();
       createLines();
-    }
-    DisplayVX::loop();
-    //graph
-    if (averageData()) {
-      fillData();
+      DisplayVX::loop();
       drawGraph();
     }
+    //graph
+    if(changed)
+      drawGraph();
+    
     //end setup
     if(start)
       start = false;
@@ -59,9 +68,9 @@ extern int DisplayV1::lastPixel = 0;
   boolean DisplayV1::averageData() {
     valuesGraph[counter] = airCondition;
     counter ++;
-    if (!(counter < general::graph_speed.getValue())) {
+    if (!(counter < general::graph_speed.getValue()*10)) {
       lastPixel = pixel;
-      pixel = average(valuesGraph, 0, general::graph_speed.getValue());
+      pixel = average(valuesGraph, 0, general::graph_speed.getValue()*10);
       pixel = map(pixel, DISPLAYED_PPM_LOWEST, DISPLAYED_PPM_HIGHEST, GRAPH_START_Y, GRAPH_END_Y);
       if(lastPixel != 0)
         pixel = ALPHA_GRAPH * pixel + (1 - ALPHA_GRAPH) * lastPixel;
@@ -81,7 +90,7 @@ extern int DisplayV1::lastPixel = 0;
       graphData[currentPosition] = pixel;
     } else {
       if(graphData[0] != graphData[1])
-        drawConnection(1, state >= BLINK && blinkSwitch ? TEXT_COLOR : BACKGROUND_COLOR);
+        drawConnection(1, state >= BLINK && blinkSwitch > 10 ? TEXT_COLOR : BACKGROUND_COLOR);
       for (short x = 0; x < DISPLAY_LENGTH; x++) {
         graphData[x] = graphData[x + 1];
       }
@@ -102,7 +111,7 @@ extern int DisplayV1::lastPixel = 0;
     if(COLORED_BAR && airCondition < DISPLAYED_PPM_HIGHEST && lastAirCondition >= DISPLAYED_PPM_HIGHEST)
       display.drawLine(0, GRAPH_END_Y, DISPLAY_LENGTH, GRAPH_END_Y, state.getColor(false));*/
     //draw Graph
-    if(currentPosition >= DISPLAY_LENGTH-1 || state.getColor(COLORED_CHART) != lastState.getColor(COLORED_CHART) && !COLOR_MODE || COLORED_BAR && airCondition < DISPLAYED_PPM_HIGHEST && lastAirCondition >= DISPLAYED_PPM_HIGHEST || general::mode.hasChanged() && general::mode.equals(CHART)) {
+    if(currentPosition >= DISPLAY_LENGTH-1 || state.getColor(COLORED_CHART) != lastState.getColor(COLORED_CHART) && !COLOR_MODE /*|| COLORED_BAR && airCondition < DISPLAYED_PPM_HIGHEST && lastAirCondition >= DISPLAYED_PPM_HIGHEST || general::mode.hasChanged() && general::mode.equals(CHART)*/ || start) {
       for (short x = 1; x <= currentPosition; x++) {
         if(state < BLINK || !blinkSwitch || x != 1)
           drawConnection(x);

@@ -9,7 +9,7 @@ extern State DisplayVX::state;
 extern State DisplayVX::lastState;
 extern int DisplayVX::airCondition;
 extern int DisplayVX::lastAirCondition = 0;
-extern boolean DisplayVX::blinkSwitch = false;
+extern int DisplayVX::blinkSwitch = 0;
 extern int DisplayVX::statusLetters;
 extern String DisplayVX::statusInfo;
 extern String DisplayVX::lastTime;
@@ -38,14 +38,16 @@ extern boolean DisplayVX::drop = false;
     debug(DEBUG, SETUP, "");
   }
 
-  void DisplayVX::loop() {
+  void DisplayVX::loop(boolean draw) {
     if(general::data.getValue())
       getData();
     else
-      generateData(400, 1100, 30);
+      generateData(400, 1100, 1);
     //info
-    writeInfo();
-    checkState();
+    if(draw) {
+      writeInfo();
+      checkState();
+    }
   }
 
 
@@ -91,7 +93,7 @@ extern boolean DisplayVX::drop = false;
   }
 
   void DisplayVX::checkState() {
-    if (blinkSwitch) {
+    if (blinkSwitch == 1) {
       //restore Border
       drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, 1, BACKGROUND_COLOR);
       display.drawLine(0, DISPLAY_HEIGHT-1, DISPLAY_LENGTH-1, DISPLAY_HEIGHT-1, DATABOX_BACKGROUND_COLOR);
@@ -102,14 +104,20 @@ extern boolean DisplayVX::drop = false;
       display.drawLine(0, TOP_BAR_HEIGHT, 0, STATUS_END_HEIGHT-1, state.getColor(COLORED_BAR));
       display.drawLine(DISPLAY_LENGTH-1, TOP_BAR_HEIGHT, DISPLAY_LENGTH-1, STATUS_END_HEIGHT-1, state.getColor(COLORED_BAR));
       digitalWrite(PIEZO, LOW);
-      blinkSwitch = false;
-    } else if (state >= 3) {
+      if(state < 3)
+        blinkSwitch = 0;
+    } else if(blinkSwitch == 11) {
       if(general::blink.getValue())
         drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, 1, WHITE);
-      if (state == PIEP && general::sound.getValue())
+       if (state == PIEP && general::sound.getValue())
         digitalWrite(PIEZO, HIGH); //TODO: PIEP
-      blinkSwitch = true;
     }
+    if(state >= 3) {
+      if(blinkSwitch == 20)
+        blinkSwitch = 0;
+      blinkSwitch++;
+    } else if(blinkSwitch != 0)
+      blinkSwitch = 1;
   }
 
   //Write PPM, Time
