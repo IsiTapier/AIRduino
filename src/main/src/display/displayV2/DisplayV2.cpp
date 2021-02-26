@@ -128,18 +128,14 @@ void DisplayV2::drawBar() {
   } else if(lastState.getColor(COLORED_CHART) == state.getColor(COLORED_CHART) && !start) {
     if(lastAirCondition < airCondition) {
       display.fillRect(lastBarPixel, BAR_Y, barPixel - lastBarPixel, BAR_HEIGHT, state.getColor(COLORED_CHART));
-      Serial.println("add");
     } else {
       display.fillRect(barPixel, BAR_Y, lastBarPixel - barPixel, BAR_HEIGHT, CHART_BACKGROUND_COLOR);
-      Serial.println("renove");
     }
   } else {
-    if(lastAirCondition > airCondition) {
-      Serial.println("remove2");
+    if(lastAirCondition > airCondition) 
       display.fillRect(barPixel, BAR_Y, lastBarPixel - barPixel, BAR_HEIGHT, CHART_BACKGROUND_COLOR);
-    } else
-      Serial.println("add2");
-    display.fillRect(BAR_START_X, BAR_Y, barPixel - BAR_START_X, BAR_HEIGHT, state.getColor(COLORED_CHART));
+    else
+      display.fillRect(BAR_START_X, BAR_Y, barPixel - BAR_START_X, BAR_HEIGHT, state.getColor(COLORED_CHART));
   }
   drawSections();
 }

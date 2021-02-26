@@ -111,28 +111,16 @@
     }
     Serial.println("Config getting closed");
   }
-
-    if (topic == "maintenance/" + device_id) {
-      Serial.println((char)payload[0]);
-      int rValue = (char)payload[0] - 48;
-      if (rValue != general::maintenance_mode.getValue()) {
-        if ((rValue == 1 || rValue == 3) && general::maintenance_mode.getValue() == 0) {
-          general::maintenance_mode.setValue(rValue, false);
-          debug(IMPORTANT, SETUP, "/////////////////////////////////");
-          debug(IMPORTANT, SETUP, "Maintenance Mode activated");
-          debug(IMPORTANT, SETUP, "/////////////////////////////////");
-          maintenanceMode(rValue);
-        }
-        if (rValue == 0 && general::maintenance_mode.getValue() == 1) {
-          general::maintenance_mode.setValue(rValue, false);
-        }
-      }
+    if(general::maintenance_mode.getValue() >= 1) {
+      debug(IMPORTANT, SETUP, "/////////////////////////////////");
+      debug(IMPORTANT, SETUP, "Maintenance Mode activated");
+      debug(IMPORTANT, SETUP, "/////////////////////////////////");
+      maintenanceMode();  
     }
   }
 
-void maintenanceMode(int variant) {
-  general::maintenance_mode.setValue(1, false);
-  while (general::maintenance_mode.getValue() == 1) {
+void maintenanceMode() {
+  while (general::maintenance_mode.getValue() > 1) {
     Serial.println("Maintenance Mode");
     reconnect();
 
@@ -143,7 +131,7 @@ void maintenanceMode(int variant) {
   debug(IMPORTANT, SETUP, "Maintenance Mode disabled");
   debug(IMPORTANT, SETUP, "/////////////////////////////////");
 
-  if (variant == 3) { //implemented to restart the arduino remotely by will
+  if (general::maintenance_mode.getValue() == 3) { //implemented to restart the arduino remotely by will
     ESP.restart();
   }
 }
@@ -218,7 +206,7 @@ void maintenanceMode(int variant) {
       delay(500);
       Serial.print(".");
       timeout++;
-      if(timeout > 10)
+      if(timeout > 50)
         break;
     }
     randomSeed(micros());
@@ -246,7 +234,7 @@ void maintenanceMode(int variant) {
         Serial.print(client.state());
         Serial.println(" try again in 1 seconds");
         // Wait 1 seconds before retrying
-        //delay(1000);
+        //delay(10);
       }
     }
     if(!client.connected())

@@ -30,7 +30,7 @@
   void setupDatabaseConnection();
   void callback(char* topic_char, byte* payload, unsigned int length);
   void config_request();
-  void maintenanceMode(int variant);
+  void maintenanceMode();
   void subToConfigChannel();
   void subscribeToMaintenanceCheck();
   void config_update(String column, String value);

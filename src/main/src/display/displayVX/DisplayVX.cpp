@@ -63,7 +63,7 @@ extern boolean DisplayVX::drop = false;
     display.fillScreen(BACKGROUND_COLOR);
     display.fillRect(0, DATABOX_Y, DISPLAY_LENGTH, DATABOX_HEIGHT, DATABOX_BACKGROUND_COLOR);
     display.pushImage(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, gear, WHITE);
-    display.fillRect(0, TOP_BAR_HEIGHT, DISPLAY_LENGTH, TOP_BAR_THICKNESS, TEXT_COLOR);
+    if(general::version.getValue() == 1) display.fillRect(0, TOP_BAR_HEIGHT, DISPLAY_LENGTH, TOP_BAR_THICKNESS, TEXT_COLOR);
     debug(INFO, SETUP, "Display drawn");
   }
 
@@ -124,11 +124,12 @@ extern boolean DisplayVX::drop = false;
       //Draw Datatbox
 
       //Draw Bar
-      if(COLORED_BAR || start) {
-        display.fillRect(0, DATABOX_BAR_Y, DISPLAY_LENGTH, DATABOX_BAR_THICKNESS, state.getColor(COLORED_BAR));
-        display.fillRect(0, TOP_BAR_HEIGHT, DISPLAY_LENGTH, TOP_BAR_THICKNESS, state.getColor(COLORED_BAR));
-      }
-
+      // if((BLACK_MODE == 0) && (general::version.getValue() == 0)) {
+        if(COLORED_BAR || start) {
+          display.fillRect(0, DATABOX_BAR_Y, DISPLAY_LENGTH, DATABOX_BAR_THICKNESS, state.getColor(COLORED_BAR));
+          display.fillRect(0, TOP_BAR_HEIGHT, DISPLAY_LENGTH, DATABOX_BAR_THICKNESS/* TOP_BAR_THICKNESS */, state.getColor(COLORED_BAR));
+        }
+      // }
       //Draw PPM
       if(airCondition < 0)
         airCondition = 0;
@@ -146,7 +147,6 @@ extern boolean DisplayVX::drop = false;
 
       display.fillRect(x+1, DATABOX_BAR_Y, DISPLAY_LENGTH, DATABOX_BAR_THICKNESS, GREY);
       display.fillRect(x+1, TOP_BAR_HEIGHT, DISPLAY_LENGTH, TOP_BAR_THICKNESS, GREY);
-
     }
 
     //Verhindert überschreiben von "ppm"

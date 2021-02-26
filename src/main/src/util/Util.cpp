@@ -77,7 +77,7 @@
     for (int i = x; i < length; i+=a) {
       for (int j = y; j < height; j+=b) {
         if(filter1) {
-          if(display.readPixel(i, j) == (0x0FFFU * BACKGROUND_COLOR)/100) {
+          if(display.readPixel(i, j) == (BACKGROUND_COLOR/* 0xFFFFU * BACKGROUND_COLOR */)/* /100 */) {
             if(filter2 && filtervalue1 >= DISPLAYED_PPM_HIGHEST)
               display.drawPixel(i, j, filtervalue2.getColor(COLORED_BAR));
             else
