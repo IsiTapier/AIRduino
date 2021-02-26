@@ -34,13 +34,14 @@
       debug(DEBUG, MENUD, _setting->getDebugMessage());
   }
 
-  void Number::setValue(short value) {
+  void Number::setValue(short value, boolean active) {
     if(value > _setting->getMaxValue())
       value = _setting->getMinValue();
     if(value < _setting->getMinValue())
       value = _setting->getMaxValue();
     _setting->setValue(value);
-    write();
+    if(active)
+      write();
     debug(INFO, MENUD, "Value changed to", _setting->getValue());
   }
 
@@ -69,7 +70,7 @@
     dPrint(text, MENU_NUMBER_NUMBER_START_X, MENU_SECTION_TEXT_Y(_section), MENU_NUMBER_NUMBER_SIZE, TEXT_COLOR, 3, BACKGROUND_COLOR, oldText);
   }
 
-  void Number::reset() {
+  void Number::reset(boolean active) {
     if(_setting->getValue() != _setting->getDefaultValue())
-      setValue(_setting->getDefaultValue());
+      setValue(_setting->getDefaultValue(), active);
   }

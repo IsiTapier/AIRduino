@@ -16,11 +16,11 @@ class Slider {
     Slider& setSection(byte section);
     byte getSection();
     void init();
-    void reset();
+    void reset(boolean active);
     void checkTouch(TSPoint p);
 
   private:
-    void setValue(boolean value);
+    void setValue(boolean value, boolean active = true);
     void changeValue();
     void draw();
     void write(boolean init = false);

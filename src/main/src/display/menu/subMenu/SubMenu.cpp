@@ -73,11 +73,11 @@ boolean SubMenu::checkTouch(TSPoint p) {
     return(false);
 }
 
-void SubMenu::reset() {
+void SubMenu::reset(boolean active) {
   /*if(_currentPage != _defaultPage)
     setPage(_defaultPage);
   else
     _pages.at(_currentPage).reset();*/
   for(int i = 0; i < _pages.size(); i++)
-    _pages.at(i).reset();
+      _pages.at(i).reset(active && i == _currentPage ? true : false);
 }

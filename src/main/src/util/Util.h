@@ -19,6 +19,7 @@
 #include "../display/Design.h"
 #include "settings/Settings.h"
 #include "database/Database.h"
+#include <list>
 
 #define LIMIT_GOOD 600
 #define LIMIT_MEDIUM 800
@@ -76,6 +77,7 @@
   extern TFT_eSPI display;
   extern TouchScreen ts;
   extern Calibration calibration[];
+  extern std::list<uint16_t> co2Data;
 
   //State
   State getStateOf(int value);

@@ -42,7 +42,7 @@ void setup() {
   Serial.println("Serial communication started at 9600 baud");
   Serial.println();
   Display::setup();
-  general::debugPriority.setValue(INFO);
+  general::debugPriority.setValue(DEBUG);
 }
 
 //  _

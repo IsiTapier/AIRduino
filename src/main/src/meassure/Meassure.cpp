@@ -37,7 +37,7 @@
   extern int Meassure::pressure;
   extern int Meassure::humidity;
 
-  extern void Meassure::setup() {
+  void Meassure::setup() {
     debug(DEBUG, SETUP, "Meassure SETUP started");
     pinMode(PIEZO, OUTPUT);
     pinMode(SENSOR, INPUT);
@@ -56,7 +56,7 @@
     debug(DEBUG, SETUP, "");
   }
 
-  extern void Meassure::loop() {
+  void Meassure::loop() {
     meassureEnvironment();
     meassureAirCondition();
     mapAirCondition();
@@ -67,27 +67,27 @@
   }
 
   //Getter
-  extern State Meassure::getState() {
+  State Meassure::getState() {
     return(state);
   }
 
-  extern int Meassure::getAirCondition() {
+  int Meassure::getAirCondition() {
     return((int) airCondition);
   }
 
-  extern int Meassure::getLowest() {
+  int Meassure::getLowest() {
     return(minPPM);
   }
 
-  extern int Meassure::getHighest() {
+  int Meassure::getHighest() {
     return(maxPPM);
   }
 
-  extern unsigned long Meassure::getStartTime() {
+  unsigned long Meassure::getStartTime() {
     return(startTime);
   }
 
-  extern void Meassure::debugMeassure() {
+  void Meassure::debugMeassure() {
 /*    if (general::debugSensor.getValue() && general::debugPriority.getValue()) {
       Serial.println("");
       Serial.println("Sensor");
@@ -110,7 +110,7 @@
   // | |  | |  __/ (_| \__ \__ \ |_| | | |  __/
   // |_|  |_|\___|\__,_|___/___/\__,_|_|  \___|
 
-  extern void Meassure::meassureAirCondition() {
+  void Meassure::meassureAirCondition() {
     //Messung
     int timeLeft = 1000-(millis()%1000);
     if(timeLeft < 600) {
@@ -148,7 +148,7 @@
     }
   }
 
-  extern void Meassure::meassureEnvironment() {
+  void Meassure::meassureEnvironment() {
     temperature = bme.readTemperature();
     pressure = bme.readPressure();
     humidity = bme.readHumidity();
@@ -165,7 +165,7 @@
   // |_____/ \__,_|\__\__,_|
 
 
-  extern void Meassure::mapAirCondition() {
+  void Meassure::mapAirCondition() {
     //to PPM
   /*  if (airCondition <= calibration[EEPROM.read(0)].getLowestSensor())
       airCondition = calibration[EEPROM.read(0)].getLowestSensor();*/
@@ -188,7 +188,7 @@
   }
 
 
-  extern void Meassure::calculateGradient() {
+  void Meassure::calculateGradient() {
     // gradient ist die Differenz zwischen altem und neuem Wert
     //store last AirConditions
     for (int i = AVERAGING_GRADIENT * 2 - 1; i > 0; i--) {
@@ -204,7 +204,7 @@
     gradient = now - last;
   }
 
-  extern void Meassure::checkVentilating() {
+  void Meassure::checkVentilating() {
     //start Ventilating
     if (gradient < MAX_DECREASE && state != VENTILATING) { // Wenn die Differenz die Hemmschwelle übersteigt: Wird Ventilating erkannt
       state = (State) VENTILATING;
@@ -237,7 +237,7 @@
     last = now;
   }
 
-  extern void Meassure::setState() {
+  void Meassure::setState() {
     // define colorState  -changed
     if(state != -1) {
       state = getStateOf(airCondition);

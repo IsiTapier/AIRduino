@@ -34,11 +34,11 @@ using namespace general;
     }
   }
 
-  void Slider::setValue(boolean value) {
+  void Slider::setValue(boolean value, boolean active) {
     _setting->setValue(value);
     if(debugMenu.getValue())
       debug(INFO, MENUD, "Value changed to", _setting->getValue());
-    if(mode.equals(MENU))
+    if(mode.equals(MENU) && active)
       draw();
   }
 
@@ -65,7 +65,7 @@ using namespace general;
     dPrint(text, MENU_MARGIN_LEFT, MENU_SECTION_TEXT_Y(_section), MENU_SECTION_SIZE, TEXT_COLOR, 3, BACKGROUND_COLOR, oldText, MENU_SECTION_OLD_SIZE);
   }
 
-  void Slider::reset() {
+  void Slider::reset(boolean active) {
     if(_setting->getValue() != _setting->getDefaultValue())
-      setValue(_setting->getDefaultValue());
+      setValue(_setting->getDefaultValue(), active);
   }

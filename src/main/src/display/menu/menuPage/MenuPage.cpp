@@ -43,11 +43,11 @@ void MenuPage::handleTouch(TSPoint p) {
   }
 }
 
-void MenuPage::reset() {
-  _inputOne.reset();
-  _inputTwo.reset();
-  _inputThree.reset();
-  _inputFour.reset();
-  _inputFive.reset();
-  _inputSix.reset();
+void MenuPage::reset(boolean active) {
+  _inputOne.reset(active);
+  _inputTwo.reset(active);
+  _inputThree.reset(active);
+  _inputFour.reset(active);
+  _inputFive.reset(active);
+  _inputSix.reset(active);
 }

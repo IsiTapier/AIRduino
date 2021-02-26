@@ -63,7 +63,7 @@ using namespace general;
   }
 
   void Input::clear() {
-    display.fillRect(MENU_SECTION_BORDER_THICKNESS, (MENU_SECTION_Y(_inputSection) + MENU_SECTION_BORDER_THICKNESS), (MENU_SECTION_LENGTH+1 - MENU_SECTION_BORDER_THICKNESS - MENU_SECTION_BORDER_SHIFT), (MENU_SECTION_HEIGHT - MENU_SECTION_BORDER_THICKNESS), BACKGROUND_COLOR);
+    display.fillRect(0, (MENU_SECTION_Y(_inputSection) + MENU_SECTION_BORDER_THICKNESS), (MENU_SECTION_LENGTH+1), (MENU_SECTION_HEIGHT - MENU_SECTION_BORDER_THICKNESS), BACKGROUND_COLOR);
   }
 
   void Input::handleTouch(TSPoint p) {
@@ -81,14 +81,14 @@ using namespace general;
     }
   }
 
-  void Input::reset() {
+  void Input::reset(boolean active) {
     if(mode.equals(MENU)) {
       if(_setting->getType() == SWITCH)
-        _slider.reset();
+        _slider.reset(active);
       else if(_setting->getType() == MULTISELECT)
-        _multiselect.reset();
+        _multiselect.reset(active);
       else if(_setting->getType() == NUMBER)
-        _number.reset();
+        _number.reset(active);
       else if(_setting->getType() == SELECT)
         _select.reset();
     }

@@ -16,11 +16,11 @@ class Multiselect {
     Multiselect& setSection(byte section);
     byte getSection();
     void init();
-    void reset();
+    void reset(boolean active);
     void checkTouch(TSPoint p);
 
   private:
-    void setValue(int value);
+    void setValue(int value, boolean active = true);
     void changeValue();
     void write(boolean init = false);
 

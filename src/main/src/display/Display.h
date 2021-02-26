@@ -22,6 +22,7 @@ class Display {
 
   private:
     static TSPoint p;
+    static unsigned long lastModeChange;
 
 };
 

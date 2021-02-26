@@ -164,7 +164,6 @@ extern boolean DisplayVX::drop = false;
     long startTime = Meassure::getStartTime();
     seconds = (millis() - startTime) / 1000 % 60;
     minutes = ((millis() - startTime) / 1000 - seconds) / 60;
-
     //create String
     time = "";
     if (minutes < 10)
@@ -179,9 +178,10 @@ extern boolean DisplayVX::drop = false;
     //dPrint(lasttime, timeR_X, timeR_Y, timeR_SIZE, BAR_BACKGROUND_COLOR, 8);
     //write new Pixels
     if (minutes >= 20 && COLORED_TIME) {
-      if(seconds == 0 && minutes == 20 || start)
-        dPrint(time, TIMER_X, TIMER_Y, TIMER_SIZE, TIME_COLOR_CRITICAL, 8);
-      else
+      if(seconds == 0 && minutes == 20 || start) {
+        dPrint(time, TIMER_X, TIMER_Y, TIMER_SIZE, TIME_COLOR_CRITICAL, 8, DATABOX_BACKGROUND_COLOR, start ? "" : lastTime);
+        dPrint(":  ", TIMER_X, TIMER_Y, TIMER_SIZE, TIME_COLOR_CRITICAL, 8, DATABOX_BACKGROUND_COLOR, "   ");
+      } else
         dPrint(time, TIMER_X, TIMER_Y, TIMER_SIZE, TIME_COLOR_CRITICAL, 8, DATABOX_BACKGROUND_COLOR, lastTime);
     } else {
       if(start)

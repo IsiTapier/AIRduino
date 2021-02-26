@@ -7,6 +7,7 @@
 using namespace general;
 
   extern TSPoint Display::p;
+  extern unsigned long Display::lastModeChange = 0;
 
   void Display::setup() {
     debug(DEBUG, SETUP, "Display SETUP started");
@@ -101,12 +102,15 @@ using namespace general;
       if(p.isTouching()) {
         p.calibrate();
         if(p.isTouching(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_END_X, MENU_ARROW_BACK_START_Y, MENU_ARROW_BACK_END_Y)) {
-          if(debugSetup.getValue())
-            debug(INFO, SETUP, "change Mode");
-          if(mode.equals(MENU))
-            mode.setValue(CHART);
-          else if(mode.equals(CHART))
-            mode.setValue(MENU);
+          if(millis() - lastModeChange >= MENU_BUTTON_COOLDOWN) {
+            if(debugSetup.getValue())
+              debug(INFO, SETUP, "change Mode");
+            if(mode.equals(MENU))
+              mode.setValue(CHART);
+            else if(mode.equals(CHART))
+              mode.setValue(MENU);
+            lastModeChange = millis();
+          }
         } else if(p.isTouching(MENU_ARROW_RESET_START_X, MENU_ARROW_RESET_END_X, MENU_ARROW_RESET_START_Y, MENU_ARROW_RESET_END_Y)) {
           if(debugSetup.getValue())
             debug(INFO, SETUP, "reset");

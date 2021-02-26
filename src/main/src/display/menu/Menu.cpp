@@ -137,6 +137,6 @@
     /*if(currentSubMenu != DEFAULT_SUB_MENU)
       setSubMenu(DEFAULT_SUB_MENU);
     else*/
-      for(int i = 0; i < sizeOf(subMenus); i++)
-        subMenus[i].reset();
+    for(int i = 0; i < sizeOf(subMenus); i++)
+      subMenus[i].reset(i == currentSubMenu ? true : false);
   }

@@ -13,7 +13,7 @@ class SubMenu {
     SubMenu(void);
     SubMenu(char* title, std::vector<MenuPage> pages, short defaultPage = 0);
     void setup();
-    void reset();
+    void reset(boolean active = false);
     void handleTouch(TSPoint p);
     void clear();
 

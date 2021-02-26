@@ -19,7 +19,7 @@ class Input {
     Input(Setting* setting);
     void setSection(byte section);
     void setup();
-    void reset();
+    void reset(boolean active);
     void handleTouch(TSPoint p);
 
   private:

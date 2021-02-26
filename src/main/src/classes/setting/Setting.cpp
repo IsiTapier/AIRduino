@@ -57,13 +57,11 @@ void Setting::setValue(short value, boolean upload) {
     value = _maxValue;
   if(value < _minValue)
     value = _minValue;
+  
   _oldValue = _value;
   _value = value;
-
+  
   debug(SPAMM, DATABASE, "Updated " + _key + ", " + _value);
-  Serial.print(_key);
-  Serial.print(_value);
-  Serial.println();
   if(_key != "" && upload) {
     config_update(_key, _value);
   }
@@ -82,21 +80,10 @@ short Setting::getSize() {
 }
 
 String Setting::getName(boolean reverse) {
-  if(getSize() > _value) {
-    if(reverse) {
-      if(_type == SWITCH) {
-        return GETLANGUAGE(_names.at(!_value));
-      } else if(_value > 0) {
-        return GETLANGUAGE(_names[_value-1]);
-      } else {
-        return GETLANGUAGE(_names[getSize()]);
-      }
-    } else {
-      return GETLANGUAGE(_names[_value]);
-    }
-  } else {
-    return GETLANGUAGE(_title);
-  }
+  if(reverse)
+    return GETNAME(_type == SELECT ? !_value : _oldValue);
+  else
+    return GETNAME(_value);
 }
 
 boolean Setting::getColored() {

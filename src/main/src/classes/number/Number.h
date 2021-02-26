@@ -16,11 +16,11 @@ class Number {
     Number& setSection(byte section);
     byte getSection();
     void init();
-    void reset();
+    void reset(boolean active);
     void checkTouch(TSPoint p);
 
   private:
-    void setValue(short value);
+    void setValue(short value, boolean active = true);
     void draw();
     void write(boolean init = false);
 

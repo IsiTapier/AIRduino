@@ -50,9 +50,9 @@ using namespace general;
 
   void Select::write() {
     String text = _setting->getName(_setting->getValue());
-    dPrint(text, round(MENU_SECTION_LENGTH/4), MENU_SECTION_TEXT_Y(_section), MENU_SECTION_SIZE, TEXT_COLOR, 4);
+    dPrint(text, round(MENU_SECTION_LENGTH/4), MENU_SECTION_TEXT_Y(_section), MENU_SECTION_HALF_SIZE, TEXT_COLOR, 4);
     text = _setting->getName(!_setting->getValue());
-    dPrint(text, floor(MENU_SECTION_LENGTH/4*3), MENU_SECTION_TEXT_Y(_section), MENU_SECTION_SIZE, TEXT_COLOR, 4);
+    dPrint(text, floor(MENU_SECTION_LENGTH/4*3), MENU_SECTION_TEXT_Y(_section), MENU_SECTION_HALF_SIZE, TEXT_COLOR, 4);
   }
 
   void Select::reset() {

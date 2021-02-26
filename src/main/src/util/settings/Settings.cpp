@@ -16,7 +16,7 @@ namespace general {
   Setting data = Setting(SWITCH, "", {"Daten", "data", "donn"+ea+"es", "data", "datos"}, 1, "Data gettering changed", 0, 1, {{"generierte Daten", "generated data", "donn"+ea+"es g"+ea+"n"+ea+"r"+ea+"es", "data sing digawe", "datos generados"}, {"Sensor Daten", "sensor data", "donn"+ea+"es du capteur", "data sensor", "datos del sensor"}}); //TODO: connect to database
   Setting calibrateTouch = Setting(ACTIVATOR, "", {"Touch kalibrieren", "calibrate Touch", "calibrage tactile", "tutul kalibrasi", "calibrar el tacto"});
 
-  Setting language = Setting(MULTISELECT, "language", {"Sprache", "language", "langue", "basa", "idioma"}, 0, "'Status' changed", 0, 5, {{"deutsch", "german", "allemand", "jerman", "alem"+aa+"n"}, {"englisch", "english", "anglais"}, {"franz"+oe+"sisch", "french", "fran"+cC+"aise", "prancis", "franc"+ea+"s"}, {"java", "java", "javanais", "wong jawa", "javan"+ea+"s"}, {"spanisch", "spanish", "espagnol", "spanyol","espa"+nw+"ol"}, {"spezial", "special", "special", "khusus", "especial", "ESPecial"}});
+  Setting language = Setting(MULTISELECT, "language", {"Sprache", "language", "langue", "basa", "idioma"}, 0, "'Status' changed", 0, 5, {{"deutsch", "german", "allemand", "jerman", "alem"+aa+"n"}, {"englisch", "english", "anglais", "basa inggris", "ingl"+ea+"s"}, {"franz"+oe+"sisch", "french", "fran"+cC+"aise", "prancis", "franc"+ea+"s"}, {"java", "java", "javanais", "wong jawa", "javan"+ea+"s"}, {"spanisch", "spanish", "espagnol", "spanyol","espa"+nw+"ol"}, {"spezial", "special", "special", "khusus", "especial", "ESPecial"}});
   Setting kernMode = Setting(SWITCH, "", {"Kern Modus", "Kern mode", "mode de Kern", "mode Kern", "modo de Kern"}, 0, "'Kern Modus' changed");
   Setting graph_speed = Setting(NUMBER, "graph_speed", {"Graph Dauer", "Graph Speed", "vitesse de graphe", "kacepetan grafik", "velocidad gr"+aa+"fica"}, 5, "'Graph Speed' changed", 1, 9);
   Setting segments = Setting(NUMBER, "segments", {"Menu Felder", "menu inputs", "entr"+ea+"es de menu", "kothak menu", "entradas de men"+ua}, 6, "'Segments' changed", 1, 6);
@@ -29,7 +29,8 @@ namespace general {
   Setting debugDisplay = Setting(SWITCH, "", {"Debug Display", "debug display", "d"+ea+"boguer affichage", "tampilan debug", "depurar de mostrar"}, 0, "'Debug Display' changed");
   Setting debugMenu = Setting(SWITCH, "", {"Debug Menu", "debug menu", "d"+ea+"boguer menu", "menu debug", "depurar de men"+ua}, 0, "'Debug Menu' changed");
   Setting debugTouch = Setting(SWITCH, "", {"Debug Touch", "debug touch", "d"+ea+"boguer toucher", "tutul debug", "depurar de tocar"}, 0, "'Debug Touch' changed");
-
+  
+  Setting debugDatabase = Setting(SWITCH, "", {"Debug Datenbank", "debug database"}, 1, "'Debug Database' changed");
   Setting mode = Setting(MULTISELECT, "", {"Modus", "mode", "mode", "pantun", "moda"}, LOADINGSCREEN, "'Mode' changed", 0, 3);
   Setting maintenance_mode = Setting(MULTISELECT, "maintenance_mode", {"Wartungsmodus", "maintance mode", "mode de maintenance", "mode pangop"+ag+"nan", "mode de mantenimiento"}, 0, "'Wartungsmodus' changed", 0, 3);
 

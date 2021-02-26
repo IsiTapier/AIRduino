@@ -33,10 +33,10 @@ using namespace general;
     }
   }
 
-  void Multiselect::setValue(int value) {
+  void Multiselect::setValue(int value, boolean active) {
     _setting->setValue(value);
     debug(INFO, MENUD, "Value changed to", _setting->getValue());
-    if(mode.equals(MENU))
+    if(mode.equals(MENU) && active)
       write();
   }
 
@@ -56,7 +56,7 @@ using namespace general;
     dPrint(text, MENU_SECTION_LENGTH/2, MENU_SECTION_TEXT_Y(_section), MENU_SECTION_SIZE, TEXT_COLOR, 4, BACKGROUND_COLOR, oldText, MENU_SECTION_OLD_SIZE);
   }
 
-  void Multiselect::reset() {
+  void Multiselect::reset(boolean active) {
     if(_setting->getValue() != _setting->getDefaultValue())
-      setValue(_setting->getDefaultValue());
+      setValue(_setting->getDefaultValue(), active);
   }
