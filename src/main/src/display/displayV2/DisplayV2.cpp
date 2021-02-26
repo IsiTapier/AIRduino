@@ -32,8 +32,9 @@ void DisplayV2::loop() {
   if(start) {
     drawDisplay();
     drawBarBorder();
+    DisplayVX::loop();
   }
-  DisplayVX::loop();
+ // DisplayVX::loop();
   drawBar();
   //end setup
   if(start)

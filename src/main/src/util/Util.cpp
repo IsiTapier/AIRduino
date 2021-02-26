@@ -14,8 +14,6 @@
       Calibration(40, 60, 400, 1000)
   };
 
- std::list<uint16_t> co2Data; 
-
   //State
   State getStateOf(int value) {
          if (value <= LIMIT_GOOD)

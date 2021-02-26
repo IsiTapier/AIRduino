@@ -14,7 +14,7 @@ class DisplayVX {
 
   public:
     static void setup();
-    static void loop();
+    static void loop(boolean draw = true);
 
   protected:
     static void drawDisplay();
@@ -28,7 +28,7 @@ class DisplayVX {
     static State lastState;
     static int airCondition;
     static int lastAirCondition;
-    static boolean blinkSwitch;
+    static int blinkSwitch;
     static int statusLetters;
     static String statusInfo;
     static String lastTime;

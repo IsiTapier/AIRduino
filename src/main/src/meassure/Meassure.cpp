@@ -37,6 +37,9 @@
   extern int Meassure::pressure;
   extern int Meassure::humidity;
 
+  extern int Meassure::testCounter = 0;
+  extern unsigned long Meassure::lasttime;
+
   void Meassure::setup() {
     debug(DEBUG, SETUP, "Meassure SETUP started");
     pinMode(PIEZO, OUTPUT);
@@ -112,12 +115,12 @@
 
   void Meassure::meassureAirCondition() {
     //Messung
-    int timeLeft = 1000-(millis()%1000);
-    if(timeLeft < 600) {
-      timeLeft += 1000;
+    int timeLeft = STAGE_TIME-(millis()%STAGE_TIME);
+    if(timeLeft < 0.8*STAGE_TIME) {
+      timeLeft += STAGE_TIME;
       //Serial.println("WARNING: Timing error!");
     }
-    timeLeft-10;
+    timeLeft-=10;
 
     tempAirCondition = 0;
     temptempAirCondition = 0;
@@ -143,9 +146,16 @@
 
     airConditionLast = airCondition;
 //    airCondition = sensor.getPPM(temperature, humidity);
-
-    while(millis()%1000 > 100) {
+    
+    int time = floor(millis()/1000);
+    if(lasttime != time) {
+      //Serial.println(testCounter);
+      testCounter = 0;
     }
+    testCounter++;
+    lasttime = time;
+
+    while(millis()%STAGE_TIME > 0) {}
   }
 
   void Meassure::meassureEnvironment() {

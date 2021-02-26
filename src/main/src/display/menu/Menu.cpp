@@ -66,7 +66,6 @@
   }
 
   void Menu::loop() {
-    delay(100);
   }
 
   void Menu::draw() {
