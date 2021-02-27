@@ -48,6 +48,7 @@
 //get config via a single String
 
   if (topic == "config/get/" + device_id) {
+    debug(IMPORTANT, SETUP, "Config received");
     int digit = 0;
     for (int x = 0; digit < length; x++) { //loop for every setting
       String output = "";
@@ -63,8 +64,8 @@
       switch (x) {
         case 0: { //grade
           device_class = output;
-          Serial.print("Grade ");
-          Serial.println(device_class);
+          /* Serial.print("Grade ");
+          Serial.println(device_class); */
           if (device_class[0] == 'a' && device_class[1] == 'u' && device_class[2] == 't') { //if the grade is auto generated
             debug(ERROR, DATABASE, "///////////////////// CONFIG ///////////////////////////");
             debug(ERROR, DATABASE, "Please enter the grade of your device into the database");
@@ -107,9 +108,7 @@
         case 17: colorModes::c_slider.setValue((short) atoi(output.c_str()), false);
           break;
       }
-      Serial.println();
     }
-    Serial.println("Config getting closed");
   }
     if(general::maintenance_mode.getValue() >= 1) {
       debug(IMPORTANT, SETUP, "/////////////////////////////////");
@@ -140,7 +139,7 @@ void maintenanceMode() {
     getUniqueID();
     subToConfigChannel();
     subscribeToMaintenanceCheck();
-    debug(NONE, SETUP, "Requesting config...");
+    debug(IMPORTANT, SETUP, "Requesting config...");
     client.publish("config/request", device_id.c_str());
     delay(500);
     for (short x = 0; x <= 1000; x++) {
@@ -171,11 +170,11 @@ void maintenanceMode() {
     config_update(column, (String)value);
   }
 
-  void mysql_insert(String grade, int co2, double temp, double humidity, double pressure, double altitude) {
+  void mysql_insert(String grade, int co2, double temp) {
     if (!(grade[0] == 'a' && grade[1] == 'u' && grade[2] == 't')) {
-      String output = "VALUES ('" + grade + "', " + co2 + ", " + temp + ", " + humidity + ", " + pressure + ", " + altitude + ")";
+      String output = "VALUES ('" + grade + "', " + co2 + ", " + temp + ")";
       client.publish("mysql/insert", output.c_str());
-      debug(INFO, DATABASE, "INSERTED into LOG grade: " + grade + " co2: " + co2 + " temp: " + temp + " humidity: " + humidity + " pressure: " + pressure + " altitude: " + altitude);
+      debug(INFO, DATABASE, "INSERTED into LOG grade: " + grade + " co2: " + co2 + " temp: " + temp);
       //Serial.println("INSERTED into LOG grade: " + grade + " co2: " + co2 + " temp: " + temp + " humidity: " + humidity + " pressure: " + pressure + " altitude: " + altitude);
     }
 }

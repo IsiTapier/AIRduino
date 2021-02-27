@@ -54,8 +54,7 @@ class Meassure {
     static State state;
     static int colorState;
     static int temperature;
-    static int pressure;
-    static int humidity;
+
 
     static int testCounter;
     static unsigned long lasttime;

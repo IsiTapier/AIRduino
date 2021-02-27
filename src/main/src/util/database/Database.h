@@ -35,7 +35,7 @@
   void subscribeToMaintenanceCheck();
   void config_update(String column, String value);
   void config_update(String column, int value);
-  void mysql_insert(String grade, int co2, double temp, double humidity, double pressure, double altitude);
+  void mysql_insert(String grade, int co2, double temp);
   void getUniqueID();
   void setup_wifi();
   void reconnect();

@@ -34,8 +34,6 @@
   extern State Meassure::state;
   extern int Meassure::colorState;
   extern int Meassure::temperature;
-  extern int Meassure::pressure;
-  extern int Meassure::humidity;
 
   extern int Meassure::testCounter = 0;
   extern unsigned long Meassure::lasttime;
@@ -194,7 +192,7 @@
     Serial.print(sensor.getRZero(airConditionRaw, temperature, humidity)); Serial.print("\t");
     Serial.print(sensor.getRZero(airConditionRaw, temperature, humidity, 1)); Serial.print("\t");
     Serial.println(sensor.getRZero(airConditionRaw, temperature, humidity, "1"));*/
-    mysql_insert(device_class, airCondition, temperature, humidity, pressure, 234.5);
+    mysql_insert(device_class, airCondition, temperature);
   }
 
 

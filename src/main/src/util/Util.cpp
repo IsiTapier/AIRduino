@@ -141,7 +141,6 @@
   void dPrint(int text, int x, int y, int size, int color, int datum, int backgroundColor, int oldText, int oldTextSize, int padding) {
     dPrint(String(text), x, y, size, color, datum, backgroundColor, (oldText == -1) ? "" : String(oldText), oldTextSize, padding);
   }
-
   //Loading Screen
   void loadingScreen() {
     debug(DEBUG, SETUP, "loadingscreen started");
