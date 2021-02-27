@@ -17,7 +17,6 @@
   // extern MQ135 Meassure::sensor = MQ135(GAS_SENSOR);
   extern Adafruit_BME280 Meassure::bme = Adafruit_BME280(BMESDA, BMESCL);
   extern MHZ19 Meassure::MHZ19b;
-  extern HardwareSerial Meassure::sensorSerial = HardwareSerial(MHZ19SERIAL);
   extern unsigned long Meassure::tempAirCondition;
   extern unsigned long Meassure::temptempAirCondition;
   extern float Meassure::airConditionTemp;
@@ -57,8 +56,8 @@
     } else {
       debug(WARNING, SETUP, "Could not find a valid BME280 sensor, check wiring!");
     }
-    sensorSerial.begin(MHZ19BAUDRATE);
-    MHZ19b.begin(sensorSerial);
+    Serial1.begin(MHZ19BAUDRATE);
+    MHZ19b.begin(Serial1);
     MHZ19b.autoCalibration(false);
     debug(INFO, SENSOR, "ABC Status: " + MHZ19b.getABC() ? "ON" : "OFF");  // now print it's status
     // MHZ19b.setRange(RANGE);
@@ -152,6 +151,7 @@
     airConditionRaw = airCondition;*/
 
     airCondition = MHZ19b.getCO2(true, true);
+    Serial.println(airCondition);
     temperature = MHZ19b.getTemperature(true, true);
 
     //Wert smoothen;

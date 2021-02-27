@@ -40,7 +40,6 @@ class Meassure {
     static Adafruit_BME280 bme;
     static MQ135 sensor;
     static MHZ19 MHZ19b;
-    static HardwareSerial sensorSerial;
     static unsigned long tempAirCondition;
     static unsigned long temptempAirCondition;
     static float airConditionTemp;
