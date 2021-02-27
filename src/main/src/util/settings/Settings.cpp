@@ -23,12 +23,12 @@ namespace general {
   Setting blink_thickness = Setting(NUMBER, "blink_thickness", {"Blink Dicke", "blink thickness", "grosseur de clignoter", "ketebalan kedhip", "espesor de parpadeo"}, 2, "'Blink Boarder Thickness' changed", 1, 9);
   Setting ventilating_timeout = Setting(NUMBER, "ventilating_timeout", {"Time-out", "timeout", "temps mort", "wektu entek", "se acab"+oa+" el tiempo"}, 5, "'ventilatingTimeout' changed", 1, 9);
 
-  Setting debugPriority = Setting(MULTISELECT, "", {"Debug", "debug", "d"+ea+"boguer", "debug", "depurar"}, 0, "'Debug' changed", 0, 6, {{"Keinen", "none", "rien"}, {"Fehler", "error", "fautes"}, {"Warnungen", "warnings", "alerte"}, {"Wichtig", "important", "important"}, {"Debug", "debug", "d"+ea+"boguer"}, {"Info", "info", "info"}, {"Spam", "spam", "pourriel"}});
-  Setting debugSetup = Setting(SWITCH, "", {"Debug Setup", "debug setup", "d"+ea+"boguer installation", "persiyapan debug", "depurar de configuracti"+oa+"n"}, 0, "'Debug Setup' changed");
-  Setting debugSensor = Setting(SWITCH, "", {"Debug Sensor", "debug sensor", "d"+ea+"boguer capteur", "sensor debug", "depurar de sensor"}, 0, "'Debug Sensor' changed");
+  Setting debugPriority = Setting(MULTISELECT, "", {"Debug", "debug", "d"+ea+"boguer", "debug", "depurar"}, 1, "'Debug' changed", 0, 6, {{"Keinen", "none", "rien"}, {"Fehler", "error", "fautes"}, {"Warnungen", "warnings", "alerte"}, {"Wichtig", "important", "important"}, {"Debug", "debug", "d"+ea+"boguer"}, {"Info", "info", "info"}, {"Spam", "spam", "pourriel"}});
+  Setting debugSetup = Setting(SWITCH, "", {"Debug Setup", "debug setup", "d"+ea+"boguer installation", "persiyapan debug", "depurar de configuracti"+oa+"n"}, 1, "'Debug Setup' changed");
+  Setting debugSensor = Setting(SWITCH, "", {"Debug Sensor", "debug sensor", "d"+ea+"boguer capteur", "sensor debug", "depurar de sensor"}, 1, "'Debug Sensor' changed");
   Setting debugDisplay = Setting(SWITCH, "", {"Debug Display", "debug display", "d"+ea+"boguer affichage", "tampilan debug", "depurar de mostrar"}, 0, "'Debug Display' changed");
-  Setting debugMenu = Setting(SWITCH, "", {"Debug Menu", "debug menu", "d"+ea+"boguer menu", "menu debug", "depurar de men"+ua}, 0, "'Debug Menu' changed");
-  Setting debugTouch = Setting(SWITCH, "", {"Debug Touch", "debug touch", "d"+ea+"boguer toucher", "tutul debug", "depurar de tocar"}, 0, "'Debug Touch' changed");
+  Setting debugMenu = Setting(SWITCH, "", {"Debug Menu", "debug menu", "d"+ea+"boguer menu", "menu debug", "depurar de men"+ua}, 1, "'Debug Menu' changed");
+  Setting debugTouch = Setting(SWITCH, "", {"Debug Touch", "debug touch", "d"+ea+"boguer toucher", "tutul debug", "depurar de tocar"}, 1, "'Debug Touch' changed");
   
   Setting debugDatabase = Setting(SWITCH, "", {"Debug Datenbank", "debug database"}, 1, "'Debug Database' changed");
   Setting mode = Setting(MULTISELECT, "", {"Modus", "mode", "mode", "pantun", "moda"}, LOADINGSCREEN, "'Mode' changed", 0, 3);

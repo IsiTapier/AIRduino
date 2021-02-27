@@ -75,7 +75,7 @@
           break;
         case 1: general::version.setValue((short) atoi(output.c_str()), false);
           break;
-        case 2: general::maintenance_mode.setValue((short) atoi(output.c_str()), false);
+        case 2: general::mode.setValue((short) atoi(output.c_str()), false);
           break;
         case 3: general::theme.setValue((short) atoi(output.c_str()), false);
           break;
@@ -110,7 +110,7 @@
       }
     }
   }
-    if(general::maintenance_mode.getValue() >= 1) {
+    if(general::mode.getValue() > 2) {
       debug(IMPORTANT, SETUP, "/////////////////////////////////");
       debug(IMPORTANT, SETUP, "Maintenance Mode activated");
       debug(IMPORTANT, SETUP, "/////////////////////////////////");
@@ -119,19 +119,25 @@
   }
 
 void maintenanceMode() {
-  while (general::maintenance_mode.getValue() > 1) {
-    Serial.println("Maintenance Mode");
+  byte m = general::mode.getValue();
+
+  display.fillScreen(BACKGROUND_COLOR);
+  dPrint(general::maintenance_mode.getTitle(), 160, 120, 3, TEXT_COLOR, 4);
+
+  while (general::mode.getValue() > 2) {
     reconnect();
 
-    delay(5000);
+    delay(500);
     client.loop();
   }
   debug(IMPORTANT, SETUP, "/////////////////////////////////");
   debug(IMPORTANT, SETUP, "Maintenance Mode disabled");
   debug(IMPORTANT, SETUP, "/////////////////////////////////");
 
-  if (general::maintenance_mode.getValue() == 3) { //implemented to restart the arduino remotely by will
-    ESP.restart();
+  general::mode.setValue(1);
+  if (m == 4) { //implemented to restart the arduino remotely by will
+    Serial.println("Restart");
+    ESP.restart();   
   }
 }
 

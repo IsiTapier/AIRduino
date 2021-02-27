@@ -58,7 +58,7 @@
   }
 
   void Meassure::loop() {
-    meassureEnvironment();
+    // meassureEnvironment();
     meassureAirCondition();
     mapAirCondition();
     calculateGradient();
@@ -156,14 +156,14 @@
     while(millis()%STAGE_TIME > 0) {}
   }
 
-  void Meassure::meassureEnvironment() {
+/*   void Meassure::meassureEnvironment() {
     temperature = bme.readTemperature();
     pressure = bme.readPressure();
     humidity = bme.readHumidity();
     debug(INFO, SENSOR, "Temperature", temperature, "°C");
     debug(INFO, SENSOR, "Pressure", pressure / 100.0F, "mbar");
     debug(INFO, SENSOR, "Humidity", humidity, "%");
-  }
+  } */
 
   //  _____        _
   // |  __ \      | |

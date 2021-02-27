@@ -27,7 +27,7 @@ class Meassure {
     static void debugMeassure();
     //meassure
     static void meassureAirCondition();
-    static void meassureEnvironment();
+    // static void meassureEnvironment();
     //data
     static void mapAirCondition();
     static void calculateGradient();
