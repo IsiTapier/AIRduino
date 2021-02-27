@@ -7,9 +7,16 @@
 #include "../Util.h"
 
 namespace general {
+  const std::vector<String> titlesVersion = {"Version", "version", "version", "versi","versi"+oa+"n"};
+  const std::vector<String> titles = {};
+  const std::vector<std::vector<String>> namesVersion = {{"Version 1", "version 1", "version 1", "versi 1", "versi"+oa+"n 1"}, {"Version 2", "version 2", "version 2", "versi 2", "versi"+oa+"n 2"}};
+  const std::vector<std::vector<String>> names = {};
+}
+
+namespace general {
   Setting empty = Setting(EMPTY);  
 
-  Setting version = Setting(SWITCH, "version", {"Version", "version", "version", "versi","versi"+oa+"n"}, 0, "'Version' changed", 0, 1, {{"Version 1", "version 1", "version 1", "versi 1", "versi"+oa+"n 1"}, {"Version 2", "version 2", "version 2", "versi 2", "versi"+oa+"n 2"}}, false);
+  Setting version = Setting(SWITCH, "version", titlesVersion, 0, "'Version' changed", 0, 1, namesVersion, false);
   Setting theme = Setting(SELECT, "theme", {"Thema", "theme", "th"+eg+"me", "tema", "tema"}, 1, "'Theme' changed", 0, 1, {{"heller Modus", "light mode", "mode clair", "mode cahya", "modo de luz"}, {"dunkel Modus", "dark mode", "mode noir", "mode peteng", "modo oscuro"}});
   Setting sound = Setting(SWITCH, "sound", {"Ton", "sound", "son", "swara", "sonido"}, 1, "'Piezo' changed");
   Setting blink = Setting(SWITCH, "blink", {"Blinken", "blink", "clignoter", "lampu kilat", "destello"}, 1, "'Blink' changed");
@@ -30,7 +37,9 @@ namespace general {
   Setting debugMenu = Setting(SWITCH, "", {"Debug Menu", "debug menu", "d"+ea+"boguer menu", "menu debug", "depurar de men"+ua}, 1, "'Debug Menu' changed");
   Setting debugTouch = Setting(SWITCH, "", {"Debug Touch", "debug touch", "d"+ea+"boguer toucher", "tutul debug", "depurar de tocar"}, 1, "'Debug Touch' changed");
   
-  Setting debugDatabase = Setting(SWITCH, "", {"Debug Datenbank", "debug database"}, 1, "'Debug Database' changed");
+  Setting debugDatabase = Setting(SWITCH, "", {"Debug Datenbank", "debug database"}, 0, "'Debug Database' changed");
+  Setting developSettings = Setting(SWITCH, "", {"Develop Settings"}, 0, "'Develop settings' changed");
+
   Setting mode = Setting(MULTISELECT, "", {"Modus", "mode", "mode", "pantun", "moda"}, LOADINGSCREEN, "'Mode' changed", 0, 3);
   Setting maintenance_mode = Setting(MULTISELECT, "maintenance_mode", {"Wartungsmodus", "maintance mode", "mode de maintenance", "mode pangop"+ag+"nan", "mode de mantenimiento"}, 0, "'Wartungsmodus' changed", 0, 3);
 

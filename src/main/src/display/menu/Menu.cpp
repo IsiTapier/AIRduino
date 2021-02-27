@@ -30,6 +30,10 @@
           Input(&general::debugDisplay),
           Input(&general::debugMenu),
           Input(&general::debugTouch)
+        ),
+        MenuPage(
+          Input(&general::debugDatabase),
+          Input(&general::developSettings)
         )
     })},
     {SubMenu("Farb-Modi", {
@@ -55,7 +59,18 @@
         MenuPage(
 
         )
-    })}
+    })},
+    {SubMenu("Developper", {
+        MenuPage(
+          
+        ),
+        MenuPage(
+
+        ),
+        MenuPage(
+
+        )
+    }, 0, 1)}
   };
 
   void Menu::setup() {
@@ -113,6 +128,8 @@
       else
         setSubMenu(currentSubMenu+1);
     }
+    if(subMenus[currentSubMenu].isHidden() && !general::developSettings.getValue())
+      shiftSubMenu(left);
   }
 
   void Menu::handleTouch(TSPoint p) {
