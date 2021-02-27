@@ -36,7 +36,7 @@
 /*!
  *  @brief  class constructor
  */
-Adafruit_BME280::Adafruit_BME280() : _cs(-1), _mosi(-1), _miso(-1), _sck(-1) {}
+Adafruit_BME280::Adafruit_BME280(int8_t sda, int8_t scl) : _sda(sda), _scl(scl), _cs(-1), _mosi(-1), _miso(-1), _sck(-1) {}
 
 /*!
  *   @brief  class constructor if using hardware SPI
@@ -96,7 +96,7 @@ bool Adafruit_BME280::init() {
   // init I2C or SPI sensor interface
   if (_cs == -1) {
     // I2C
-    _wire->begin();
+    _wire->begin(_sda, _scl);
   } else {
     digitalWrite(_cs, HIGH);
     pinMode(_cs, OUTPUT);

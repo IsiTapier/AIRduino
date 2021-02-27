@@ -14,8 +14,10 @@
   //                       | |
   //                       |_|
 
-  extern MQ135 Meassure::sensor = MQ135(GAS_SENSOR);
-  extern Adafruit_BME280 Meassure::bme = Adafruit_BME280();
+  // extern MQ135 Meassure::sensor = MQ135(GAS_SENSOR);
+  extern Adafruit_BME280 Meassure::bme = Adafruit_BME280(BMESDA, BMESCL);
+  extern MHZ19 Meassure::MHZ19b;
+  extern HardwareSerial Meassure::sensorSerial = HardwareSerial(MHZ19SERIAL);
   extern unsigned long Meassure::tempAirCondition;
   extern unsigned long Meassure::temptempAirCondition;
   extern float Meassure::airConditionTemp;
@@ -34,6 +36,8 @@
   extern State Meassure::state;
   extern int Meassure::colorState;
   extern int Meassure::temperature;
+  extern int Meassure::humidity;
+  extern int Meassure::pressure;
 
   extern int Meassure::testCounter = 0;
   extern unsigned long Meassure::lasttime;
@@ -41,11 +45,11 @@
   void Meassure::setup() {
     debug(DEBUG, SETUP, "Meassure SETUP started");
     pinMode(PIEZO, OUTPUT);
-    pinMode(SENSOR, INPUT);
+    // pinMode(SENSOR, INPUT);
     digitalWrite(PIEZO, LOW);
     debug(INFO, SETUP, "Pins initialized");
-    airConditionRaw = analogRead(GAS_SENSOR);
-    airConditionLast = analogRead(GAS_SENSOR);
+    // airConditionRaw = analogRead(GAS_SENSOR);
+    // airConditionLast = analogRead(GAS_SENSOR);
     startTime = millis();
     debug(INFO, SETUP, "Variables initialized");
     if (bme.begin(0x76)) {
@@ -53,12 +57,19 @@
     } else {
       debug(WARNING, SETUP, "Could not find a valid BME280 sensor, check wiring!");
     }
+    sensorSerial.begin(MHZ19BAUDRATE);
+    MHZ19b.begin(sensorSerial);
+    MHZ19b.autoCalibration(false);
+    debug(INFO, SENSOR, "ABC Status: " + MHZ19b.getABC() ? "ON" : "OFF");  // now print it's status
+    // MHZ19b.setRange(RANGE);
+    // MHZ19b.calibrate();
+    // MHZ19b.zeroSpan(1000);
     debug(DEBUG, SETUP, "Meassure SETUP ended");
     debug(DEBUG, SETUP, "");
   }
 
   void Meassure::loop() {
-    // meassureEnvironment();
+    meassureEnvironment();
     meassureAirCondition();
     mapAirCondition();
     calculateGradient();
@@ -120,10 +131,10 @@
     }
     timeLeft-=10;
 
-    tempAirCondition = 0;
+    /*tempAirCondition = 0;
     temptempAirCondition = 0;
     for (long i = 0; i < AVERAGING_MEASUREMENTS; i++) {
-      value = analogRead(GAS_SENSOR);
+      // value = analogRead(GAS_SENSOR);
 
       //Fehlmessungen überschreiben
     /*  if (airConditionRaw * MAX_INCREASE < value && i == 0)
@@ -131,14 +142,18 @@
       else if (airCondition / i * MAX_INCREASE < value && i != 0)
         tempAirCondition = tempAirCondition + tempAirCondition / i;
       else*/
-        tempAirCondition = tempAirCondition + value;
+    /*    tempAirCondition = tempAirCondition + value;
         temptempAirCondition += analogRead(39);
       delay(timeLeft/ AVERAGING_MEASUREMENTS);
     }
 
     airCondition = (float) tempAirCondition / AVERAGING_MEASUREMENTS;
     airConditionTemp = (float) temptempAirCondition / AVERAGING_MEASUREMENTS;
-    airConditionRaw = airCondition;
+    airConditionRaw = airCondition;*/
+
+    airCondition = MHZ19b.getCO2(true, true);
+    temperature = MHZ19b.getTemperature(true, true);
+
     //Wert smoothen;
     //airCondition = ALPHA_MEASUREMENTS * airCondition + (1 - ALPHA_MEASUREMENTS) * airConditionLast;
 
@@ -156,14 +171,12 @@
     while(millis()%STAGE_TIME > 0) {}
   }
 
-/*   void Meassure::meassureEnvironment() {
+  void Meassure::meassureEnvironment() {
     temperature = bme.readTemperature();
-    pressure = bme.readPressure();
     humidity = bme.readHumidity();
-    debug(INFO, SENSOR, "Temperature", temperature, "°C");
-    debug(INFO, SENSOR, "Pressure", pressure / 100.0F, "mbar");
-    debug(INFO, SENSOR, "Humidity", humidity, "%");
-  } */
+    pressure = bme.readPressure()/100;
+    debug(INFO, SENSOR, "Temperature: " + temperature + String(char(167)) +"C " + "Humidity: " + humidity + "% " + "Pressure: " + pressure + "mbar");
+  }
 
   //  _____        _
   // |  __ \      | |

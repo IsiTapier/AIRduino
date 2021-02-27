@@ -34,8 +34,6 @@
 #define YMAX (1+3*sizeof(short))
 
 //pins
-#define GAS_SENSOR 36
-#define PIEZO      21
 
   enum Version {
     V1 = false,

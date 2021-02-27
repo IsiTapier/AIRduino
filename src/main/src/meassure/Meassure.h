@@ -10,6 +10,9 @@
 #include "../util/Util.h"
 #include "../util/settings/Settings.h"
 #include "../extern/Adafruit_BME280_Library-master/Adafruit_BME280.h"
+#include "../extern/MH_Z19/src/MHZ19.h"
+
+#define RANGE 2000
 
 class Meassure {
 
@@ -27,7 +30,7 @@ class Meassure {
     static void debugMeassure();
     //meassure
     static void meassureAirCondition();
-    // static void meassureEnvironment();
+    static void meassureEnvironment();
     //data
     static void mapAirCondition();
     static void calculateGradient();
@@ -36,6 +39,8 @@ class Meassure {
 
     static Adafruit_BME280 bme;
     static MQ135 sensor;
+    static MHZ19 MHZ19b;
+    static HardwareSerial sensorSerial;
     static unsigned long tempAirCondition;
     static unsigned long temptempAirCondition;
     static float airConditionTemp;
@@ -54,8 +59,9 @@ class Meassure {
     static State state;
     static int colorState;
     static int temperature;
-
-
+    static int humidity;
+    static int pressure;
+   
     static int testCounter;
     static unsigned long lasttime;
 

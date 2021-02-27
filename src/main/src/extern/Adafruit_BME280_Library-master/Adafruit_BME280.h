@@ -211,7 +211,8 @@ public:
   };
 
   // constructors
-  Adafruit_BME280();
+  //added
+  Adafruit_BME280(int8_t sdapin, int8_t sclpin);
   Adafruit_BME280(int8_t cspin, SPIClass *theSPI = &SPI);
   Adafruit_BME280(int8_t cspin, int8_t mosipin, int8_t misopin, int8_t sckpin);
   ~Adafruit_BME280(void);
@@ -272,6 +273,9 @@ protected:
                   //!< as this is used for temperature compensation reading
                   //!< humidity and pressure
 
+  //added
+  int8_t _sda;
+  int8_t _scl;
   int8_t _cs;   //!< for the SPI interface
   int8_t _mosi; //!< for the SPI interface
   int8_t _miso; //!< for the SPI interface

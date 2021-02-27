@@ -17,14 +17,23 @@
 
 #define TFT_BL   13//14// 32            // LED back-light control pin
 
-#define TFT_D2   19
-#define TFT_D3   18
-#define TFT_D4   5
-#define TFT_D5   17
-#define TFT_D6   16
-#define TFT_D7   4
+#define TFT_D2   18
+#define TFT_D3   5
+#define TFT_D4   17
+#define TFT_D5   16
+#define TFT_D6   4
+#define TFT_D7   0
 #define TFT_D0   2  // Must use pins in the range 0-31 for the data bus
 #define TFT_D1   15  // so a single register write sets/clears all bits
+
+/*#define MHZ19RX 19
+#define MHZ19TX 21*/
+#define MHZ19SERIAL 0
+#define MHZ19BAUDRATE 9600
+#define BMESDA 22
+#define BMESCL 23
+//#define GAS_SENSOR 36
+#define PIEZO 27
 
 #define LOAD_GLCD   // Font 1. Original Adafruit 8 pixel font needs ~1820 bytes in FLASH
 #define LOAD_FONT2  // Font 2. Small 16 pixel high font, needs ~3534 bytes in FLASH, 96 characters

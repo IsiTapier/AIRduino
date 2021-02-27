@@ -39,7 +39,7 @@ MQ135::MQ135(uint8_t pin) {
 float MQ135::getAnalogValue() {
   unsigned long analogValue = 0;
   for (long i = 0; i < AVERAGING_MEASUREMENTS; i++) {
-    analogValue += analogRead(GAS_SENSOR);
+    // analogValue += analogRead(GAS_SENSOR);
     delay(STAGE_TIME / AVERAGING_MEASUREMENTS);
   }
   float back = analogValue / AVERAGING_MEASUREMENTS;
@@ -51,7 +51,7 @@ float MQ135::getAnalogValue() {
 float MQ135::getAnalogValue(int test) {
   unsigned long analogValue = 0;
   for (long i = 0; i < AVERAGING_MEASUREMENTS; i++) {
-    analogValue += analogRead(GAS_SENSOR);
+    // analogValue += analogRead(GAS_SENSOR);
     delay(STAGE_TIME / AVERAGING_MEASUREMENTS);
   }
   float back = analogValue / AVERAGING_MEASUREMENTS;
