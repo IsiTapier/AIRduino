@@ -34,6 +34,8 @@ namespace general {
   extern Setting debugTouch;
 
   extern Setting debugDatabase;
+  extern Setting developSettings;
+
   extern Setting mode;
   extern Setting maintenance_mode;
 }

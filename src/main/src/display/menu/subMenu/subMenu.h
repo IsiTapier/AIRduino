@@ -11,11 +11,12 @@
 class SubMenu {
   public:
     SubMenu(void);
-    SubMenu(char* title, std::vector<MenuPage> pages, short defaultPage = 0);
+    SubMenu(char* title, std::vector<MenuPage> pages, short defaultPage = 0, boolean hide = false);
     void setup();
     void reset(boolean active = false);
     void handleTouch(TSPoint p);
     void clear();
+    boolean isHidden();
 
   private:
     void draw();
@@ -27,6 +28,7 @@ class SubMenu {
     short _defaultPage;
     char* _title;
     std::vector<MenuPage> _pages;
+    boolean _hide;
 };
 
 #endif
