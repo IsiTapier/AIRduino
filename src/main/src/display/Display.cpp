@@ -20,10 +20,10 @@ using namespace general;
 
     //Logo
     display.pushImage(0, 0, 320, 240, testLogo);
-    
+
     eeprom();
     setupDatabaseConnection();
-    
+
     mode.setValue(CHART);
     debug(DEBUG, SETUP, "Display SETUP completed");
     debug(DEBUG, SETUP, "");
@@ -56,14 +56,17 @@ using namespace general;
   }
 
   void Display::loop() {
+    while(millis()%STAGE_TIME > 0) {}
+    handleTouch();
     initDisplay();
-    //handleTouch();
     Meassure::loop();
     boolean changed = DisplayV1::getGraphData();
     /*if(mode.getValue() == MENU) {
       Menu::loop();
     } else */
-    if(mode.getValue() == CHART) {
+    if(mode.getValue() == MENU) {
+      Menu::loop();
+    } else if(mode.getValue() == CHART) {
       if(!version.getValue()) {
         DisplayV1::loop(changed);
       } else {

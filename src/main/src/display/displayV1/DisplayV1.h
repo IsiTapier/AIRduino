@@ -21,7 +21,7 @@ class DisplayV1 : public DisplayVX {
     static void drawGraph();
     static void drawConnection(int x, int color=-1, int shift = 0);
 
-    static int valuesGraph[AVERAGING_GRAPH];
+    static int valuesGraph[100];
     static int graphData[DISPLAY_LENGTH+1];
     static int counter;
     static int currentPosition;
