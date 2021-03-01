@@ -163,7 +163,8 @@
     airConditionRaw = airCondition;*/
 
     airCondition = MHZ19b.getCO2(true, true);
-    //Serial.println(airCondition);
+    Serial.print("PPM: ");
+    Serial.println(airCondition);
     temperature = MHZ19b.getTemperature(true, true);
 
     //Wert smoothen;

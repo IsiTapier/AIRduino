@@ -17,12 +17,17 @@ using namespace general;
     display.setTextWrap(false);
     display.setRotation(ROTATION);
     debug(INFO, SETUP, "Display initialized");
+
+    //Logo
+    display.pushImage(0, 0, 320, 240, testLogo);
+    
     eeprom();
     setupDatabaseConnection();
-    loadingScreen();
+    
     mode.setValue(CHART);
     debug(DEBUG, SETUP, "Display SETUP completed");
     debug(DEBUG, SETUP, "");
+    delay(20000);
     Meassure::setup();
   }
 
@@ -52,7 +57,7 @@ using namespace general;
 
   void Display::loop() {
     initDisplay();
-    handleTouch();
+    //handleTouch();
     Meassure::loop();
     boolean changed = DisplayV1::getGraphData();
     /*if(mode.getValue() == MENU) {
