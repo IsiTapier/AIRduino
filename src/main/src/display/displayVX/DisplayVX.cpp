@@ -42,7 +42,7 @@ extern boolean DisplayVX::drop = false;
     if(general::data.getValue())
       getData();
     else
-      generateData(400, 1100, 1);
+      generateData(400, 1100, 30);
     //info
     if(draw) {
       writeInfo();
@@ -65,7 +65,6 @@ extern boolean DisplayVX::drop = false;
     display.fillScreen(BACKGROUND_COLOR);
     display.fillRect(0, DATABOX_Y, DISPLAY_LENGTH, DATABOX_HEIGHT, DATABOX_BACKGROUND_COLOR);
     display.pushImage(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, gear, WHITE);
-    if(general::version.getValue() == 1) display.fillRect(0, TOP_BAR_HEIGHT, DISPLAY_LENGTH, TOP_BAR_THICKNESS, TEXT_COLOR);
     debug(INFO, SETUP, "Display drawn");
   }
 
@@ -101,8 +100,10 @@ extern boolean DisplayVX::drop = false;
       display.drawLine(DISPLAY_LENGTH-1, DATABOX_Y, DISPLAY_LENGTH-1, DISPLAY_HEIGHT-1, DATABOX_BACKGROUND_COLOR);
       display.drawLine(0, DATABOX_BAR_Y, 0, DATABOX_Y-1, state.getColor(COLORED_BAR));
       display.drawLine(DISPLAY_LENGTH-1, DATABOX_BAR_Y, DISPLAY_LENGTH-1, DATABOX_Y-1, state.getColor(COLORED_BAR));
-      display.drawLine(0, TOP_BAR_HEIGHT, 0, STATUS_END_HEIGHT-1, state.getColor(COLORED_BAR));
-      display.drawLine(DISPLAY_LENGTH-1, TOP_BAR_HEIGHT, DISPLAY_LENGTH-1, STATUS_END_HEIGHT-1, state.getColor(COLORED_BAR));
+      if(colorModes::showTopBar.getValue()) {
+        display.drawLine(0, TOP_BAR_HEIGHT, 0, STATUS_END_HEIGHT-1, state.getColor(COLORED_BAR));
+        display.drawLine(DISPLAY_LENGTH-1, TOP_BAR_HEIGHT, DISPLAY_LENGTH-1, STATUS_END_HEIGHT-1, state.getColor(COLORED_BAR));
+      }
       digitalWrite(PIEZO, LOW);
       if(state < 3)
         blinkSwitch = 0;
@@ -123,6 +124,24 @@ extern boolean DisplayVX::drop = false;
   //Write PPM, Time
   void DisplayVX::writeInfo() {
     //ppm zeichnen
+    String ppm;
+      if(airCondition < 0)
+        ppm = "  0";
+      else if(airCondition < 10)
+        ppm = "  " + String(airCondition);
+      else if(airCondition < 100)
+        ppm = " " + String(airCondition);
+      else
+        ppm = String(airCondition);
+      String lastppm;
+      if(lastAirCondition < 0)
+        lastppm = "  0";
+      else if(lastAirCondition < 10)
+        lastppm = "  " + String(lastAirCondition);
+      else if(lastAirCondition < 100)
+        lastppm = " " + String(lastAirCondition);
+      else
+        lastppm = String(lastAirCondition);
     if (lastState != state || start) {
       //Wenn sich der Wert geändert hat oder state sich geändert hat
       //Schreibt Status an die Decke
@@ -135,14 +154,13 @@ extern boolean DisplayVX::drop = false;
       // if((BLACK_MODE == 0) && (general::version.getValue() == 0)) {
         if(COLORED_BAR || start) {
           display.fillRect(0, DATABOX_BAR_Y, DISPLAY_LENGTH, DATABOX_BAR_THICKNESS, state.getColor(COLORED_BAR));
-          display.fillRect(0, TOP_BAR_HEIGHT, DISPLAY_LENGTH, DATABOX_BAR_THICKNESS/* TOP_BAR_THICKNESS */, state.getColor(COLORED_BAR));
+          if(colorModes::showTopBar.getValue())
+            display.fillRect(0, TOP_BAR_HEIGHT, DISPLAY_LENGTH, DATABOX_BAR_THICKNESS/* TOP_BAR_THICKNESS */, state.getColor(COLORED_BAR));
         }
       // }
       //Draw PPM
-      if(airCondition < 0)
-        airCondition = 0;
-      dPrint(lastAirCondition, PPM_MARGIN_LEFT, PPM_Y, PPM_SIZE, DATABOX_BACKGROUND_COLOR, 6);
-      dPrint(String(airCondition) + " ", PPM_MARGIN_LEFT, PPM_Y, PPM_SIZE, state.getColor(COLORED_PPM), 6);
+      dPrint(lastppm, PPM_MARGIN_LEFT, PPM_Y, PPM_SIZE, DATABOX_BACKGROUND_COLOR, 6);
+      dPrint(ppm, PPM_MARGIN_LEFT, PPM_Y, PPM_SIZE, state.getColor(COLORED_PPM), 6);
       if (airCondition < 1000) {
         dPrint("ppm", PPM_STRING_X, PPM_STRING_Y, PPM_STRING_SIZE, state.getColor(COLORED_PPM), 6);
       }
@@ -162,7 +180,7 @@ extern boolean DisplayVX::drop = false;
       dPrint("ppm", PPM_STRING_X, PPM_STRING_Y, PPM_STRING_SIZE, DATABOX_BACKGROUND_COLOR, 6);
 
     //write new Pixels
-    dPrint(airCondition, PPM_MARGIN_LEFT, PPM_Y, PPM_SIZE, state.getColor(COLORED_PPM), 6, DATABOX_BACKGROUND_COLOR, lastAirCondition);
+    dPrint(ppm, PPM_MARGIN_LEFT, PPM_Y, PPM_SIZE, state.getColor(COLORED_PPM), 6, DATABOX_BACKGROUND_COLOR, lastppm);
 
     if (airCondition < 1000 && lastAirCondition >= 1000 || airCondition < 1000 && start)
       dPrint("ppm", PPM_STRING_X, PPM_STRING_Y, PPM_STRING_SIZE, state.getColor(COLORED_PPM), 6);
@@ -186,7 +204,7 @@ extern boolean DisplayVX::drop = false;
     //dPrint(lasttime, timeR_X, timeR_Y, timeR_SIZE, BAR_BACKGROUND_COLOR, 8);
     //write new Pixels
     if (minutes >= 20 && COLORED_TIME) {
-      if(seconds == 0 && minutes == 20 || start) {
+      if(seconds == 0 && minutes == 20 || seconds == 0 && minutes == 0 || start) {
         dPrint(time, TIMER_X, TIMER_Y, TIMER_SIZE, TIME_COLOR_CRITICAL, 8, DATABOX_BACKGROUND_COLOR, start ? "" : lastTime);
         dPrint(":  ", TIMER_X, TIMER_Y, TIMER_SIZE, TIME_COLOR_CRITICAL, 8, DATABOX_BACKGROUND_COLOR, "   ");
       } else

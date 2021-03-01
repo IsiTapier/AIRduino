@@ -51,14 +51,17 @@ using namespace general;
   }
 
   void Display::loop() {
-    initDisplay();
+    while(millis()%STAGE_TIME > 0) {}
     handleTouch();
+    initDisplay();
     Meassure::loop();
     boolean changed = DisplayV1::getGraphData();
     /*if(mode.getValue() == MENU) {
       Menu::loop();
     } else */
-    if(mode.getValue() == CHART) {
+    if(mode.getValue() == MENU) {
+      Menu::loop();
+    } else if(mode.getValue() == CHART) {
       if(!version.getValue()) {
         DisplayV1::loop(changed);
       } else {

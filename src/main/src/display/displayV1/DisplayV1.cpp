@@ -4,7 +4,7 @@
 #include "Arduino.h"
 #include "DisplayV1.h"
 
-extern int DisplayV1::valuesGraph[AVERAGING_GRAPH];
+extern int DisplayV1::valuesGraph[100];
 extern int DisplayV1::graphData[DISPLAY_LENGTH+1];
 extern int DisplayV1::counter = 0;
 extern int DisplayV1::currentPosition = 0;
@@ -68,9 +68,9 @@ extern int DisplayV1::lastPixel = 0;
   boolean DisplayV1::averageData() {
     valuesGraph[counter] = airCondition;
     counter ++;
-    if (!(counter < general::graph_speed.getValue()*10)) {
+    if (!(counter < AVERAGING_GRAPH)) {
       lastPixel = pixel;
-      pixel = average(valuesGraph, 0, general::graph_speed.getValue()*10);
+      pixel = average(valuesGraph, 0, AVERAGING_GRAPH);
       pixel = map(pixel, DISPLAYED_PPM_LOWEST, DISPLAYED_PPM_HIGHEST, GRAPH_START_Y, GRAPH_END_Y);
       if(lastPixel != 0)
         pixel = ALPHA_GRAPH * pixel + (1 - ALPHA_GRAPH) * lastPixel;

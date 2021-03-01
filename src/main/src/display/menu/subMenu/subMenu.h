@@ -26,7 +26,7 @@ class SubMenu {
 
     short _currentPage;
     short _defaultPage;
-    char* _title;
+    String _title;
     std::vector<MenuPage> _pages;
     boolean _hide;
 };

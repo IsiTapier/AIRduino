@@ -24,7 +24,7 @@ class Menu {
 
   private:
     static void draw();
-    static void setSubMenu(int subMenu);
+    static boolean setSubMenu(int subMenu);
     static void shiftSubMenu(boolean left);
     static boolean checkTouch(TSPoint p);
 

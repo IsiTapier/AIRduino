@@ -34,7 +34,7 @@ namespace general {
   extern Setting debugTouch;
 
   extern Setting debugDatabase;
-  extern Setting developSettings;
+  extern Setting developperSettings;
 
   extern Setting mode;
   extern Setting maintenance_mode;
@@ -49,6 +49,7 @@ namespace colorModes {
   extern Setting c_value;
 
   extern Setting c_slider;
+  extern Setting showTopBar;
 }
 /*
 namespace colors {

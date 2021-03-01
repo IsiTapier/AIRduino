@@ -46,7 +46,7 @@
     for (int i = averageStart; i < averageEnd; i++) {
       sum = sum + averageArray[i];
     }
-    return (sum / (averageEnd - averageStart));
+    return (sum / (averageEnd-1 - averageStart));
   }
 
   void drawBorder(int x, int y, int length, int height, int thickness, int color) {

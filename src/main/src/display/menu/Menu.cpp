@@ -33,7 +33,7 @@
         ),
         MenuPage(
           Input(&general::debugDatabase),
-          Input(&general::developSettings)
+          Input(&general::developperSettings)
         )
     })},
     {SubMenu("Farb-Modi", {
@@ -46,7 +46,8 @@
           Input(&colorModes::c_value)
         ),
         MenuPage(
-          Input(&colorModes::c_slider)
+          Input(&colorModes::c_slider),
+          Input(&colorModes::showTopBar)
         )
     })},
     {SubMenu("Farben", {
@@ -101,7 +102,12 @@
     }
   }
 
-  void Menu::setSubMenu(int subMenu) {
+  boolean Menu::setSubMenu(int subMenu) {
+    if(subMenus[subMenu].isHidden() && !general::developperSettings.getValue()) {
+      subMenus[currentSubMenu].clear();
+      currentSubMenu = subMenu;
+      return false;
+    }
     if(subMenu < 0)
       subMenu = 0;
     if(subMenu >= sizeOf(subMenus))
@@ -109,22 +115,28 @@
     subMenus[currentSubMenu].clear();
     currentSubMenu = subMenu;
     subMenus[currentSubMenu].setup();
+    return true;
   }
 
   void Menu::shiftSubMenu(boolean left) {
     if(left) {
-      if(currentSubMenu <= 0)
-        setSubMenu(sizeOf(subMenus)-1);
-      else
-        setSubMenu(currentSubMenu-1);
+      if(currentSubMenu <= 0) {
+        if(setSubMenu(sizeOf(subMenus)-1))
+          return;
+      } else {
+        if(setSubMenu(currentSubMenu-1))
+          return;
+      }
     } else {
-      if(currentSubMenu >= sizeOf(subMenus)-1)
-        setSubMenu(0);
-      else
-        setSubMenu(currentSubMenu+1);
+      if(currentSubMenu >= sizeOf(subMenus)-1) {
+        if(setSubMenu(0))
+          return;
+      } else {
+        if(setSubMenu(currentSubMenu+1))
+          return;
+      }
     }
-    if(subMenus[currentSubMenu].isHidden() && !general::developSettings.getValue())
-      shiftSubMenu(left);
+    shiftSubMenu(left);
   }
 
   void Menu::handleTouch(TSPoint p) {

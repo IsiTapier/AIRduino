@@ -28,6 +28,9 @@
   extern int Meassure::gradient;
   extern int Meassure::value;
   extern int Meassure::values[AVERAGING_GRADIENT * 2];
+  extern int Meassure::databaseCO2[10];
+  extern int Meassure::databaseTemperature[10];
+  extern int Meassure::counter = 0;
   extern int Meassure::now;
   extern int Meassure::last;
   extern int Meassure::minPPM = 400;
@@ -56,10 +59,8 @@
     } else {
       debug(WARNING, SETUP, "Could not find a valid BME280 sensor, check wiring!");
     }
-   Serial1.begin(MHZ19BAUDRATE);
-   MHZ19b.begin(Serial1);
-   Serial.begin(9600);
-   Serial.println("test");
+    Serial1.begin(MHZ19BAUDRATE);
+    MHZ19b.begin(Serial1);
     MHZ19b.autoCalibration(false);
     debug(INFO, SENSOR, "ABC Status: " + MHZ19b.getABC() ? "ON" : "OFF");  // now print it's status
     // MHZ19b.setRange(RANGE);
@@ -111,7 +112,7 @@
   }
 
   void Meassure::debugMeassure() {
-/*    if (general::debugSensor.getValue() && general::debugPriority.getValue()) {
+/*  if (general::debugSensor.getValue() && general::debugPriority.getValue()) {
       Serial.println("");
       Serial.println("Sensor");
       Serial.println("");
@@ -135,7 +136,7 @@
 
   void Meassure::meassureAirCondition() {
     //Messung
-    int timeLeft = STAGE_TIME-(millis()%STAGE_TIME);
+  /*  int timeLeft = STAGE_TIME-(millis()%STAGE_TIME);
     if(timeLeft < 0.8*STAGE_TIME) {
       timeLeft += STAGE_TIME;
       //Serial.println("WARNING: Timing error!");
@@ -165,9 +166,11 @@
     airCondition = MHZ19b.getCO2(true, true);
     //Serial.println(airCondition);
     temperature = MHZ19b.getTemperature(true, true);
-
+    counter++;
     //Wert smoothen;
     //airCondition = ALPHA_MEASUREMENTS * airCondition + (1 - ALPHA_MEASUREMENTS) * airConditionLast;
+  	databaseCO2[counter] = airCondition;
+    databaseTemperature[counter] = temperature;
 
     airConditionLast = airCondition;
 //    airCondition = sensor.getPPM(temperature, humidity);
@@ -179,8 +182,6 @@
     }
     testCounter++;
     lasttime = time;
-
-    while(millis()%STAGE_TIME > 0) {}
   }
 
   void Meassure::meassureEnvironment() {
@@ -217,7 +218,10 @@
     Serial.print(sensor.getRZero(airConditionRaw, temperature, humidity)); Serial.print("\t");
     Serial.print(sensor.getRZero(airConditionRaw, temperature, humidity, 1)); Serial.print("\t");
     Serial.println(sensor.getRZero(airConditionRaw, temperature, humidity, "1"));*/
-    mysql_insert(device_class, airCondition, temperature);
+    if(counter >= AVERAGING_MEASUREMENTS) {
+      mysql_insert(device_class, average(databaseCO2, 0, AVERAGING_MEASUREMENTS), average(databaseCO2, 0, AVERAGING_MEASUREMENTS));
+      counter = 0;
+    }
   }
 
 
