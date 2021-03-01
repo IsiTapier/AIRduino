@@ -17,12 +17,12 @@
 
 #define TFT_BL   13//14// 32            // LED back-light control pin
 
-#define TFT_D2   18
-#define TFT_D3   5
-#define TFT_D4   17
-#define TFT_D5   16
-#define TFT_D6   4
-#define TFT_D7   0
+#define TFT_D2   19
+#define TFT_D3   18
+#define TFT_D4   5
+#define TFT_D5   17
+#define TFT_D6   16
+#define TFT_D7   4
 #define TFT_D0   2  // Must use pins in the range 0-31 for the data bus
 #define TFT_D1   15  // so a single register write sets/clears all bits
 

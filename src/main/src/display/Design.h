@@ -34,7 +34,7 @@
 #define LOADING_SCREEN_TIME 1
 
 //settings
-#define STAGE_TIME 1000
+#define STAGE_TIME 250
 #define MENU_BUTTON_COOLDOWN 1*1000
 #define VENTILATING_TIMEOUT general::ventilating_timeout.getValue()*1000
 

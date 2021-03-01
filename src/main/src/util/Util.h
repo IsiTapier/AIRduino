@@ -19,6 +19,7 @@
 #include "../display/Design.h"
 #include "settings/Settings.h"
 #include "database/Database.h"
+#include "../meassure/Meassure.h"
 
 #define LIMIT_GOOD 600
 #define LIMIT_MEDIUM 800

@@ -21,7 +21,7 @@ namespace general {
   Setting sound = Setting(SWITCH, "sound", {"Ton", "sound", "son", "swara", "sonido"}, 1, "'Piezo' changed");
   Setting blink = Setting(SWITCH, "blink", {"Blinken", "blink", "clignoter", "lampu kilat", "destello"}, 1, "'Blink' changed");
   Setting data = Setting(SWITCH, "", {"Daten", "data", "donn"+ea+"es", "data", "datos"}, 1, "Data gettering changed", 0, 1, {{"generierte Daten", "generated data", "donn"+ea+"es g"+ea+"n"+ea+"r"+ea+"es", "data sing digawe", "datos generados"}, {"Sensor Daten", "sensor data", "donn"+ea+"es du capteur", "data sensor", "datos del sensor"}}); //TODO: connect to database
-  Setting calibrateTouch = Setting(ACTIVATOR, "", {"Touch kalibrieren", "calibrate Touch", "calibrage tactile", "tutul kalibrasi", "calibrar el tacto"});
+  Setting calibrateTouch = Setting(ACTIVATOR, "", {"Touch kalibrieren", "calibrate Touch", "calibrage tactile", "tutul kalibrasi", "calibrar el tacto"}, 0);
 
   Setting language = Setting(MULTISELECT, "language", {"Sprache", "language", "langue", "basa", "idioma"}, 0, "'Status' changed", 0, 5, {{"deutsch", "german", "allemand", "jerman", "alem"+aa+"n"}, {"englisch", "english", "anglais", "basa inggris", "ingl"+ea+"s"}, {"franz"+oe+"sisch", "french", "fran"+cC+"aise", "prancis", "franc"+ea+"s"}, {"java", "java", "javanais", "wong jawa", "javan"+ea+"s"}, {"spanisch", "spanish", "espagnol", "spanyol","espa"+nw+"ol"}, {"spezial", "special", "special", "khusus", "especial", "ESPecial"}});
   Setting kernMode = Setting(SWITCH, "", {"Kern Modus", "Kern mode", "mode de Kern", "mode Kern", "modo de Kern"}, 0, "'Kern Modus' changed");
@@ -74,3 +74,8 @@ namespace colorModes {
   Setting* SliderColorStrip = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
   Setting* SliderBackgroundColor = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
 } */
+
+namespace developper {
+  Setting calibrateMin = Setting(ACTIVATOR, "", {"calibrate Min"}, 1);
+  Setting calibrateMax = Setting(ACTIVATOR, "", {"calibrate Max"}, 2);
+}

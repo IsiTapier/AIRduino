@@ -21,7 +21,8 @@
 
   void Button::checkTouch(TSPoint p) {
     if(p.isTouching(0, MENU_SECTION_LENGTH, MENU_SECTION_Y(_section), (MENU_SECTION_Y(_section) + MENU_SIDE_HEIGHT))) {
-      ts.calibration(); // TODO universal
+      execute();
+       // TODO universal
       if(_setting->getDebugMessage() != "")
         debug(DEBUG, MENUD, _setting->getDebugMessage());
     }
@@ -31,3 +32,15 @@
     String text = _setting->getTitle();
     dPrint(text, MENU_SECTION_LENGTH/2, MENU_SECTION_TEXT_Y(_section), MENU_SECTION_SIZE, TEXT_COLOR, 4);
   }
+  
+  void Button::execute() {
+    Serial.println(_setting->getDefaultValue());
+    switch(_setting->getDefaultValue()) {
+      case 0: ts.calibration(); break;
+      case 1: Meassure::calibrateMin(); break;
+      case 2: Meassure::calibrateMax(); break;
+      default: break;
+    }
+
+  }
+

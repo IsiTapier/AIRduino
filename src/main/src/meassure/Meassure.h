@@ -25,6 +25,8 @@ class Meassure {
     static unsigned long getStartTime();
     static int getLowest();
     static int getHighest();
+    static void calibrateMin();
+    static void calibrateMax();
 
   private:
     static void debugMeassure();
@@ -38,7 +40,7 @@ class Meassure {
     static void setState();
 
     static Adafruit_BME280 bme;
-    static MQ135 sensor;
+    // static MQ135 sensor;
     static MHZ19 MHZ19b;
     static unsigned long tempAirCondition;
     static unsigned long temptempAirCondition;

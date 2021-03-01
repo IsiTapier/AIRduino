@@ -69,4 +69,9 @@ namespace colors {
   extern Setting* SliderBackgroundColor;
 }*/
 
+namespace developper {
+  extern Setting calibrateMin;
+  extern Setting calibrateMax;
+}
+
 #endif

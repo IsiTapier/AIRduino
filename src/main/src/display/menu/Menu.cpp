@@ -62,13 +62,8 @@
     })},
     {SubMenu("Developper", {
         MenuPage(
-          
-        ),
-        MenuPage(
-
-        ),
-        MenuPage(
-
+          Input(&developper::calibrateMin),
+          Input(&developper::calibrateMax)
         )
     }, 0, 1)}
   };

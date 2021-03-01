@@ -56,8 +56,10 @@
     } else {
       debug(WARNING, SETUP, "Could not find a valid BME280 sensor, check wiring!");
     }
-    Serial1.begin(MHZ19BAUDRATE);
-    MHZ19b.begin(Serial1);
+   Serial1.begin(MHZ19BAUDRATE);
+   MHZ19b.begin(Serial1);
+   Serial.begin(9600);
+   Serial.println("test");
     MHZ19b.autoCalibration(false);
     debug(INFO, SENSOR, "ABC Status: " + MHZ19b.getABC() ? "ON" : "OFF");  // now print it's status
     // MHZ19b.setRange(RANGE);
@@ -75,6 +77,16 @@
     checkVentilating();
     setState();
     debugMeassure();
+  }
+
+  void Meassure::calibrateMin() {
+    MHZ19b.calibrate();
+    debug(INFO, SENSOR, "min PPM value calibrated");
+  }
+
+  void Meassure::calibrateMax() {
+    MHZ19b.zeroSpan(1000);
+    debug(INFO, SENSOR, "max PPM value calibrated");
   }
 
   //Getter
@@ -151,7 +163,7 @@
     airConditionRaw = airCondition;*/
 
     airCondition = MHZ19b.getCO2(true, true);
-    Serial.println(airCondition);
+    //Serial.println(airCondition);
     temperature = MHZ19b.getTemperature(true, true);
 
     //Wert smoothen;
@@ -231,13 +243,13 @@
       state = (State) VENTILATING;
       maxPPM = airCondition;
       startTime = millis();
-      debug(DEBUG, SENSOR, "VENTILATING");
+      debug(INFO, SENSOR, "VENTILATING");
     }
 
     //stop Ventilating
     else if ((gradient > MAX_INCREASE && state == VENTILATING) || (millis() - timer >= VENTILATING_TIMEOUT && state == VENTILATING && timer != 0)) {
       // Wenn der Graph nach oben Steigt oder der Timer abgelaufen ist
-      debug(DEBUG, SENSOR, "NOT VENTILATING");
+      debug(INFO, SENSOR, "NOT VENTILATING");
       if (airCondition - minPPM < MAX_INCREASE_LOWEST && gradient < 3) {
         //Wenn
         minPPM = ALPHA_LOWEST * airCondition + (1 - ALPHA_LOWEST) * minPPM;

@@ -20,6 +20,7 @@ class Button {
 
   private:
     void write();
+    void execute();
 
     Setting* _setting;
     byte _section;

@@ -7,7 +7,6 @@
 
 #include "Arduino.h"
 #include "Wire.h"
-#include "../../meassure/Meassure.h"
 #include "../../util/Util.h"
 
 class DisplayVX {
