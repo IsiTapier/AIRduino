@@ -19,8 +19,9 @@ using namespace general;
     debug(INFO, SETUP, "Display initialized");
 
     //Logo
-    display.pushImage(0, 0, 320, 240, testLogo);
-
+    display.fillScreen(BACKGROUND_COLOR);
+    delay(500);
+    drawImage(320, 240);
     eeprom();
     setupDatabaseConnection();
 
@@ -29,6 +30,15 @@ using namespace general;
     debug(DEBUG, SETUP, "");
     delay(20000);
     Meassure::setup();
+  }
+
+  void Display::drawImage(int length, int height) {
+    for(int i = 0; i <= length; i++) {
+      for(int j = 0; j <= height; j++) {
+        display.drawPixel(i, j, testLogob[j*length + i]);
+      }
+    }
+    delay(7000);
   }
 
   void Display::eeprom() {

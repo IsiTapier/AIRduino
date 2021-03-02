@@ -17,6 +17,7 @@ class Display {
     static void setup();
     static void eeprom();
     static void loop();
+    static void drawImage(int length, int height);
     static void initDisplay();
     static void handleTouch(); //TODO relocate
 

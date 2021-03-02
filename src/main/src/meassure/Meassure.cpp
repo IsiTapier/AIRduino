@@ -81,13 +81,13 @@
   }
 
   void Meassure::calibrateMin() {
-    MHZ19b.calibrate();
-    debug(INFO, SENSOR, "min PPM value calibrated");
+  //  MHZ19b.calibrate();
+    debug(IMPORTANT, SENSOR, "min PPM value calibrated");
   }
 
   void Meassure::calibrateMax() {
-    MHZ19b.zeroSpan(1000);
-    debug(INFO, SENSOR, "max PPM value calibrated");
+   //MHZ19b.zeroSpan(1000);
+    debug(IMPORTANT, SENSOR, "max PPM value calibrated");
   }
 
   //Getter
