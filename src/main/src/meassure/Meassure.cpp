@@ -177,7 +177,7 @@
 
     airConditionLast = airCondition;
 //    airCondition = sensor.getPPM(temperature, humidity);
-    
+
     int time = floor(millis()/1000);
     if(lasttime != time) {
       //Serial.println(testCounter);
