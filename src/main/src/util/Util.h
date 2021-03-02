@@ -90,5 +90,5 @@
   void loadingScreen();
   void writeLoadingScreenTitle();
   void writeLoadingAnimation(int c1, int c2, int c3);
-
+  boolean requestDecision(String error, String question, String op1, String op2);
 #endif

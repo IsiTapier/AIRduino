@@ -83,10 +83,12 @@
   void Meassure::calibrateMin() {
     MHZ19b.calibrate();
     debug(INFO, SENSOR, "min PPM value calibrated");
+    Serial.println("min PPM value calibrated");
   }
 
   void Meassure::calibrateMax() {
     MHZ19b.zeroSpan(1000);
+    Serial.println("max PPM value calibrated");
     debug(INFO, SENSOR, "max PPM value calibrated");
   }
 

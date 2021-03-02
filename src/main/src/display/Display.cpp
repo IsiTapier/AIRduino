@@ -20,14 +20,12 @@ using namespace general;
 
     //Logo
     display.pushImage(0, 0, 320, 240, testLogo);
-
     eeprom();
     setupDatabaseConnection();
-
     mode.setValue(CHART);
     debug(DEBUG, SETUP, "Display SETUP completed");
     debug(DEBUG, SETUP, "");
-    delay(20000);
+    delay(1000);
     Meassure::setup();
   }
 
