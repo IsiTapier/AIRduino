@@ -13,9 +13,9 @@ SubMenu::SubMenu(char* title, std::vector<MenuPage> pages, short defaultPage, bo
   _hide = hide;
 }
 
-void SubMenu::setup() {
+void SubMenu::setup(boolean redraw) {
   draw();
-  _pages.at(_currentPage).setup();
+  _pages.at(_currentPage).setup(redraw);
 }
 
 void SubMenu::draw() {

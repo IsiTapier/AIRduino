@@ -12,7 +12,7 @@ class SubMenu {
   public:
     SubMenu(void);
     SubMenu(char* title, std::vector<MenuPage> pages, short defaultPage = 0, boolean hide = false);
-    void setup();
+    void setup(boolean redraw = false);
     void reset(boolean active = false);
     void handleTouch(TSPoint p);
     void clear();

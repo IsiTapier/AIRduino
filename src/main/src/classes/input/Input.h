@@ -18,7 +18,7 @@ class Input {
     Input(void);
     Input(Setting* setting);
     void setSection(byte section);
-    void setup();
+    void setup(boolean redraw);
     void reset(boolean active);
     void handleTouch(TSPoint p);
 

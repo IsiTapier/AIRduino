@@ -13,7 +13,7 @@ using namespace general;
 class MenuPage {
   public:
     MenuPage(Input inputOne = Input(&empty), Input inputTwo = Input(&empty), Input inputThree = Input(&empty), Input inputFour = Input(&empty), Input inputFive = Input(&empty), Input inputSix = Input(&empty));
-    void setup();
+    void setup(boolean redraw = false);
     void reset(boolean active);
     void handleTouch(TSPoint p);
 

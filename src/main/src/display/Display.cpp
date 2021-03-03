@@ -11,18 +11,16 @@ using namespace general;
 
   void Display::setup() {
     debug(DEBUG, SETUP, "Display SETUP started");
+    mode.setValue(LOADINGSCREEN, false);
     display.begin();
     debug(INFO, SETUP, "Display connection started");
     display.fillScreen(BACKGROUND_COLOR);
     display.setTextWrap(false);
     display.setRotation(ROTATION);
     debug(INFO, SETUP, "Display initialized");
-
     //Logo
     display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoBlatt);
-    delay(5000);
     eeprom();
-    display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoPfeil);
     setupDatabaseConnection();
     mode.setValue(CHART);
     debug(DEBUG, SETUP, "Display SETUP completed");
@@ -86,7 +84,7 @@ using namespace general;
         } else {
           DisplayV2::setup();
         }
-      } else if(mode.getValue() == MENU) {
+      } else if(mode.getValue() == MENU && (theme.hasChanged() || mode.hasChanged())) {
         Menu::setup();
       } else {
 
@@ -118,9 +116,12 @@ using namespace general;
             lastModeChange = millis();
           }
         } else if(p.isTouching(MENU_ARROW_RESET_START_X, MENU_ARROW_RESET_END_X, MENU_ARROW_RESET_START_Y, MENU_ARROW_RESET_END_Y)) {
-          if(debugSetup.getValue())
-            debug(INFO, SETUP, "reset");
-          Menu::reset();
+          if(requestDecision("Einstellungs Reset", "Willst du fortfahren?")) {
+            if(debugSetup.getValue())
+              debug(WARNING, SETUP, "reset");
+            Menu::reset();
+          }
+          Menu::setup();
         } else if(mode.equals(MENU)) {
           Menu::handleTouch(p);
         }

@@ -212,7 +212,7 @@ void maintenanceMode() {
     Serial.print("Connecting to ");
     Serial.println(ssid);
     do{
-      display.pushImage(0, 0, 320, 240, testLogo);
+      display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoBlatt);
       // We start by connecting to a WiFi networ
 
       WiFi.mode(WIFI_STA);

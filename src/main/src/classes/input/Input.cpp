@@ -35,31 +35,27 @@ using namespace general;
       _select.setSection(section);
   }
 
-  void Input::setup() {
-    if(mode.equals(MENU)) {
-      if(!mode.hasChanged() && !theme.hasChanged())
-        clear();
-      else
-        draw();
-      if(_setting->getType() == SWITCH)
-        _slider.init();
-      else if(_setting->getType() == ACTIVATOR)
-        _button.init();
-      else if(_setting->getType() == MULTISELECT)
-        _multiselect.init();
-      else if(_setting->getType() == NUMBER)
-        _number.init();
-      else if(_setting->getType() == SELECT)
-        _select.init();
-    }
+  void Input::setup(boolean redraw) {
+    if(!mode.hasChanged() && !theme.hasChanged() && !redraw)
+      clear();
+    else
+      draw();
+    if(_setting->getType() == SWITCH)
+      _slider.init();
+    else if(_setting->getType() == ACTIVATOR)
+      _button.init();
+    else if(_setting->getType() == MULTISELECT)
+      _multiselect.init();
+    else if(_setting->getType() == NUMBER)
+      _number.init();
+    else if(_setting->getType() == SELECT)
+      _select.init();
   }
 
   void Input::draw() {
-    if(mode.hasChanged() || theme.hasChanged()) {
-      if(_inputSection != 0)
-        display.fillRect(0, MENU_SECTION_Y(_inputSection), MENU_SECTION_LENGTH+1, MENU_SECTION_BORDER_THICKNESS, TEXT_COLOR);
-      debug(INFO, MENUD, "Input:", _inputSection, "drawn");
-    }
+    if(_inputSection != 0)
+      display.fillRect(0, MENU_SECTION_Y(_inputSection), MENU_SECTION_LENGTH+1, MENU_SECTION_BORDER_THICKNESS, TEXT_COLOR);
+    debug(INFO, MENUD, "Input:", _inputSection, "drawn");
   }
 
   void Input::clear() {
