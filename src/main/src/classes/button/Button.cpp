@@ -23,7 +23,7 @@
     if(p.isTouching(0, MENU_SECTION_LENGTH, MENU_SECTION_Y(_section), (MENU_SECTION_Y(_section) + MENU_SECTION_HEIGHT))) {
       execute();
        // TODO universal
-      if(_setting->getDebugMessage() != "")
+      if(strlen(_setting->getDebugMessage()) != 0)
         debug(DEBUG, MENUD, _setting->getDebugMessage());
     }
   }

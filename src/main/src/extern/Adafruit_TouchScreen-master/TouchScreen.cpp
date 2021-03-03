@@ -32,13 +32,15 @@ TSPoint::TSPoint(int16_t x0, int16_t y0, int16_t z0) {
 }
 
 void TSPoint::calibrate() {
-  if(EEPROM.readShort(XMIN) == EEPROM.readShort(XMAX) || EEPROM.readShort(YMIN) == EEPROM.readShort(YMAX))
-    ts.calibration();
-  xc = map(x, EEPROM.readShort(XMIN), EEPROM.readShort(XMAX), TOUCH_CALIBRATION_BOX_MARGIN + TOUCH_CALIBRATION_BOX_SIZE/2, DISPLAY_LENGTH - TOUCH_CALIBRATION_BOX_MARGIN - TOUCH_CALIBRATION_BOX_SIZE/2);
-  yc = map(y, EEPROM.readShort(YMIN), EEPROM.readShort(YMAX), TOUCH_CALIBRATION_BOX_MARGIN + TOUCH_CALIBRATION_BOX_SIZE/2, DISPLAY_HEIGHT - TOUCH_CALIBRATION_BOX_MARGIN - TOUCH_CALIBRATION_BOX_SIZE/2);
-  if(xc < 0 || xc > DISPLAY_LENGTH || yc < 0 || yc > DISPLAY_HEIGHT)
-    ts.calibration();
-  print();
+  if(ts.isTouching()) {
+    if(EEPROM.readShort(XMIN) == EEPROM.readShort(XMAX) || EEPROM.readShort(YMIN) == EEPROM.readShort(YMAX))
+      ts.calibration();
+    xc = map(x, EEPROM.readShort(XMIN), EEPROM.readShort(XMAX), TOUCH_CALIBRATION_BOX_MARGIN + TOUCH_CALIBRATION_BOX_SIZE/2, DISPLAY_LENGTH - TOUCH_CALIBRATION_BOX_MARGIN - TOUCH_CALIBRATION_BOX_SIZE/2);
+    yc = map(y, EEPROM.readShort(YMIN), EEPROM.readShort(YMAX), TOUCH_CALIBRATION_BOX_MARGIN + TOUCH_CALIBRATION_BOX_SIZE/2, DISPLAY_HEIGHT - TOUCH_CALIBRATION_BOX_MARGIN - TOUCH_CALIBRATION_BOX_SIZE/2);
+    if(xc < -TOUCHINACURRACY || xc > DISPLAY_LENGTH+TOUCHINACURRACY || yc < -TOUCHINACURRACY || yc > DISPLAY_HEIGHT+TOUCHINACURRACY)
+      ts.calibration();
+    print();
+  }
 }
 
 void TSPoint::print() {

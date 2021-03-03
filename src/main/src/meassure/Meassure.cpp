@@ -60,17 +60,17 @@
       debug(WARNING, SETUP, "Could not find a valid BME280 sensor, check wiring!");
     }
     Serial1.begin(MHZ19BAUDRATE);
-    
-    do{
+    MHZ19b.begin(Serial1);
+    while (!SENSORCONNECTED && requestDecision("Sensor nicht verbunden", "erneut versuchen?", "Ja", "Nein")) {
       display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoBlatt);
-      MHZ19b.begin(Serial1);
       Serial.print("connecting to sensor");
       for (int x = 0; x <= 15; x++) {
         delay(500);
         Serial.print(".");
       }
       Serial.println();
-    } while (!SENSORCONNECTED && requestDecision("Sensor nicht verbunden", "erneut versuchen?", "Ja", "Nein"));
+      MHZ19b.begin(Serial1);
+    }
     if(SENSORCONNECTED) {
       MHZ19b.autoCalibration(false);
       debug(INFO, SENSOR, "ABC Status: " + MHZ19b.getABC() ? "ON" : "OFF");  // now print it's status
@@ -181,12 +181,10 @@
     airCondition = (float) tempAirCondition / AVERAGING_MEASUREMENTS;
     airConditionTemp = (float) temptempAirCondition / AVERAGING_MEASUREMENTS;
     airConditionRaw = airCondition;*/
-    if(SENSORCONNECTED) {
-      airCondition = MHZ19b.getCO2(true, true);
-      // Serial.print("PPM: ");
-      // Serial.println(airCondition);
-      temperature = MHZ19b.getTemperature(true, true);
-    }
+
+    airCondition = MHZ19b.getCO2(true, true);
+    debug(SPAMM, SENSOR, "PPM: " + airCondition);
+    temperature = MHZ19b.getTemperature(true, true);
     counter++;
     //Wert smoothen;
     //airCondition = ALPHA_MEASUREMENTS * airCondition + (1 - ALPHA_MEASUREMENTS) * airConditionLast;

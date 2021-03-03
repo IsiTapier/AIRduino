@@ -6,8 +6,8 @@
 
 using namespace general;
 
-  extern TSPoint Display::p;
-  extern unsigned long Display::lastModeChange = 0;
+  TSPoint Display::p;
+  unsigned long Display::lastModeChange = 0;
 
   void Display::setup() {
     debug(DEBUG, SETUP, "Display SETUP started");
@@ -21,6 +21,14 @@ using namespace general;
     //Logo
     display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoBlatt);
     eeprom();
+    unsigned long begin = millis();
+    while(millis() - begin > 2000) {
+      p = ts.getPoint();
+      if(p.isTouching()) {
+        ts.calibration();
+        break;
+      }
+    }
     setupDatabaseConnection();
     mode.setValue(CHART);
     debug(DEBUG, SETUP, "Display SETUP completed");

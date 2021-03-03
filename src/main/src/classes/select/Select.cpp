@@ -31,7 +31,7 @@ using namespace general;
     } else if(p.isTouching(MENU_SELECT_LENGTH, MENU_SELECT_LENGTH*2, MENU_SECTION_Y(_section), MENU_SECTION_END_Y(_section))) {
       setValue(true);
     }
-    if(_setting->getDebugMessage() != "")
+    if(strlen(_setting->getDebugMessage())!= 0)
       debug(DEBUG, MENUD, _setting->getDebugMessage());
   }
 

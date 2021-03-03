@@ -323,7 +323,7 @@
 
 //MACROS
 #define SIZE(width, height, letters) (                        \
-  (width <= 0 && height <= 0 || height <= 0 && letters <= 0) ? 1 :           \
+  ((width <= 0 && height <= 0) || (height <= 0 && letters <= 0)) ? 1 :           \
   (width <= 0) ?  GETSIZE(DISPLAY_LENGTH, height, 1) :  \
   (height <= 0) ? GETSIZE(width, DISPLAY_HEIGHT, letters) :   \
                   GETSIZE(width, height, letters))

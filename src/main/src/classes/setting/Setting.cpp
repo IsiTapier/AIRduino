@@ -6,7 +6,7 @@
 #include "../../util/Util.h"
 
 Setting::Setting(void) {}
-Setting::Setting(SettingType type, String key, std::vector<String> title, short defaultValue, char* debugMessage, short minValue, short maxValue, std::vector<std::vector<String>> names,  boolean colored) { //TODO DATATYPE
+Setting::Setting(SettingType type, const char* key, std::vector<String> title, short defaultValue, const char* debugMessage, short minValue, short maxValue, std::vector<std::vector<String>> names,  boolean colored) { //TODO DATATYPE
   _type = type;
   _key = key;
   _title = title;
@@ -61,8 +61,8 @@ void Setting::setValue(short value, boolean upload) {
   _oldValue = _value;
   _value = value;
   
-  debug(SPAMM, DATABASE, "Updated " + _key + ", " + _value);
-  if(_key != "" && upload) {
+  debug(SPAMM, DATABASE, "Updated " + String(_key) + ", " + String(_value));
+  if(strlen(_key) != 0  && upload) {
     config_update(_key, _value);
   }
 }
@@ -90,6 +90,6 @@ boolean Setting::getColored() {
   return _colored;
 }
 
-char* Setting::getDebugMessage() {
+const char* Setting::getDebugMessage() {
   return _debugMessage;
 }

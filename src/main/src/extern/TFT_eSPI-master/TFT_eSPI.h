@@ -802,7 +802,7 @@ class TFT_eSPI : public Print { //friend class TFT_eSprite; // Sprite class has 
 **                         Section 10: Additional extension classes
 ***************************************************************************************/
 // Load the Button Class
-#include "Extensions/Button.h"
+// #include "Extensions/Button.h"
 
 // Load the Sprite Class
 //#include "Extensions/Sprite.h"

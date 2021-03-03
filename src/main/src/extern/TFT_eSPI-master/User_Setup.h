@@ -335,11 +335,6 @@
 
 // #define SUPPORT_TRANSACTIONS
 
-
-
-
-
-
-#define ESP32 true
-/*#define ESP8266 false
+/*#define ESP32 true
+#define ESP8266 false
 #define STM32 false*/

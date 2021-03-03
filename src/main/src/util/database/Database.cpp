@@ -24,12 +24,16 @@
     setup_wifi();
     client.setServer(mqtt_server, 1883);
     client.setCallback(callback);
+    reconnect();
     //connect client the first time
-    do{
-      if (!client.connected()) {
-        reconnect();
+    while ((!client.connected()) && requestDecision("MQTT fehlgeschlagen", "erneut versuchen?", "Ja", "Nein")) {
+      display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoBlatt);
+      for (int x = 0; x <= 15; x++) {
+        delay(500);
+        Serial.print(".");
       }
-    } while ((!client.connected()) && requestDecision("MQTT fehlgeschlagen", "erneut versuchen?", "Ja", "Nein"));
+      reconnect();
+    }
     // do{
     config_request();
     // delay(100);
@@ -211,20 +215,18 @@ void maintenanceMode() {
     Serial.println();
     Serial.print("Connecting to ");
     Serial.println(ssid);
-    do{
+    // We start by connecting to a WiFi networ
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(ssid, password);
+    delay(500);
+    while ((WiFi.status() != WL_CONNECTED) && requestDecision("Wifi fehlgeschlagen", "erneut versuchen?", "Ja", "Nein")) {
       display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoBlatt);
-      // We start by connecting to a WiFi networ
-
-      WiFi.mode(WIFI_STA);
       WiFi.begin(ssid, password);
-    
       for (int x = 0; x <= 15; x++) {
         delay(500);
         Serial.print(".");
       }
-    } while ((WiFi.status() != WL_CONNECTED) && requestDecision("Wifi fehlgeschlagen", "erneut versuchen?", "Ja", "Nein"));
-
-    display.fillScreen(BACKGROUND_COLOR);
+    }
     if (WiFi.status() == WL_CONNECTED) {
       randomSeed(micros());
       Serial.println("");

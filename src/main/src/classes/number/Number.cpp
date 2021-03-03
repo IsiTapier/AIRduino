@@ -30,7 +30,7 @@
       setValue(_setting->getValue()-1);
     else
       return;
-    if(_setting->getDebugMessage() != "")
+    if(strlen(_setting->getDebugMessage()) != 0)
       debug(DEBUG, MENUD, _setting->getDebugMessage());
   }
 

@@ -23,7 +23,7 @@ enum SettingType {
 class Setting {
   public:
     Setting(void);
-    Setting(SettingType type, String key = "", std::vector<String> title = {}, short defaultValue = 0, char* debugMessage = "", short minValue = 0, short maxValue = 1, std::vector<std::vector<String>> names = {}, boolean colored = true);
+    Setting(SettingType type, const char* key = "", std::vector<String> title = {}, short defaultValue = 0, const char* debugMessage = "", short minValue = 0, short maxValue = 1, std::vector<std::vector<String>> names = {}, boolean colored = true);
     short getValue();
     short getOldValue();
     boolean hasChanged();
@@ -38,18 +38,18 @@ class Setting {
     short getSize();
     boolean getColored();
     String getName(boolean reverse = false);
-    char* getDebugMessage();
+    const char* getDebugMessage();
 
   private:
     SettingType _type;
-    String _key;
+    const char* _key;
     std::vector<String> _title;
     short _value;
     short _oldValue;
     short _defaultValue;
     short _minValue;
     short _maxValue;
-    char* _debugMessage;
+    const char* _debugMessage;
     char* _nameOn;
     char* _nameOff;
     boolean _colored;
