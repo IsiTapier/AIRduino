@@ -6,13 +6,12 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
-import java.io.Writer;
 
 import javax.imageio.ImageIO;
 
 public class Main {
 	
-	final static String sourceInput = "img\\arrow2.png";
+	final static String sourceInput = "img\\input.png";
 	final static String sourceOutput = "img\\output.txt";
 	final static boolean swapx = false;
 	final static boolean swapy = false;
@@ -35,13 +34,13 @@ public class Main {
 			writer = new FileWriter(sourceOutput);
 		    bWriter = new BufferedWriter(writer);
 			pWriter = new PrintWriter(bWriter);
-			//get pixel colors
+			//get pixel colors;
 			int row;
 			int col;
 			int buf;
-			for (int x = 0; x < imageWidth; x++) {
+			for (int y = 0; y < imageHeight; y++) {
 				out = "";
-				for (int y = 0; y < imageHeight; y++) {
+				for (int x = 0; x < imageWidth; x++) {
 					if(swapx) {
 						col = imageWidth - x -1;
 						row = imageHeight - y -1;
@@ -54,15 +53,33 @@ public class Main {
 						row = col;
 						col = buf;
 					}
-					int rgb = image.getRGB(row, col);
-					int a = ((0xF0000000 & rgb) >> 16) & 0x0000F000;
-					int r = ((0x00F00000 & rgb) >> 12);
-					int g = ((0x0000F000 & rgb) >> 8);
-					int b = ((0x000000F0 & rgb) >> 4);
-					int argb = a + r + g + b;
-					String color16 = Integer.toHexString(argb);
+					int rgb = image.getRGB(col, row);
+					int argb;
+					int a = 0;
+					int b = 0;
+					int r = 0;
+					int g = 0;
+					if(rgb != 0) {
+						/*System.out.println(Integer.toHexString(rgb));
+						System.out.print(Integer.toBinaryString((0x00FF0000 & rgb) >> 16)+" ");
+						System.out.print(Integer.toBinaryString((0x0000FF00 & rgb) >> 8)+" ");
+						System.out.println(Integer.toBinaryString((0x000000FF & rgb)));*/
+						r = (rgb >> 8) & 0xF800;
+						g = (rgb >> 5) & 0x07E0;
+						b = (rgb >> 3) & 0x001F;
+						rgb = r | g | b;
+						/*System.out.println(Integer.toBinaryString(rgb));
+						System.out.println(Integer.toHexString(rgb));*/
+						argb = a + r + g + b;
+					} else {
+						argb = 0xFFFF;
+					}
+					String color16 = argb == 0 ? "0000" : Integer.toHexString(argb);
 					String color32 = Integer.toHexString(rgb);
-					System.out.println("32bit: " + color32 + " 16bit: " + color16);
+					while(color16.length() < 4) {
+						color16+=" ";
+					}
+					//System.out.println("32bit: " + color32 + " 16bit: " + color16);
 					out += "0x" + color16 + ", ";
 				}
 				pWriter.println(out);
@@ -72,8 +89,9 @@ public class Main {
 			bWriter.close();
 			writer.close();
 		} catch(Exception exception) {
-			
+			System.out.println("ERROR");
+			System.out.println(imageWidth);
+			System.out.println(imageHeight);
 		}
-		
 	}
 }

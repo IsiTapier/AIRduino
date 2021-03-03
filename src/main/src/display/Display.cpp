@@ -19,10 +19,10 @@ using namespace general;
     debug(INFO, SETUP, "Display initialized");
 
     //Logo
-    display.fillScreen(BACKGROUND_COLOR);
-    delay(500);
-    drawImage(320, 240);
+    display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoBlatt);
+    delay(5000);
     eeprom();
+    display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoPfeil);
     setupDatabaseConnection();
 
     mode.setValue(CHART);
@@ -30,15 +30,6 @@ using namespace general;
     debug(DEBUG, SETUP, "");
     delay(20000);
     Meassure::setup();
-  }
-
-  void Display::drawImage(int length, int height) {
-    for(int i = 0; i <= length; i++) {
-      for(int j = 0; j <= height; j++) {
-        display.drawPixel(i, j, testLogob[j*length + i]);
-      }
-    }
-    delay(7000);
   }
 
   void Display::eeprom() {
