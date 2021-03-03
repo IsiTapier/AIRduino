@@ -20,7 +20,7 @@
   }
 
   void Button::checkTouch(TSPoint p) {
-    if(p.isTouching(0, MENU_SECTION_LENGTH, MENU_SECTION_Y(_section), (MENU_SECTION_Y(_section) + MENU_SIDE_HEIGHT))) {
+    if(p.isTouching(0, MENU_SECTION_LENGTH, MENU_SECTION_Y(_section), (MENU_SECTION_Y(_section) + MENU_SECTION_HEIGHT))) {
       execute();
        // TODO universal
       if(_setting->getDebugMessage() != "")
@@ -34,7 +34,6 @@
   }
   
   void Button::execute() {
-    Serial.println(_setting->getDefaultValue());
     switch(_setting->getDefaultValue()) {
       case 0: ts.calibration(); break;
       case 1: Meassure::calibrateMin(); break;

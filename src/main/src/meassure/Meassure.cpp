@@ -4,6 +4,7 @@
 
 #include "Arduino.h"
 #include "Meassure.h"
+#include "../display/menu/Menu.h"
 
   //   _____      _
   //  / ____|    | |
@@ -20,7 +21,7 @@
   extern unsigned long Meassure::tempAirCondition;
   extern unsigned long Meassure::temptempAirCondition;
   extern float Meassure::airConditionTemp;
-  extern float Meassure::airCondition;
+  extern float Meassure::airCondition = 0;
   extern float Meassure::airConditionRaw;
   extern float Meassure::airConditionLast;
   extern unsigned long Meassure::startTime;
@@ -52,7 +53,6 @@
     debug(INFO, SETUP, "Pins initialized");
     // airConditionRaw = analogRead(GAS_SENSOR);
     // airConditionLast = analogRead(GAS_SENSOR);
-    startTime = millis();
     debug(INFO, SETUP, "Variables initialized");
     if (bme.begin(0x76)) {
       debug(INFO, SETUP, "BME-Sensor initialized");
@@ -60,12 +60,25 @@
       debug(WARNING, SETUP, "Could not find a valid BME280 sensor, check wiring!");
     }
     Serial1.begin(MHZ19BAUDRATE);
-    MHZ19b.begin(Serial1);
-    MHZ19b.autoCalibration(false);
-    debug(INFO, SENSOR, "ABC Status: " + MHZ19b.getABC() ? "ON" : "OFF");  // now print it's status
-    // MHZ19b.setRange(RANGE);
-    // MHZ19b.calibrate();
-    // MHZ19b.zeroSpan(1000);
+
+    do{
+      display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoBlatt);
+      MHZ19b.begin(Serial1);
+      Serial.print("connecting to sensor");
+      for (int x = 0; x <= 15; x++) {
+        delay(500);
+        Serial.print(".");
+      }
+      Serial.println();
+    } while (!SENSORCONNECTED && requestDecision("Sensor nicht verbunden", "erneut versuchen?", "Ja", "Nein"));
+    if(SENSORCONNECTED) {
+      MHZ19b.autoCalibration(false);
+      debug(INFO, SENSOR, "ABC Status: " + MHZ19b.getABC() ? "ON" : "OFF");  // now print it's status
+      // MHZ19b.setRange(RANGE);
+      // MHZ19b.calibrate();
+      // MHZ19b.zeroSpan(1000);
+    }
+    startTime = millis();
     debug(DEBUG, SETUP, "Meassure SETUP ended");
     debug(DEBUG, SETUP, "");
   }
@@ -81,15 +94,19 @@
   }
 
   void Meassure::calibrateMin() {
-    MHZ19b.calibrate();
-    debug(INFO, SENSOR, "min PPM value calibrated");
-    Serial.println("min PPM value calibrated");
+    if(requestDecision("Max Wert Kalibrierung", "Möchtest du fortfahren?")) {
+      // MHZ19b.calibrate();
+      debug(WARNING, SENSOR, "min value calibrated to 400 PPM");
+    }
+    Menu::setup();
   }
 
   void Meassure::calibrateMax() {
-    MHZ19b.zeroSpan(1000);
-    Serial.println("max PPM value calibrated");
-    debug(INFO, SENSOR, "max PPM value calibrated");
+    if(requestDecision("Max Wert Kalibrierung", "Möchtest du fortfahren?")) {
+      // MHZ19b.zeroSpan(1000);
+      debug(WARNING, SENSOR, "max value calibrated to 1000 PPM");
+    }
+    Menu::setup();
   }
 
   //Getter
@@ -221,7 +238,10 @@
     Serial.print(sensor.getRZero(airConditionRaw, temperature, humidity, 1)); Serial.print("\t");
     Serial.println(sensor.getRZero(airConditionRaw, temperature, humidity, "1"));*/
     if(counter >= AVERAGING_MEASUREMENTS) {
-      mysql_insert(device_class, average(databaseCO2, 0, AVERAGING_MEASUREMENTS), average(databaseCO2, 0, AVERAGING_MEASUREMENTS));
+      int co2 = average(databaseCO2, 0, AVERAGING_MEASUREMENTS);
+      int temp = average(databaseTemperature, 0, AVERAGING_MEASUREMENTS);
+      if(co2 != 0 || temp != 0)
+        mysql_insert(device_class, co2, temp);
       counter = 0;
     }
   }

@@ -11,17 +11,15 @@ using namespace general;
 
   void Display::setup() {
     debug(DEBUG, SETUP, "Display SETUP started");
+    mode.setValue(LOADINGSCREEN, false);
     display.begin();
     debug(INFO, SETUP, "Display connection started");
     display.fillScreen(BACKGROUND_COLOR);
     display.setTextWrap(false);
     display.setRotation(ROTATION);
     debug(INFO, SETUP, "Display initialized");
-
     //Logo
-    display.fillScreen(BACKGROUND_COLOR);
-    delay(500);
-    drawImage(320, 240);
+    display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoBlatt);
     eeprom();
     setupDatabaseConnection();
     mode.setValue(CHART);
@@ -29,15 +27,6 @@ using namespace general;
     debug(DEBUG, SETUP, "");
     delay(1000);
     Meassure::setup();
-  }
-
-  void Display::drawImage(int length, int height) {
-    for(int i = 0; i <= length; i++) {
-      for(int j = 0; j <= height; j++) {
-        display.drawPixel(i, j, testLogob[j*length + i]);
-      }
-    }
-    delay(7000);
   }
 
   void Display::eeprom() {
@@ -95,7 +84,7 @@ using namespace general;
         } else {
           DisplayV2::setup();
         }
-      } else if(mode.getValue() == MENU) {
+      } else if(mode.getValue() == MENU && (theme.hasChanged() || mode.hasChanged())) {
         Menu::setup();
       } else {
 
@@ -127,9 +116,12 @@ using namespace general;
             lastModeChange = millis();
           }
         } else if(p.isTouching(MENU_ARROW_RESET_START_X, MENU_ARROW_RESET_END_X, MENU_ARROW_RESET_START_Y, MENU_ARROW_RESET_END_Y)) {
-          if(debugSetup.getValue())
-            debug(INFO, SETUP, "reset");
-          Menu::reset();
+          if(requestDecision("Einstellungs Reset", "Willst du fortfahren?")) {
+            if(debugSetup.getValue())
+              debug(WARNING, SETUP, "reset");
+            Menu::reset();
+          }
+          Menu::setup();
         } else if(mode.equals(MENU)) {
           Menu::handleTouch(p);
         }

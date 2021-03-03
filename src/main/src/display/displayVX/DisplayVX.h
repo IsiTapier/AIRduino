@@ -9,6 +9,9 @@
 #include "Wire.h"
 #include "../../util/Util.h"
 
+#define ERROR (airCondition <= 0)
+#define ERRORLAST (lastAirCondition <= 0)
+
 class DisplayVX {
 
   public:

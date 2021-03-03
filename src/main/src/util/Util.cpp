@@ -207,16 +207,13 @@
     dPrint("R", distanceToFirstLetter + 120, 55, LOADING_SCREEN_TITLE_SIZE, c3);
   }
 
-  boolean requestDecision(String error, String question, String op1, String op2) {
-
+  boolean requestDecision(String topic, String question, String op1, String op2) {
     display.fillScreen(BACKGROUND_COLOR);
-    dPrint(error, 160, 40, 2, TEXT_COLOR, 4);
+    dPrint(topic, 160, 40, 2, TEXT_COLOR, 4);
     dPrint(question, 160, 60, 2, TEXT_COLOR, 4);
     dPrint(op1, 0, 240, 4, GREEN, 6);
     dPrint(op2, 320, 240, 4, RED, 8);
     TSPoint p = ts.getPoint();
-    delay(1000);
-    Serial.println("s1");
     while(true) {
       while(p.isTouching()) {
         p = ts.getPoint();
@@ -227,13 +224,11 @@
       if(p.isTouching()) {
         p.calibrate();
         if(p.isTouching(0, 160, 120, 240)) {
-          Serial.println("true");
-          Serial.println(p.z);
+          // Serial.println("true");
           return true;
         }
         if(p.isTouching(161, 320, 120, 240)) {
-          Serial.println("false");
-          Serial.println(p.z);
+          // Serial.println("false");
           return false;
         }
         delay(10);

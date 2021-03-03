@@ -21,26 +21,22 @@ MenuPage::MenuPage(Input inputOne, Input inputTwo, Input inputThree, Input input
   _inputSix.setSection(5);
 }
 
-void MenuPage::setup() {
-  if(mode.equals(MENU)) {   //TODO page check
-    _inputOne.setup();
-    _inputTwo.setup();
-    _inputThree.setup();
-    _inputFour.setup();
-    _inputFive.setup();
-    _inputSix.setup();
-  }
+void MenuPage::setup(boolean redraw) {
+  _inputOne.setup(redraw);
+  _inputTwo.setup(redraw);
+  _inputThree.setup(redraw);
+  _inputFour.setup(redraw);
+  _inputFive.setup(redraw);
+  _inputSix.setup(redraw);
 }
 
 void MenuPage::handleTouch(TSPoint p) {
-  if(mode.equals(MENU)) {   //TODO page check
-    _inputOne.handleTouch(p);
-    _inputTwo.handleTouch(p);
-    _inputThree.handleTouch(p);
-    _inputFour.handleTouch(p);
-    _inputFive.handleTouch(p);
-    _inputSix.handleTouch(p);
-  }
+  _inputOne.handleTouch(p);
+  _inputTwo.handleTouch(p);
+  _inputThree.handleTouch(p);
+  _inputFour.handleTouch(p);
+  _inputFive.handleTouch(p);
+  _inputSix.handleTouch(p);
 }
 
 void MenuPage::reset(boolean active) {

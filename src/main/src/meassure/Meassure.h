@@ -13,6 +13,7 @@
 #include "../extern/MH_Z19/src/MHZ19.h"
 
 #define RANGE 2000
+#define SENSORCONNECTED (MHZ19b.errorCode == RESULT_OK)
 
 class Meassure {
 
