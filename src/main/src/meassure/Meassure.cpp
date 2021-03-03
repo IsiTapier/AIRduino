@@ -240,7 +240,10 @@
     Serial.print(sensor.getRZero(airConditionRaw, temperature, humidity, 1)); Serial.print("\t");
     Serial.println(sensor.getRZero(airConditionRaw, temperature, humidity, "1"));*/
     if(counter >= AVERAGING_MEASUREMENTS) {
-      mysql_insert(device_class, average(databaseCO2, 0, AVERAGING_MEASUREMENTS), average(databaseCO2, 0, AVERAGING_MEASUREMENTS));
+      int co2 = average(databaseCO2, 0, AVERAGING_MEASUREMENTS);
+      int temp = average(databaseTemperature, 0, AVERAGING_MEASUREMENTS);
+      if(co2 != 0 || temp != 0)
+        mysql_insert(device_class, co2, temp);
       counter = 0;
     }
   }

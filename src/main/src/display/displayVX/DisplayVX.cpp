@@ -125,8 +125,8 @@ extern boolean DisplayVX::drop = false;
   void DisplayVX::writeInfo() {
     //ppm zeichnen
     String ppm;
-      if(airCondition < 0)
-        ppm = "  0";
+      if(ERROR)
+        ppm = "error";
       else if(airCondition < 10)
         ppm = "  " + String(airCondition);
       else if(airCondition < 100)
@@ -134,8 +134,8 @@ extern boolean DisplayVX::drop = false;
       else
         ppm = String(airCondition);
       String lastppm;
-      if(lastAirCondition < 0)
-        lastppm = "  0";
+      if(ERRORLAST)
+        lastppm = "error";
       else if(lastAirCondition < 10)
         lastppm = "  " + String(lastAirCondition);
       else if(lastAirCondition < 100)
@@ -159,9 +159,9 @@ extern boolean DisplayVX::drop = false;
         }
       // }
       //Draw PPM
-      dPrint(lastppm, PPM_MARGIN_LEFT, PPM_Y, PPM_SIZE, DATABOX_BACKGROUND_COLOR, 6);
-      dPrint(ppm, PPM_MARGIN_LEFT, PPM_Y, PPM_SIZE, state.getColor(COLORED_PPM), 6);
-      if (airCondition < 1000) {
+      dPrint(lastppm, PPM_MARGIN_LEFT, PPM_Y, ERRORLAST ? PPM_SIZE-1 : PPM_SIZE, DATABOX_BACKGROUND_COLOR, 6);
+      dPrint(ppm, PPM_MARGIN_LEFT, PPM_Y, ERROR ? PPM_SIZE-1 : PPM_SIZE, ERROR ? RED : state.getColor(COLORED_PPM), 6);
+      if (airCondition < 1000 && !ERROR) {
         dPrint("ppm", PPM_STRING_X, PPM_STRING_Y, PPM_STRING_SIZE, state.getColor(COLORED_PPM), 6);
       }
     }
@@ -176,13 +176,13 @@ extern boolean DisplayVX::drop = false;
     }
 
     //Verhindert überschreiben von "ppm"
-    if(airCondition >= 1000 && lastAirCondition < 1000)
+    if(airCondition >= 1000 && lastAirCondition < 1000 || ERROR && !ERRORLAST)
       dPrint("ppm", PPM_STRING_X, PPM_STRING_Y, PPM_STRING_SIZE, DATABOX_BACKGROUND_COLOR, 6);
 
     //write new Pixels
-    dPrint(ppm, PPM_MARGIN_LEFT, PPM_Y, PPM_SIZE, state.getColor(COLORED_PPM), 6, DATABOX_BACKGROUND_COLOR, lastppm);
+    dPrint(ppm, PPM_MARGIN_LEFT, PPM_Y, ERROR ? PPM_SIZE-1 : PPM_SIZE, ERROR ? RED : state.getColor(COLORED_PPM), 6, DATABOX_BACKGROUND_COLOR, lastppm, 6);
 
-    if (airCondition < 1000 && lastAirCondition >= 1000 || airCondition < 1000 && start)
+    if (airCondition < 1000 && lastAirCondition >= 1000 && !ERROR || airCondition < 1000 && start && !ERROR)
       dPrint("ppm", PPM_STRING_X, PPM_STRING_Y, PPM_STRING_SIZE, state.getColor(COLORED_PPM), 6);
     //drawLoadingBar();
 
