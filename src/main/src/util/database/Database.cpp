@@ -15,6 +15,8 @@
   char msg[MSG_BUFFER_SIZE];
   int value = 0;
 
+  boolean configReceived = false;
+
   //Database connection
   void setupDatabaseConnection() {
     getUniqueID();
@@ -23,9 +25,16 @@
     client.setServer(mqtt_server, 1883);
     client.setCallback(callback);
     //connect client the first time
-    if (!client.connected())
-      reconnect();
+    do{
+      if (!client.connected()) {
+        reconnect();
+      }
+    } while ((!client.connected()) && requestDecision("MQTT fehlgeschlagen", "erneut versuchen?", "Ja", "Nein"));
+    // do{
     config_request();
+    // delay(100);
+    // } while((!configReceived) && requestDecision("Config nicht geladen", "erneut versuchen?", "Ja", "Nein"));
+    
   }
 
   void callback(char* topic_char, byte* payload, unsigned int length) {
@@ -49,6 +58,7 @@
 
   if (topic == "config/get/" + device_id) {
     debug(IMPORTANT, SETUP, "Config received");
+    configReceived = true;
     int digit = 0;
     for (int x = 0; digit < length; x++) { //loop for every setting
       String output = "";
@@ -198,27 +208,30 @@ void maintenanceMode() {
   }
 
   void setup_wifi() {
-    // We start by connecting to a WiFi network
     Serial.println();
     Serial.print("Connecting to ");
     Serial.println(ssid);
+    do{
+      display.pushImage(0, 0, 320, 240, testLogo);
+      // We start by connecting to a WiFi networ
 
-    WiFi.mode(WIFI_STA);
-    WiFi.begin(ssid, password);
+      WiFi.mode(WIFI_STA);
+      WiFi.begin(ssid, password);
+    
+      for (int x = 0; x <= 15; x++) {
+        delay(500);
+        Serial.print(".");
+      }
+    } while ((WiFi.status() != WL_CONNECTED) && requestDecision("Wifi fehlgeschlagen", "erneut versuchen?", "Ja", "Nein"));
 
-    int timeout = 0;
-    while (WiFi.status() != WL_CONNECTED) {
-      delay(500);
-      Serial.print(".");
-      timeout++;
-      if(timeout > 50)
-        break;
+    display.fillScreen(BACKGROUND_COLOR);
+    if (WiFi.status() == WL_CONNECTED) {
+      randomSeed(micros());
+      Serial.println("");
+      Serial.println("WiFi connected");
+      Serial.println("IP address: ");
+      Serial.println(WiFi.localIP());
     }
-    randomSeed(micros());
-    Serial.println("");
-    Serial.println("WiFi connected");
-    Serial.println("IP address: ");
-    Serial.println(WiFi.localIP());
   }
 
   void reconnect() {

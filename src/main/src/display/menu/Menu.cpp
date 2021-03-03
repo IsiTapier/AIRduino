@@ -64,6 +64,7 @@
     {SubMenu("Developper", {
         MenuPage(
           Input(&developper::calibrateMin),
+          Input(&general::empty),
           Input(&developper::calibrateMax)
         )
     }, 0, 1)}

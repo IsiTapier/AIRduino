@@ -123,7 +123,6 @@ namespace general {
 
   Setting mode = Setting(MULTISELECT, "", titlesMode, LOADINGSCREEN, "'Mode' changed", 0, 3);
   Setting maintenance_mode = Setting(MULTISELECT, "maintenance_mode", titlesMaintenanceMode, 0, "'Wartungsmodus' changed", 0, 3);
-
 }
 
 namespace colorModes {

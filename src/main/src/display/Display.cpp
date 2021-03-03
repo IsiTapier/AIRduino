@@ -24,11 +24,10 @@ using namespace general;
     eeprom();
     display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoPfeil);
     setupDatabaseConnection();
-
     mode.setValue(CHART);
     debug(DEBUG, SETUP, "Display SETUP completed");
     debug(DEBUG, SETUP, "");
-    delay(20000);
+    delay(1000);
     Meassure::setup();
   }
 
