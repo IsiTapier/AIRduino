@@ -36,8 +36,10 @@
     }
     // do{
     config_request();
-    // delay(100);
-    // } while((!configReceived) && requestDecision("Config nicht geladen", "erneut versuchen?", "Ja", "Nein"));
+    delay(100);
+    while((!configReceived) && requestDecision("Config nicht geladen", "erneut versuchen?", "Ja", "Nein")) {
+      delay(100);
+    }
     
   }
 
