@@ -181,11 +181,12 @@
     airCondition = (float) tempAirCondition / AVERAGING_MEASUREMENTS;
     airConditionTemp = (float) temptempAirCondition / AVERAGING_MEASUREMENTS;
     airConditionRaw = airCondition;*/
-
-    airCondition = MHZ19b.getCO2(true, true);
-    debug(SPAMM, SENSOR, "PPM: " + airCondition);
-    temperature = MHZ19b.getTemperature(true, true);
-    counter++;
+    if(SENSORCONNECTED) {
+      airCondition = MHZ19b.getCO2(true, true);
+      debug(SPAMM, SENSOR, "PPM: " + String(airCondition));
+      temperature = MHZ19b.getTemperature(true, true);
+      counter++;
+    }
     //Wert smoothen;
     //airCondition = ALPHA_MEASUREMENTS * airCondition + (1 - ALPHA_MEASUREMENTS) * airConditionLast;
   	databaseCO2[counter] = airCondition;
@@ -196,7 +197,7 @@
 
     int time = floor(millis()/1000);
     if(lasttime != time) {
-      //Serial.println(testCounter);
+      Serial.println(testCounter);
       testCounter = 0;
     }
     testCounter++;

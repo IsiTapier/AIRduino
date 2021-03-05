@@ -13,6 +13,8 @@
 #endif
 #include "TouchScreen.h"
 
+int errorCounter = 0;
+
 // increase or decrease the touchscreen oversampling. This is a little different
 // than you make think: 1 is no oversampling, whatever data we get is
 // immediately returned 2 is double-sampling and we only return valid data if
@@ -32,13 +34,19 @@ TSPoint::TSPoint(int16_t x0, int16_t y0, int16_t z0) {
 }
 
 void TSPoint::calibrate() {
-  if(ts.isTouching()) {
+  if(isTouching()) {
     if(EEPROM.readShort(XMIN) == EEPROM.readShort(XMAX) || EEPROM.readShort(YMIN) == EEPROM.readShort(YMAX))
       ts.calibration();
     xc = map(x, EEPROM.readShort(XMIN), EEPROM.readShort(XMAX), TOUCH_CALIBRATION_BOX_MARGIN + TOUCH_CALIBRATION_BOX_SIZE/2, DISPLAY_LENGTH - TOUCH_CALIBRATION_BOX_MARGIN - TOUCH_CALIBRATION_BOX_SIZE/2);
     yc = map(y, EEPROM.readShort(YMIN), EEPROM.readShort(YMAX), TOUCH_CALIBRATION_BOX_MARGIN + TOUCH_CALIBRATION_BOX_SIZE/2, DISPLAY_HEIGHT - TOUCH_CALIBRATION_BOX_MARGIN - TOUCH_CALIBRATION_BOX_SIZE/2);
     if(xc < -TOUCHINACURRACY || xc > DISPLAY_LENGTH+TOUCHINACURRACY || yc < -TOUCHINACURRACY || yc > DISPLAY_HEIGHT+TOUCHINACURRACY)
+      errorCounter++;
+    else
+      errorCounter = 0;
+    if(errorCounter >= ERRORBIAS) {
+      errorCounter = 0;
       ts.calibration();
+    }
     print();
   }
 }
