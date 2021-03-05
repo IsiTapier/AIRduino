@@ -58,7 +58,7 @@
   const std::vector<std::vector<String>> namesData = {{"generierte Daten", "generated data", "donn"+ea+"es g"+ea+"n"+ea+"r"+ea+"es", "data sing digawe", "datos generados"}, {"Sensor Daten", "sensor data", "donn"+ea+"es du capteur", "data sensor", "datos del sensor"}};
   const std::vector<std::vector<String>> namesCalibrateTouch = {};
 
-  const std::vector<std::vector<String>> namesLanguage = {{"deutsch", "german", "allemand", "jerman", "alem"+aa+"n"}, {"englisch", "english", "anglais", "basa inggris", "ingl"+ea+"s"}, {"franz"+oe+"sisch", "french", "fran"+cC+"aise", "prancis", "franc"+ea+"s"}, {"java", "java", "javanais", "wong jawa", "javan"+ea+"s"}, {"spanisch", "spanish", "espagnol", "spanyol","espa"+nw+"ol"}, {"spezial", "special", "special", "khusus", "especial", "ESPecial"}};
+  const std::vector<std::vector<String>> namesLanguage = {{"deutsch"/*, "german", "allemand", "jerman", "alem"+aa+"n"*/}, {/*"englisch",*/ "english"/*, "anglais", "basa inggris", "ingl"+ea+"s"*/}, {/*"franz"+oe+"sisch", "french",*/ "fran"+cC+"aise"/*, "prancis", "franc"+ea+"s"*/}, {"java"/*, "java", "javanais", "wong jawa", "javan"+ea+"s"*/}, {/*"spanisch", "spanish", "espagnol", "spanyol",*/"espa"+nw+"ol"}, {/*"spezial",*/ "special"/*, "special", "khusus", "especial", "ESPecial"*/}};
   const std::vector<std::vector<String>> namesKernMode = {};
   const std::vector<std::vector<String>> namesGraphSpeed = {};
   const std::vector<std::vector<String>> namesSegments = {};

@@ -9,7 +9,7 @@
 #include "Wire.h"
 #include "../../util/Util.h"
 
-#define ERROR (airCondition <= 0)
+#define ERROR (airCondition <= 0 && ERRORLAST)
 #define ERRORLAST (lastAirCondition <= 0)
 
 class DisplayVX {
@@ -39,6 +39,9 @@ class DisplayVX {
     static short minutes;
     static boolean start;
     static boolean drop;
+  
+  private:
+    static boolean lastError;
 
 };
 

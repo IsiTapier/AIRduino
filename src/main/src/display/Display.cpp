@@ -21,14 +21,14 @@ using namespace general;
     //Logo
     display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoBlatt);
     eeprom();
-    unsigned long begin = millis();
+    /*unsigned long begin = millis();
     while(millis() - begin > 2000) {
       p = ts.getPoint();
       if(p.isTouching()) {
         ts.calibration();
         break;
       }
-    }
+    }*/
     setupDatabaseConnection();
     mode.setValue(CHART);
     debug(DEBUG, SETUP, "Display SETUP completed");
@@ -63,9 +63,9 @@ using namespace general;
 
   void Display::loop() {
     while(millis()%STAGE_TIME > 0) {}
+    Meassure::loop();
     handleTouch();
     initDisplay();
-    Meassure::loop();
     boolean changed = DisplayV1::getGraphData();
     /*if(mode.getValue() == MENU) {
       Menu::loop();
