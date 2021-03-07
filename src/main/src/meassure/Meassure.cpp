@@ -181,16 +181,18 @@
     airCondition = (float) tempAirCondition / AVERAGING_MEASUREMENTS;
     airConditionTemp = (float) temptempAirCondition / AVERAGING_MEASUREMENTS;
     airConditionRaw = airCondition;*/
-    if(SENSORCONNECTED) {
-      airCondition = MHZ19b.getCO2(true, true)-6000;
+    // if(SENSORCONNECTED) {
+      airCondition = MHZ19b.getCO2(true, true);
       debug(SPAMM, SENSOR, "PPM: " + String(airCondition));
-      temperature = MHZ19b.getTemperature(true, true);
+      Serial.println(airCondition);
+      temperature = MHZ19b.getTemperature(true, false);
+      Serial.println(temperature);
       counter++;
       //Wert smoothen;
       //airCondition = ALPHA_MEASUREMENTS * airCondition + (1 - ALPHA_MEASUREMENTS) * airConditionLast;
   	  databaseCO2[counter] = airCondition;
       databaseTemperature[counter] = temperature;
-    }
+    // }
     airConditionLast = airCondition;
 //    airCondition = sensor.getPPM(temperature, humidity);
 
@@ -207,7 +209,7 @@
     temperature = bme.readTemperature();
     humidity = bme.readHumidity();
     pressure = bme.readPressure()/100;
-    debug(INFO, SENSOR, "Temperature: " + temperature + String(char(167)) +"C " + "Humidity: " + humidity + "% " + "Pressure: " + pressure + "mbar");
+    // debug(INFO, SENSOR, "Temperature: " + temperature + String(char(167)) +"C " + "Humidity: " + humidity + "% " + "Pressure: " + pressure + "mbar");
   }
 
   //  _____        _

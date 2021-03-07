@@ -28,11 +28,11 @@
     //connect client the first time
     while ((!client.connected()) && requestDecision("MQTT fehlgeschlagen", "erneut versuchen?", "Ja", "Nein")) {
       display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoBlatt);
-      for (int x = 0; x <= 15; x++) {
+      for (int x = 0; (x <= 15) && (!client.connected()); x++) {
         delay(500);
         Serial.print(".");
+        reconnect();
       }
-      reconnect();
     }
     // do{
     config_request();
@@ -186,6 +186,7 @@ void maintenanceMode() {
       reconnect();
     String config_update = column + " = '" +  value + "' WHERE `device_overview`.`device_id` = " + device_id;
     client.publish("config/update", config_update.c_str());
+    debug(SPAMM, MENUD, "CONFIG - " + column + " = " + (String) value);
   }
 
   void config_update(String column, int value) {
@@ -198,6 +199,7 @@ void maintenanceMode() {
       client.publish("mysql/insert", output.c_str());
       debug(INFO, DATABASE, "INSERTED into LOG grade: " + grade + " co2: " + co2 + " temp: " + temp);
       //Serial.println("INSERTED into LOG grade: " + grade + " co2: " + co2 + " temp: " + temp + " humidity: " + humidity + " pressure: " + pressure + " altitude: " + altitude);
+      
     }
 }
 
@@ -223,10 +225,12 @@ void maintenanceMode() {
     delay(500);
     while ((WiFi.status() != WL_CONNECTED) && requestDecision("Wifi fehlgeschlagen", "erneut versuchen?", "Ja", "Nein")) {
       display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoBlatt);
-      WiFi.begin(ssid, password);
-      for (int x = 0; x <= 15; x++) {
-        delay(500);
-        Serial.print(".");
+      for(int z = 0; (z <= 3) && (WiFi.status() != WL_CONNECTED); z++) {
+        WiFi.begin(ssid, password);
+        for (int x = 0; (x <= 5) && (WiFi.status() != WL_CONNECTED); x++) {
+          delay(500);
+          Serial.print(".");
+        }
       }
     }
     if (WiFi.status() == WL_CONNECTED) {
@@ -245,7 +249,7 @@ void maintenanceMode() {
       timeout++;
       Serial.print("Attempting MQTT connection...");
       // Create a random client ID
-      String clientId = "ESP8266Client-";
+      String clientId = "ESP32Client-";
       clientId += String(random(0xffff), HEX);
       // Attempt to connect
       if (client.connect(clientId.c_str())) {

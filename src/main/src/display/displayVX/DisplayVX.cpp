@@ -111,8 +111,14 @@ extern boolean DisplayVX::lastError = false;
     } else if(blinkSwitch == 11) {
       if(general::blink.getValue())
         drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, 1, WHITE);
-       if (state == PIEP && general::sound.getValue())
-        digitalWrite(PIEZO, HIGH); //TODO: PIEP
+       if (/* state == PIEP &&  */general::sound.getValue()) {
+        /* ledcAttachPin(PIEZO, 0);
+        ledcWrite(0, 100); */
+        // analogWrite(PIEZO, 100); //TODO: PIEP
+        digitalWrite(PIEZO, LOW);
+        Serial.println("Piezo");
+        debug(SPAMM, SENSOR, "Alarm - PEEP");
+       }
     }
     if(state >= 3) {
       if(blinkSwitch == 20)
