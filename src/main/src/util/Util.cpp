@@ -22,10 +22,10 @@
       return((State) MEDIUM);
     else if (value < LIMIT_BLINK)
       return((State) BAD);
-    else if (value >= LIMIT_BLINK)
-      return((State) BLINK);
     else if (value >= LIMIT_PIEP)
       return((State) PIEP);
+    else if (value >= LIMIT_BLINK)
+      return((State) BLINK);
     else
       return((State) BAD);
   }

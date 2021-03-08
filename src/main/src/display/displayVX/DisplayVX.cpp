@@ -105,18 +105,15 @@ extern boolean DisplayVX::lastError = false;
         display.drawLine(0, TOP_BAR_HEIGHT, 0, STATUS_END_HEIGHT-1, state.getColor(COLORED_BAR));
         display.drawLine(DISPLAY_LENGTH-1, TOP_BAR_HEIGHT, DISPLAY_LENGTH-1, STATUS_END_HEIGHT-1, state.getColor(COLORED_BAR));
       }
-      digitalWrite(PIEZO, LOW);
+      ledcDetachPin(PIEZO);
       if(state < 3)
         blinkSwitch = 0;
     } else if(blinkSwitch == 11) {
       if(general::blink.getValue())
         drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, 1, WHITE);
-       if (/* state == PIEP &&  */general::sound.getValue()) {
-        /* ledcAttachPin(PIEZO, 0);
-        ledcWrite(0, 100); */
-        // analogWrite(PIEZO, 100); //TODO: PIEP
-        digitalWrite(PIEZO, LOW);
-        // Serial.println("Piezo");
+       if (state >= PIEP && general::sound.getValue()) {
+        ledcAttachPin(PIEZO, 0);
+        ledcWriteNote(0, NOTE_C, 4);
         debug(SPAMM, SENSOR, "Alarm - PEEP");
        }
     }

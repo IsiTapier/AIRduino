@@ -95,6 +95,7 @@ using namespace general;
           DisplayV2::setup();
         }
       } else if(mode.getValue() == MENU && (theme.hasChanged() || mode.hasChanged())) {
+        ledcDetachPin(PIEZO);
         Menu::setup();
       } else if(mode.getValue() == LOADINGSCREEN) {
         Serial.println("Restart");

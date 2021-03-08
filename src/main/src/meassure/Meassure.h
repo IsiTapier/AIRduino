@@ -35,13 +35,11 @@ class Meassure {
     static boolean meassureAirCondition();
     static void meassureEnvironment();
     //data
-    static void mapAirCondition();
     static void calculateGradient();
     static void checkVentilating();
     static void setState();
 
     static Adafruit_BME280 bme;
-    // static MQ135 sensor;
     static MHZ19 MHZ19b;
     static unsigned long tempAirCondition;
     static unsigned long temptempAirCondition;

@@ -22,26 +22,30 @@
     getUniqueID();
     Serial.println(device_id);
     setup_wifi();
-    client.setServer(mqtt_server, 1883);
-    client.setCallback(callback);
-    reconnect();
-    //connect client the first time
-    while ((!client.connected()) && requestDecision("MQTT fehlgeschlagen", "erneut versuchen?", "Ja", "Nein")) {
-      display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoBlatt);
-      for (int x = 0; (x <= 15) && (!client.connected()); x++) {
-        delay(500);
-        Serial.print(".");
-        reconnect();
+    if(WiFi.status() == WL_CONNECTED) {
+      client.setServer(mqtt_server, 1883);
+      client.setCallback(callback);
+      reconnect();
+      //connect client the first time
+      while ((!client.connected()) && requestDecision("MQTT fehlgeschlagen", "erneut versuchen?", "Ja", "Nein")) {
+        display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoBlatt);
+        for (int x = 0; (x <= 15) && (!client.connected()); x++) {
+          delay(500);
+          Serial.print(".");
+          reconnect();
+        }
+      }
+      if(client.connected()) {
+        config_request();
+        unsigned long timeout = millis();
+        do{
+          if(millis()-timeout >= 1000)
+            timeout = millis();
+          display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoBlatt);
+          client.loop();
+        } while(!configReceived && (millis()-timeout < 1000 || requestDecision("Config nicht geladen", "erneut versuchen?", "Ja", "Nein")));
       }
     }
-    config_request();
-    unsigned long timeout = millis();
-    do{
-      if(millis()-timeout >= 1000)
-        timeout = millis();
-      display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoBlatt);
-      client.loop();
-    } while(!configReceived && (millis()-timeout < 1000 || requestDecision("Config nicht geladen", "erneut versuchen?", "Ja", "Nein")));
   }
 
   void callback(char* topic_char, byte* payload, unsigned int length) {
@@ -169,11 +173,12 @@
   }
 
   void config_update(String column, String value) {
-    if (!client.connected())
+    if (client.connected()) {
       reconnect();
-    String config_update = column + " = '" +  value + "' WHERE `device_overview`.`device_id` = " + device_id;
-    client.publish("config/update", config_update.c_str());
-    debug(SPAMM, MENUD, "CONFIG - " + column + " = " + (String) value);
+      String config_update = column + " = '" +  value + "' WHERE `device_overview`.`device_id` = " + device_id;
+      client.publish("config/update", config_update.c_str());
+      debug(SPAMM, MENUD, "CONFIG - " + column + " = " + (String) value);
+    }
   }
 
   void config_update(String column, int value) {
@@ -181,7 +186,7 @@
   }
 
   void mysql_insert(String grade, int co2, double temp) {
-    if (!(grade[0] == 'a' && grade[1] == 'u' && grade[2] == 't')) {
+    if (!(grade[0] == 'a' && grade[1] == 'u' && grade[2] == 't') && client.connected()) {
       String output = "VALUES ('" + grade + "', " + co2 + ", " + temp + ")";
       client.publish("mysql/insert", output.c_str());
       debug(INFO, DATABASE, "INSERTED into LOG grade: " + grade + " co2: " + co2 + " temp: " + temp);

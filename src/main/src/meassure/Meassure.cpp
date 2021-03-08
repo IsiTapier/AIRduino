@@ -15,7 +15,6 @@
   //                       | |
   //                       |_|
 
-  // extern MQ135 Meassure::sensor = MQ135(GAS_SENSOR);
   extern Adafruit_BME280 Meassure::bme = Adafruit_BME280(BMESDA, BMESCL);
   extern MHZ19 Meassure::MHZ19b;
   extern unsigned long Meassure::tempAirCondition;
@@ -45,12 +44,7 @@
 
   void Meassure::setup() {
     debug(DEBUG, SETUP, "Meassure SETUP started");
-    pinMode(PIEZO, OUTPUT);
-    // pinMode(SENSOR, INPUT);
-    digitalWrite(PIEZO, LOW);
     debug(INFO, SETUP, "Pins initialized");
-    // airConditionRaw = analogRead(GAS_SENSOR);
-    // airConditionLast = analogRead(GAS_SENSOR);
     debug(INFO, SETUP, "Variables initialized");
     if (bme.begin(0x76)) {
       debug(INFO, SETUP, "BME-Sensor initialized");
@@ -84,7 +78,6 @@
   void Meassure::loop() {
     // meassureEnvironment();
     if(meassureAirCondition()) {
-      mapAirCondition();
       calculateGradient();
       checkVentilating();
       setState();
@@ -93,7 +86,7 @@
   }
 
   void Meassure::calibrateMin() {
-    if(requestDecision("Max Wert Kalibrierung", "Möchtest du fortfahren?")) {
+    if(requestDecision("Min Wert Kalibrierung", "Möchtest du fortfahren?")) {
       MHZ19b.calibrate();
       debug(WARNING, SENSOR, "min value calibrated to 400 PPM");
     }
@@ -153,33 +146,6 @@
   // |_|  |_|\___|\__,_|___/___/\__,_|_|  \___|
 
   boolean Meassure::meassureAirCondition() {
-    //Messung
-  /*  int timeLeft = STAGE_TIME-(millis()%STAGE_TIME);
-    if(timeLeft < 0.8*STAGE_TIME) {
-      timeLeft += STAGE_TIME;
-      //Serial.println("WARNING: Timing error!");
-    }
-    timeLeft-=10;
-
-    /*tempAirCondition = 0;
-    temptempAirCondition = 0;
-    for (long i = 0; i < AVERAGING_MEASUREMENTS; i++) {
-      // value = analogRead(GAS_SENSOR);
-
-      //Fehlmessungen überschreiben
-    /*  if (airConditionRaw * MAX_INCREASE < value && i == 0)
-        tempAirCondition = tempAirCondition + airConditionRaw;
-      else if (airCondition / i * MAX_INCREASE < value && i != 0)
-        tempAirCondition = tempAirCondition + tempAirCondition / i;
-      else*/
-    /*    tempAirCondition = tempAirCondition + value;
-        temptempAirCondition += analogRead(39);
-      delay(timeLeft/ AVERAGING_MEASUREMENTS);
-    }
-
-    airCondition = (float) tempAirCondition / AVERAGING_MEASUREMENTS;
-    airConditionTemp = (float) temptempAirCondition / AVERAGING_MEASUREMENTS;
-    airConditionRaw = airCondition;*/
     if(SENSORCONNECTED) {
       counter++;
       if(counter >= AVERAGING_MEASUREMENTS) {
@@ -198,7 +164,6 @@
       return false;
     }
     airConditionLast = airCondition;
-//    airCondition = sensor.getPPM(temperature, humidity);
 
     int time = floor(millis()/1000);
     if(lasttime != time) {
@@ -223,30 +188,6 @@
   // | |__| | (_| | || (_| |
   // |_____/ \__,_|\__\__,_|
 
-
-  void Meassure::mapAirCondition() {
-    //to PPM
-  /*  if (airCondition <= calibration[EEPROM.read(0)].getLowestSensor())
-      airCondition = calibration[EEPROM.read(0)].getLowestSensor();*/
-  /*  airCondition = map(airCondition*100, calibration[EEPROM.read(0)].getLowestSensor()*100, calibration[EEPROM.read(0)].getHighestSensor()*100, calibration[EEPROM.read(0)].getLowestPPM(), calibration[EEPROM.read(0)].getHighestPPM());
-    airCondition += 400 - minPPM;*/
-    //sd.saveValuesToSD(millis()/1000, airConditionRaw, airConditionLast, airCondition);
-    //Serial.print(airCondition); Serial.print("\t");
-    //Serial.print(0); Serial.print("\t");
-  /*  Serial.print(airConditionTemp); Serial.print("\t");
-    Serial.println(0);*/
-    //Serial.print(temperature); Serial.print("\t");
-    //Serial.println(humidity); /*Serial.print("\t");
-  /*  Serial.print(sensor.getRZero(airConditionRaw)); Serial.print("\t");
-    Serial.print(sensor.getRZero(airConditionRaw, 1)); Serial.print("\t");
-    Serial.print(sensor.getRZero(airConditionRaw, "1")); Serial.print("\t");
-    Serial.print(sensor.getRZero(airConditionRaw, temperature, humidity)); Serial.print("\t");
-    Serial.print(sensor.getRZero(airConditionRaw, temperature, humidity, 1)); Serial.print("\t");
-    Serial.println(sensor.getRZero(airConditionRaw, temperature, humidity, "1"));*/
-    
-  }
-
-
   void Meassure::calculateGradient() {
     // gradient ist die Differenz zwischen altem und neuem Wert
     //store last AirConditions
@@ -261,7 +202,6 @@
 
     //gradient
     gradient = now - last;
-    Serial.println(gradient);
   }
 
   void Meassure::checkVentilating() {
@@ -299,22 +239,6 @@
 
   void Meassure::setState() {
     // define colorState  -changed
-    if(state != -1) {
+    if(state != -1)
       state = getStateOf(airCondition);
-    }
-
-    //colorState = map(airCondition, calibration[EEPROM.read(0)].getLowestPPM(), calibration[EEPROM.read(0)].getHighestPPM(), 0, 2);
-/*
-    if (state == -1)
-      return;
-
-    if (airCondition > LIMIT_PIEP)
-      state = PIEP;
-    else if (airCondition > LIMIT_BLINK)
-      state = BLINK;
-
-    if (state < -1)
-      state =  -1;
-    if (state > 4)
-      state =  4;*/
   }
