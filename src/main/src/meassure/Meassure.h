@@ -32,7 +32,7 @@ class Meassure {
   private:
     static void debugMeassure();
     //meassure
-    static void meassureAirCondition();
+    static boolean meassureAirCondition();
     static void meassureEnvironment();
     //data
     static void mapAirCondition();
@@ -54,8 +54,6 @@ class Meassure {
     static int gradient;
     static int value;
     static int values[AVERAGING_GRADIENT * 2];
-    static int databaseCO2[10];
-    static int databaseTemperature[10];
     static int counter;
     static int now;
     static int last;

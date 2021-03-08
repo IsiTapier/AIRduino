@@ -46,7 +46,6 @@ void setup() {
   general::debugPriority.setValue(INFO);
 }
 
-
 //  _
 // | |
 // | |     ___   ___  _ __
@@ -55,6 +54,7 @@ void setup() {
 // |______\___/ \___/| .__/
 //                   | |
 //                   |_|
+
 void loop() {
   Display::loop();
 }

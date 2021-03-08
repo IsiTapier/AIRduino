@@ -30,6 +30,7 @@ using namespace general;
       }
     }*/
     setupDatabaseConnection();
+    mode.setValue(LOADINGSCREEN, false);
     mode.setValue(CHART);
     debug(DEBUG, SETUP, "Display SETUP completed");
     debug(DEBUG, SETUP, "");
@@ -63,6 +64,7 @@ using namespace general;
 
   void Display::loop() {
     while(millis()%STAGE_TIME > 0) {}
+    delay(1);
     Meassure::loop();
     handleTouch();
     initDisplay();
@@ -78,8 +80,8 @@ using namespace general;
       } else {
         DisplayV2::loop();
       }
-    } else {
-
+    } else if(mode.getValue() == MAINTENANCE) {
+      maintenanceMode();
     }
     client.loop();
   }
@@ -94,8 +96,13 @@ using namespace general;
         }
       } else if(mode.getValue() == MENU && (theme.hasChanged() || mode.hasChanged())) {
         Menu::setup();
-      } else {
-
+      } else if(mode.getValue() == LOADINGSCREEN) {
+        Serial.println("Restart");
+        ESP.restart();   
+      } else if(mode.getValue() == RESET) {
+        mode.setValue(mode.getOldValue());
+        Menu::reset();
+        initDisplay();
       }
       version.setValue(version.getValue(), false);
       theme.setValue(theme.getValue(), false);

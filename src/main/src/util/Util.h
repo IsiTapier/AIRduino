@@ -44,7 +44,9 @@
   enum Mode {
     LOADINGSCREEN = 0,
     CHART = 1,
-    MENU = 2
+    MENU = 2,
+    MAINTENANCE = 3,
+    RESET = 4
   };
 
   template<class T>

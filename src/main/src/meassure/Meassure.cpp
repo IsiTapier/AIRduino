@@ -29,9 +29,7 @@
   extern int Meassure::gradient;
   extern int Meassure::value;
   extern int Meassure::values[AVERAGING_GRADIENT * 2];
-  extern int Meassure::databaseCO2[10];
-  extern int Meassure::databaseTemperature[10];
-  extern int Meassure::counter = 0;
+  extern int Meassure::counter = AVERAGING_MEASUREMENTS;
   extern int Meassure::now;
   extern int Meassure::last;
   extern int Meassure::minPPM = 400;
@@ -84,18 +82,19 @@
   }
 
   void Meassure::loop() {
-    meassureEnvironment();
-    meassureAirCondition();
-    mapAirCondition();
-    calculateGradient();
-    checkVentilating();
-    setState();
-    debugMeassure();
+    // meassureEnvironment();
+    if(meassureAirCondition()) {
+      mapAirCondition();
+      calculateGradient();
+      checkVentilating();
+      setState();
+      debugMeassure();
+    }
   }
 
   void Meassure::calibrateMin() {
     if(requestDecision("Max Wert Kalibrierung", "Möchtest du fortfahren?")) {
-      // MHZ19b.calibrate();
+      MHZ19b.calibrate();
       debug(WARNING, SENSOR, "min value calibrated to 400 PPM");
     }
     Menu::setup();
@@ -153,7 +152,7 @@
   // | |  | |  __/ (_| \__ \__ \ |_| | | |  __/
   // |_|  |_|\___|\__,_|___/___/\__,_|_|  \___|
 
-  void Meassure::meassureAirCondition() {
+  boolean Meassure::meassureAirCondition() {
     //Messung
   /*  int timeLeft = STAGE_TIME-(millis()%STAGE_TIME);
     if(timeLeft < 0.8*STAGE_TIME) {
@@ -181,18 +180,23 @@
     airCondition = (float) tempAirCondition / AVERAGING_MEASUREMENTS;
     airConditionTemp = (float) temptempAirCondition / AVERAGING_MEASUREMENTS;
     airConditionRaw = airCondition;*/
-    // if(SENSORCONNECTED) {
-      airCondition = MHZ19b.getCO2(true, true);
-      debug(SPAMM, SENSOR, "PPM: " + String(airCondition));
-      Serial.println(airCondition);
-      temperature = MHZ19b.getTemperature(true, false);
-      Serial.println(temperature);
+    if(SENSORCONNECTED) {
       counter++;
-      //Wert smoothen;
-      //airCondition = ALPHA_MEASUREMENTS * airCondition + (1 - ALPHA_MEASUREMENTS) * airConditionLast;
-  	  databaseCO2[counter] = airCondition;
-      databaseTemperature[counter] = temperature;
-    // }
+      if(counter >= AVERAGING_MEASUREMENTS) {
+        airCondition = MHZ19b.getCO2(true, true);
+        debug(SPAMM, SENSOR, "PPM: " + String(airCondition));
+        // Serial.println(airCondition);
+        temperature = MHZ19b.getTemperature(true, false);
+        // Serial.println(temperature);
+        //Wert smoothen;
+        //airCondition = ALPHA_MEASUREMENTS * airCondition + (1 - ALPHA_MEASUREMENTS) * airConditionLast;
+        if(airCondition != 0 || temperature != 0)
+          mysql_insert(device_class, airCondition, temperature);
+        counter = 0;
+        return true;
+      }
+      return false;
+    }
     airConditionLast = airCondition;
 //    airCondition = sensor.getPPM(temperature, humidity);
 
@@ -239,13 +243,7 @@
     Serial.print(sensor.getRZero(airConditionRaw, temperature, humidity)); Serial.print("\t");
     Serial.print(sensor.getRZero(airConditionRaw, temperature, humidity, 1)); Serial.print("\t");
     Serial.println(sensor.getRZero(airConditionRaw, temperature, humidity, "1"));*/
-    if(counter >= AVERAGING_MEASUREMENTS) {
-      int co2 = average(databaseCO2, 0, AVERAGING_MEASUREMENTS);
-      int temp = average(databaseTemperature, 0, AVERAGING_MEASUREMENTS);
-      if(co2 != 0 || temp != 0)
-        mysql_insert(device_class, co2, temp);
-      counter = 0;
-    }
+    
   }
 
 
@@ -263,6 +261,7 @@
 
     //gradient
     gradient = now - last;
+    Serial.println(gradient);
   }
 
   void Meassure::checkVentilating() {

@@ -116,7 +116,7 @@ extern boolean DisplayVX::lastError = false;
         ledcWrite(0, 100); */
         // analogWrite(PIEZO, 100); //TODO: PIEP
         digitalWrite(PIEZO, LOW);
-        Serial.println("Piezo");
+        // Serial.println("Piezo");
         debug(SPAMM, SENSOR, "Alarm - PEEP");
        }
     }

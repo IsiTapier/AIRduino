@@ -78,14 +78,12 @@ using namespace general;
   }
 
   void Input::reset(boolean active) {
-    if(mode.equals(MENU)) {
-      if(_setting->getType() == SWITCH)
-        _slider.reset(active);
-      else if(_setting->getType() == MULTISELECT)
-        _multiselect.reset(active);
-      else if(_setting->getType() == NUMBER)
-        _number.reset(active);
-      else if(_setting->getType() == SELECT)
-        _select.reset();
-    }
+    if(_setting->getType() == SWITCH)
+      _slider.reset(active);
+    else if(_setting->getType() == MULTISELECT)
+      _multiselect.reset(active);
+    else if(_setting->getType() == NUMBER)
+      _number.reset(active);
+    else if(_setting->getType() == SELECT)
+      _select.reset();
   }

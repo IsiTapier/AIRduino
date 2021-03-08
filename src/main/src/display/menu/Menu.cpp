@@ -160,5 +160,5 @@
       setSubMenu(DEFAULT_SUB_MENU);
     else*/
     for(int i = 0; i < sizeOf(subMenus); i++)
-      subMenus[i].reset(i == currentSubMenu ? true : false);
+      subMenus[i].reset(general::mode.equals(MENU) ? i == currentSubMenu ? true : false : false);
   }
