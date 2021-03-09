@@ -216,6 +216,7 @@
       state = (State) VENTILATING;
       maxPPM = airCondition;
       startTime = millis();
+      counter = 0;
       debug(INFO, SENSOR, "VENTILATING");
     }
 
@@ -249,6 +250,8 @@
       state = getStateOf(airCondition);
   }
 
-  void Meassure::resetStartTime() {
+  void Meassure::resetStartTime(boolean cycle) {
     startTime = millis();
+    if(cycle)
+    counter = -1;
   }

@@ -44,7 +44,7 @@ public:
   constexpr State operator=(const int a) const { return State((States) a); }
 
   String getTitle() {
-    return stateTitles[general::language.getValue()][_state+1];
+    return stateTitles[general::language.getValue()][_state+(_state==PIEP?0:1)];
   }
 
   int getColor(boolean colored) {

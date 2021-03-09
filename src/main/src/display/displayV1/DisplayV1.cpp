@@ -6,7 +6,7 @@
 
 int DisplayV1::valuesGraph[100];
 int DisplayV1::graphData[DISPLAY_LENGTH+1];
-int DisplayV1::counter = 0;
+int DisplayV1::counter = -1;
 int DisplayV1::currentPosition = 0;
 int DisplayV1::pixel = 0;
 int DisplayV1::lastPixel = 0;
@@ -172,4 +172,5 @@ int DisplayV1::lastPixel = 0;
 
   void DisplayV1::resetGraph() {
     currentPosition = 0;
+    counter = -1;
   }

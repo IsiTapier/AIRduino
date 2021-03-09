@@ -8,6 +8,7 @@ using namespace general;
 
   TSPoint Display::p;
   unsigned long Display::lastModeChange = 0;
+  int Display::counter = 1000/STAGE_TIME-1;
 
   void Display::setup() {
     debug(DEBUG, SETUP, "Display SETUP started");
@@ -63,28 +64,31 @@ using namespace general;
   }
 
   void Display::loop() {
-    while(millis()%STAGE_TIME > 0) {}
+    while((millis()-Meassure::getStartTime())%STAGE_TIME > 0) {}
     delay(1);
-    
-    Meassure::loop();
-    handleTouch();
-    initDisplay();
-    boolean changed = DisplayV1::getGraphData();
-    /*if(mode.getValue() == MENU) {
-      Menu::loop();
-    } else */
-    if(mode.getValue() == MENU) {
-      Menu::loop();
-    } else if(mode.getValue() == CHART) {
-      if(!version.getValue()) {
-        DisplayV1::loop(changed);
-      } else {
-        DisplayV2::loop();
+    counter++;
+    if(counter >= 1000/STAGE_TIME) {
+      counter = 0;
+      Meassure::loop();
+      boolean changed = DisplayV1::getGraphData();
+      /*if(mode.getValue() == MENU) {
+        Menu::loop();
+      } else */
+      if(mode.getValue() == MENU) {
+        Menu::loop();
+      } else if(mode.getValue() == CHART) {
+        if(!version.getValue()) {
+          DisplayV1::loop(changed);
+        } else {
+          DisplayV2::loop();
+        }
+      } else if(mode.getValue() == MAINTENANCE) {
+        maintenanceMode();
       }
-    } else if(mode.getValue() == MAINTENANCE) {
-      maintenanceMode();
     }
+    handleTouch();
     client.loop();
+    initDisplay();
   }
 
   void Display::initDisplay() {
@@ -139,7 +143,7 @@ using namespace general;
             Menu::reset();
             Menu::setup();
           } else if(mode.equals(CHART)) {
-            Meassure::resetStartTime();
+            Meassure::resetStartTime(true);
             DisplayV1::resetGraph();
             if(version.equals(V1))
               DisplayV1::setup();

@@ -24,7 +24,7 @@ class Meassure {
     static State getState();
     static int getAirCondition();
     static unsigned long getStartTime();
-    static void resetStartTime();
+    static void resetStartTime(boolean cycle = false);
     static int getLowest();
     static int getHighest();
     static void calibrateMin();

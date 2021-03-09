@@ -9,7 +9,7 @@ State DisplayVX::state;
 State DisplayVX::lastState;
 int DisplayVX::airCondition;
 int DisplayVX::lastAirCondition = 0;
-int DisplayVX::blinkSwitch = 0;
+boolean DisplayVX::blinkSwitch = 0;
 int DisplayVX::statusLetters;
 String DisplayVX::statusInfo;
 String DisplayVX::lastTime;
@@ -41,6 +41,8 @@ boolean DisplayVX::lastError = false;
   void DisplayVX::loop(boolean draw) {
     if(general::data.getValue())
       getData();
+    else if(general::version.equals(V1))
+      generateData(200, 1050, 5);
     else
       generateData(400, 1100, 100);
     //info
@@ -96,7 +98,8 @@ boolean DisplayVX::lastError = false;
   }
 
   void DisplayVX::checkState() {
-    if (blinkSwitch == 1) {
+    if (blinkSwitch) {
+      blinkSwitch = 0;
       //restore Border
       drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, 1, BACKGROUND_COLOR);
       display.drawLine(0, DISPLAY_HEIGHT-1, DISPLAY_LENGTH-1, DISPLAY_HEIGHT-1, DATABOX_BACKGROUND_COLOR);
@@ -109,9 +112,8 @@ boolean DisplayVX::lastError = false;
         display.drawLine(DISPLAY_LENGTH-1, TOP_BAR_HEIGHT, DISPLAY_LENGTH-1, TOP_BAR_HEIGHT+DATABOX_BAR_THICKNESS-1, state.getColor(COLORED_BAR));
       }
       ledcDetachPin(PIEZO);
-      if(state < 3)
-        blinkSwitch = 0;
-    } else if(blinkSwitch == 11) {
+    } else if(state >= 3) {
+      blinkSwitch = 1;
       if(general::blink.getValue())
         drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, 1, WHITE);
        if (state >= PIEP && general::sound.getValue()) {
@@ -120,12 +122,6 @@ boolean DisplayVX::lastError = false;
         debug(SPAMM, SENSOR, "Alarm - PEEP");
        }
     }
-    if(state >= 3) {
-      if(blinkSwitch == 20)
-        blinkSwitch = 0;
-      blinkSwitch++;
-    } else if(blinkSwitch != 0)
-      blinkSwitch = 1;
   }
 
   //Write PPM, Time
@@ -198,7 +194,7 @@ boolean DisplayVX::lastError = false;
     //drawLoadingBar();)
 
     //calculate time since last ventilating
-    long startTime = Meassure::getStartTime();
+    unsigned long startTime = Meassure::getStartTime();
     seconds = (millis() - startTime) / 1000 % 60;
     minutes = ((millis() - startTime) / 1000 - seconds) / 60;
     //create String
@@ -212,20 +208,14 @@ boolean DisplayVX::lastError = false;
     time = time + seconds;
 
     //Clear old Pixels
-    //dPrint(lasttime, timeR_X, timeR_Y, timeR_SIZE, BAR_BACKGROUND_COLOR, 8);
     //write new Pixels
-    if (minutes >= 20 && COLORED_TIME) {
-      if((seconds == 0 && minutes == 20) || (seconds == 0 && minutes == 0) || start || (state == VENTILATING && lastState != VENTILATING)) {
-        dPrint(time, TIMER_X, TIMER_Y, TIMER_SIZE, TIME_COLOR_CRITICAL, 8, DATABOX_BACKGROUND_COLOR, start ? "" : lastTime);
-        dPrint(":  ", TIMER_X, TIMER_Y, TIMER_SIZE, TIME_COLOR_CRITICAL, 8, DATABOX_BACKGROUND_COLOR, "   ");
-      } else
-        dPrint(time, TIMER_X, TIMER_Y, TIMER_SIZE, TIME_COLOR_CRITICAL, 8, DATABOX_BACKGROUND_COLOR, lastTime);
-    } else {
-      if(start)
-        dPrint(time, TIMER_X, TIMER_Y, TIMER_SIZE, TIME_COLOR_NORMAL, 8);
-      else
-        dPrint(time, TIMER_X, TIMER_Y, TIMER_SIZE, TIME_COLOR_NORMAL, 8, DATABOX_BACKGROUND_COLOR, lastTime);
-    }
+    if((seconds == 0 && (minutes == 0 || (minutes == 20 && COLORED_TIME))) || start) {
+      dPrint(lastTime, TIMER_X, TIMER_Y, TIMER_SIZE, DATABOX_BACKGROUND_COLOR, 8);
+      dPrint(time, TIMER_X, TIMER_Y, TIMER_SIZE, minutes>=20&&COLORED_TIME?TIME_COLOR_CRITICAL:TIME_COLOR_NORMAL, 8);
+    } else if (minutes >= 20 && COLORED_TIME)
+      dPrint(time, TIMER_X, TIMER_Y, TIMER_SIZE, TIME_COLOR_CRITICAL, 8, DATABOX_BACKGROUND_COLOR, lastTime);
+    else
+      dPrint(time, TIMER_X, TIMER_Y, TIMER_SIZE, TIME_COLOR_NORMAL, 8, DATABOX_BACKGROUND_COLOR, lastTime);
 
     //Set new lasttime
     lastTime = time; //Setzt letzten Wert

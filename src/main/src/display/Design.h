@@ -39,7 +39,7 @@
 #define VENTILATING_TIMEOUT general::ventilating_timeout.getValue()*1000
 
 #define SENSOR_SPEED 5000
-#define AVERAGING_MEASUREMENTS SENSOR_SPEED/STAGE_TIME
+#define AVERAGING_MEASUREMENTS SENSOR_SPEED/1000
 #define AVERAGING_GRADIENT 6
 #define ALPHA_MEASUREMENTS 0.7
 #define ALPHA_LOWEST 0.5
@@ -63,7 +63,7 @@
 #define TOUCH_INACCURACY_Y TOUCH_INACCURACY
 
 //DisplayV1
-#define AVERAGING_GRAPH general::graph_speed.getValue()*1000/STAGE_TIME
+#define AVERAGING_GRAPH general::graph_speed.getValue()
 #define ALPHA_GRAPH 0.7
 
 //DisplayV2
