@@ -8,14 +8,16 @@
 extern int DisplayV2::barPixel;
 extern int DisplayV2::lastBarPixel;
 
-//   _____      _
-//  / ____|    | |
-// | (___   ___| |_ _   _ _ __
-//  \___ \ / _ \ __| | | | '_ \
-//  ____) |  __/ |_| |_| | |_) |
-// |_____/ \___|\__|\__,_| .__/
-//                        | |
-//                       |_|
+/*
+   _____      _
+  / ____|    | |
+ | (___   ___| |_ _   _ _ __
+  \___ \ / _ \ __| | | | '_ \
+  ____) |  __/ |_| |_| | |_) |
+ |_____/ \___|\__|\__,_| .__/
+                        | |
+                       |_|
+*/
 
 void DisplayV2::setup() {
   DisplayVX::setup();
@@ -92,7 +94,7 @@ void DisplayV2::drawBar() {
   //   - search position of the bar -
   barPixel = map(airCondition, DISPLAYED_PPM_LOWEST, DISPLAYED_PPM_HIGHEST, BAR_START_X, BAR_END_X);
   lastBarPixel = map(lastAirCondition, DISPLAYED_PPM_LOWEST, DISPLAYED_PPM_HIGHEST, BAR_START_X, BAR_END_X);
-  if(barPixel <= BAR_START_X && lastAirCondition <= BAR_START_X || barPixel == lastBarPixel && !start)
+  if((barPixel <= BAR_START_X && lastAirCondition <= BAR_START_X) || (barPixel == lastBarPixel && !start))
     return;
   if(barPixel < BAR_START_X)
     barPixel = BAR_START_X;

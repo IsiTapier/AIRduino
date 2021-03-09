@@ -13,6 +13,7 @@ class DisplayV1 : public DisplayVX {
     static void setup();
     static void loop(boolean changed);
     static boolean getGraphData();
+    static void resetGraph();
 
   private:
     static boolean averageData();

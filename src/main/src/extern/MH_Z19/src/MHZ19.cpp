@@ -622,13 +622,13 @@ byte MHZ19::read(byte inBytes[MHZ19_DATA_LEN], Command_Type commandnumber)
 }
 
 void MHZ19::cleanUp(uint8_t cnt)
-{
+{   
     uint8_t eject = 0;
     for(uint8_t x = 0; x < cnt; x++)
     {
         eject = mySerial->read();
         #if defined (ESP32) && (MHZ19_ERRORS) 
-        ESP_LOGW(TAG_MHZ19, "Clearing Byte: %d", eject);  
+        ESP_LOGW(TAG_MHZ19, "Clearing Byte: %d", eject);
         #elif MHZ19_ERRORS
         Serial.print("!Warning: Clearing Byte: "); Serial.println(eject);
         #endif     

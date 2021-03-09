@@ -5,7 +5,7 @@
 #include "SubMenu.h"
 
 SubMenu::SubMenu(void) {}
-SubMenu::SubMenu(char* title, std::vector<MenuPage> pages, short defaultPage, boolean hide) {
+SubMenu::SubMenu(const char* title, std::vector<MenuPage> pages, short defaultPage, boolean hide) {
   _title = title;
   _pages = pages;
   _currentPage = defaultPage;

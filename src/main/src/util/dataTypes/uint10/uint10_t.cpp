@@ -15,7 +15,7 @@ uint10_t::uint10_t(uint64_t var) {
 }
 
 uint10_t::operator int() {
-    getValue();
+    return getValue();
 }
 
 uint10_t uint10_t::operator=(int64_t var) {
@@ -33,7 +33,7 @@ int uint10_t::operator=(uint10_t var) {
 uint10_t uint10_t::setValue(int64_t var) {
     if(var < 0)
         var = 0;
-    setValue((uint64_t) var);
+    return setValue((uint64_t) var);
 }
 
 uint10_t uint10_t::setValue(uint64_t var) {
@@ -49,6 +49,7 @@ uint10_t uint10_t::setValue(uint64_t var) {
             var = 0;
         }
     }
+    return *this;
 }
 
 int uint10_t::getValue() {

@@ -18,7 +18,7 @@
   if (array == nullptr) return;
   fontPtr = (uint8_t*) array;
   loadFont("", false);
-}
+}*/
 
 #ifdef FONT_FS_AVAILABLE
 /***************************************************************************************
@@ -29,7 +29,7 @@
 {
   fontFS = ffs;
   loadFont(fontName, false);
-}
+}*/
 #endif
 
 /***************************************************************************************
@@ -37,7 +37,7 @@
 ** Description:             loads parameters from a font vlw file
 *************************************************************************************x*/
 /*void TFT_eSPI::loadFont(String fontName, bool flash)
-{
+{*/
   /*
     The vlw font format does not appear to be documented anywhere, so some reverse
     engineering has been applied!
@@ -145,7 +145,7 @@
 
   // Fetch the metrics for each glyph
   loadMetrics();
-}
+}*/
 
 
 /***************************************************************************************
@@ -210,7 +210,7 @@
     // Different glyph sets have different ascent values not always based on "d", so we could get
     // the maximum glyph ascent by checking all characters. BUT this method can generate bad values
     // for non-existant glyphs, so we will reply on processing for the value and disable this code for now...
-    /*
+    
     if (gdY[gNum] > gFont.maxAscent)
     {
       // Try to avoid UTF coding values and characters that tend to give duff values
@@ -222,10 +222,10 @@
 #endif
       }
     }
-    */
+    
 
     // Different glyph sets have different descent values not always based on "p", so get maximum glyph descent
-/*    if (((int16_t)gHeight[gNum] - (int16_t)gdY[gNum]) > gFont.maxDescent)
+    if (((int16_t)gHeight[gNum] - (int16_t)gdY[gNum]) > gFont.maxDescent)
     {
       // Avoid UTF coding values and characters that tend to give duff values
       if (((gUnicode[gNum] > 0x20) && (gUnicode[gNum] < 0xA0) && (gUnicode[gNum] != 0x7F)) || (gUnicode[gNum] > 0xFF))
@@ -248,7 +248,7 @@
   gFont.yAdvance = gFont.maxAscent + gFont.maxDescent;
 
   gFont.spaceWidth = (gFont.ascent + gFont.descent) * 2/7;  // Guess at space width
-}
+}*/
 
 
 /***************************************************************************************
@@ -306,7 +306,7 @@
 #endif
 
   fontLoaded = false;
-}
+}*/
 
 
 /***************************************************************************************
@@ -334,7 +334,7 @@
   }
 
   return val;
-}
+}*/
 
 
 /***************************************************************************************

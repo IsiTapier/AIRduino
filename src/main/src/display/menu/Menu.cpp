@@ -4,7 +4,7 @@
 
 #include "Menu.h"
 
-  extern int Menu::currentSubMenu = 0;
+  int Menu::currentSubMenu = 0;
   SubMenu subMenus[] = {
     {SubMenu("General", {
         MenuPage(

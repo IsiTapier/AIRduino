@@ -11,7 +11,7 @@
 
 #define MHZ19_ERRORS 1			// Set to 0 to disable error prints
 
-#define TEMP_ADJUST 38			// This is the value used to adjust the temeperature.
+#define TEMP_ADJUST 40 //38			// This is the value used to adjust the temeperature.
 								// Older datsheets use 40, however is likely incorrect.
 #define TIMEOUT_PERIOD 500		// Time out period for response (ms)
 

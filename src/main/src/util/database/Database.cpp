@@ -29,7 +29,7 @@
       //connect client the first time
       while ((!client.connected()) && requestDecision("MQTT fehlgeschlagen", "erneut versuchen?", "Ja", "Nein")) {
         display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoBlatt);
-        for (int x = 0; (x <= 15) && (!client.connected()); x++) {
+        for (int x = 0; (x <= 10) && (!client.connected()); x++) {
           delay(500);
           Serial.print(".");
           reconnect();
@@ -215,9 +215,10 @@
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, password);
     delay(500);
+    WiFi.begin(ssid, password);
     while ((WiFi.status() != WL_CONNECTED) && requestDecision("Wifi fehlgeschlagen", "erneut versuchen?", "Ja", "Nein")) {
       display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoBlatt);
-      for(int z = 0; (z <= 3) && (WiFi.status() != WL_CONNECTED); z++) {
+      for(int z = 0; (z <= 2) && (WiFi.status() != WL_CONNECTED); z++) {
         WiFi.begin(ssid, password);
         for (int x = 0; (x <= 5) && (WiFi.status() != WL_CONNECTED); x++) {
           delay(500);

@@ -65,6 +65,7 @@ using namespace general;
   void Display::loop() {
     while(millis()%STAGE_TIME > 0) {}
     delay(1);
+    
     Meassure::loop();
     handleTouch();
     initDisplay();
@@ -132,15 +133,22 @@ using namespace general;
             lastModeChange = millis();
           }
         } else if(p.isTouching(MENU_ARROW_RESET_START_X, MENU_ARROW_RESET_END_X, MENU_ARROW_RESET_START_Y, MENU_ARROW_RESET_END_Y)) {
-          if(requestDecision("Einstellungs Reset", "Willst du fortfahren?")) {
+          if(mode.equals(MENU) && requestDecision("Einstellungs Reset", "Willst du fortfahren?")) {
             if(debugSetup.getValue())
               debug(WARNING, SETUP, "reset");
             Menu::reset();
+            Menu::setup();
+          } else if(mode.equals(CHART)) {
+            Meassure::resetStartTime();
+            DisplayV1::resetGraph();
+            if(version.equals(V1))
+              DisplayV1::setup();
           }
-          Menu::setup();
         } else if(mode.equals(MENU)) {
           Menu::handleTouch(p);
-        }
+        } else if(mode.equals(CHART)) {
+          version.shiftValue();
+        } 
       }
     } else {
       p = ts.getPoint();

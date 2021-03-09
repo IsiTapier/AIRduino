@@ -66,7 +66,7 @@ void TSPoint::print() {
 
 boolean TSPoint::isTouching(int startx, int endx, int starty, int endy) {
   if (z < MINPRESSURE || z > MAXPRESSURE) {
-    if((xc + TOUCH_INACCURACY >= startx && xc - TOUCH_INACCURACY <= endx || xc == 0) && (yc + TOUCH_INACCURACY >= starty && yc - TOUCH_INACCURACY <= endy || yc == 0))
+    if(((xc + TOUCH_INACCURACY >= startx && xc - TOUCH_INACCURACY <= endx) || xc == 0) && ((yc + TOUCH_INACCURACY >= starty && yc - TOUCH_INACCURACY <= endy) || yc == 0))
       return(true);
   }
   return(false);

@@ -8,7 +8,6 @@
 #include "Arduino.h"
 #include "EEPROM.h"
 #include <pgmspace.h>
-#include "../classes/Pair/Pair.h"
 #include "../classes/calibration/Calibration.h"
 #include "../classes/state/State.h"
 #include "../extern/Adafruit_TouchScreen-master/TouchScreen.h"

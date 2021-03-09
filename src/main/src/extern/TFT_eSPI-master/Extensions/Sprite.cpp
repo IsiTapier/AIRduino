@@ -40,7 +40,7 @@
   _colorMap = nullptr;
 
   _psram_enable = true;
-}
+}*/
 
 
 /***************************************************************************************
@@ -108,7 +108,7 @@
   }
 
   return nullptr;
-}
+}*/
 
 
 /***************************************************************************************
@@ -119,7 +119,7 @@
 {
   if (!_created) return nullptr;
   return _img8_1;
-}
+}*/
 
 
 /***************************************************************************************
@@ -129,7 +129,7 @@
 /*bool TFT_eSprite::created(void)
 {
   return _created;
-}
+}*/
 
 
 /***************************************************************************************
@@ -143,7 +143,7 @@
 #ifdef SMOOTH_FONT
   if(fontLoaded) unloadFont();
 #endif
-}
+}*/
 
 
 /***************************************************************************************
@@ -214,7 +214,7 @@
   }
 
   return ptr8;
-}
+}*/
 
 
 /***************************************************************************************
@@ -245,7 +245,7 @@
   {
     _colorMap[i] = colorMap[i];
   }
-}
+}*/
 
 
 /***************************************************************************************
@@ -270,7 +270,7 @@
   {
     _colorMap[i] = pgm_read_word(colorMap++);
   }
-}
+}*/
 
 
 /***************************************************************************************
@@ -292,7 +292,7 @@
   if (_bpp == 4) _img4 = _img8;
 
   return _img8;
-}
+}*/
 
 
 /***************************************************************************************
@@ -321,7 +321,7 @@
   }
 
   return nullptr;
-}
+}*/
 
 
 /***************************************************************************************
@@ -332,7 +332,7 @@
 {
   if (_created) return _bpp;
   else return 0;
-}
+}*/
 
 
 /***************************************************************************************
@@ -344,7 +344,7 @@
   if (c == b) b = ~c;
   _tft->bitmap_fg = c;
   _tft->bitmap_bg = b;
-}
+}*/
 
 
 /***************************************************************************************
@@ -356,7 +356,7 @@
   if (_colorMap == nullptr || index > 15) return; // out of bounds
 
   _colorMap[index] = color;
-}
+}*/
 
 
 /***************************************************************************************
@@ -368,7 +368,7 @@
   if (_colorMap == nullptr || index > 15) return 0; // out of bounds
 
   return _colorMap[index];
-}
+}*/
 
 
 /***************************************************************************************
@@ -390,7 +390,7 @@
     _created = false;
     _vpOoB   = true;  // TFT_eSPI class write() uses this to check for valid sprite
   }
-}
+}*/
 
 
 /***************************************************************************************
@@ -460,7 +460,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
   _tft->endWrite(); // End transaction
 
   return true;
-}
+}*/
 
 
 /***************************************************************************************
@@ -523,7 +523,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
   }
   spr->setSwapBytes(oldSwapBytes);
   return true;
-}
+}*/
 
 
 /***************************************************************************************
@@ -555,7 +555,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
   if (*max_y > _tft->_vpH) *max_y = _tft->_vpH;
 
   return true;
-}
+}*/
 
 
 /***************************************************************************************
@@ -592,7 +592,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
   if (*max_y > spr->height()) *max_y = spr->height();
 
   return true;
-}
+}*/
 
 
 /***************************************************************************************
@@ -646,7 +646,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
 
   _sinra = round(sina * (1<<FP_SCALE));
   _cosra = round(cosa * (1<<FP_SCALE));
-}
+}*/
 
 
 /***************************************************************************************
@@ -669,7 +669,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
     _tft->pushImage(x, y, _dwidth, _dheight, _img4, false, _colorMap);
   }
   else _tft->pushImage(x, y, _dwidth, _dheight, _img8, (bool)(_bpp == 8));
-}
+}*/
 
 
 /***************************************************************************************
@@ -697,7 +697,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
     _tft->pushImage(x, y, _dwidth, _dheight, _img4, (uint8_t)(transp & 0x0F), false, _colorMap);
   }
   else _tft->pushImage(x, y, _dwidth, _dheight, _img8, 0, (bool)false);
-}
+}*/
 
 
 /***************************************************************************************
@@ -730,7 +730,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
   dspr->setSwapBytes(oldSwapBytes);
 
   return true;
-}
+}*/
 
 
 /***************************************************************************************
@@ -788,7 +788,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
   }
   dspr->setSwapBytes(oldSwapBytes);
   return true;
-}
+}*/
 
 
 /***************************************************************************************
@@ -801,7 +801,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
 
   // Perform window boundary checks and crop if needed
   setWindow(sx, sy, sx + sw - 1, sy + sh - 1);
-
+*/
   /* These global variables are now populated for the sprite
   _xs = x start coordinate
   _ys = y start coordinate
@@ -885,7 +885,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
   }
 
   return true;
-}
+}*/
 
 
 /***************************************************************************************
@@ -948,7 +948,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
   }
 
   return 0;
-}
+}*/
 
 /***************************************************************************************
 ** Function name:           readPixel
@@ -1018,7 +1018,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
 
   if (color) return _tft->bitmap_fg;
   else       return _tft->bitmap_bg;
-}
+}*/
 
 
 /***************************************************************************************
@@ -1157,7 +1157,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
       y++;
     }
   }
-}
+}*/
 
 
 /***************************************************************************************
@@ -1239,7 +1239,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
     }
   }
 #endif // if ESP32 check
-}
+}*/
 
 
 /***************************************************************************************
@@ -1277,7 +1277,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
 
   _xptr = _xs;
   _yptr = _ys;
-}
+}*/
 
 
 /***************************************************************************************
@@ -1319,7 +1319,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
     if (_yptr > _ye) _yptr = _ys;
   }
 
-}
+}*/
 
 
 /***************************************************************************************
@@ -1341,7 +1341,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
   else pixelColor = (uint16_t) color; // for 1bpp or 4bpp
 
   while(len--) writeColor(pixelColor);
-}
+}*/
 
 
 /***************************************************************************************
@@ -1379,7 +1379,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
     _yptr++;
     if (_yptr > _ye) _yptr = _ys;
   }
-}
+}*/
 
 
 /***************************************************************************************
@@ -1405,7 +1405,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
   _sh = h;
 
   _scolor = color;
-}
+}*/
 
 
 /***************************************************************************************
@@ -1503,7 +1503,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
   if (dx < 0) fillRect(_sx + _sw + dx, _sy, -dx, _sh, _scolor);
   if (dy > 0) fillRect(_sx, _sy, _sw, dy, _scolor);
   if (dy < 0) fillRect(_sx, _sy + _sh + dy, _sw, -dy, _scolor);
-}
+}*/
 
 
 /***************************************************************************************
@@ -1540,7 +1540,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
     }
   }
   else fillRect(_vpX - _xDatum, _vpY - _yDatum, _xWidth, _yHeight, color);
-}
+}*/
 
 
 /***************************************************************************************
@@ -1564,7 +1564,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
 
   if (_vpDatum) return _xWidth;
   return _dwidth;
-}
+}*/
 
 
 /***************************************************************************************
@@ -1587,7 +1587,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
 
   if (_vpDatum) return _yHeight;
   return _dheight;
-}
+}*/
 
 
 /***************************************************************************************
@@ -1607,7 +1607,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
   else {
     resetViewport();
   }
-}
+}*/
 
 
 /***************************************************************************************
@@ -1617,7 +1617,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
 /*uint8_t TFT_eSprite::getRotation(void)
 {
   return rotation;
-}
+}*/
 
 
 /***************************************************************************************
@@ -1677,7 +1677,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
     if (color) _img8[(x + y * _bitwidth)>>3] |=  (0x80 >> (x & 0x7));
     else       _img8[(x + y * _bitwidth)>>3] &= ~(0x80 >> (x & 0x7));
   }
-}
+}*/
 
 
 /***************************************************************************************
@@ -1735,7 +1735,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
     }
     if (dlen) drawFastHLine(xs, y0, dlen, color);
   }
-}
+}*/
 
 
 /***************************************************************************************
@@ -1796,7 +1796,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
       drawPixel(x, y++, color);
     }
   }
-}
+}*/
 
 
 /***************************************************************************************
@@ -1859,7 +1859,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
       drawPixel(x++, y, color);
     }
   }
-}
+}*/
 
 
 /***************************************************************************************
@@ -1971,7 +1971,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
       y++;
     }
   }
-}
+}*/
 
 
 /***************************************************************************************
@@ -2113,7 +2113,7 @@ bool TFT_eSprite::pushRotated(int16_t angle, int32_t transp)
   #endif
 #endif
 
-}
+}*/
 
 
 /***************************************************************************************
@@ -2496,7 +2496,7 @@ int16_t TFT_eSprite::drawChar(uint16_t uniCode, int32_t x, int32_t y, uint8_t fo
     drawRect(cursor_x, cursor_y + gFont.maxAscent - gFont.ascent, gFont.spaceWidth, gFont.ascent, fg);
     cursor_x += gFont.spaceWidth + 1;
   }
-}
+}*/
 
 
 /***************************************************************************************
@@ -2511,7 +2511,7 @@ int16_t TFT_eSprite::drawChar(uint16_t uniCode, int32_t x, int32_t y, uint8_t fo
   string.toCharArray(cbuffer, len + 1); // Add 1 for the null, otherwise characters get dropped
   printToSprite(cbuffer, len);
   //printToSprite((char*)string.c_str(), string.length());
-}
+}*/
 
 
 /***************************************************************************************
@@ -2562,7 +2562,7 @@ int16_t TFT_eSprite::drawChar(uint16_t uniCode, int32_t x, int32_t y, uint8_t fo
     pushSprite(_tft->cursor_x, _tft->cursor_y);
     deleteSprite();
   }
-}
+}*/
 
 
 /***************************************************************************************

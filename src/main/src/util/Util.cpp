@@ -192,8 +192,6 @@
   }
 
   void writeLoadingAnimation(int c1, int c2, int c3) {
-    long endTime = millis() + LOADING_SCREEN_TIME * 1000;
-
     short distanceToFirstLetter = 70 + DD_MARGIN;
     short VerticalDistanceToFirstLetter = 55 + DD_MARGIN;
     dPrint("A", distanceToFirstLetter, VerticalDistanceToFirstLetter, LOADING_SCREEN_TITLE_SIZE, GREY);

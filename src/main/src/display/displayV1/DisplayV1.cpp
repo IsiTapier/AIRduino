@@ -4,21 +4,23 @@
 #include "Arduino.h"
 #include "DisplayV1.h"
 
-extern int DisplayV1::valuesGraph[100];
-extern int DisplayV1::graphData[DISPLAY_LENGTH+1];
-extern int DisplayV1::counter = 0;
-extern int DisplayV1::currentPosition = 0;
-extern int DisplayV1::pixel = 0;
-extern int DisplayV1::lastPixel = 0;
+int DisplayV1::valuesGraph[100];
+int DisplayV1::graphData[DISPLAY_LENGTH+1];
+int DisplayV1::counter = 0;
+int DisplayV1::currentPosition = 0;
+int DisplayV1::pixel = 0;
+int DisplayV1::lastPixel = 0;
 
-  //   _____      _
-  //  / ____|    | |
-  // | (___   ___| |_ _   _ _ __
-  //  \___ \ / _ \ __| | | | '_ \
-  //  ____) |  __/ |_| |_| | |_) |
-  // |_____/ \___|\__|\__,_| .__/
-  //                       | |
-  //                       |_|
+  /*
+     _____      _
+    / ____|    | |
+   | (___   ___| |_ _   _ _ __
+    \___ \ / _ \ __| | | | '_ \
+    ____) |  __/ |_| |_| | |_) |
+   |_____/ \___|\__|\__,_| .__/
+                         | |
+                         |_|
+  */
 
   void DisplayV1::setup() {
     DisplayVX::setup();
@@ -36,6 +38,8 @@ extern int DisplayV1::lastPixel = 0;
       fillData();
       return true;
     }
+    if(state.getColor(COLORED_CHART) != lastState.getColor(COLORED_CHART) && !COLOR_MODE)
+      return true;
     return false;
   }
 
@@ -111,7 +115,7 @@ extern int DisplayV1::lastPixel = 0;
     if(COLORED_BAR && airCondition < DISPLAYED_PPM_HIGHEST && lastAirCondition >= DISPLAYED_PPM_HIGHEST)
       display.drawLine(0, GRAPH_END_Y, DISPLAY_LENGTH, GRAPH_END_Y, state.getColor(false));*/
     //draw Graph
-    if(currentPosition >= DISPLAY_LENGTH-1 || state.getColor(COLORED_CHART) != lastState.getColor(COLORED_CHART) && !COLOR_MODE /*|| COLORED_BAR && airCondition < DISPLAYED_PPM_HIGHEST && lastAirCondition >= DISPLAYED_PPM_HIGHEST || general::mode.hasChanged() && general::mode.equals(CHART)*/ || start) {
+    if(currentPosition >= DISPLAY_LENGTH-1 || (state.getColor(COLORED_CHART) != lastState.getColor(COLORED_CHART) && !COLOR_MODE) /*|| COLORED_BAR && airCondition < DISPLAYED_PPM_HIGHEST && lastAirCondition >= DISPLAYED_PPM_HIGHEST || general::mode.hasChanged() && general::mode.equals(CHART)*/ || start) {
       for (short x = 1; x <= currentPosition; x++) {
         if(state < BLINK || !blinkSwitch || x != 1)
           drawConnection(x);
@@ -142,9 +146,11 @@ extern int DisplayV1::lastPixel = 0;
       j = graphData[x];
     }
     //value correction
-    if(i < GRAPH_END_Y)
-      i = GRAPH_END_Y;
-    if(j >= GRAPH_START_Y)
+    /*if(i < GRAPH_END_Y)
+      i = GRAPH_END_Y;*/
+    if(i < TOP_BAR_HEIGHT+DATABOX_BAR_THICKNESS)
+      i = TOP_BAR_HEIGHT+DATABOX_BAR_THICKNESS;
+    if(j > GRAPH_START_Y)
       j = GRAPH_START_Y;
     //get color
     int color_;
@@ -162,4 +168,8 @@ extern int DisplayV1::lastPixel = 0;
       //draw connection
       display.drawPixel(x-1, y, color_);
     }
+  }
+
+  void DisplayV1::resetGraph() {
+    currentPosition = 0;
   }

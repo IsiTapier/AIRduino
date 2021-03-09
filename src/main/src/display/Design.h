@@ -48,7 +48,7 @@
 #define MAX_DECREASE -40
 #define MAX_INCREASE_LOWEST 100
 
-#define TOUCH_RESISTANCE 10000000
+#define TOUCH_RESISTANCE 300
 
 #define MINPRESSURE -1
 #define MAXPRESSURE 0
@@ -316,7 +316,7 @@
 #define PH  PPM_HEIGHT
 #define PW  PPM_LENGTH
 #define PY  PPM_Y
-#define PS  PPM_SIZE
+// #define PS  PPM_SIZE
 #define PSX PPM_STRING_X
 #define PSS PPM_STRING_SIZE
 

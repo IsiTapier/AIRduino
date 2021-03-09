@@ -6,41 +6,43 @@
 #include "Meassure.h"
 #include "../display/menu/Menu.h"
 
-  //   _____      _
-  //  / ____|    | |
-  // | (___   ___| |_ _   _ _ __
-  //  \___ \ / _ \ __| | | | '_ \
-  //  ____) |  __/ |_| |_| | |_) |
-  // |_____/ \___|\__|\__,_| .__/
-  //                       | |
-  //                       |_|
+  /*
+     _____      _
+    / ____|    | |
+   | (___   ___| |_ _   _ _ __
+    \___ \ / _ \ __| | | | '_ \
+    ____) |  __/ |_| |_| | |_) |
+   |_____/ \___|\__|\__,_| .__/
+                         | |
+                         |_|
+  */
 
-  extern Adafruit_BME280 Meassure::bme = Adafruit_BME280(BMESDA, BMESCL);
-  extern MHZ19 Meassure::MHZ19b;
-  extern unsigned long Meassure::tempAirCondition;
-  extern unsigned long Meassure::temptempAirCondition;
-  extern float Meassure::airConditionTemp;
-  extern float Meassure::airCondition = 0;
-  extern float Meassure::airConditionRaw;
-  extern float Meassure::airConditionLast;
-  extern unsigned long Meassure::startTime;
-  extern unsigned long Meassure::timer;
-  extern int Meassure::gradient;
-  extern int Meassure::value;
-  extern int Meassure::values[AVERAGING_GRADIENT * 2];
-  extern int Meassure::counter = AVERAGING_MEASUREMENTS;
-  extern int Meassure::now;
-  extern int Meassure::last;
-  extern int Meassure::minPPM = 400;
-  extern int Meassure::maxPPM;
-  extern State Meassure::state;
-  extern int Meassure::colorState;
-  extern int Meassure::temperature;
-  extern int Meassure::humidity;
-  extern int Meassure::pressure;
+  Adafruit_BME280 Meassure::bme = Adafruit_BME280(BMESDA, BMESCL);
+  MHZ19 Meassure::MHZ19b;
+  unsigned long Meassure::tempAirCondition;
+  unsigned long Meassure::temptempAirCondition;
+  float Meassure::airConditionTemp;
+  float Meassure::airCondition = 0;
+  float Meassure::airConditionRaw;
+  float Meassure::airConditionLast;
+  unsigned long Meassure::startTime;
+  unsigned long Meassure::timer;
+  int Meassure::gradient;
+  int Meassure::value;
+  int Meassure::values[AVERAGING_GRADIENT * 2];
+  int Meassure::counter = AVERAGING_MEASUREMENTS;
+  int Meassure::now;
+  int Meassure::last;
+  int Meassure::minPPM = 400;
+  int Meassure::maxPPM;
+  State Meassure::state;
+  int Meassure::colorState;
+  int Meassure::temperature;
+  int Meassure::humidity;
+  int Meassure::pressure;
 
-  extern int Meassure::testCounter = 0;
-  extern unsigned long Meassure::lasttime;
+  int Meassure::testCounter = 0;
+  unsigned long Meassure::lasttime;
 
   void Meassure::setup() {
     debug(DEBUG, SETUP, "Meassure SETUP started");
@@ -56,7 +58,7 @@
     while (!SENSORCONNECTED && requestDecision("Sensor nicht verbunden", "erneut versuchen?", "Ja", "Nein")) {
       display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoBlatt);
       Serial.print("connecting to sensor");
-      for (int x = 0; x <= 15; x++) {
+      for (int x = 0; x <= 10; x++) {
         delay(500);
         Serial.print(".");
       }
@@ -138,12 +140,15 @@
     }*/
   }
 
-  //  __  __
-  // |  \/  |
-  // | \  / | ___  __ _ ___ ___ _   _ _ __ ___
-  // | |\/| |/ _ \/ _` / __/ __| | | | '__/ _ \
-  // | |  | |  __/ (_| \__ \__ \ |_| | | |  __/
-  // |_|  |_|\___|\__,_|___/___/\__,_|_|  \___|
+  /*
+    __  __
+   |  \/  |
+   | \  / | ___  __ _ ___ ___ _   _ _ __ ___
+   | |\/| |/ _ \/ _` / __/ __| | | | '__/ _ \
+   | |  | |  __/ (_| \__ \__ \ |_| | | |  __/
+   |_|  |_|\___|\__,_|___/___/\__,_|_|  \___|
+
+  */
 
   boolean Meassure::meassureAirCondition() {
     if(SENSORCONNECTED) {
@@ -152,7 +157,7 @@
         airCondition = MHZ19b.getCO2(true, true);
         debug(SPAMM, SENSOR, "PPM: " + String(airCondition));
         // Serial.println(airCondition);
-        temperature = MHZ19b.getTemperature(true, false);
+        temperature = MHZ19b.getTemperature();
         // Serial.println(temperature);
         //Wert smoothen;
         //airCondition = ALPHA_MEASUREMENTS * airCondition + (1 - ALPHA_MEASUREMENTS) * airConditionLast;
@@ -172,6 +177,7 @@
     }
     testCounter++;
     lasttime = time;
+    return false;
   }
 
   void Meassure::meassureEnvironment() {
@@ -241,4 +247,8 @@
     // define colorState  -changed
     if(state != -1)
       state = getStateOf(airCondition);
+  }
+
+  void Meassure::resetStartTime() {
+    startTime = millis();
   }
