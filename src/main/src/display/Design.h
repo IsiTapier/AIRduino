@@ -34,12 +34,13 @@
 #define LOADING_SCREEN_TIME 1
 
 //settings
-#define STAGE_TIME 100
+#define STAGE_TIME 10
 #define MENU_BUTTON_COOLDOWN 1*1000
 #define VENTILATING_TIMEOUT general::ventilating_timeout.getValue()*1000
+#define TOUCH_COOLDOWN 200
 
 #define SENSOR_SPEED 5000
-#define AVERAGING_MEASUREMENTS SENSOR_SPEED/STAGE_TIME
+#define AVERAGING_MEASUREMENTS SENSOR_SPEED/1000
 #define AVERAGING_GRADIENT 6
 #define ALPHA_MEASUREMENTS 0.7
 #define ALPHA_LOWEST 0.5
@@ -48,7 +49,7 @@
 #define MAX_DECREASE -40
 #define MAX_INCREASE_LOWEST 100
 
-#define TOUCH_RESISTANCE 10000000
+#define TOUCH_RESISTANCE 300
 
 #define MINPRESSURE -1
 #define MAXPRESSURE 0
@@ -63,7 +64,7 @@
 #define TOUCH_INACCURACY_Y TOUCH_INACCURACY
 
 //DisplayV1
-#define AVERAGING_GRAPH general::graph_speed.getValue()*1000/STAGE_TIME
+#define AVERAGING_GRAPH general::graph_speed.getValue()
 #define ALPHA_GRAPH 0.7
 
 //DisplayV2
@@ -316,7 +317,7 @@
 #define PH  PPM_HEIGHT
 #define PW  PPM_LENGTH
 #define PY  PPM_Y
-#define PS  PPM_SIZE
+// #define PS  PPM_SIZE
 #define PSX PPM_STRING_X
 #define PSS PPM_STRING_SIZE
 

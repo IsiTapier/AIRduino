@@ -8,6 +8,8 @@ using namespace general;
 
   TSPoint Display::p;
   unsigned long Display::lastModeChange = 0;
+  unsigned long Display::lastTouch;
+  int Display::counter = 1000/STAGE_TIME-1;
 
   void Display::setup() {
     debug(DEBUG, SETUP, "Display SETUP started");
@@ -63,28 +65,31 @@ using namespace general;
   }
 
   void Display::loop() {
-    while(millis()%STAGE_TIME > 0) {}
+    while((millis()-Meassure::getStartTime())%STAGE_TIME > 0) {}
     delay(1);
-    Meassure::loop();
+    client.loop();
     handleTouch();
     initDisplay();
-    boolean changed = DisplayV1::getGraphData();
-    /*if(mode.getValue() == MENU) {
-      Menu::loop();
-    } else */
-    if(mode.getValue() == MENU) {
-      Menu::loop();
-    } else if(mode.getValue() == CHART) {
-      if(!version.getValue()) {
-        DisplayV1::loop(changed);
-      } else {
-        //DisplayV2::loop();
-        DisplayV3::loop();
+    counter++;
+    if(counter >= 1000/STAGE_TIME) {
+      counter = 0;
+      Meassure::loop();
+      boolean changed = DisplayV1::getGraphData();
+      /*if(mode.getValue() == MENU) {
+        Menu::loop();
+      } else */
+      if(mode.getValue() == MENU) {
+        Menu::loop();
+      } else if(mode.getValue() == CHART) {
+        if(!version.getValue()) {
+          DisplayV1::loop(changed);
+        } else {
+          DisplayV2::loop();
+        }
+      } else if(mode.getValue() == MAINTENANCE) {
+        maintenanceMode();
       }
-    } else if(mode.getValue() == MAINTENANCE) {
-      maintenanceMode();
     }
-    client.loop();
   }
 
   void Display::initDisplay() {
@@ -92,11 +97,13 @@ using namespace general;
       if(mode.getValue() == CHART) {
         if(!version.getValue()) {
           DisplayV1::setup();
+          DisplayV1::loop(false);
         } else {
-          //DisplayV2::setup();
-          DisplayV3::setup();
+          DisplayV2::setup();
+          DisplayV2::loop();
         }
       } else if(mode.getValue() == MENU && (theme.hasChanged() || mode.hasChanged())) {
+        ledcDetachPin(PIEZO);
         Menu::setup();
       } else if(mode.getValue() == LOADINGSCREEN) {
         Serial.println("Restart");
@@ -120,28 +127,36 @@ using namespace general;
       // we have some minimum pressure we consider 'valid'
       // pressure of 0 means no pressing!
       //template:: p.isTouching(PLACEHOLDER_PLACE_START_X, PLACEHOLDER_PLACE_END_X, PLACEHOLDER_PLACE_START_Y, PLACEHOLDER_PLACE_END_Y)
-      if(p.isTouching()) {
+      if(p.isTouching() && millis()-lastTouch >= TOUCH_COOLDOWN && millis() > lastTouch) {
+        lastTouch = millis();
         p.calibrate();
         if(p.isTouching(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_END_X, MENU_ARROW_BACK_START_Y, MENU_ARROW_BACK_END_Y)) {
-          if(millis() - lastModeChange >= MENU_BUTTON_COOLDOWN) {
-            if(debugSetup.getValue())
-              debug(INFO, SETUP, "change Mode");
-            if(mode.equals(MENU))
-              mode.setValue(CHART);
-            else if(mode.equals(CHART))
-              mode.setValue(MENU);
-            lastModeChange = millis();
-          }
+          if(debugSetup.getValue())
+            debug(INFO, SETUP, "change Mode");
+          if(mode.equals(MENU))
+            mode.setValue(CHART);
+          else if(mode.equals(CHART))
+            mode.setValue(MENU);
+          lastModeChange = millis();
+          lastTouch+=500;
         } else if(p.isTouching(MENU_ARROW_RESET_START_X, MENU_ARROW_RESET_END_X, MENU_ARROW_RESET_START_Y, MENU_ARROW_RESET_END_Y)) {
-          if(requestDecision("Einstellungs Reset", "Willst du fortfahren?")) {
+          if(mode.equals(MENU) && requestDecision("Einstellungs Reset", "Willst du fortfahren?")) {
             if(debugSetup.getValue())
               debug(WARNING, SETUP, "reset");
             Menu::reset();
+            Menu::setup();
+          } else if(mode.equals(CHART)) {
+            Meassure::resetStartTime(true);
+            DisplayV1::resetGraph();
+            if(version.equals(V1))
+              DisplayV1::setup();
           }
-          Menu::setup();
         } else if(mode.equals(MENU)) {
           Menu::handleTouch(p);
-        }
+        } else if(mode.equals(CHART)) {
+          version.shiftValue();
+          lastTouch+=500;
+        } 
       }
     } else {
       p = ts.getPoint();

@@ -22,10 +22,10 @@
       return((State) MEDIUM);
     else if (value < LIMIT_BLINK)
       return((State) BAD);
-    else if (value >= LIMIT_BLINK)
-      return((State) BLINK);
     else if (value >= LIMIT_PIEP)
       return((State) PIEP);
+    else if (value >= LIMIT_BLINK)
+      return((State) BLINK);
     else
       return((State) BAD);
   }
@@ -46,7 +46,7 @@
     for (int i = averageStart; i < averageEnd; i++) {
       sum = sum + averageArray[i];
     }
-    return (sum / (averageEnd-1 - averageStart));
+    return (sum / (averageEnd - averageStart));
   }
 
   void drawBorder(int x, int y, int length, int height, int thickness, int color) {
@@ -94,7 +94,7 @@
     display.fillRect((DISPLAY_LENGTH - STATUS_LENGTH)/2, STATUS_MARGIN_TOP, STATUS_LENGTH, STATUS_HEIGHT, RED);
   }
 
-  void dPrint(String text, int x, int y, int size, int color, int datum, int backgroundColor, String oldText, int oldTextSize, int padding) {
+  void dPrint(String text, int x, int y, int size, int color, int datum, int backgroundColor, String oldText, int oldTextSize, boolean redraw, int padding) {
     display.setTextPadding(padding);
     display.setTextDatum(datum);
     if(backgroundColor == 0)
@@ -114,16 +114,23 @@
       }
       display.setTextColor(backgroundColor);
       display.setTextSize(oldTextSize);
-      for(int i = 0; i < oldText.length(); i++) {
-        if(text.charAt(i) != oldText.charAt(i) || text.length() != oldText.length()) {
-          display.drawString((String) oldText.charAt(i), (xold+LETTER_LENGTH*oldTextSize*i), y);
+      if(redraw) {
+        display.drawString(oldText, x, y);
+        display.setTextColor(color);
+        display.setTextSize(size);
+        display.drawString(text, x, y);
+      } else {
+        for(int i = 0; i < oldText.length(); i++) {
+          if(text.charAt(i) != oldText.charAt(i) || text.length() != oldText.length()) {
+            display.drawString((String) oldText.charAt(i), (xold+LETTER_LENGTH*oldTextSize*i), y);
+          }
         }
-      }
-      display.setTextColor(color);
-      display.setTextSize(size);
-      for(int i = 0; i < text.length(); i++) {
-        if(text.charAt(i) != oldText.charAt(i) || text.length() != oldText.length()) {
-          display.drawString((String) text.charAt(i), x+LETTER_LENGTH*size*i, y);
+        display.setTextColor(color);
+        display.setTextSize(size);
+        for(int i = 0; i < text.length(); i++) {
+          if(text.charAt(i) != oldText.charAt(i) || text.length() != oldText.length()) {
+            display.drawString((String) text.charAt(i), x+LETTER_LENGTH*size*i, y);
+          }
         }
       }
     } else {
@@ -138,9 +145,10 @@
   }
 
   //Verkürzung: Writing mit Integern
-  void dPrint(int text, int x, int y, int size, int color, int datum, int backgroundColor, int oldText, int oldTextSize, int padding) {
-    dPrint(String(text), x, y, size, color, datum, backgroundColor, (oldText == -1) ? "" : String(oldText), oldTextSize, padding);
+  void dPrint(int text, int x, int y, int size, int color, int datum, int backgroundColor, int oldText, int oldTextSize, boolean redraw, int padding) {
+    dPrint(String(text), x, y, size, color, datum, backgroundColor, (oldText == -1) ? "" : String(oldText), oldTextSize, redraw, padding);
   }
+
   //Loading Screen
   void loadingScreen() {
     debug(DEBUG, SETUP, "loadingscreen started");
@@ -192,8 +200,6 @@
   }
 
   void writeLoadingAnimation(int c1, int c2, int c3) {
-    long endTime = millis() + LOADING_SCREEN_TIME * 1000;
-
     short distanceToFirstLetter = 70 + DD_MARGIN;
     short VerticalDistanceToFirstLetter = 55 + DD_MARGIN;
     dPrint("A", distanceToFirstLetter, VerticalDistanceToFirstLetter, LOADING_SCREEN_TITLE_SIZE, GREY);

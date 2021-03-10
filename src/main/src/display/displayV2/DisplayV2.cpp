@@ -8,14 +8,16 @@
 extern int DisplayV2::barPixel;
 extern int DisplayV2::lastBarPixel;
 
-//   _____      _
-//  / ____|    | |
-// | (___   ___| |_ _   _ _ __
-//  \___ \ / _ \ __| | | | '_ \
-//  ____) |  __/ |_| |_| | |_) |
-// |_____/ \___|\__|\__,_| .__/
-//                        | |
-//                       |_|
+/*
+   _____      _
+  / ____|    | |
+ | (___   ___| |_ _   _ _ __
+  \___ \ / _ \ __| | | | '_ \
+  ____) |  __/ |_| |_| | |_) |
+ |_____/ \___|\__|\__,_| .__/
+                        | |
+                       |_|
+*/
 
 void DisplayV2::setup() {
   DisplayVX::setup();
@@ -102,7 +104,7 @@ void DisplayV2::drawBar() {
   //   - search position of the bar -
   barPixel = map(airCondition, DISPLAYED_PPM_LOWEST, DISPLAYED_PPM_HIGHEST, BAR_START_X, BAR_END_X);
   lastBarPixel = map(lastAirCondition, DISPLAYED_PPM_LOWEST, DISPLAYED_PPM_HIGHEST, BAR_START_X, BAR_END_X);
-  if(barPixel <= BAR_START_X && lastAirCondition <= BAR_START_X || barPixel == lastBarPixel && !start)
+  if((barPixel <= BAR_START_X && lastAirCondition <= BAR_START_X) || (barPixel == lastBarPixel && !start))
     return;
   if(barPixel < BAR_START_X)
     barPixel = BAR_START_X;
@@ -114,15 +116,15 @@ void DisplayV2::drawBar() {
     lastBarPixel = BAR_START_X;
 
   //TODO: vereinfachen
-  if(COLOR_MODE) {
+  if(COLOR_MODE && state != VENTILATING) {
     if(airCondition >= LIMIT_GOOD) {
-      if(!(lastAirCondition >= LIMIT_GOOD))
+      if(!(lastAirCondition >= LIMIT_GOOD) || lastState == VENTILATING)
         display.fillRect(BAR_START_X, BAR_Y, FIRST_SECTION_X - BAR_START_X, BAR_HEIGHT, COLOR_STATUS_NORMAL);
       if(airCondition >= LIMIT_MEDIUM) {
-        if(!(lastAirCondition >= LIMIT_MEDIUM))
+        if(!(lastAirCondition >= LIMIT_MEDIUM) || lastState == VENTILATING)
           display.fillRect(FIRST_SECTION_X, BAR_Y, SECOND_SECTION_X - FIRST_SECTION_X, BAR_HEIGHT, COLOR_STATUS_RISK);
         if(airCondition >= DISPLAYED_PPM_HIGHEST) {
-          if(lastAirCondition < DISPLAYED_PPM_HIGHEST)
+          if(lastAirCondition < DISPLAYED_PPM_HIGHEST || lastState == VENTILATING)
             display.fillRect(SECOND_SECTION_X, BAR_Y, BAR_END_X - SECOND_SECTION_X, BAR_HEIGHT, COLOR_STATUS_ALARM);
         } else if(lastAirCondition < airCondition)
           display.fillRect(SECOND_SECTION_X, BAR_Y, barPixel - SECOND_SECTION_X, BAR_HEIGHT, COLOR_STATUS_ALARM);
@@ -136,7 +138,7 @@ void DisplayV2::drawBar() {
       display.fillRect(BAR_START_X, BAR_Y, barPixel - BAR_START_X, BAR_HEIGHT, COLOR_STATUS_NORMAL);
     else
       display.fillRect(barPixel, BAR_Y, lastBarPixel - barPixel, BAR_HEIGHT, CHART_BACKGROUND_COLOR);
-  } else if(lastState.getColor(COLORED_CHART) == state.getColor(COLORED_CHART) && !start) {
+  } else if(state.getColor(COLORED_CHART) == lastState.getColor(COLORED_CHART) && !start) {
     if(lastAirCondition < airCondition) {
       display.fillRect(lastBarPixel, BAR_Y, barPixel - lastBarPixel, BAR_HEIGHT, state.getColor(COLORED_CHART));
     } else {

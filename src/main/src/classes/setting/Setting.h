@@ -33,6 +33,7 @@ class Setting {
     short getMinValue();
     short getMaxValue();
     void setValue(short value, boolean upload = true);
+    void shiftValue(boolean up = true, boolean upload = true);
     SettingType getType();
     String getTitle();
     short getSize();

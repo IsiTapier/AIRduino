@@ -6,51 +6,47 @@
 #include "Meassure.h"
 #include "../display/menu/Menu.h"
 
-  //   _____      _
-  //  / ____|    | |
-  // | (___   ___| |_ _   _ _ __
-  //  \___ \ / _ \ __| | | | '_ \
-  //  ____) |  __/ |_| |_| | |_) |
-  // |_____/ \___|\__|\__,_| .__/
-  //                       | |
-  //                       |_|
+  /*
+     _____      _
+    / ____|    | |
+   | (___   ___| |_ _   _ _ __
+    \___ \ / _ \ __| | | | '_ \
+    ____) |  __/ |_| |_| | |_) |
+   |_____/ \___|\__|\__,_| .__/
+                         | |
+                         |_|
+  */
 
-  // extern MQ135 Meassure::sensor = MQ135(GAS_SENSOR);
-  extern Adafruit_BME280 Meassure::bme = Adafruit_BME280(BMESDA, BMESCL);
-  extern MHZ19 Meassure::MHZ19b;
-  extern unsigned long Meassure::tempAirCondition;
-  extern unsigned long Meassure::temptempAirCondition;
-  extern float Meassure::airConditionTemp;
-  extern float Meassure::airCondition = 0;
-  extern float Meassure::airConditionRaw;
-  extern float Meassure::airConditionLast;
-  extern unsigned long Meassure::startTime;
-  extern unsigned long Meassure::timer;
-  extern int Meassure::gradient;
-  extern int Meassure::value;
-  extern int Meassure::values[AVERAGING_GRADIENT * 2];
-  extern int Meassure::counter = AVERAGING_MEASUREMENTS;
-  extern int Meassure::now;
-  extern int Meassure::last;
-  extern int Meassure::minPPM = 400;
-  extern int Meassure::maxPPM;
-  extern State Meassure::state;
-  extern int Meassure::colorState;
-  extern int Meassure::temperature;
-  extern int Meassure::humidity;
-  extern int Meassure::pressure;
+  Adafruit_BME280 Meassure::bme = Adafruit_BME280(BMESDA, BMESCL);
+  MHZ19 Meassure::MHZ19b;
+  unsigned long Meassure::tempAirCondition;
+  unsigned long Meassure::temptempAirCondition;
+  float Meassure::airConditionTemp;
+  float Meassure::airCondition = 0;
+  float Meassure::airConditionRaw;
+  float Meassure::airConditionLast;
+  unsigned long Meassure::startTime;
+  unsigned long Meassure::timer;
+  int Meassure::gradient;
+  int Meassure::value;
+  int Meassure::values[AVERAGING_GRADIENT * 2];
+  int Meassure::counter = AVERAGING_MEASUREMENTS;
+  int Meassure::now;
+  int Meassure::last;
+  int Meassure::minPPM = 400;
+  int Meassure::maxPPM;
+  State Meassure::state;
+  int Meassure::colorState;
+  int Meassure::temperature;
+  int Meassure::humidity;
+  int Meassure::pressure;
 
-  extern int Meassure::testCounter = 0;
-  extern unsigned long Meassure::lasttime;
+  int Meassure::testCounter = 0;
+  unsigned long Meassure::lasttime;
 
   void Meassure::setup() {
     debug(DEBUG, SETUP, "Meassure SETUP started");
-    pinMode(PIEZO, OUTPUT);
-    // pinMode(SENSOR, INPUT);
-    digitalWrite(PIEZO, LOW);
     debug(INFO, SETUP, "Pins initialized");
-    // airConditionRaw = analogRead(GAS_SENSOR);
-    // airConditionLast = analogRead(GAS_SENSOR);
     debug(INFO, SETUP, "Variables initialized");
     if (bme.begin(0x76)) {
       debug(INFO, SETUP, "BME-Sensor initialized");
@@ -62,7 +58,7 @@
     while (!SENSORCONNECTED && requestDecision("Sensor nicht verbunden", "erneut versuchen?", "Ja", "Nein")) {
       display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoBlatt);
       Serial.print("connecting to sensor");
-      for (int x = 0; x <= 15; x++) {
+      for (int x = 0; x <= 10; x++) {
         delay(500);
         Serial.print(".");
       }
@@ -84,7 +80,6 @@
   void Meassure::loop() {
     // meassureEnvironment();
     if(meassureAirCondition()) {
-      mapAirCondition();
       calculateGradient();
       checkVentilating();
       setState();
@@ -93,7 +88,7 @@
   }
 
   void Meassure::calibrateMin() {
-    if(requestDecision("Max Wert Kalibrierung", "Möchtest du fortfahren?")) {
+    if(requestDecision("Min Wert Kalibrierung", "Möchtest du fortfahren?")) {
       MHZ19b.calibrate();
       debug(WARNING, SENSOR, "min value calibrated to 400 PPM");
     }
@@ -145,48 +140,24 @@
     }*/
   }
 
-  //  __  __
-  // |  \/  |
-  // | \  / | ___  __ _ ___ ___ _   _ _ __ ___
-  // | |\/| |/ _ \/ _` / __/ __| | | | '__/ _ \
-  // | |  | |  __/ (_| \__ \__ \ |_| | | |  __/
-  // |_|  |_|\___|\__,_|___/___/\__,_|_|  \___|
+  /*
+    __  __
+   |  \/  |
+   | \  / | ___  __ _ ___ ___ _   _ _ __ ___
+   | |\/| |/ _ \/ _` / __/ __| | | | '__/ _ \
+   | |  | |  __/ (_| \__ \__ \ |_| | | |  __/
+   |_|  |_|\___|\__,_|___/___/\__,_|_|  \___|
+
+  */
 
   boolean Meassure::meassureAirCondition() {
-    //Messung
-  /*  int timeLeft = STAGE_TIME-(millis()%STAGE_TIME);
-    if(timeLeft < 0.8*STAGE_TIME) {
-      timeLeft += STAGE_TIME;
-      //Serial.println("WARNING: Timing error!");
-    }
-    timeLeft-=10;
-
-    /*tempAirCondition = 0;
-    temptempAirCondition = 0;
-    for (long i = 0; i < AVERAGING_MEASUREMENTS; i++) {
-      // value = analogRead(GAS_SENSOR);
-
-      //Fehlmessungen überschreiben
-    /*  if (airConditionRaw * MAX_INCREASE < value && i == 0)
-        tempAirCondition = tempAirCondition + airConditionRaw;
-      else if (airCondition / i * MAX_INCREASE < value && i != 0)
-        tempAirCondition = tempAirCondition + tempAirCondition / i;
-      else*/
-    /*    tempAirCondition = tempAirCondition + value;
-        temptempAirCondition += analogRead(39);
-      delay(timeLeft/ AVERAGING_MEASUREMENTS);
-    }
-
-    airCondition = (float) tempAirCondition / AVERAGING_MEASUREMENTS;
-    airConditionTemp = (float) temptempAirCondition / AVERAGING_MEASUREMENTS;
-    airConditionRaw = airCondition;*/
-    // if(SENSORCONNECTED) {
+    if(SENSORCONNECTED) {
       counter++;
       if(counter >= AVERAGING_MEASUREMENTS) {
         airCondition = MHZ19b.getCO2(true, true);
         debug(SPAMM, SENSOR, "PPM: " + String(airCondition));
         // Serial.println(airCondition);
-        temperature = MHZ19b.getTemperature(true, false);
+        temperature = MHZ19b.getTemperature();
         // Serial.println(temperature);
         //Wert smoothen;
         //airCondition = ALPHA_MEASUREMENTS * airCondition + (1 - ALPHA_MEASUREMENTS) * airConditionLast;
@@ -196,9 +167,8 @@
         return true;
       }
       return false;
-    // }
+    }
     airConditionLast = airCondition;
-//    airCondition = sensor.getPPM(temperature, humidity);
 
     int time = floor(millis()/1000);
     if(lasttime != time) {
@@ -207,6 +177,7 @@
     }
     testCounter++;
     lasttime = time;
+    return false;
   }
 
   void Meassure::meassureEnvironment() {
@@ -223,30 +194,6 @@
   // | |__| | (_| | || (_| |
   // |_____/ \__,_|\__\__,_|
 
-
-  void Meassure::mapAirCondition() {
-    //to PPM
-  /*  if (airCondition <= calibration[EEPROM.read(0)].getLowestSensor())
-      airCondition = calibration[EEPROM.read(0)].getLowestSensor();*/
-  /*  airCondition = map(airCondition*100, calibration[EEPROM.read(0)].getLowestSensor()*100, calibration[EEPROM.read(0)].getHighestSensor()*100, calibration[EEPROM.read(0)].getLowestPPM(), calibration[EEPROM.read(0)].getHighestPPM());
-    airCondition += 400 - minPPM;*/
-    //sd.saveValuesToSD(millis()/1000, airConditionRaw, airConditionLast, airCondition);
-    //Serial.print(airCondition); Serial.print("\t");
-    //Serial.print(0); Serial.print("\t");
-  /*  Serial.print(airConditionTemp); Serial.print("\t");
-    Serial.println(0);*/
-    //Serial.print(temperature); Serial.print("\t");
-    //Serial.println(humidity); /*Serial.print("\t");
-  /*  Serial.print(sensor.getRZero(airConditionRaw)); Serial.print("\t");
-    Serial.print(sensor.getRZero(airConditionRaw, 1)); Serial.print("\t");
-    Serial.print(sensor.getRZero(airConditionRaw, "1")); Serial.print("\t");
-    Serial.print(sensor.getRZero(airConditionRaw, temperature, humidity)); Serial.print("\t");
-    Serial.print(sensor.getRZero(airConditionRaw, temperature, humidity, 1)); Serial.print("\t");
-    Serial.println(sensor.getRZero(airConditionRaw, temperature, humidity, "1"));*/
-    
-  }
-
-
   void Meassure::calculateGradient() {
     // gradient ist die Differenz zwischen altem und neuem Wert
     //store last AirConditions
@@ -261,7 +208,6 @@
 
     //gradient
     gradient = now - last;
-    Serial.println(gradient);
   }
 
   void Meassure::checkVentilating() {
@@ -270,6 +216,7 @@
       state = (State) VENTILATING;
       maxPPM = airCondition;
       startTime = millis();
+      counter = 0;
       debug(INFO, SENSOR, "VENTILATING");
     }
 
@@ -299,22 +246,12 @@
 
   void Meassure::setState() {
     // define colorState  -changed
-    if(state != -1) {
+    if(state != -1)
       state = getStateOf(airCondition);
-    }
+  }
 
-    //colorState = map(airCondition, calibration[EEPROM.read(0)].getLowestPPM(), calibration[EEPROM.read(0)].getHighestPPM(), 0, 2);
-/*
-    if (state == -1)
-      return;
-
-    if (airCondition > LIMIT_PIEP)
-      state = PIEP;
-    else if (airCondition > LIMIT_BLINK)
-      state = BLINK;
-
-    if (state < -1)
-      state =  -1;
-    if (state > 4)
-      state =  4;*/
+  void Meassure::resetStartTime(boolean cycle) {
+    startTime = millis();
+    if(cycle)
+    counter = -1;
   }

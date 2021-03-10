@@ -30,7 +30,7 @@ class DisplayVX {
     static State lastState;
     static int airCondition;
     static int lastAirCondition;
-    static int blinkSwitch;
+    static boolean blinkSwitch;
     static int statusLetters;
     static String statusInfo;
     static String lastTime;

@@ -29,7 +29,7 @@ using namespace general;
   void Slider::checkTouch(TSPoint p) {
     if(p.isTouching(MENU_SLIDER_START_X, MENU_SLIDER_END_X, MENU_SLIDER_START_Y(_section), MENU_SLIDER_END_Y(_section))) {
       changeValue();
-      if(_setting->getDebugMessage() != "")
+      if(strlen(_setting->getDebugMessage()) != 0)
         debug(DEBUG, MENUD, _setting->getDebugMessage());
     }
   }

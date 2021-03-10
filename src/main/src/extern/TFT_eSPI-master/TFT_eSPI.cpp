@@ -4120,6 +4120,7 @@ int16_t TFT_eSPI::drawString(const char *string, int32_t poX, int32_t poY, uint8
 
   uint16_t len = strlen(string);
   uint16_t n = 0;
+  uint16_t uniCode;
 
 #ifdef SMOOTH_FONT
   if(fontLoaded) {
@@ -4137,7 +4138,7 @@ int16_t TFT_eSPI::drawString(const char *string, int32_t poX, int32_t poY, uint8
     setCursor(poX, poY);
 
     while (n < len) {
-      uint16_t uniCode = decodeUTF8((uint8_t*)string, &n, len - n);
+      uniCode = decodeUTF8((uint8_t*)string, &n, len - n);
     }
     sumX += cwidth;
     //fontFile.close();
@@ -4146,7 +4147,7 @@ int16_t TFT_eSPI::drawString(const char *string, int32_t poX, int32_t poY, uint8
 #endif
   {
     while (n < len) {
-      uint16_t uniCode = decodeUTF8((uint8_t*)string, &n, len - n);
+      uniCode = decodeUTF8((uint8_t*)string, &n, len - n);
       sumX += drawChar(uniCode, poX+sumX, poY, font);
     }
   }

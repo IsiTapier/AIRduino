@@ -67,6 +67,17 @@ void Setting::setValue(short value, boolean upload) {
   }
 }
 
+void Setting::shiftValue(boolean up, boolean upload) {
+  if(up && _value >= _maxValue)
+    setValue(_minValue, upload);
+  else if(!up && _value <= _minValue)
+    setValue(_maxValue, upload);
+  else if(up)
+    setValue(_value+1);
+  else
+    setValue(_value-1);
+}
+
 SettingType Setting::getType() {
   return _type;
 }
