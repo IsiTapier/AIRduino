@@ -24,6 +24,7 @@ class Display {
     static TSPoint p;
     static unsigned long lastModeChange;
     static int counter;
+    static unsigned long lastTouch;
 };
 
 #endif

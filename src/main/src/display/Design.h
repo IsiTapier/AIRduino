@@ -34,9 +34,10 @@
 #define LOADING_SCREEN_TIME 1
 
 //settings
-#define STAGE_TIME 100
+#define STAGE_TIME 10
 #define MENU_BUTTON_COOLDOWN 1*1000
 #define VENTILATING_TIMEOUT general::ventilating_timeout.getValue()*1000
+#define TOUCH_COOLDOWN 200
 
 #define SENSOR_SPEED 5000
 #define AVERAGING_MEASUREMENTS SENSOR_SPEED/1000

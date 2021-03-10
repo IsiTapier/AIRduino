@@ -94,7 +94,7 @@ int DisplayV1::lastPixel = 0;
       graphData[currentPosition] = pixel;
     } else {
       if(graphData[0] != graphData[1])
-        drawConnection(1, state >= BLINK && blinkSwitch > 10 ? TEXT_COLOR : BACKGROUND_COLOR);
+        drawConnection(1, state >= BLINK && blinkSwitch ? TEXT_COLOR : BACKGROUND_COLOR);
       for (short x = 0; x < DISPLAY_LENGTH; x++) {
         graphData[x] = graphData[x + 1];
       }
