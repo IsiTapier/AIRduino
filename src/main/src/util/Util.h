@@ -36,8 +36,9 @@
 //pins
 
   enum Version {
-    V1 = false,
-    V2 = true
+    V1 = 1,
+    V2 = 2,
+    V3 = 3
   };
 
   enum Mode {

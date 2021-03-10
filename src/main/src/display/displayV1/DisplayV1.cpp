@@ -57,9 +57,8 @@ int DisplayV1::lastPixel = 0;
     } else {
       if(general::mode.equals(CHART) && general::mode.equaled(CHART)) {
         DisplayVX::writeInfo();
-        Serial.print(".-");
         DisplayVX::checkState();
-        }
+      }
     }
     //graph
     if(changed)

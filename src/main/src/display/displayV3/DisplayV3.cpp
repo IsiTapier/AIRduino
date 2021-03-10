@@ -22,7 +22,6 @@ void DisplayV3::setup() {
 void DisplayV3::loop() {
   	stateBackgroundColor = state.getBackgroundColor();
     if(start) {
-
         drawDisplay();
         //Draw Bar
         display.fillRect(0, 0, DISPLAY_LENGTH, 20, state.getColor(true));
@@ -43,7 +42,7 @@ void DisplayV3::loop() {
         DisplayVX::checkState();
         }
     }
-    if(lastState != state) {
+    if(lastState.getColor() != state.getColor()) {
         drawDisplay();
         writeInfoV3();
     }
@@ -57,8 +56,6 @@ void DisplayV3::loop() {
     display.fillScreen(state.getBackgroundColor());
     display.pushImage(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, gear, WHITE);
     debug(INFO, SETUP, "Display drawn");
-
-
     // dPrint("16:44", 160, 120, 11, BLACK, 4, state.getColor(true));
 }
 
@@ -108,6 +105,10 @@ void DisplayV3::writeInfoV3() {
       display.fillRect(x+1, 0, DISPLAY_LENGTH-x, 20, stateBackgroundColor);
       display.fillCircle(x, 0, 19, state.getColor(true));
       display.pushImage(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, gear, WHITE);
+      if(general::theme.getValue())
+        display.pushImage(MENU_ARROW_RESET_START_X, MENU_ARROW_RESET_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, arrowResetDark, BLACK);
+      else
+        display.pushImage(MENU_ARROW_RESET_START_X, MENU_ARROW_RESET_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, arrowResetLight, WHITE);
     }
     //calculate time since last ventilating
     long startTime = Meassure::getStartTime();
@@ -128,10 +129,7 @@ void DisplayV3::writeInfoV3() {
     //Clear old Pixels
     //dPrint(lasttime, timeR_X, timeR_Y, timeR_SIZE, BAR_BACKGROUND_COLOR, 8);
     //write new Pixels
-    if(seconds == 0 && minutes == 20 || seconds == 0 && minutes == 0 || start || state != lastState) {
-      dPrint("00:00", 165, 130, 10, WHITE, 1);
-    }
-    dPrint(time, 165, 120, 130, WHITE, 1, stateBackgroundColor, lastTime);
+    dPrint(time, 165, 130, 10, WHITE, 1, stateBackgroundColor, lastTime, -1, (seconds == 0 && (minutes == 0 || (minutes == 20 && COLORED_TIME))) || start || state.getColor() != lastState.getColor());
 
     //Set new lasttime
     lastTime = time; //Setzt letzten Wert

@@ -81,10 +81,12 @@ using namespace general;
       if(mode.getValue() == MENU) {
         Menu::loop();
       } else if(mode.getValue() == CHART) {
-        if(!version.getValue()) {
+        if(version.equals(V1)) {
           DisplayV1::loop(changed);
-        } else {
+        } else if(version.equals(V2)) {
           DisplayV2::loop();
+        } else if(version.equals(V3)) {
+          DisplayV3::loop();
         }
       } else if(mode.getValue() == MAINTENANCE) {
         maintenanceMode();
@@ -95,12 +97,15 @@ using namespace general;
   void Display::initDisplay() {
     if(mode.hasChanged() || (version.hasChanged() && !mode.equals(MENU)) || theme.hasChanged() || language.hasChanged()) {
       if(mode.getValue() == CHART) {
-        if(!version.getValue()) {
+        if(version.equals(V1)) {
           DisplayV1::setup();
           DisplayV1::loop(false);
-        } else {
+        } else if(version.equals(V2)) {
           DisplayV2::setup();
           DisplayV2::loop();
+        } else if(version.equals(V3)) {
+          DisplayV3::setup();
+          DisplayV3::loop();
         }
       } else if(mode.getValue() == MENU && (theme.hasChanged() || mode.hasChanged())) {
         ledcDetachPin(PIEZO);

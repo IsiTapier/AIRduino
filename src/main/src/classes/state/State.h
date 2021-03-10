@@ -47,7 +47,7 @@ public:
     return stateTitles[general::language.getValue()][_state+(_state==PIEP?0:1)];
   }
 
-  int getColor(boolean colored) {
+  int getColor(boolean colored = true) {
     if(!colored)
       return(DEFAULT_COLOR);
     switch ((int) _state) {

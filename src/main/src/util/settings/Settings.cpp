@@ -51,7 +51,7 @@
   const std::vector<String> titles = {};
 
   //names
-  const std::vector<std::vector<String>> namesVersion = {{"Version 1", "version 1", "version 1", "versi 1", "versi"+oa+"n 1"}, {"Version 2", "version 2", "version 2", "versi 2", "versi"+oa+"n 2"}};
+  const std::vector<std::vector<String>> namesVersion = {{"Version 1", "version 1", "version 1", "versi 1", "versi"+oa+"n 1"}, {"Version 2", "version 2", "version 2", "versi 2", "versi"+oa+"n 2"}, {"Version 3", "version 3", "version 3", "versi 3", "versi"+oa+"n 3"}};
   const std::vector<std::vector<String>> namesTheme = {{"heller Modus", "light mode", "mode clair", "mode cahya", "modo de luz"}, {"dunkel Modus", "dark mode", "mode noir", "mode peteng", "modo oscuro"}};
   const std::vector<std::vector<String>> namesSound = {};
   const std::vector<std::vector<String>> namesBlink = {};
@@ -97,7 +97,7 @@
 namespace general {
   Setting empty = Setting(EMPTY);  
 
-  Setting version = Setting(SWITCH, "version", titlesVersion, 0, "'Version' changed", 0, 1, namesVersion, false);
+  Setting version = Setting(MULTISELECT, "version", titlesVersion, 1, "'Version' changed", 1, 3, namesVersion, false);
   Setting theme = Setting(SELECT, "theme", titlesTheme, 1, "'Theme' changed", 0, 1, namesTheme);
   Setting sound = Setting(SWITCH, "sound", titlesSound, 1, "'Piezo' changed");
   Setting blink = Setting(SWITCH, "blink", titlesBlink, 1, "'Blink' changed");

@@ -205,7 +205,7 @@ boolean DisplayVX::lastError = false;
 
     //Clear old Pixels
     //write new Pixels
-    dPrint(time, TIMER_X, TIMER_Y, TIMER_SIZE, minutes>=20&&COLORED_TIME?TIME_COLOR_CRITICAL:TIME_COLOR_NORMAL, 8, DATABOX_BACKGROUND_COLOR, lastTime, -1, (seconds == 0 && (minutes == 0 || (minutes == 20 && COLORED_TIME))) || start);
+    dPrint(time, TIMER_X, TIMER_Y, TIMER_SIZE, TIME_COLOR, 8, DATABOX_BACKGROUND_COLOR, lastTime, -1, (seconds == 0 && (minutes == 0 || (minutes == 20 && COLORED_TIME))) || start);
     //Set new lasttime
     lastTime = time; //Setzt letzten Wert
     lastError = ERRORLAST;
