@@ -78,7 +78,8 @@ using namespace general;
       if(!version.getValue()) {
         DisplayV1::loop(changed);
       } else {
-        DisplayV2::loop();
+        //DisplayV2::loop();
+        DisplayV3::loop();
       }
     } else if(mode.getValue() == MAINTENANCE) {
       maintenanceMode();
@@ -92,7 +93,8 @@ using namespace general;
         if(!version.getValue()) {
           DisplayV1::setup();
         } else {
-          DisplayV2::setup();
+          //DisplayV2::setup();
+          DisplayV3::setup();
         }
       } else if(mode.getValue() == MENU && (theme.hasChanged() || mode.hasChanged())) {
         Menu::setup();

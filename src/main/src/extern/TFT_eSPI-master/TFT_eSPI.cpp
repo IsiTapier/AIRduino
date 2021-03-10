@@ -2368,7 +2368,8 @@ int16_t TFT_eSPI::getCursorY(void)
 ***************************************************************************************/
 void TFT_eSPI::setTextSize(uint8_t s)
 {
-  if (s>7) s = 7; // Limit the maximum size multiplier so byte variables can be used for rendering
+  //added
+  // if (s>7) s = 7; // Limit the maximum size multiplier so byte variables can be used for rendering
   textsize = (s > 0) ? s : 1; // Don't allow font size 0
 }
 

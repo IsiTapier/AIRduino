@@ -53,19 +53,37 @@ public:
     switch ((int) _state) {
       case -1:  return (CYAN);
         break;
-      case 0: return (PPM_COLOR_N);
+      case 0: return (COLOR_STATUS_NORMAL);
         break;
-      case 1: return (PPM_COLOR_R);
+      case 1: return (COLOR_STATUS_RISK);
         break;
-      case 2: return (PPM_COLOR_A);
+      case 2: return (COLOR_STATUS_WARNING);
         break;
-      case 3: return (PPM_COLOR_A);
+      case 3: return (COLOR_STATUS_ALARM);
         break;
-      case 4: return (PPM_COLOR_A);
+      case 4: return (COLOR_STATUS_ALARM);
         break;
-      default: return (PPM_COLOR_A);
+      default: return (COLOR_STATUS_ALARM);
         break;
-    }
+    } 
+  }
+  int getBackgroundColor() {
+    switch ((int) _state) {
+      case -1:  return (BACKGROUND_COLOR_STATUS_VENTILATING_V3);
+        break;
+      case 0: return (BACKGROUND_COLOR_STATUS_NORMAL_V3);
+        break;
+      case 1: return (BACKGROUND_COLOR_STATUS_RISK_V3);
+        break;
+      case 2: return (BACKGROUND_COLOR_STATUS_ALARM_V3);
+        break;
+      case 3: return (BACKGROUND_COLOR_STATUS_ALARM_V3);
+        break;
+      case 4: return (BACKGROUND_COLOR_STATUS_ALARM_V3);
+        break;
+      default: return (BACKGROUND_COLOR_STATUS_ALARM_V3);
+        break;
+    } 
   }
 
 private:

@@ -32,8 +32,18 @@ void DisplayV2::loop() {
   if(start) {
     drawDisplay();
     drawBarBorder();
-    DisplayVX::loop();
-  }
+    DisplayVX::handleData();
+    if(general::mode.equals(CHART)) {
+      DisplayVX::writeInfo();
+      DisplayVX::checkState();
+    }
+  } else {
+      if(general::mode.equals(CHART) && general::mode.equaled(CHART)) {
+        DisplayVX::writeInfo();
+        Serial.print(".-");
+        DisplayVX::checkState();
+        }
+    }
  // DisplayVX::loop();
   drawBar();
   //end setup
@@ -107,23 +117,23 @@ void DisplayV2::drawBar() {
   if(COLOR_MODE) {
     if(airCondition >= LIMIT_GOOD) {
       if(!(lastAirCondition >= LIMIT_GOOD))
-        display.fillRect(BAR_START_X, BAR_Y, FIRST_SECTION_X - BAR_START_X, BAR_HEIGHT, PPM_COLOR_N);
+        display.fillRect(BAR_START_X, BAR_Y, FIRST_SECTION_X - BAR_START_X, BAR_HEIGHT, COLOR_STATUS_NORMAL);
       if(airCondition >= LIMIT_MEDIUM) {
         if(!(lastAirCondition >= LIMIT_MEDIUM))
-          display.fillRect(FIRST_SECTION_X, BAR_Y, SECOND_SECTION_X - FIRST_SECTION_X, BAR_HEIGHT, PPM_COLOR_R);
+          display.fillRect(FIRST_SECTION_X, BAR_Y, SECOND_SECTION_X - FIRST_SECTION_X, BAR_HEIGHT, COLOR_STATUS_RISK);
         if(airCondition >= DISPLAYED_PPM_HIGHEST) {
           if(lastAirCondition < DISPLAYED_PPM_HIGHEST)
-            display.fillRect(SECOND_SECTION_X, BAR_Y, BAR_END_X - SECOND_SECTION_X, BAR_HEIGHT, PPM_COLOR_A);
+            display.fillRect(SECOND_SECTION_X, BAR_Y, BAR_END_X - SECOND_SECTION_X, BAR_HEIGHT, COLOR_STATUS_ALARM);
         } else if(lastAirCondition < airCondition)
-          display.fillRect(SECOND_SECTION_X, BAR_Y, barPixel - SECOND_SECTION_X, BAR_HEIGHT, PPM_COLOR_A);
+          display.fillRect(SECOND_SECTION_X, BAR_Y, barPixel - SECOND_SECTION_X, BAR_HEIGHT, COLOR_STATUS_ALARM);
         else
           display.fillRect(barPixel, BAR_Y, lastBarPixel - barPixel, BAR_HEIGHT, CHART_BACKGROUND_COLOR);
       } else if(lastAirCondition < airCondition)
-        display.fillRect(FIRST_SECTION_X, BAR_Y, barPixel - FIRST_SECTION_X, BAR_HEIGHT, PPM_COLOR_R);
+        display.fillRect(FIRST_SECTION_X, BAR_Y, barPixel - FIRST_SECTION_X, BAR_HEIGHT, COLOR_STATUS_RISK);
       else
         display.fillRect(barPixel, BAR_Y, lastBarPixel - barPixel, BAR_HEIGHT, CHART_BACKGROUND_COLOR);
     } else if(lastAirCondition < airCondition)
-      display.fillRect(BAR_START_X, BAR_Y, barPixel - BAR_START_X, BAR_HEIGHT, PPM_COLOR_N);
+      display.fillRect(BAR_START_X, BAR_Y, barPixel - BAR_START_X, BAR_HEIGHT, COLOR_STATUS_NORMAL);
     else
       display.fillRect(barPixel, BAR_Y, lastBarPixel - barPixel, BAR_HEIGHT, CHART_BACKGROUND_COLOR);
   } else if(lastState.getColor(COLORED_CHART) == state.getColor(COLORED_CHART) && !start) {
@@ -140,7 +150,3 @@ void DisplayV2::drawBar() {
   drawSections();
 }
 
-void DisplayV2::writeAnalogValue() {
-    display.fillRect(0, 0, 25, 10, BACKGROUND_COLOR);
-    dPrint(0, 0, 1, WHITE, analogRead(A0));
-}

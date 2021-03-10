@@ -31,7 +31,8 @@ extern int DisplayV1::lastPixel = 0;
   }
 
   boolean DisplayV1::getGraphData() {
-    DisplayVX::loop(general::mode.equals(CHART) && general::mode.equaled(CHART));
+    //general::mode.equals(CHART) && general::mode.equaled(CHART)
+    DisplayVX::handleData();
     if(averageData()) {
       fillData();
       return true;
@@ -43,8 +44,18 @@ extern int DisplayV1::lastPixel = 0;
     if(start) {
       drawDisplay();
       createLines();
-      DisplayVX::loop();
+      DisplayVX::handleData();
+      if(general::mode.equals(CHART)) {
+        DisplayVX::writeInfo();
+        DisplayVX::checkState();
+      }
       drawGraph();
+    } else {
+      if(general::mode.equals(CHART) && general::mode.equaled(CHART)) {
+        DisplayVX::writeInfo();
+        Serial.print(".-");
+        DisplayVX::checkState();
+        }
     }
     //graph
     if(changed)

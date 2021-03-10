@@ -180,7 +180,7 @@
     airCondition = (float) tempAirCondition / AVERAGING_MEASUREMENTS;
     airConditionTemp = (float) temptempAirCondition / AVERAGING_MEASUREMENTS;
     airConditionRaw = airCondition;*/
-    if(SENSORCONNECTED) {
+    // if(SENSORCONNECTED) {
       counter++;
       if(counter >= AVERAGING_MEASUREMENTS) {
         airCondition = MHZ19b.getCO2(true, true);
@@ -196,7 +196,7 @@
         return true;
       }
       return false;
-    }
+    // }
     airConditionLast = airCondition;
 //    airCondition = sensor.getPPM(temperature, humidity);
 

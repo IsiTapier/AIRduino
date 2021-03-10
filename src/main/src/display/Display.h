@@ -9,6 +9,7 @@
 #include "displayVX/DisplayVX.h"
 #include "displayV1/DisplayV1.h"
 #include "displayV2/DisplayV2.h"
+#include "displayV3/DisplayV3.h"
 #include "menu/Menu.h"
 #include "../util/Util.h"
 

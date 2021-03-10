@@ -16,7 +16,7 @@ class DisplayVX {
 
   public:
     static void setup();
-    static void loop(boolean draw = true);
+    static void handleData();
 
   protected:
     static void drawDisplay();
@@ -39,8 +39,6 @@ class DisplayVX {
     static short minutes;
     static boolean start;
     static boolean drop;
-  
-  private:
     static boolean lastError;
 
 };

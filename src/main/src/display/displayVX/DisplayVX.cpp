@@ -39,16 +39,12 @@ extern boolean DisplayVX::lastError = false;
     debug(DEBUG, SETUP, "");
   }
 
-  void DisplayVX::loop(boolean draw) {
+  void DisplayVX::handleData() {
     if(general::data.getValue())
       getData();
     else
       generateData(400, 1100, 30);
     //info
-    if(draw) {
-      writeInfo();
-      checkState();
-    }
   }
 
 

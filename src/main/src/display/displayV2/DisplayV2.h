@@ -17,7 +17,6 @@ class DisplayV2 : DisplayVX {
     static void drawBarBorder();
     static void drawSections();
     static void drawBar();
-    static void writeAnalogValue();
 
     static int barPixel;
     static int lastBarPixel;
