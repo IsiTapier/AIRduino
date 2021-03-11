@@ -84,6 +84,7 @@
       checkVentilating();
       setState();
       debugMeassure();
+      Serial.println((int)airCondition);
     }
   }
 
@@ -97,7 +98,7 @@
 
   void Meassure::calibrateMax() {
     if(requestDecision("Max Wert Kalibrierung", "Möchtest du fortfahren?")) {
-      // MHZ19b.zeroSpan(1000);
+      MHZ19b.zeroSpan(1000);
       debug(WARNING, SENSOR, "max value calibrated to 1000 PPM");
     }
     Menu::setup();
@@ -151,11 +152,12 @@
   */
 
   boolean Meassure::meassureAirCondition() {
-    if(SENSORCONNECTED) {
+    // if(SENSORCONNECTED) {
       counter++;
       if(counter >= AVERAGING_MEASUREMENTS) {
         airCondition = MHZ19b.getCO2(true, true);
         debug(SPAMM, SENSOR, "PPM: " + String(airCondition));
+        
         // Serial.println(airCondition);
         temperature = MHZ19b.getTemperature();
         // Serial.println(temperature);
@@ -167,7 +169,7 @@
         return true;
       }
       return false;
-    }
+    // }
     airConditionLast = airCondition;
 
     int time = floor(millis()/1000);

@@ -25,11 +25,13 @@
     if(WiFi.status() == WL_CONNECTED) {
       client.setServer(mqtt_server, 1883);
       client.setCallback(callback);
-      reconnect();
+      delay(500);
+      if(!client.connected())
+        reconnect();
       //connect client the first time
       while ((!client.connected()) && requestDecision("MQTT fehlgeschlagen", "erneut versuchen?", "Ja", "Nein")) {
         display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoBlatt);
-        for (int x = 0; (x <= 10) && (!client.connected()); x++) {
+        for (int x = 0; (x <= 5) && (!client.connected()); x++) {
           delay(500);
           Serial.print(".");
           reconnect();

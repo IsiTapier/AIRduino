@@ -85,17 +85,17 @@ void DisplayV3::writeInfoV3() {
       //Titles
       dPrint(lastState.getTitle(), DISPLAY_LENGTH/2, STATUS_MARGIN_TOP+25, 4, BLACK, 1);
       dPrint(state.getTitle(), DISPLAY_LENGTH/2, STATUS_MARGIN_TOP+25, 4, GREY, 1);
-
-
-      //Draw PPM
-      dPrint(lastppm, 157, 125, ERRORLAST ? PPM_SIZE-1+1 : PPM_SIZE+1, BLACK, 7);
-      dPrint(ppm, 157, 125, ERROR ? PPM_SIZE-1+1 : PPM_SIZE+1, state.getColor(true), 7);
     }
 
-    //Draw Bar
+    
     if(lastppm != ppm) {
+      //Draw PPM Value
+      dPrint(lastppm, 157, 125, ERRORLAST ? PPM_SIZE-1+1 : PPM_SIZE+1, BLACK, 7);
+      dPrint(ppm, 157, 125, ERROR ? PPM_SIZE-1+1 : PPM_SIZE+1, state.getColor(true), 7);
+
+      //Draw Bar
       //bar on the bottom
-      short x = map(airCondition, LIMIT_GOOD, LIMIT_PIEP, 0, DISPLAY_LENGTH);
+      short x = map(airCondition, LIMIT_GOOD - 200, LIMIT_PIEP, 0, DISPLAY_LENGTH);
       display.fillRect(0, 220, x, 20, state.getColor(true));
       display.fillRect(x+1, 220, DISPLAY_LENGTH-x, 20, BLACK);
       display.fillCircle(x, DISPLAY_HEIGHT, 20, state.getColor(true));
@@ -124,7 +124,7 @@ void DisplayV3::writeInfoV3() {
       time = time + 0;
     time = time + seconds;
 
-    Serial.println(ppm);
+    
     //Clear old Pixels
     //dPrint(lasttime, timeR_X, timeR_Y, timeR_SIZE, BAR_BACKGROUND_COLOR, 8);
     //write new Pixels

@@ -78,6 +78,7 @@ using namespace general;
       /*if(mode.getValue() == MENU) {
         Menu::loop();
       } else */
+
       if(mode.getValue() == MENU) {
         Menu::loop();
       } else if(mode.getValue() == CHART) {
