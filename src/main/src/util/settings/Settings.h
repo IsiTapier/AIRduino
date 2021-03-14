@@ -73,6 +73,7 @@ namespace colors {
 namespace developper {
   extern Setting calibrateMin;
   extern Setting calibrateMax;
+  extern Setting autoCalibrationMin;
 }
 
 #endif

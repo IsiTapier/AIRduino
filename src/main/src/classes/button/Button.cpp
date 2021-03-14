@@ -38,6 +38,7 @@
       case 0: ts.calibration(); break;
       case 1: Meassure::calibrateMin(); break;
       case 2: Meassure::calibrateMax(); break;
+      case 3: Meassure::autoCalibrationMin(); break;
       default: break;
     }
 

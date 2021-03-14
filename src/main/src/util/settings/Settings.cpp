@@ -47,6 +47,7 @@
 
   const std::vector<String> titlesCalibrateMin = {"calibrate Min"};
   const std::vector<String> titlesCalibrateMax = {"calibrate Max"};
+  const std::vector<String> titlesAutoMinCali = {"auto Min Calibration"};
 
   const std::vector<String> titles = {};
 
@@ -111,12 +112,12 @@ namespace general {
   Setting blink_thickness = Setting(NUMBER, "blink_thickness", titlesBlinkThickness, 2, "'Blink Boarder Thickness' changed", 1, 9);
   Setting ventilating_timeout = Setting(NUMBER, "ventilating_timeout", titlesVentilatingTimeout, 5, "'ventilatingTimeout' changed", 1, 9);
 
-  Setting debugPriority = Setting(MULTISELECT, "", titlesDebugPriority, 1, "'Debug' changed", 0, 6, namesDebugPriority);
-  Setting debugSetup = Setting(SWITCH, "", titlesDebugSetup, 1, "'Debug Setup' changed");
-  Setting debugSensor = Setting(SWITCH, "", titlesDebugSensor, 1, "'Debug Sensor' changed");
+  Setting debugPriority = Setting(MULTISELECT, "", titlesDebugPriority, 0, "'Debug' changed", 0, 6, namesDebugPriority);
+  Setting debugSetup = Setting(SWITCH, "", titlesDebugSetup, 0, "'Debug Setup' changed");
+  Setting debugSensor = Setting(SWITCH, "", titlesDebugSensor, 0, "'Debug Sensor' changed");
   Setting debugDisplay = Setting(SWITCH, "", titlesDebugDisplay, 0, "'Debug Display' changed");
-  Setting debugMenu = Setting(SWITCH, "", titlesDebugMenu, 1, "'Debug Menu' changed");
-  Setting debugTouch = Setting(SWITCH, "", titlesDebugTouch, 1, "'Debug Touch' changed");
+  Setting debugMenu = Setting(SWITCH, "", titlesDebugMenu, 0, "'Debug Menu' changed");
+  Setting debugTouch = Setting(SWITCH, "", titlesDebugTouch, 0, "'Debug Touch' changed");
   
   Setting debugDatabase = Setting(SWITCH, "", titlesDebugDatabase, 0, "'Debug Database' changed");
   Setting developperSettings = Setting(SWITCH, "", titlesDevelopperSettings, 0, "'Develop settings' changed");
@@ -159,4 +160,5 @@ namespace colorModes {
 namespace developper {
   Setting calibrateMin = Setting(ACTIVATOR, "", titlesCalibrateMin, 1);
   Setting calibrateMax = Setting(ACTIVATOR, "", titlesCalibrateMax, 2);
+  Setting autoCalibrationMin = Setting(ACTIVATOR, "", titlesAutoMinCali, 3);
 }

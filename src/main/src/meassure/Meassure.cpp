@@ -104,6 +104,45 @@
     Menu::setup();
   }
 
+  void Meassure::autoCalibrationMin() {
+    int average[30];
+    if(requestDecision("Auto Min Wert", "Möchtest du fortfahren?")) {
+      int counter = 1;
+      int value = 400;
+      while(true/* requestDecision("Round" + counter, "Möchtest du fortfahren?") */) {
+        Serial.println("AutoMinCali: Round" + (String) counter);
+        display.fillScreen(BLACK);
+        dPrint("Auto Min Cali", 20, 0, 3, CYAN);
+        dPrint("Round " + counter, 20, 40, 3, BLUE);
+        for(int x = 0; x < 30; x++) {
+          value = MHZ19b.getCO2(true, true);
+          average[x] = value;
+          if((value < 600) && (value > 200) && (x != 0)) {
+            average[x] = average[x-1];
+          }
+          display.fillRect(10, 80, 80, 80, BLACK);
+          dPrint(average[x], 20, 80, 3, LIME);
+          Serial.print((String) value + ", ");
+          delay(1000);
+        }
+        Serial.println();
+        int output = 0;
+        for(int x = 0; x < 30; x++) {
+          output += average[x];
+        }
+        output = output / 30;
+        if(output < 400) {
+          if(requestDecision("Average" + (String) output, "Möchtest du 0 punkt kallibrieren?")) {
+            MHZ19b.calibrate();
+            Serial.println("Auto callibrated Min Value");
+          }
+        }
+        counter++;
+
+      }
+    }
+  }
+
   //Getter
   State Meassure::getState() {
     return(state);
@@ -124,6 +163,7 @@
   unsigned long Meassure::getStartTime() {
     return(startTime);
   }
+  
 
   void Meassure::debugMeassure() {
 /*  if (general::debugSensor.getValue() && general::debugPriority.getValue()) {

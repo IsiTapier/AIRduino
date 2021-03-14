@@ -29,6 +29,7 @@ class Meassure {
     static int getHighest();
     static void calibrateMin();
     static void calibrateMax();
+    static void autoCalibrationMin();
 
   private:
     static void debugMeassure();
