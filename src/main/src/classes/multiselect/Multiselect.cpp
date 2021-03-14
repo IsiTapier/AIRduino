@@ -22,6 +22,8 @@ using namespace general;
   }
 
   void Multiselect::init() {
+    if(language.hasChanged())
+      write(language.hasChanged()?false:true);
     write(true);
   }
 

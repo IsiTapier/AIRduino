@@ -7,8 +7,8 @@
 
 #include "Arduino.h"
 
-#define GETLANGUAGE(vector) (vector.empty() ? "" : vector.at((vector.size() > general::language.getValue()) ? general::language.getValue() : 0))
-#define GETNAME(value) GETLANGUAGE((_names.size() == 0 ? _title : _names.at(value - _minValue < _names.size() && value - _minValue >= 0  ? value - _minValue > _maxValue ? _maxValue : value - _minValue : 0)))
+#define GETLANGUAGE(vector, reverse) (vector.empty() ? "" : vector.at((vector.size() > (general::language.hasChanged() && reverse ? general::language.getOldValue() : general::language.getValue()) ? (general::language.hasChanged() && reverse ? general::language.getOldValue() : general::language.getValue())  : 0)))
+#define GETNAME(value, reverse) GETLANGUAGE((_names.size() == 0 ? _title : _names.at(value - _minValue < _names.size() && value - _minValue >= 0  ? value - _minValue > _maxValue ? _maxValue : value - _minValue : 0)), reverse)
 
 enum SettingType {
   EMPTY,

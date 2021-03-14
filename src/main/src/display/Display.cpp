@@ -108,12 +108,12 @@ using namespace general;
           DisplayV3::setup();
           DisplayV3::loop();
         }
-      } else if(mode.getValue() == MENU && (theme.hasChanged() || mode.hasChanged())) {
+      } else if(mode.getValue() == MENU && (theme.hasChanged() || mode.hasChanged() || language.hasChanged())) {
         ledcDetachPin(PIEZO);
         Menu::setup();
       } else if(mode.getValue() == LOADINGSCREEN) {
         Serial.println("Restart");
-        ESP.restart();   
+        ESP.restart();
       } else if(mode.getValue() == RESET) {
         mode.setValue(mode.getOldValue());
         Menu::reset();

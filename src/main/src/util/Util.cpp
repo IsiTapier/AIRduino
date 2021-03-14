@@ -232,10 +232,14 @@
           p.calibrate();
           if(p.isTouching(0, 160, 120, 240)) {
             // Serial.println("true");
+             general::mode.setValue(LOADINGSCREEN);
+            general::mode.setValue(general::mode.getOldValue());
             return true;
           }
           if(p.isTouching(161, 320, 120, 240)) {
             // Serial.println("false");
+             general::mode.setValue(LOADINGSCREEN);
+            general::mode.setValue(general::mode.getOldValue());
             return false;
           }
           delay(10);

@@ -83,7 +83,7 @@ SettingType Setting::getType() {
 }
 
 String Setting::getTitle() {
-  return GETLANGUAGE(_title);
+  return GETLANGUAGE(_title, false);
 }
 
 short Setting::getSize() {
@@ -92,9 +92,9 @@ short Setting::getSize() {
 
 String Setting::getName(boolean reverse) {
   if(reverse)
-    return GETNAME(_type == SELECT ? !_value : _oldValue);
+    return GETNAME(_type == SELECT ? !_value : _oldValue, _type == SELECT ? false : reverse);
   else
-    return GETNAME(_value);
+    return GETNAME(_value, reverse);
 }
 
 boolean Setting::getColored() {

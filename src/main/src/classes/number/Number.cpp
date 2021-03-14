@@ -20,6 +20,8 @@
   }
 
   void Number::init() {
+    if(general::language.hasChanged())
+      write(true);
     draw();
   }
 
@@ -53,7 +55,6 @@
       display.pushImage(MENU_NUMBER_PLUS_START_X, MENU_INPUT_ICON_START_Y(_section), MENU_INPUT_ICON_LENGTH, MENU_INPUT_ICON_HEIGHT, plusLight, WHITE);
       display.pushImage(MENU_NUMBER_MINUS_START_X, MENU_INPUT_ICON_START_Y(_section), MENU_INPUT_ICON_LENGTH, MENU_INPUT_ICON_HEIGHT, minusLight, WHITE);
     }
-
     write(true);
   }
 
@@ -61,9 +62,13 @@
     String text;
     String oldText;
     if(init) {
-      text = _setting->getTitle();
-      oldText = " ";
-      dPrint(text, MENU_MARGIN_LEFT, MENU_SECTION_TEXT_Y(_section), MENU_NUMBER_TITLE_SIZE, TEXT_COLOR, 3);
+      text = _setting->getName();
+      if(general::language.hasChanged())
+        oldText = _setting->getName(true);
+      else
+        oldText = " ";
+      dPrint(text, MENU_MARGIN_LEFT, MENU_SECTION_TEXT_Y(_section), MENU_NUMBER_TITLE_SIZE, TEXT_COLOR, 3, BACKGROUND_COLOR, oldText, MENU_NUMBER_OLD_TITLE_SIZE);
+      oldText = "";
     } else
       oldText = String(_setting->getOldValue());
     text = String(_setting->getValue());

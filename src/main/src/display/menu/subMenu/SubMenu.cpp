@@ -14,8 +14,8 @@ SubMenu::SubMenu(const char* title, std::vector<MenuPage> pages, short defaultPa
 }
 
 void SubMenu::setup(boolean redraw) {
-  Serial.println("atest");
-  draw();
+  if(!language.hasChanged() || redraw)
+    draw();
   _pages.at(_currentPage).setup(redraw);
 }
 

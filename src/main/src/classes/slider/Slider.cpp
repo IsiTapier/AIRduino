@@ -22,8 +22,9 @@ using namespace general;
   }
 
   void Slider::init() {
+    if(language.hasChanged())
+      write();
     draw();
-    write(true);
   }
 
   void Slider::checkTouch(TSPoint p) {
@@ -40,6 +41,7 @@ using namespace general;
       debug(INFO, MENUD, "Value changed to", _setting->getValue());
     if(mode.equals(MENU) && active)
       draw();
+      write();
   }
 
   void Slider::changeValue() {
@@ -53,7 +55,7 @@ using namespace general;
     display.fillCircle(MENU_SLIDER_DOT_X(_setting->getValue()), MENU_SLIDER_DOT_Y(_section), MENU_SLIDER_DOT_RADIUS, MENU_SLIDER_DOT_COLOR(_setting->getValue(), _setting->getColored()));
     if(_setting->getColored())
       display.drawCircle(MENU_SLIDER_DOT_X(_setting->getValue()), MENU_SLIDER_DOT_Y(_section), MENU_SLIDER_DOT_RADIUS, TEXT_COLOR);
-    write();
+    write(true);
   }
 
   void Slider::write(boolean init) {

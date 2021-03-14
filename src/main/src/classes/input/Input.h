@@ -23,7 +23,7 @@ class Input {
     void handleTouch(TSPoint p);
 
   private:
-    void draw();
+    void draw(boolean redraw = false);
     void clear();
 
     byte _inputSection;

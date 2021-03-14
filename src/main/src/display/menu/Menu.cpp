@@ -73,7 +73,8 @@
 
   void Menu::setup() {
     debug(DEBUG, SETUP, "Menu SETUP started");
-    draw();
+    if(mode.hasChanged() || theme.hasChanged())
+      draw();
     subMenus[currentSubMenu].setup(true);
     debug(DEBUG, SETUP, "Menu SETUP completed");
   }
@@ -160,6 +161,7 @@
     /*if(currentSubMenu != DEFAULT_SUB_MENU)
       setSubMenu(DEFAULT_SUB_MENU);
     else*/
+    draw();
     for(int i = 0; i < sizeOf(subMenus); i++)
       subMenus[i].reset(general::mode.equals(MENU) ? i == currentSubMenu ? true : false : false);
   }

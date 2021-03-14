@@ -36,10 +36,10 @@ using namespace general;
   }
 
   void Input::setup(boolean redraw) {
-    if(!mode.hasChanged() && !theme.hasChanged() && !redraw)
+    if(!mode.hasChanged() && !theme.hasChanged() && !redraw && !language.hasChanged())
       clear();
     else
-      draw();
+      draw(redraw);
     if(_setting->getType() == SWITCH)
       _slider.init();
     else if(_setting->getType() == ACTIVATOR)
@@ -52,8 +52,8 @@ using namespace general;
       _select.init();
   }
 
-  void Input::draw() {
-    if(_inputSection != 0)
+  void Input::draw(boolean redraw) {
+    if(_inputSection != 0 && (mode.hasChanged() || redraw))
       display.fillRect(0, MENU_SECTION_Y(_inputSection), MENU_SECTION_LENGTH+1, MENU_SECTION_BORDER_THICKNESS, TEXT_COLOR);
     debug(INFO, MENUD, "Input:", _inputSection, "drawn");
   }
