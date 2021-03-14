@@ -26,9 +26,9 @@ using namespace general;
   }
 
   void Select::checkTouch(TSPoint p) {
-    if(p.isTouching(0, MENU_SELECT_LENGTH, MENU_SECTION_Y(_section), MENU_SECTION_END_Y(_section))) {
+    if(p.isTouching(0, MENU_SELECT_LENGTH, MENU_SECTION_Y(_section)+5, MENU_SECTION_END_Y(_section))) {
       setValue(false);
-    } else if(p.isTouching(MENU_SELECT_LENGTH, MENU_SELECT_LENGTH*2, MENU_SECTION_Y(_section), MENU_SECTION_END_Y(_section))) {
+    } else if(p.isTouching(MENU_SELECT_LENGTH, MENU_SELECT_LENGTH*2, MENU_SECTION_Y(_section)+5, MENU_SECTION_END_Y(_section))) {
       setValue(true);
     }
   }

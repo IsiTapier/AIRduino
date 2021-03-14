@@ -35,6 +35,7 @@ namespace general {
 
   extern Setting debugDatabase;
   extern Setting developperSettings;
+  extern Setting autoTimeReset;
 
   extern Setting mode;
   extern Setting maintenance_mode;

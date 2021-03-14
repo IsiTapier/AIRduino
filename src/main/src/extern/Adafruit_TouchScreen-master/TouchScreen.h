@@ -12,7 +12,7 @@ class TouchScreen;
 #include "../../util/Util.h"
 
 #define TOUCHINACURRACY 5
-#define ERRORBIAS 10
+#define ERRORBIAS 50
 extern int errorCounter;
 
 #if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega32U4__) ||              \

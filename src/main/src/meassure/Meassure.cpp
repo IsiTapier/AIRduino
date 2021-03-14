@@ -84,7 +84,6 @@
       checkVentilating();
       setState();
       debugMeassure();
-      Serial.println((int)airCondition);
     }
   }
 
@@ -98,7 +97,7 @@
 
   void Meassure::calibrateMax() {
     if(requestDecision("Max Wert Kalibrierung", "Möchtest du fortfahren?")) {
-      MHZ19b.zeroSpan(1000);
+      // MHZ19b.zeroSpan(1000);
       debug(WARNING, SENSOR, "max value calibrated to 1000 PPM");
     }
     Menu::setup();
@@ -197,20 +196,25 @@
       if(counter >= AVERAGING_MEASUREMENTS) {
         airCondition = MHZ19b.getCO2(true, true);
         debug(SPAMM, SENSOR, "PPM: " + String(airCondition));
-        
         // Serial.println(airCondition);
         temperature = MHZ19b.getTemperature();
         // Serial.println(temperature);
+
         //Wert smoothen;
         //airCondition = ALPHA_MEASUREMENTS * airCondition + (1 - ALPHA_MEASUREMENTS) * airConditionLast;
-        if(airCondition != 0 || temperature != 0)
+
+        if(SENSORERROR && !SENSORERRORLAST) {
+          airCondition = airConditionLast;
+          airConditionLast = 0;
+        } else
+          airConditionLast = airCondition;
+        if(airCondition != 0 /*|| temperature != 0*/)
           mysql_insert(device_class, airCondition, temperature);
         counter = 0;
         return true;
       }
       return false;
     // }
-    airConditionLast = airCondition;
 
     int time = floor(millis()/1000);
     if(lasttime != time) {
@@ -257,8 +261,10 @@
     if (gradient < MAX_DECREASE && state != VENTILATING) { // Wenn die Differenz die Hemmschwelle übersteigt: Wird Ventilating erkannt
       state = (State) VENTILATING;
       maxPPM = airCondition;
-      startTime = millis();
-      counter = 0;
+      if(general::autoTimeReset.getValue()) {
+        startTime = millis();
+        counter = 0;
+      }
       debug(INFO, SENSOR, "VENTILATING");
     }
 
@@ -270,12 +276,12 @@
         //Wenn
         minPPM = ALPHA_LOWEST * airCondition + (1 - ALPHA_LOWEST) * minPPM;
       }
-
       state = (State) (States) 0;
       timer = 0;
-      startTime = millis();
-
-
+      if(general::autoTimeReset.getValue()) {
+        startTime = millis();
+        counter = 0;
+      }
     } else if (gradient == 0 && timer == 0 && state == VENTILATING) {
       //Wenn der Graph nicht mehr steigt und der Timer noch nicht gestartet wurde
       //Ziel nach gewisser Zeit kein Abstieg -> Timer für Timeout wird gestartet

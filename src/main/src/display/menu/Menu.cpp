@@ -33,7 +33,8 @@
         ),
         MenuPage(
           Input(&general::debugDatabase),
-          Input(&general::developperSettings)
+          Input(&general::developperSettings),
+          Input(&general::autoTimeReset)
         )
     })},
     {SubMenu("Farb-Modi", {
@@ -145,10 +146,10 @@
   }
 
   boolean Menu::checkTouch(TSPoint p) {
-    if(p.isTouching(MENU_ARROW_LEFT_START_X, MENU_ARROW_LEFT_END_X, MENU_ARROW_LEFT_START_Y, MENU_ARROW_LEFT_END_Y)) {
+    if(p.isTouching(MENU_ARROW_LEFT_START_X-3, MENU_ARROW_LEFT_END_X+3, MENU_ARROW_LEFT_START_Y-3, MENU_ARROW_LEFT_END_Y+3)) {
       shiftSubMenu(true);
       return(true);
-    } else if(p.isTouching(MENU_ARROW_RIGHT_START_X, MENU_ARROW_RIGHT_END_X, MENU_ARROW_RIGHT_START_Y, MENU_ARROW_RIGHT_END_Y)) {
+    } else if(p.isTouching(MENU_ARROW_RIGHT_START_X-3, MENU_ARROW_RIGHT_END_X+3, MENU_ARROW_RIGHT_START_Y-3, MENU_ARROW_RIGHT_END_Y+3)) {
       shiftSubMenu(false);
       return(true);
     } else

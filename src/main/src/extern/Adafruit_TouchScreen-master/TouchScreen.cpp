@@ -45,7 +45,8 @@ void TSPoint::calibrate() {
       errorCounter = 0;
     if(errorCounter >= ERRORBIAS) {
       errorCounter = 0;
-      ts.calibration();
+      Serial.println("WARNING: touch calibration needed");
+      //ts.calibration();
     }
     print();
   }
@@ -66,6 +67,19 @@ void TSPoint::print() {
 
 boolean TSPoint::isTouching(int startx, int endx, int starty, int endy) {
   if (z < MINPRESSURE || z > MAXPRESSURE) {
+    /*Serial.print((int)floor(millis()/1000));
+    Serial.print(" ");
+    Serial.print(z);
+    if(xc != 0) {
+      Serial.print(" ");
+      Serial.print(xc);
+      Serial.print(" ");
+      Serial.print(yc);
+    }
+    Serial.println();*/
+    if(startx != 0)
+      display.drawRect(startx, starty, endx - startx, endy - starty, BLUE);
+      display.drawRect(startx-TOUCH_INACCURACY, starty-TOUCH_INACCURACY, endx-startx+2*TOUCH_INACCURACY, endy-starty+2*TOUCH_INACCURACY, RED);
     if(((xc + TOUCH_INACCURACY >= startx && xc - TOUCH_INACCURACY <= endx) || xc == 0) && ((yc + TOUCH_INACCURACY >= starty && yc - TOUCH_INACCURACY <= endy) || yc == 0))
       return(true);
   }

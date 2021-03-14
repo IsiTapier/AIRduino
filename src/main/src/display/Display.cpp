@@ -134,9 +134,11 @@ using namespace general;
       // pressure of 0 means no pressing!
       //template:: p.isTouching(PLACEHOLDER_PLACE_START_X, PLACEHOLDER_PLACE_END_X, PLACEHOLDER_PLACE_START_Y, PLACEHOLDER_PLACE_END_Y)
       if(p.isTouching() && millis()-lastTouch >= TOUCH_COOLDOWN && millis() > lastTouch) {
-        lastTouch = millis();
         p.calibrate();
-        if(p.isTouching(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_END_X, MENU_ARROW_BACK_START_Y, MENU_ARROW_BACK_END_Y)) {
+        if(!p.isTouching())
+          return;
+        lastTouch = millis();
+        if(p.isTouching(MENU_ARROW_BACK_START_X-3, MENU_ARROW_BACK_END_X+3, MENU_ARROW_BACK_START_Y-3, MENU_ARROW_BACK_END_Y+3)) {
           if(debugSetup.getValue())
             debug(INFO, SETUP, "change Mode");
           if(mode.equals(MENU))
@@ -145,7 +147,7 @@ using namespace general;
             mode.setValue(MENU);
           lastModeChange = millis();
           lastTouch+=500;
-        } else if(p.isTouching(MENU_ARROW_RESET_START_X, MENU_ARROW_RESET_END_X, MENU_ARROW_RESET_START_Y, MENU_ARROW_RESET_END_Y)) {
+        } else if(p.isTouching(MENU_ARROW_RESET_START_X-3, MENU_ARROW_RESET_END_X+3, MENU_ARROW_RESET_START_Y-3, MENU_ARROW_RESET_END_Y+3)) {
           if(mode.equals(MENU) && requestDecision("Einstellungs Reset", "Willst du fortfahren?")) {
             if(debugSetup.getValue())
               debug(WARNING, SETUP, "reset");

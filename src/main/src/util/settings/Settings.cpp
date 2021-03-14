@@ -31,6 +31,7 @@
 
   const std::vector<String> titlesDebugDatabase = {"Debug Datenbank", "debug database"};
   const std::vector<String> titlesDevelopperSettings = {"Develop Settings"};
+  const std::vector<String> titlesAutoTimeReset = {"auto Zeit reset", "auto time reset"};
 
   const std::vector<String> titlesMode = {"Modus", "mode", "mode", "pantun", "moda"};
   const std::vector<String> titlesMaintenanceMode = {"Wartungsmodus", "maintance mode", "mode de maintenance", "mode pangop"+ag+"nan", "mode de mantenimiento"};
@@ -75,6 +76,7 @@
 
   const std::vector<std::vector<String>> namesDebugDatabase = {};
   const std::vector<std::vector<String>> namesDevelopperSettings = {};
+  const std::vector<std::vector<String>> namesAutoTimeReset = {};
 
   const std::vector<std::vector<String>> namesMode = {};
   const std::vector<std::vector<String>> namesMaintenanceMode = {};
@@ -121,6 +123,7 @@ namespace general {
   
   Setting debugDatabase = Setting(SWITCH, "", titlesDebugDatabase, 0, "'Debug Database' changed");
   Setting developperSettings = Setting(SWITCH, "", titlesDevelopperSettings, 0, "'Develop settings' changed");
+  Setting autoTimeReset = Setting(SWITCH, "", titlesAutoTimeReset, 1, "'Auto Time Reset' changed");
 
   Setting mode = Setting(MULTISELECT, "mode", titlesMode, MENU, "'Mode' changed", 0, 4);
   Setting maintenance_mode = Setting(MULTISELECT, "maintenance_mode", titlesMaintenanceMode, 0, "'Wartungsmodus' changed", 0, 3);

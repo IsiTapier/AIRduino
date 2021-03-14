@@ -14,6 +14,8 @@
 
 #define RANGE 2000
 #define SENSORCONNECTED (MHZ19b.errorCode == RESULT_OK)
+#define SENSORERROR (airCondition <= 0)
+#define SENSORERRORLAST (airConditionLast <= 0)
 
 class Meassure {
 
@@ -67,7 +69,6 @@ class Meassure {
    
     static int testCounter;
     static unsigned long lasttime;
-
 };
 
 #endif

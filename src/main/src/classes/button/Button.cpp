@@ -20,7 +20,7 @@
   }
 
   void Button::checkTouch(TSPoint p) {
-    if(p.isTouching(0, MENU_SECTION_LENGTH, MENU_SECTION_Y(_section), (MENU_SECTION_Y(_section) + MENU_SECTION_HEIGHT))) {
+    if(p.isTouching(0, MENU_SECTION_LENGTH, MENU_SECTION_Y(_section)+5, (MENU_SECTION_Y(_section) + MENU_SECTION_HEIGHT))) {
       execute();
        // TODO universal
       if(strlen(_setting->getDebugMessage()) != 0)
