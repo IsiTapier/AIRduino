@@ -42,7 +42,6 @@ void DisplayV2::loop() {
   } else {
       if(general::mode.equals(CHART) && general::mode.equaled(CHART)) {
         DisplayVX::writeInfo();
-        Serial.print(".-");
         DisplayVX::checkState();
         }
     }

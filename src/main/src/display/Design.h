@@ -59,7 +59,7 @@
 #define TS_MAXX 740
 #define TS_MAXY 540
 
-#define TOUCH_INACCURACY 5
+#define TOUCH_INACCURACY 3
 #define TOUCH_INACCURACY_X TOUCH_INACCURACY
 #define TOUCH_INACCURACY_Y TOUCH_INACCURACY
 
@@ -231,17 +231,17 @@
 #define PPM_MARGIN_LEFT            DISPLAY_MARGIN_LEFT
 #define PPM_MARGIN_BOTTOM          DISPLAY_MARGIN_BOTTOM
 #define PPM_MARGIN_RIGHT           DISPLAY_MARGIN_RIGHT
-#define PPM_LENGTH                 round(DISPLAY_LENGTH * 0.5)
+#define PPM_LENGTH                 round(DISPLAY_LENGTH * 0.4)
 #define PPM_HEIGHT                 round(DISPLAY_HEIGHT * 0.2)
 #define PPM_Y                      round(DISPLAY_HEIGHT - (DATABOX_HEIGHT - PPM_SIZE*(LETTER_HEIGHT + 1))/2)
-#define PPM_SIZE                   SIZE(0, PPM_HEIGHT, 0)
+#define PPM_SIZE                   SIZE(PPM_LENGTH, PPM_HEIGHT, 5)
 #define PPM_STRING_X               (PPM_MARGIN_LEFT + (3*LETTER_LENGTH - 1)*PPM_SIZE + PPM_MARGIN_RIGHT)
 #define PPM_STRING_Y               (PPM_Y - PPM_MARGIN_BOTTOM)
 #define PPM_STRING_SIZE            SIZE((PPM_LENGTH - PPM_STRING_X), 0, 3)
 //Timer
 #define TIMER_MARGIN_RIGHT         DISPLAY_MARGIN_RIGHT
 #define TIMER_MARGIN_BOTTOM        DISPLAY_MARGIN_BOTTOM
-#define TIMER_LENGTH               round(DISPLAY_LENGTH * 0.4)
+#define TIMER_LENGTH               round(DISPLAY_LENGTH * 0.6)
 #define TIMER_HEIGHT               round(DISPLAY_HEIGHT * 0.2)
 #define TIMER_X                    (DISPLAY_LENGTH - TIMER_MARGIN_RIGHT)
 #define TIMER_Y                    round(DISPLAY_HEIGHT - (DATABOX_HEIGHT - TIMER_SIZE*(LETTER_HEIGHT + 1))/2)

@@ -27,7 +27,7 @@ using namespace general;
   }
 
   void Slider::checkTouch(TSPoint p) {
-    if(p.isTouching(MENU_SLIDER_START_X, MENU_SLIDER_END_X, MENU_SLIDER_START_Y(_section), MENU_SLIDER_END_Y(_section))) {
+    if(p.isTouching(MENU_SLIDER_START_X-5, MENU_SLIDER_END_X+5, MENU_SLIDER_START_Y(_section)-5, MENU_SLIDER_END_Y(_section)+5)) {
       changeValue();
       if(strlen(_setting->getDebugMessage()) != 0)
         debug(DEBUG, MENUD, _setting->getDebugMessage());

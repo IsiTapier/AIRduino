@@ -14,6 +14,7 @@ SubMenu::SubMenu(const char* title, std::vector<MenuPage> pages, short defaultPa
 }
 
 void SubMenu::setup(boolean redraw) {
+  Serial.println("atest");
   draw();
   _pages.at(_currentPage).setup(redraw);
 }
@@ -69,10 +70,10 @@ void SubMenu::handleTouch(TSPoint p) {
 }
 
 boolean SubMenu::checkTouch(TSPoint p) {
-  if(p.isTouching(MENU_ARROW_UP_START_X, MENU_ARROW_UP_END_X, MENU_ARROW_UP_START_Y, MENU_ARROW_UP_END_Y)) {
+  if(p.isTouching(MENU_ARROW_UP_START_X-5, MENU_ARROW_UP_END_X+5, MENU_ARROW_UP_START_Y-5, MENU_ARROW_UP_END_Y+5)) {
     shiftPage(true);
     return(true);
-  } else if(p.isTouching(MENU_ARROW_DOWN_START_X, MENU_ARROW_DOWN_END_X, MENU_ARROW_DOWN_START_Y, MENU_ARROW_DOWN_END_Y)) {
+  } else if(p.isTouching(MENU_ARROW_DOWN_START_X-5, MENU_ARROW_DOWN_END_X+5, MENU_ARROW_DOWN_START_Y-5, MENU_ARROW_DOWN_END_Y+5)) {
     shiftPage(false);
     return(true);
   } else
