@@ -13,11 +13,11 @@
           Input(&general::sound),
           Input(&general::blink),
           Input(&general::data),
-          Input(&general::empty)
+          Input(&general::autoTimeReset)
         ),
         MenuPage(
           Input(&general::language),
-          //Input(&general::kernMode),
+          Input(&general::empty),//Input(&general::kernMode),
           Input(&general::graph_speed),
           Input(&general::segments),
           Input(&general::blink_thickness),
@@ -33,8 +33,7 @@
         ),
         MenuPage(
           Input(&general::debugDatabase),
-          Input(&general::developperSettings),
-          Input(&general::autoTimeReset)
+          Input(&general::developperSettings)
         )
     })},
     {SubMenu("Farb-Modi", {
