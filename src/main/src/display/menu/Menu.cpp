@@ -13,11 +13,11 @@
           Input(&general::sound),
           Input(&general::blink),
           Input(&general::data),
-          Input(&general::calibrateTouch)
+          Input(&general::empty)
         ),
         MenuPage(
           Input(&general::language),
-          Input(&general::kernMode),
+          //Input(&general::kernMode),
           Input(&general::graph_speed),
           Input(&general::segments),
           Input(&general::blink_thickness),
@@ -66,7 +66,9 @@
         MenuPage(
           Input(&developper::calibrateMin),
           Input(&general::empty),
-          Input(&developper::calibrateMax)
+          Input(&developper::calibrateMax),
+          Input(&general::empty),
+          Input(&general::calibrateTouch)
         )
     }, 0, 1)}
   };

@@ -56,7 +56,7 @@
     Serial1.begin(MHZ19BAUDRATE);
     MHZ19b.begin(Serial1);
     while (!SENSORCONNECTED && requestDecision("Sensor nicht verbunden", "erneut versuchen?", "Ja", "Nein")) {
-      display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoBlatt);
+      drawLogo();
       Serial.print("connecting to sensor");
       for (int x = 0; x <= 10; x++) {
         delay(500);
@@ -196,7 +196,7 @@
       if(counter >= AVERAGING_MEASUREMENTS) {
         airCondition = MHZ19b.getCO2(true, true);
         debug(SPAMM, SENSOR, "PPM: " + String(airCondition));
-        // Serial.println(airCondition);
+        //  Serial.println(airCondition);
         temperature = MHZ19b.getTemperature();
         // Serial.println(temperature);
 

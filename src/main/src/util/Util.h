@@ -93,4 +93,5 @@
   void writeLoadingScreenTitle();
   void writeLoadingAnimation(int c1, int c2, int c3);
   boolean requestDecision(String topic, String question, String op1 = "ja", String op2 = "nein");
+  void drawLogo();
 #endif

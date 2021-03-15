@@ -102,13 +102,13 @@ namespace general {
 
   Setting version = Setting(MULTISELECT, "version", titlesVersion, 1, "'Version' changed", 1, 3, namesVersion, false);
   Setting theme = Setting(SELECT, "theme", titlesTheme, 1, "'Theme' changed", 0, 1, namesTheme);
-  Setting sound = Setting(SWITCH, "sound", titlesSound, 1, "'Piezo' changed");
+  Setting sound = Setting(SWITCH, "sound", titlesSound, 0, "'Piezo' changed");
   Setting blink = Setting(SWITCH, "blink", titlesBlink, 1, "'Blink' changed");
   Setting data = Setting(SWITCH, "", titlesData, 1, "Data gettering changed", 0, 1, namesData); //TODO: connect to database
   Setting calibrateTouch = Setting(ACTIVATOR, "", titlesCalibrateTouch, 0);
 
   Setting language = Setting(MULTISELECT, "language", titlesLanguage, 0, "'Status' changed", 0, 5, namesLanguage);
-  Setting kernMode = Setting(SWITCH, "", titlesKernMode, 0, "'Kern Modus' changed");
+  // Setting kernMode = Setting(SWITCH, "", titlesKernMode, 0, "'Kern Modus' changed");
   Setting graph_speed = Setting(NUMBER, "graph_speed", titlesGraphSpeed, 5, "'Graph Speed' changed", 1, 9);
   Setting segments = Setting(NUMBER, "segments", titlesSegments, 6, "'Segments' changed", 1, 6);
   Setting blink_thickness = Setting(NUMBER, "blink_thickness", titlesBlinkThickness, 2, "'Blink Boarder Thickness' changed", 1, 9);
@@ -123,8 +123,8 @@ namespace general {
   
   Setting debugDatabase = Setting(SWITCH, "", titlesDebugDatabase, 0, "'Debug Database' changed");
   Setting developperSettings = Setting(SWITCH, "", titlesDevelopperSettings, 0, "'Develop settings' changed");
-  Setting autoTimeReset = Setting(SWITCH, "", titlesAutoTimeReset, 1, "'Auto Time Reset' changed");
-
+  Setting autoTimeReset = Setting(SWITCH, "", titlesAutoTimeReset, 0, "'Auto Time Reset' changed");
+  
   Setting mode = Setting(MULTISELECT, "mode", titlesMode, MENU, "'Mode' changed", 0, 4);
   Setting maintenance_mode = Setting(MULTISELECT, "maintenance_mode", titlesMaintenanceMode, 0, "'Wartungsmodus' changed", 0, 3);
 }

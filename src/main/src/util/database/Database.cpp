@@ -30,7 +30,7 @@
         reconnect();
       //connect client the first time
       while ((!client.connected()) && requestDecision("MQTT fehlgeschlagen", "erneut versuchen?", "Ja", "Nein")) {
-        display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoBlatt);
+        drawLogo();
         for (int x = 0; (x <= 5) && (!client.connected()); x++) {
           delay(500);
           Serial.print(".");
@@ -43,7 +43,7 @@
         do{
           if(millis()-timeout >= 1000)
             timeout = millis();
-          display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoBlatt);
+          drawLogo();
           client.loop();
         } while(!configReceived && (millis()-timeout < 1000 || requestDecision("Config nicht geladen", "erneut versuchen?", "Ja", "Nein")));
       }
@@ -219,7 +219,7 @@
     delay(500);
     WiFi.begin(ssid, password);
     while ((WiFi.status() != WL_CONNECTED) && requestDecision("Wifi fehlgeschlagen", "erneut versuchen?", "Ja", "Nein")) {
-      display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoBlatt);
+      drawLogo();
       for(int z = 0; (z <= 2) && (WiFi.status() != WL_CONNECTED); z++) {
         WiFi.begin(ssid, password);
         for (int x = 0; (x <= 5) && (WiFi.status() != WL_CONNECTED); x++) {

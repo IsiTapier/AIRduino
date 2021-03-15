@@ -234,7 +234,7 @@
             // Serial.println("true");
              general::mode.setValue(LOADINGSCREEN);
             general::mode.setValue(general::mode.getOldValue());
-            return true;
+             return true;
           }
           if(p.isTouching(161, 320, 120, 240)) {
             // Serial.println("false");
@@ -247,3 +247,9 @@
       }
     }
   }
+
+void drawLogo() {
+  display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoKreis);
+  dPrint("AIR", 160, 120, 5, LIGHT_BLUE, 7);
+  dPrint("duino", 160, 120, 4, GREY, 1);
+}

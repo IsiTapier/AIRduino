@@ -21,7 +21,7 @@ using namespace general;
     display.setRotation(ROTATION);
     debug(INFO, SETUP, "Display initialized");
     //Logo
-    display.pushImage(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, logoBlatt);
+    drawLogo();
     eeprom();
     /*unsigned long begin = millis();
     while(millis() - begin > 2000) {
@@ -31,13 +31,16 @@ using namespace general;
         break;
       }
     }*/
-    setupDatabaseConnection();
+    //setupDatabaseConnection();
     mode.setValue(LOADINGSCREEN, false);
     mode.setValue(CHART);
     debug(DEBUG, SETUP, "Display SETUP completed");
     debug(DEBUG, SETUP, "");
     delay(1000);
     Meassure::setup();
+
+    drawLogo();
+    delay(10000);
   }
 
   void Display::eeprom() {
@@ -67,7 +70,7 @@ using namespace general;
   void Display::loop() {
     while((millis()-Meassure::getStartTime())%STAGE_TIME > 0) {}
     delay(1);
-    client.loop();
+    // client.loop();
     handleTouch();
     initDisplay();
     counter++;
@@ -170,3 +173,5 @@ using namespace general;
       p = ts.getPoint();
     }
   }
+
+
