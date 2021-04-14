@@ -39,6 +39,7 @@
       case 1: Meassure::calibrateMin(); break;
       case 2: Meassure::calibrateMax(); break;
       case 3: Meassure::autoCalibrationMin(); break;
+      case 4: break; //Report System
       default: break;
     }
 

@@ -32,6 +32,7 @@
   void config_request();
   void maintenanceMode();
   void subToConfigChannel();
+  void subToCaliChannel();
   void subscribeToMaintenanceCheck();
   void config_update(String column, String value);
   void config_update(String column, int value);

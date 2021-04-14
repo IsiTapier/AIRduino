@@ -32,6 +32,7 @@ class Meassure {
     static void calibrateMin();
     static void calibrateMax();
     static void autoCalibrationMin();
+    static MHZ19 getSensor();
 
   private:
     static void debugMeassure();

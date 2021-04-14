@@ -14,6 +14,7 @@
   const std::vector<String> titlesBlink = {"Blinken", "blink", "clignoter", "lampu kilat", "destello"};
   const std::vector<String> titlesData = {"Daten", "data", "donn"+ea+"es", "data", "datos"};
   const std::vector<String> titlesCalibrateTouch = {"Touch kalibrieren", "calibrate Touch", "calibrage tactile", "tutul kalibrasi", "calibrar el tacto"};
+  const std::vector<String> titlesReportSystem = {"Report System"};
 
   const std::vector<String> titlesLanguage = {"Sprache", "language", "langue", "basa", "idioma"};
   const std::vector<String> titlesKernMode = {"Kern Modus", "Kern mode", "mode de Kern", "mode Kern", "modo de Kern"};
@@ -123,10 +124,11 @@ namespace general {
   
   Setting debugDatabase = Setting(SWITCH, "", titlesDebugDatabase, 0, "'Debug Database' changed");
   Setting developperSettings = Setting(SWITCH, "", titlesDevelopperSettings, 0, "'Develop settings' changed");
-  Setting autoTimeReset = Setting(SWITCH, "", titlesAutoTimeReset, 0, "'Auto Time Reset' changed");
+  Setting autoTimeReset = Setting(SWITCH, "", titlesAutoTimeReset, 1, "'Auto Time Reset' changed");
   
   Setting mode = Setting(MULTISELECT, "mode", titlesMode, MENU, "'Mode' changed", 0, 4);
   Setting maintenance_mode = Setting(MULTISELECT, "maintenance_mode", titlesMaintenanceMode, 0, "'Wartungsmodus' changed", 0, 3);
+  Setting reportSystem = Setting(ACTIVATOR, "", titlesReportSystem, 4);
 }
 
 namespace colorModes {

@@ -39,6 +39,7 @@ namespace general {
 
   extern Setting mode;
   extern Setting maintenance_mode;
+  extern Setting reportSystem;
 }
 
 namespace colorModes {

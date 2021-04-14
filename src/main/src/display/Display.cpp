@@ -31,7 +31,7 @@ using namespace general;
         break;
       }
     }*/
-    //setupDatabaseConnection();
+    setupDatabaseConnection();
     mode.setValue(LOADINGSCREEN, false);
     mode.setValue(CHART);
     debug(DEBUG, SETUP, "Display SETUP completed");
@@ -40,7 +40,7 @@ using namespace general;
     Meassure::setup();
 
     drawLogo();
-    delay(10000);
+    
   }
 
   void Display::eeprom() {
@@ -70,7 +70,7 @@ using namespace general;
   void Display::loop() {
     while((millis()-Meassure::getStartTime())%STAGE_TIME > 0) {}
     delay(1);
-    // client.loop();
+    client.loop();
     handleTouch();
     initDisplay();
     counter++;

@@ -65,6 +65,7 @@
       Serial.println();
       MHZ19b.begin(Serial1);
     }
+    drawLogo();
     if(SENSORCONNECTED) {
       MHZ19b.autoCalibration(false);
       debug(INFO, SENSOR, "ABC Status: " + MHZ19b.getABC() ? "ON" : "OFF");  // now print it's status
@@ -72,9 +73,17 @@
       // MHZ19b.calibrate();
       // MHZ19b.zeroSpan(1000);
     }
+
     startTime = millis();
     debug(DEBUG, SETUP, "Meassure SETUP ended");
     debug(DEBUG, SETUP, "");
+
+    //TODO
+    if(SENSORCONNECTED && false) {
+      for(int x = 0; x <= 180 && ((MHZ19b.getCO2(true, true) > 4000) || (MHZ19b.getCO2(true, true) < 5)); x++) {
+        delay(1000);
+      }
+    }
   }
 
   void Meassure::loop() {
@@ -97,7 +106,7 @@
 
   void Meassure::calibrateMax() {
     if(requestDecision("Max Wert Kalibrierung", "Möchtest du fortfahren?")) {
-      // MHZ19b.zeroSpan(1000);
+      MHZ19b.zeroSpan(1000);
       debug(WARNING, SENSOR, "max value calibrated to 1000 PPM");
     }
     Menu::setup();
@@ -199,6 +208,7 @@
         //  Serial.println(airCondition);
         temperature = MHZ19b.getTemperature();
         // Serial.println(temperature);
+
 
         //Wert smoothen;
         //airCondition = ALPHA_MEASUREMENTS * airCondition + (1 - ALPHA_MEASUREMENTS) * airConditionLast;
@@ -302,4 +312,8 @@
     startTime = millis();
     if(cycle)
     counter = -1;
+  }
+
+  MHZ19 Meassure::getSensor() {
+    return Meassure::MHZ19b;
   }

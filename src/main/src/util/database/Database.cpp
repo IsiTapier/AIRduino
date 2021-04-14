@@ -46,6 +46,7 @@
           drawLogo();
           client.loop();
         } while(!configReceived && (millis()-timeout < 1000 || requestDecision("Config nicht geladen", "erneut versuchen?", "Ja", "Nein")));
+        subToCaliChannel();
       }
     }
   }
@@ -133,6 +134,15 @@
         }
       }
     }
+
+    if(topic == "cali/low/" + device_class) {
+      Meassure::getSensor().calibrate();
+      Serial.println("Forced Min Cali via MQTT");
+    }
+    if(topic == "cali/high/" + device_class) {
+      Meassure::getSensor().zeroSpan();
+      Serial.println("Forced Min Cali via MQTT");
+    }
   }
 
   void maintenanceMode() {
@@ -166,6 +176,17 @@
     String sub_config_get = "config/get/" + device_id;
     client.subscribe(sub_config_get.c_str());
     debug(INFO, SETUP, "Subscribed to: " + sub_config_get);
+  }
+
+  void subToCaliChannel() {
+    String topic = "cali/low/" + device_class;
+    client.subscribe(topic.c_str());
+    debug(INFO, SETUP, "Subscribed to: " + topic);
+    Serial.println(topic);
+    topic = "cali/high/" + device_class;
+    client.subscribe(topic.c_str());
+    debug(INFO, SETUP, "Subscribed to: " + topic);
+    Serial.println(topic);
   }
 
   void subscribeToMaintenanceCheck() {
@@ -217,7 +238,13 @@
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, password);
     delay(500);
-    WiFi.begin(ssid, password);
+    for(int z = 0; (z <= 2) && (WiFi.status() != WL_CONNECTED); z++) {
+      WiFi.begin(ssid, password);
+      for (int x = 0; (x <= 5) && (WiFi.status() != WL_CONNECTED); x++) {
+        delay(400);
+        Serial.print(".");
+      }
+    }
     while ((WiFi.status() != WL_CONNECTED) && requestDecision("Wifi fehlgeschlagen", "erneut versuchen?", "Ja", "Nein")) {
       drawLogo();
       for(int z = 0; (z <= 2) && (WiFi.status() != WL_CONNECTED); z++) {

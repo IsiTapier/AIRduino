@@ -220,6 +220,7 @@
     dPrint(op1, 0, 240, 4, GREEN, 6);
     dPrint(op2, 320, 240, 4, RED, 8);
     TSPoint p = ts.getPoint();
+    //TODO timeout
     while(true) {
       while(p.isTouching()) {
         p = ts.getPoint();
