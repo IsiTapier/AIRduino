@@ -56,10 +56,12 @@
     Serial.print(topic_char);
     Serial.print(") ");
     Serial.print(":: ");
+
+    String payload_string = "";
     for (int i = 0; i < length; i++) {
-      Serial.print((char)payload[i]);
+      payload_string = payload_string + "" + (char)payload[i];
     }
-    Serial.println();
+    Serial.println(payload_string);
 
     //get Topic as a String
     String topic = "";
@@ -140,8 +142,14 @@
       Serial.println("Forced Min Cali via MQTT");
     }
     if(topic == "cali/high/" + device_class) {
-      Meassure::getSensor().zeroSpan();
-      Serial.println("Forced Min Cali via MQTT");
+      int value = atoi(payload_string.c_str());
+      Serial.println(value);
+      Meassure::getSensor().zeroSpan(value);
+      Serial.println("Forced Max Cali via MQTT");
+    }
+    if(topic == "cali/touch/" + device_class) {
+      Serial.println("Forced Touch Calibration via MQTT");
+      ts.calibration();   
     }
   }
 
@@ -187,6 +195,12 @@
     client.subscribe(topic.c_str());
     debug(INFO, SETUP, "Subscribed to: " + topic);
     Serial.println(topic);
+
+    topic = "cali/touch/" + device_class;
+    client.subscribe(topic.c_str());
+    debug(INFO, SETUP, "Subscribed to: " + topic);
+    Serial.println(topic);
+
   }
 
   void subscribeToMaintenanceCheck() {
