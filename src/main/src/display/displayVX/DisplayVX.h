@@ -39,6 +39,8 @@ class DisplayVX {
     static short minutes;
     static boolean start;
     static boolean drop;
+    static short peep;
+    static short peepCounter;
 
 };
 

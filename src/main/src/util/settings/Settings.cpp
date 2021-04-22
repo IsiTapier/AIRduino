@@ -103,7 +103,7 @@ namespace general {
 
   Setting version = Setting(MULTISELECT, "version", titlesVersion, 1, "'Version' changed", 1, 3, namesVersion, false);
   Setting theme = Setting(SELECT, "theme", titlesTheme, 1, "'Theme' changed", 0, 1, namesTheme);
-  Setting sound = Setting(SWITCH, "sound", titlesSound, 0, "'Piezo' changed");
+  Setting sound = Setting(SWITCH, "sound", titlesSound, 1, "'Piezo' changed");
   Setting blink = Setting(SWITCH, "blink", titlesBlink, 1, "'Blink' changed");
   Setting data = Setting(SWITCH, "", titlesData, 1, "Data gettering changed", 0, 1, namesData); //TODO: connect to database
   Setting calibrateTouch = Setting(ACTIVATOR, "", titlesCalibrateTouch, 0);
@@ -115,9 +115,9 @@ namespace general {
   Setting blink_thickness = Setting(NUMBER, "blink_thickness", titlesBlinkThickness, 2, "'Blink Boarder Thickness' changed", 1, 9);
   Setting ventilating_timeout = Setting(NUMBER, "ventilating_timeout", titlesVentilatingTimeout, 5, "'ventilatingTimeout' changed", 1, 9);
 
-  Setting debugPriority = Setting(MULTISELECT, "", titlesDebugPriority, 0, "'Debug' changed", 0, 6, namesDebugPriority);
+  Setting debugPriority = Setting(MULTISELECT, "", titlesDebugPriority, 3, "'Debug' changed", 0, 6, namesDebugPriority);
   Setting debugSetup = Setting(SWITCH, "", titlesDebugSetup, 0, "'Debug Setup' changed");
-  Setting debugSensor = Setting(SWITCH, "", titlesDebugSensor, 0, "'Debug Sensor' changed");
+  Setting debugSensor = Setting(SWITCH, "", titlesDebugSensor, 1, "'Debug Sensor' changed");
   Setting debugDisplay = Setting(SWITCH, "", titlesDebugDisplay, 0, "'Debug Display' changed");
   Setting debugMenu = Setting(SWITCH, "", titlesDebugMenu, 0, "'Debug Menu' changed");
   Setting debugTouch = Setting(SWITCH, "", titlesDebugTouch, 0, "'Debug Touch' changed");
