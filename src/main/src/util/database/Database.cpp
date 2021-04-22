@@ -269,9 +269,9 @@
         }
       }
     }
+    Serial.println();
     if (WiFi.status() == WL_CONNECTED) {
       randomSeed(micros());
-      Serial.println("");
       Serial.println("WiFi connected");
       Serial.println("IP address: ");
       Serial.println(WiFi.localIP());

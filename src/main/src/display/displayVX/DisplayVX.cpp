@@ -18,6 +18,8 @@ short DisplayVX::seconds;
 short DisplayVX::minutes;
 boolean DisplayVX::start;
 boolean DisplayVX::drop = false;
+short DisplayVX::peep = -1;
+short DisplayVX::peepCounter = 0;
 
   /*
      _____      _
@@ -93,7 +95,9 @@ boolean DisplayVX::drop = false;
   }
 
   void DisplayVX::checkState() {
-    if (blinkSwitch) {
+    if(lastState == VENTILATING && state != VENTILATING)
+      peep = -1;
+    if(blinkSwitch) {
       blinkSwitch = 0;
       //restore Border
       drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, 1, BACKGROUND_COLOR);
@@ -106,16 +110,35 @@ boolean DisplayVX::drop = false;
         display.drawLine(0, TOP_BAR_HEIGHT, 0, TOP_BAR_HEIGHT+DATABOX_BAR_THICKNESS-1, state.getColor(COLORED_BAR));
         display.drawLine(DISPLAY_LENGTH-1, TOP_BAR_HEIGHT, DISPLAY_LENGTH-1, TOP_BAR_HEIGHT+DATABOX_BAR_THICKNESS-1, state.getColor(COLORED_BAR));
       }
-      ledcDetachPin(PIEZO);
-    } else if(state >= 3) {
-      blinkSwitch = 1;
-      if(general::blink.getValue())
+      if(peepCounter > 0)
+        ledcDetachPin(PIEZO);
+    } else {
+      if(state >= 3 && general::blink.getValue()) {
+        blinkSwitch = 1;
         drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, 1, WHITE);
-       if (state >= PIEP && general::sound.getValue()) {
-        ledcAttachPin(PIEZO, 0);
-        ledcWriteNote(0, NOTE_C, 4);
-        debug(SPAMM, SENSOR, "Alarm - PEEP");
-       }
+      }
+      if(airCondition < PEEPSTART)
+        return;
+      short newPeep = floor((airCondition-PEEPSTART)/PEEPINTERVAL);
+      if(PEEPEND != -1)
+        newPeep = min((int)newPeep, PEEPEND);
+      if(peep < newPeep) {
+        peep = newPeep;
+        if(general::sound.getValue()) {
+          peepCounter = 1;
+          debug(INFO, SENSOR, "Alarm - PEEP");
+        }
+      }
+      if(peepCounter > 0) {
+        if(peepCounter <= min(peep*INCREASEPEEPS+STARTPEEPS, MAXPEEPS)) {
+          ledcAttachPin(PIEZO, 0);
+          ledcWriteNote(0, peep%2 == 0 ? NOTE_C : NOTE_G, min((int)floor(peep/2)+STARTOCTAVE, MAXOCTAVE));
+          peepCounter++;
+          blinkSwitch = 1;
+        } else {
+          peepCounter = 0;
+        }
+      }
     }
   }
 
@@ -129,7 +152,7 @@ boolean DisplayVX::drop = false;
       lastppm = "  " + String(lastAirCondition);
     else if(lastAirCondition < 100)
       lastppm = " " + String(lastAirCondition);
-    else if(airCondition > 9999)
+    else if(lastAirCondition > 9999)
       lastppm = "9999";
     else
       lastppm = String(lastAirCondition);
