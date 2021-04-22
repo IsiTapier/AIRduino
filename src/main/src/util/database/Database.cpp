@@ -28,7 +28,7 @@
       delay(500);
       if(!client.connected())
         reconnect();
-      //connect client the first time
+
       while ((!client.connected()) && requestDecision("MQTT fehlgeschlagen", "erneut versuchen?", "Ja", "Nein")) {
         drawLogo();
         for (int x = 0; (x <= 5) && (!client.connected()); x++) {
@@ -37,6 +37,7 @@
           reconnect();
         }
       }
+      
       if(client.connected()) {
         config_request();
         unsigned long timeout = millis();
@@ -46,7 +47,10 @@
           drawLogo();
           client.loop();
         } while(!configReceived && (millis()-timeout < 1000 || requestDecision("Config nicht geladen", "erneut versuchen?", "Ja", "Nein")));
-        subToCaliChannel();
+
+        subscribeToMQTT("cali/low/", device_class);
+        subscribeToMQTT("cali/high/", device_class);
+        subscribeToMQTT("cali/touch/", device_class);
       }
     }
   }
@@ -54,14 +58,15 @@
   void callback(char* topic_char, byte* payload, unsigned int length) {
     Serial.print("MQTT: (");
     Serial.print(topic_char);
-    Serial.print(") ");
-    Serial.print(":: ");
+    Serial.print(") :: ");
 
+    //Write payload into console; put payload into var
     String payload_string = "";
     for (int i = 0; i < length; i++) {
       payload_string = payload_string + "" + (char)payload[i];
     }
     Serial.println(payload_string);
+
 
     //get Topic as a String
     String topic = "";
@@ -70,28 +75,26 @@
       topic = topic + "" + (char)topic_char[i];
     }
 
-  //get config via a single String
-
+    //get config via a single String
     if (topic == "config/get/" + device_id) {
       debug(IMPORTANT, SETUP, "Config received");
       configReceived = true;
-      int digit = 0;
+
+      int digit = 0;      
       for (int x = 0; digit < length; x++) { //loop for every setting
         String output = "";
         if (digit <= length) {
           for (int d = 0; (d < 100) && ((char)payload[digit] != ',') && ((char)payload[digit] != ';'); d++) { //loop to loop the single digits
             output = output + "" + (char)payload[digit];
-            //Serial.println((char)payload[digit]);
             digit++;
             delay(1);
           }
           digit++;
         }
+
         switch (x) {
-          case 0: { //grade
+          case 0: {
             device_class = output;
-            /* Serial.print("Grade ");
-            Serial.println(device_class); */
             if (device_class[0] == 'a' && device_class[1] == 'u' && device_class[2] == 't') { //if the grade is auto generated
               debug(ERROR, DATABASE, "///////////////////// CONFIG ///////////////////////////");
               debug(ERROR, DATABASE, "Please enter the grade of your device into the database");
@@ -172,41 +175,13 @@
 
   void config_request() {   //TODO: optimation
     getUniqueID();
-    subToConfigChannel();
-    subscribeToMaintenanceCheck();
+    subscribeToMQTT("config/get/", device_id);
+    subscribeToMQTT("maintenance/", device_id);
+
     debug(IMPORTANT, SETUP, "Requesting config...");
     client.publish("config/request", device_id.c_str());
     delay(500);
     client.loop();
-  }
-
-  void subToConfigChannel() {
-    String sub_config_get = "config/get/" + device_id;
-    client.subscribe(sub_config_get.c_str());
-    debug(INFO, SETUP, "Subscribed to: " + sub_config_get);
-  }
-
-  void subToCaliChannel() {
-    String topic = "cali/low/" + device_class;
-    client.subscribe(topic.c_str());
-    debug(INFO, SETUP, "Subscribed to: " + topic);
-    Serial.println(topic);
-    topic = "cali/high/" + device_class;
-    client.subscribe(topic.c_str());
-    debug(INFO, SETUP, "Subscribed to: " + topic);
-    Serial.println(topic);
-
-    topic = "cali/touch/" + device_class;
-    client.subscribe(topic.c_str());
-    debug(INFO, SETUP, "Subscribed to: " + topic);
-    Serial.println(topic);
-
-  }
-
-  void subscribeToMaintenanceCheck() {
-    String sub_topic = "maintenance/" + device_id;
-    client.subscribe(sub_topic.c_str());
-    Serial.println("Subscribed to: " + sub_topic);
   }
 
   void config_update(String column, String value) {
@@ -227,11 +202,8 @@
       String output = "VALUES ('" + grade + "', " + co2 + ", " + temp + ")";
       client.publish("mysql/insert", output.c_str());
       debug(INFO, DATABASE, "INSERTED into LOG grade: " + grade + " co2: " + co2 + " temp: " + temp);
-      //Serial.println("INSERTED into LOG grade: " + grade + " co2: " + co2 + " temp: " + temp + " humidity: " + humidity + " pressure: " + pressure + " altitude: " + altitude);
-      
     }
   }
-
 
   void getUniqueID() {
     device_id = "";
@@ -295,10 +267,25 @@
         Serial.print("failed, rc=");
         Serial.print(client.state());
         Serial.println(" try again in 1 seconds");
-        // Wait 1 seconds before retrying
-        //delay(10);
       }
     }
     if(!client.connected())
       Serial.println("Database not connected");
+  }
+
+  void subscribeToMQTT(String topic) {
+    client.subscribe(topic.c_str());
+    debug(INFO, SETUP, "Subscribed to: " + topic);
+  }
+
+  void subscribeToMQTT(String topic, String c) {
+    topic = topic + c;
+    client.subscribe(topic.c_str());
+    debug(INFO, SETUP, "Subscribed to: " + topic);
+  }
+
+  void subscribeToMQTT(String topic, int id) {
+    topic = topic + id;
+    client.subscribe(topic.c_str());
+    debug(INFO, SETUP, "Subscribed to: " + topic);
   }

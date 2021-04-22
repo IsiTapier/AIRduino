@@ -50,17 +50,6 @@
           Input(&colorModes::showTopBar)
         )
     })},
-    {SubMenu("Farben", {
-        MenuPage(
-
-        ),
-        MenuPage(
-
-        ),
-        MenuPage(
-
-        )
-    })},
     {SubMenu("Developper", {
         MenuPage(
           Input(&developper::calibrateMin),
