@@ -39,11 +39,15 @@
 #define VENTILATING_TIMEOUT general::ventilating_timeout.getValue()*1000
 #define TOUCH_COOLDOWN 200
 
+//peeper
+//octave
 #define STARTOCTAVE 3
 #define MAXOCTAVE 4
+//peeps
+#define INCREASEPEEPS 1
 #define STARTPEEPS 2
 #define MAXPEEPS 5
-#define INCREASEPEEPS 1
+//peep trigger
 #define PEEPSTART 1000
 #define PEEPEND -1
 #define PEEPINTERVAL 500
