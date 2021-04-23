@@ -74,16 +74,17 @@
       // MHZ19b.zeroSpan(1000);
     }
 
+    if(SENSORCONNECTED) {
+      for(int x = 0; x <= 180 && ((MHZ19b.getCO2(true, true) == 10000) || (MHZ19b.getCO2(true, true) <= 0)); x++) {
+        delay(1000);
+      }
+      delay(SENSORDROPTIME);
+    }
+
     startTime = millis();
     debug(DEBUG, SETUP, "Meassure SETUP ended");
     debug(DEBUG, SETUP, "");
 
-    //TODO
-    if(SENSORCONNECTED && false) {
-      for(int x = 0; x <= 180 && ((MHZ19b.getCO2(true, true) > 4000) || (MHZ19b.getCO2(true, true) < 5)); x++) {
-        delay(1000);
-      }
-    }
   }
 
   void Meassure::loop() {

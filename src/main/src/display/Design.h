@@ -32,6 +32,7 @@
 #define ROTATION 3
 #define DISPLAY_BRIGHTNESS 0.7
 #define LOADING_SCREEN_TIME 1
+#define SENSORDROPTIME 5000
 
 //settings
 #define STAGE_TIME 10
@@ -48,7 +49,7 @@
 #define STARTPEEPS 2
 #define MAXPEEPS 5
 //peep trigger
-#define PEEPSTART 1000
+#define PEEPSTART 2000
 #define PEEPEND -1
 #define PEEPINTERVAL 500
 
@@ -92,7 +93,7 @@
 
 
 #define DISPLAYED_PPM_LOWEST 400
-#define DISPLAYED_PPM_HIGHEST 1000
+#define DISPLAYED_PPM_HIGHEST 2000
 
 
 //display
