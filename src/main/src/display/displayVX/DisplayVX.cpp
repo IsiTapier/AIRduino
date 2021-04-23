@@ -131,8 +131,10 @@ short DisplayVX::peepCounter = 0;
       }
       if(peepCounter > 0) {
         if(peepCounter <= min(peep*INCREASEPEEPS+STARTPEEPS, MAXPEEPS)) {
-          ledcAttachPin(PIEZO, 0);
-          ledcWriteNote(0, peep%2 == 0 ? NOTE_C : NOTE_G, min((int)floor(peep/2)+STARTOCTAVE, MAXOCTAVE));
+          if(general::sound.getValue()) {
+            ledcAttachPin(PIEZO, 0);
+            ledcWriteNote(0, peep%2 == 0 ? NOTE_C : NOTE_G, min((int)floor(peep/2)+STARTOCTAVE, MAXOCTAVE));
+          }
           peepCounter++;
           blinkSwitch = 1;
         } else {

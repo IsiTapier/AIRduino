@@ -35,17 +35,9 @@ void DisplayV2::loop() {
     drawDisplay();
     drawBarBorder();
     DisplayVX::handleData();
-    if(general::mode.equals(CHART)) {
-      DisplayVX::writeInfo();
-      DisplayVX::checkState();
-    }
-  } else {
-      if(general::mode.equals(CHART) && general::mode.equaled(CHART)) {
-        DisplayVX::writeInfo();
-        DisplayVX::checkState();
-        }
-    }
- // DisplayVX::loop();
+  }
+  DisplayVX::writeInfo();
+  DisplayVX::checkState();
   drawBar();
   //end setup
   if(start)
@@ -104,7 +96,7 @@ void DisplayV2::drawBar() {
   barPixel = map(airCondition, DISPLAYED_PPM_LOWEST, DISPLAYED_PPM_HIGHEST, BAR_START_X, BAR_END_X);
   lastBarPixel = map(lastAirCondition, DISPLAYED_PPM_LOWEST, DISPLAYED_PPM_HIGHEST, BAR_START_X, BAR_END_X);
   //TODO fix logic
-  if(((barPixel <= BAR_START_X && lastAirCondition <= BAR_START_X) || (barPixel == lastBarPixel && !start)) && !general::mode.hasChanged() && (lastState == state || (lastState != VENTILATING && state != VENTILATING)))
+  if((barPixel <= BAR_START_X && lastBarPixel <= BAR_START_X) || ((barPixel == lastBarPixel || (barPixel >= BAR_END_X && lastBarPixel >= BAR_END_X)) && !start && !general::mode.hasChanged() && (lastState.getColor(COLORED_CHART) == state.getColor(COLORED_CHART) || (!COLOR_MODE && lastState != VENTILATING && state != VENTILATING))))
     return;
   if(barPixel < BAR_START_X)
     barPixel = BAR_START_X;
@@ -112,19 +104,19 @@ void DisplayV2::drawBar() {
     barPixel = BAR_END_X;
   if(lastBarPixel > BAR_END_X)
     lastBarPixel = BAR_END_X;
-  if(lastBarPixel < BAR_START_X)
+  if(lastBarPixel < BAR_START_X || (state.getColor(COLORED_CHART) != lastState.getColor(COLORED_CHART) && (!COLOR_MODE || lastState == VENTILATING || state == VENTILATING)) || start)
     lastBarPixel = BAR_START_X;
 
   //TODO: vereinfachen
   if(COLOR_MODE && state != VENTILATING) {
     if(airCondition >= LIMIT_GOOD) {
-      if(!(lastAirCondition >= LIMIT_GOOD) || lastState == VENTILATING)
+      if(!(lastAirCondition >= LIMIT_GOOD) || lastState == VENTILATING || start)
         display.fillRect(BAR_START_X, BAR_Y, FIRST_SECTION_X - BAR_START_X, BAR_HEIGHT, COLOR_STATUS_NORMAL);
       if(airCondition >= LIMIT_MEDIUM) {
-        if(!(lastAirCondition >= LIMIT_MEDIUM) || lastState == VENTILATING)
+        if(!(lastAirCondition >= LIMIT_MEDIUM) || lastState == VENTILATING || start)
           display.fillRect(FIRST_SECTION_X, BAR_Y, SECOND_SECTION_X - FIRST_SECTION_X, BAR_HEIGHT, COLOR_STATUS_RISK);
         if(airCondition >= DISPLAYED_PPM_HIGHEST) {
-          if(lastAirCondition < DISPLAYED_PPM_HIGHEST || lastState == VENTILATING)
+          if(lastAirCondition < DISPLAYED_PPM_HIGHEST || lastState == VENTILATING || start)
             display.fillRect(SECOND_SECTION_X, BAR_Y, BAR_END_X - SECOND_SECTION_X, BAR_HEIGHT, COLOR_STATUS_ALARM);
         } else if(lastAirCondition < airCondition)
           display.fillRect(SECOND_SECTION_X, BAR_Y, barPixel - SECOND_SECTION_X, BAR_HEIGHT, COLOR_STATUS_ALARM);
@@ -141,18 +133,14 @@ void DisplayV2::drawBar() {
         display.fillRect(BAR_START_X, BAR_Y, barPixel - BAR_START_X, BAR_HEIGHT, COLOR_STATUS_NORMAL);
       display.fillRect(barPixel, BAR_Y, lastBarPixel - barPixel, BAR_HEIGHT, CHART_BACKGROUND_COLOR);
     }
-  } else if(state.getColor(COLORED_CHART) == lastState.getColor(COLORED_CHART) && !start) {
-    if(lastAirCondition < airCondition) {
+  } else {
+    if(lastBarPixel < barPixel) {
       display.fillRect(lastBarPixel, BAR_Y, barPixel - lastBarPixel, BAR_HEIGHT, state.getColor(COLORED_CHART));
     } else {
       display.fillRect(barPixel, BAR_Y, lastBarPixel - barPixel, BAR_HEIGHT, CHART_BACKGROUND_COLOR);
     }
     if(lastState == VENTILATING && state != VENTILATING)
       display.fillRect(BAR_START_X, BAR_Y, barPixel - BAR_START_X, BAR_HEIGHT, state.getColor(COLORED_CHART));
-  } else {
-    if(lastAirCondition > airCondition) 
-      display.fillRect(barPixel, BAR_Y, lastBarPixel - barPixel, BAR_HEIGHT, CHART_BACKGROUND_COLOR);
-    display.fillRect(BAR_START_X, BAR_Y, barPixel - BAR_START_X, BAR_HEIGHT, state.getColor(COLORED_CHART));
   }
   drawSections();
 }
