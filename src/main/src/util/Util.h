@@ -21,10 +21,10 @@
 #include "../meassure/Meassure.h"
 
 #define LIMIT_GOOD 600
-#define LIMIT_MEDIUM 800
-#define LIMIT_BAD 900
+#define LIMIT_MEDIUM 1000
+#define LIMIT_BAD 1500
 #define LIMIT_BLINK 1000
-#define LIMIT_PIEP 1200
+#define LIMIT_PIEP 2000
 
 #define EEPROM_SIZE (1+4*sizeof(short))
 

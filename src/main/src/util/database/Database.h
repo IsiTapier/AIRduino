@@ -31,9 +31,6 @@
   void callback(char* topic_char, byte* payload, unsigned int length);
   void config_request();
   void maintenanceMode();
-  void subToConfigChannel();
-  void subToCaliChannel();
-  void subscribeToMaintenanceCheck();
   void config_update(String column, String value);
   void config_update(String column, int value);
   void mysql_insert(String grade, int co2, double temp);
@@ -41,4 +38,7 @@
   void setup_wifi();
   void reconnect();
 
+  void subscribeToMQTT(String topic);
+  void subscribeToMQTT(String topic, String c);
+  void subscribeToMQTT(String topic, int id);
 #endif

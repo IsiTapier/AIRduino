@@ -38,7 +38,6 @@ using namespace general;
     debug(DEBUG, SETUP, "");
     delay(1000);
     Meassure::setup();
-
     drawLogo();
     
   }
