@@ -78,4 +78,12 @@ namespace developper {
   extern Setting autoCalibrationMin;
 }
 
+namespace report {
+  extern Setting sensorError;
+  extern Setting sensorWrong;
+  extern Setting helpShortterm;
+  extern Setting helpLongterm;
+}
+
+
 #endif

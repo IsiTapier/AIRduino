@@ -5,12 +5,13 @@
 #include "SubMenu.h"
 
 SubMenu::SubMenu(void) {}
-SubMenu::SubMenu(const char* title, std::vector<MenuPage> pages, short defaultPage, boolean hide) {
+SubMenu::SubMenu(const char* title, std::vector<MenuPage> pages, short defaultPage, boolean hide, short* condition) {
   _title = title;
   _pages = pages;
   _currentPage = defaultPage;
   _defaultPage = defaultPage;
   _hide = hide;
+  _condition = condition;
 }
 
 void SubMenu::setup(boolean redraw) {
@@ -60,7 +61,11 @@ void SubMenu::shiftPage(boolean up) {
 }
 
 boolean SubMenu::isHidden() {
-  return _hide;
+  return _hide && !*_condition;
+}
+
+String SubMenu::getTitle() {
+  return _title;
 }
 
 void SubMenu::handleTouch(TSPoint p) {

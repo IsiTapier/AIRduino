@@ -14,6 +14,7 @@ extern SubMenu subMenus[];
 
 //temporary
 #define DEFAULT_SUB_MENU 0
+#define REPORT_MENU_TITLE "Hilfe"
 
 class Menu {
   public:
@@ -21,12 +22,14 @@ class Menu {
     static void loop();
     static void reset();
     static void handleTouch(TSPoint p);
+    static void openReportMenu();
 
   private:
     static void draw();
-    static boolean setSubMenu(int subMenu);
+    static boolean setSubMenu(int subMenu, boolean allowHidden = false);
     static void shiftSubMenu(boolean left);
     static boolean checkTouch(TSPoint p);
+    static int getSubMenu(String title);
 
     static int currentSubMenu;
 

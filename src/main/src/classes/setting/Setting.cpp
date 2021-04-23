@@ -104,3 +104,7 @@ boolean Setting::getColored() {
 const char* Setting::getDebugMessage() {
   return _debugMessage;
 }
+
+short* Setting::getCondition() {
+  return &_value;
+}

@@ -40,6 +40,7 @@ class Setting {
     boolean getColored();
     String getName(boolean reverse = false);
     const char* getDebugMessage();
+    short* getCondition();
 
   private:
     SettingType _type;

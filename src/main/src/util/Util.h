@@ -20,12 +20,6 @@
 #include "database/Database.h"
 #include "../meassure/Meassure.h"
 
-#define LIMIT_GOOD 933
-#define LIMIT_MEDIUM 1466
-#define LIMIT_BAD 2000
-#define LIMIT_BLINK LIMIT_GOOD
-#define LIMIT_PIEP LIMIT_MEDIUM
-
 #define EEPROM_SIZE (1+4*sizeof(short))
 
 #define XMIN (1)

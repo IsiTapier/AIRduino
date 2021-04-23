@@ -167,3 +167,10 @@ namespace developper {
   Setting calibrateMax = Setting(ACTIVATOR, "", titlesCalibrateMax, 2);
   Setting autoCalibrationMin = Setting(ACTIVATOR, "", titlesAutoMinCali, 3);
 }
+
+namespace report {
+  Setting sensorError = Setting(ACTIVATOR, "", {"Error-Wert"}, 5);
+  Setting sensorWrong = Setting(ACTIVATOR, "", {"falsche Werte"}, 6);
+  Setting helpShortterm = Setting(ACTIVATOR, "", {"Hilfe schnell"}, 9);
+  Setting helpLongterm = Setting(ACTIVATOR, "", {"Hilfe später"}, 10);
+}

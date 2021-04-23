@@ -50,13 +50,23 @@
           Input(&colorModes::showTopBar)
         )
     })},
-    {SubMenu("Developper", {
+    {SubMenu("Developer", {
         MenuPage(
           Input(&developper::calibrateMin),
           Input(&general::empty),
           Input(&developper::calibrateMax),
           Input(&general::empty),
           Input(&general::calibrateTouch)
+        )
+    }, 0, 1, general::developperSettings.getCondition())},
+    {SubMenu(REPORT_MENU_TITLE, {
+        MenuPage(
+          Input(&report::sensorError),
+          Input(&report::sensorWrong),
+          Input(&general::empty),
+          Input(&general::empty),
+          Input(&report::helpShortterm),
+          Input(&report::helpLongterm)
         )
     }, 0, 1)}
   };
@@ -93,18 +103,18 @@
     debug(INFO, SETUP, "Display drawn");
   }
 
-  boolean Menu::setSubMenu(int subMenu) {
-    if(subMenus[subMenu].isHidden() && !general::developperSettings.getValue()) {
-      subMenus[currentSubMenu].clear();
-      currentSubMenu = subMenu;
-      return false;
-    }
+  boolean Menu::setSubMenu(int subMenu, boolean allowHidden) {
+    subMenus[currentSubMenu].clear();
     if(subMenu < 0)
       subMenu = 0;
     if(subMenu >= sizeOf(subMenus))
       subMenu = sizeOf(subMenus)-1;
-    subMenus[currentSubMenu].clear();
-    currentSubMenu = subMenu;
+    /*if(currentSubMenu == getSubMenu(REPORT_MENU_TITLE))
+      currentSubMenu = DEFAULT_SUB_MENU;
+    else*/
+      currentSubMenu = subMenu;
+    if(subMenus[currentSubMenu].isHidden() && !allowHidden)
+      return false;
     subMenus[currentSubMenu].setup();
     return true;
   }
@@ -154,4 +164,16 @@
     draw();
     for(int i = 0; i < sizeOf(subMenus); i++)
       subMenus[i].reset(general::mode.equals(MENU) ? i == currentSubMenu ? true : false : false);
+  }
+
+  void Menu::openReportMenu() {
+    setSubMenu(getSubMenu(REPORT_MENU_TITLE), true);
+  }
+
+  int Menu::getSubMenu(String title) {
+    for(int i = 0; i < sizeOf(subMenus); i++) {
+      if(subMenus[i].getTitle().equals(title))
+        return(i);
+    }
+    return DEFAULT_SUB_MENU;
   }
