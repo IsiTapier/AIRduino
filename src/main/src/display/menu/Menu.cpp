@@ -63,10 +63,10 @@
         MenuPage(
           Input(&report::sensorError),
           Input(&report::sensorWrong),
-          Input(&general::empty),
-          Input(&general::empty),
+          Input(&report::graphicalBug),
+          Input(&report::acousticBug),
           Input(&report::helpShortterm),
-          Input(&report::helpLongterm)
+          Input(&report::developerEmail)
         )
     }, 0, 1)}
   };

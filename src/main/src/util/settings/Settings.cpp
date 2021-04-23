@@ -169,8 +169,10 @@ namespace developper {
 }
 
 namespace report {
-  Setting sensorError = Setting(ACTIVATOR, "", {"Error-Wert"}, 5);
-  Setting sensorWrong = Setting(ACTIVATOR, "", {"falsche Werte"}, 6);
+  Setting sensorError = Setting(ACTIVATOR, "", {"Sensor Fehler"}, 5);
+  Setting sensorWrong = Setting(ACTIVATOR, "", {"Komische Werte"}, 6);
+  Setting graphicalBug = Setting(ACTIVATOR, "", {"Graphische Fehler"}, 7);
+  Setting acousticBug = Setting(ACTIVATOR, "", {"Ton Problem"}, 8);
   Setting helpShortterm = Setting(ACTIVATOR, "", {"Hilfe schnell"}, 9);
-  Setting helpLongterm = Setting(ACTIVATOR, "", {"Hilfe später"}, 10);
+  Setting developerEmail = Setting(ACTIVATOR, "", {"Entwickler-Email"}, 10);
 }

@@ -41,4 +41,6 @@
   void subscribeToMQTT(String topic);
   void subscribeToMQTT(String topic, String c);
   void subscribeToMQTT(String topic, int id);
+
+  void reportBug(String title);
 #endif

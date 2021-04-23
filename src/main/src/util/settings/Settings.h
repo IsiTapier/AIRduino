@@ -81,8 +81,10 @@ namespace developper {
 namespace report {
   extern Setting sensorError;
   extern Setting sensorWrong;
+  extern Setting graphicalBug;
+  extern Setting acousticBug;
   extern Setting helpShortterm;
-  extern Setting helpLongterm;
+  extern Setting developerEmail;
 }
 
 

@@ -289,3 +289,10 @@
     client.subscribe(topic.c_str());
     debug(INFO, SETUP, "Subscribed to: " + topic);
   }
+
+  void reportBug(String title) {
+    if(requestDecision(title, "wirklich melden?")) {
+      String payload = device_class + "," + title;
+      client.publish("report", payload.c_str());
+    }
+  }

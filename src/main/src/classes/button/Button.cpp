@@ -41,12 +41,12 @@
       case 2: Meassure::calibrateMax(); break;
       case 3: Meassure::autoCalibrationMin(); break;
       case 4: Menu::openReportMenu(); break;
-      case 5: break; //Report System
-      case 6: break; //Report System
-      case 7: break; //Report System
-      case 8: break; //Report System
-      case 9: break; //Report System
-      case 10: break; //Report System
+      case 5: reportBug("Sensor Fehler"); break; 
+      case 6: reportBug("Komische Werte"); break;
+      case 7: reportBug("Graphische Fehler"); break; 
+      case 8: reportBug("Ton Problem"); break; 
+      case 9: reportBug("Schnelle Hilfe ben" +oe+ "tigt"); break; 
+      case 10: requestDecision("ea.jcbs@gmail.com", "wir bitten um Feedback", "", "Zur" +ue+ "ck"); break; 
       default: break;
     }
 

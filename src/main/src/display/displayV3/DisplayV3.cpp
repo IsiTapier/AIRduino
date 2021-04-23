@@ -84,11 +84,10 @@ void DisplayV3::writeInfoV3() {
       ppm = " " + String(airCondition);
     else
       ppm = String(airCondition);
-    if (lastState != state || start) {
+    if (lastAirCondition != airCondition || start) {
       //Titles
       dPrint(lastState.getTitle(), DISPLAY_LENGTH/2, STATUS_MARGIN_TOP+25, 4, BLACK, 1);
       dPrint(state.getTitle(), DISPLAY_LENGTH/2, STATUS_MARGIN_TOP+25, 4, GREY, 1);
-
 
       //Draw PPM
       dPrint(lastppm, 157, 125, ERRORLAST ? PPM_SIZE : PPM_SIZE+1, BLACK, 7);
@@ -130,8 +129,11 @@ void DisplayV3::writeInfoV3() {
     //Clear old Pixels
     //dPrint(lasttime, timeR_X, timeR_Y, timeR_SIZE, BAR_BACKGROUND_COLOR, 8);
     //write new Pixels
-    dPrint(time, 165, 130, 10, WHITE, 1, BLACK, lastTime, -1, (seconds == 0 && (minutes == 0 || (minutes == 20 && COLORED_TIME))) || start || state.getColor() != lastState.getColor());
-
+    if(minutes <= 20) {
+      dPrint(time, 165, 130, 10, WHITE, 1, BLACK, lastTime, -1, (seconds == 0 && (minutes == 0 || (minutes == 20 && COLORED_TIME))) || start || state.getColor() != lastState.getColor());
+    } else {
+      dPrint(time, 165, 130, 10, RED, 1, BLACK, lastTime, -1, (seconds == 0 && (minutes == 0 || (minutes == 20 && COLORED_TIME))) || start || state.getColor() != lastState.getColor());
+    }
     //Set new lasttime
     lastTime = time; //Setzt letzten Werts
 }
