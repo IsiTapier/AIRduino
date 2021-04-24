@@ -8,12 +8,10 @@
 #include "Arduino.h"
 #include "../menuPage/MenuPage.h"
 
-static short False = 0;
-
 class SubMenu {
   public:
     SubMenu(void);
-    SubMenu(const char* title, std::vector<MenuPage> pages, short defaultPage = 0, boolean hide = false, short* condition = &False);
+    SubMenu(const char* title, std::vector<MenuPage> pages, short defaultPage = 0, void* hide = 0);
     void setup(boolean redraw = false);
     void reset(boolean active = false);
     void handleTouch(TSPoint p);
@@ -31,8 +29,7 @@ class SubMenu {
     short _defaultPage;
     String _title;
     std::vector<MenuPage> _pages;
-    boolean _hide;
-    short* _condition;
+    boolean* _hide;
 };
 
 #endif

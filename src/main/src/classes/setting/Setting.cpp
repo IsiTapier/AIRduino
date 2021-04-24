@@ -24,6 +24,10 @@ short Setting::getValue() {
   return _value;
 }
 
+short* Setting::getValuePointer() {
+  return &_value;
+}
+
 short Setting::getOldValue() {
   return _oldValue;
 }
@@ -103,8 +107,4 @@ boolean Setting::getColored() {
 
 const char* Setting::getDebugMessage() {
   return _debugMessage;
-}
-
-short* Setting::getCondition() {
-  return &_value;
 }

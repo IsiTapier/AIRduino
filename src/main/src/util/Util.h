@@ -86,6 +86,6 @@
   void loadingScreen();
   void writeLoadingScreenTitle();
   void writeLoadingAnimation(int c1, int c2, int c3);
-  boolean requestDecision(String topic, String question, String op1 = "ja", String op2 = "nein");
+  boolean requestDecision(String topic, String question, String op1 = "ja", String op2 = "nein", long timeout = REQUESTDECISIONTIMEOUT, bool defaultValue = false);
   void drawLogo();
 #endif

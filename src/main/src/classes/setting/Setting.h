@@ -25,6 +25,7 @@ class Setting {
     Setting(void);
     Setting(SettingType type, const char* key = "", std::vector<String> title = {}, short defaultValue = 0, const char* debugMessage = "", short minValue = 0, short maxValue = 1, std::vector<std::vector<String>> names = {}, boolean colored = true);
     short getValue();
+    short* getValuePointer();
     short getOldValue();
     boolean hasChanged();
     boolean equals(short value);
@@ -40,7 +41,6 @@ class Setting {
     boolean getColored();
     String getName(boolean reverse = false);
     const char* getDebugMessage();
-    short* getCondition();
 
   private:
     SettingType _type;

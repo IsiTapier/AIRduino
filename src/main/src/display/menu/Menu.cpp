@@ -4,7 +4,11 @@
 
 #include "Menu.h"
 
+
+  short reportMenuOpen = 0;
   int Menu::currentSubMenu = 0;
+  boolean test = false;
+
   SubMenu subMenus[] = {
     {SubMenu("General", {
         MenuPage(
@@ -58,7 +62,7 @@
           Input(&general::empty),
           Input(&general::calibrateTouch)
         )
-    }, 0, 1, general::developperSettings.getCondition())},
+    }, 0, general::developperSettings.getValuePointer())},
     {SubMenu(REPORT_MENU_TITLE, {
         MenuPage(
           Input(&report::sensorError),
@@ -68,15 +72,20 @@
           Input(&report::helpShortterm),
           Input(&report::developerEmail)
         )
-    }, 0, 1)}
+    }, 0, &reportMenuOpen)}
   };
 
   void Menu::setup() {
     debug(DEBUG, SETUP, "Menu SETUP started");
     if(mode.hasChanged() || theme.hasChanged())
       draw();
+    if(mode.hasChanged() && reportMenuOpen)
+      setSubMenu(DEFAULT_SUB_MENU);
     subMenus[currentSubMenu].setup(true);
     debug(DEBUG, SETUP, "Menu SETUP completed");
+    //request decision cooldown
+    if(mode.equaled(LOADINGSCREEN))
+      delay(REQUESTDECISIONCOOLDOWN);
   }
 
   void Menu::loop() {
@@ -109,9 +118,10 @@
       subMenu = 0;
     if(subMenu >= sizeOf(subMenus))
       subMenu = sizeOf(subMenus)-1;
-    /*if(currentSubMenu == getSubMenu(REPORT_MENU_TITLE))
+    if(currentSubMenu == getSubMenu(REPORT_MENU_TITLE) && reportMenuOpen) {
       currentSubMenu = DEFAULT_SUB_MENU;
-    else*/
+      reportMenuOpen = false;
+    } else
       currentSubMenu = subMenu;
     if(subMenus[currentSubMenu].isHidden() && !allowHidden)
       return false;
@@ -167,7 +177,8 @@
   }
 
   void Menu::openReportMenu() {
-    setSubMenu(getSubMenu(REPORT_MENU_TITLE), true);
+    reportMenuOpen = true;
+    setSubMenu(getSubMenu(REPORT_MENU_TITLE));
   }
 
   int Menu::getSubMenu(String title) {
