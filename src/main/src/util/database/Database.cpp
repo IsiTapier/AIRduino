@@ -27,14 +27,14 @@
       client.setCallback(callback);
       delay(500);
       if(!client.connected())
-        reconnect();
+        reconnectToMQTT();
 
       while ((!client.connected()) && requestDecision("MQTT fehlgeschlagen", "erneut versuchen?", "Ja", "Nein")) {
         drawLogo();
         for (int x = 0; (x <= 5) && (!client.connected()); x++) {
           delay(500);
           Serial.print(".");
-          reconnect();
+          reconnectToMQTT();
         }
       }
       
@@ -48,6 +48,7 @@
           client.loop();
         } while(!configReceived && (millis()-timeout < 1000 || requestDecision("Config nicht geladen", "erneut versuchen?", "Ja", "Nein")));
 
+        dPrint(device_class, 5, 5, 3, WHITE);
         subscribeToMQTT("cali/low/", device_class);
         subscribeToMQTT("cali/high/", device_class);
         subscribeToMQTT("cali/touch/", device_class);
@@ -136,6 +137,24 @@
             break;
           case 17: colorModes::c_slider.setValue((short) atoi(output.c_str()), false);
             break;
+          case 18: Meassure::SensorMapMin = (short) atoi(output.c_str());
+            break;
+          case 19: Meassure::SensorMapMax = (short) atoi(output.c_str());
+            break;
+          case 20: general::debugPriority.setValue((short) atoi(output.c_str()), false);
+            break;
+          case 21: general::debugSetup.setValue((short) atoi(output.c_str()), false);
+            break;
+          case 22: general::debugSensor.setValue((short) atoi(output.c_str()), false);
+            break;
+          case 23: general::debugDisplay.setValue((short) atoi(output.c_str()), false);
+            break;
+          case 24: general::debugMenu.setValue((short) atoi(output.c_str()), false);
+            break;
+          case 25: general::debugTouch.setValue((short) atoi(output.c_str()), false);
+            break;
+          case 26: general::debugDatabase.setValue((short) atoi(output.c_str()), false);
+            break;
         }
       }
     }
@@ -154,6 +173,16 @@
       Serial.println("Forced Touch Calibration via MQTT");
       ts.calibration();   
     }
+    if(topic == "manager/restart/" + device_class) {
+      debug(IMPORTANT, SETUP, "ESP restartet via MQTT");
+      ESP.restart();
+    }
+    if(topic == "manager/deepSleep/" + device_class) {
+      int minutes = atoi(payload_string.c_str());
+      
+      debug(IMPORTANT, SETUP, "ESP wurde für " + String(minutes) + " Minuten in den Sleepmode versetzt");
+      ESP.deepSleep(minutes * 60000);
+    }
   }
 
   void maintenanceMode() {
@@ -164,7 +193,7 @@
     dPrint(general::maintenance_mode.getTitle(), 160, 120, 3, TEXT_COLOR, 4);
 
     while (general::mode.getValue() >= 3) {
-      reconnect();
+      reconnectToMQTT();
       delay(500);
       client.loop();
     }
@@ -177,6 +206,8 @@
     getUniqueID();
     subscribeToMQTT("config/get/", device_id);
     subscribeToMQTT("maintenance/", device_id);
+    subscribeToMQTT("manager/restart/", device_class);
+    subscribeToMQTT("manager/deepSleep/", device_class);
 
     debug(IMPORTANT, SETUP, "Requesting config...");
     client.publish("config/request", device_id.c_str());
@@ -186,7 +217,7 @@
 
   void config_update(String column, String value) {
     if (client.connected()) {
-      reconnect();
+      reconnectToMQTT();
       String config_update = column + " = '" +  value + "' WHERE `device_overview`.`device_id` = " + device_id;
       client.publish("config/update", config_update.c_str());
       debug(SPAMM, MENUD, "CONFIG - " + column + " = " + (String) value);
@@ -250,11 +281,16 @@
     }
   }
 
-  void reconnect() {
+  void reconnectToWifi() {
+    if (WiFi.status() != WL_CONNECTED) {
+      Serial.println("reconnect Wifi");
+      WiFi.reconnect();
+    }
+  }
+
+  void reconnectToMQTT() {
     // Loop until we're reconnected
-    int timeout = 0;
-    while (!client.connected() && timeout < 1) {
-      timeout++;
+    if (!client.connected()) {
       Serial.print("Attempting MQTT connection...");
       // Create a random client ID
       String clientId = "ESP32Client-";
@@ -275,19 +311,20 @@
 
   void subscribeToMQTT(String topic) {
     client.subscribe(topic.c_str());
-    debug(INFO, SETUP, "Subscribed to: " + topic);
+    debug(IMPORTANT, SETUP, "Subscribed to: " + topic);
   }
 
   void subscribeToMQTT(String topic, String c) {
     topic = topic + c;
     client.subscribe(topic.c_str());
-    debug(INFO, SETUP, "Subscribed to: " + topic);
+    Serial.println(topic);
+    debug(IMPORTANT, SETUP, "Subscribed to: " + topic);
   }
 
   void subscribeToMQTT(String topic, int id) {
     topic = topic + id;
     client.subscribe(topic.c_str());
-    debug(INFO, SETUP, "Subscribed to: " + topic);
+    debug(IMPORTANT, SETUP, "Subscribed to: " + topic);
   }
 
   void reportBug(String title) {
@@ -295,4 +332,9 @@
       String payload = device_class + "," + title;
       client.publish("report", payload.c_str());
     }
+  }
+
+  void sendDebugToMQTT(String message) {
+    String adress = "console/" + device_class;
+    client.publish(adress.c_str(), message.c_str());
   }

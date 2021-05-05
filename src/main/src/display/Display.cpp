@@ -69,6 +69,8 @@ using namespace general;
   void Display::loop() {
     while((millis()-Meassure::getStartTime())%STAGE_TIME > 0) {}
     delay(1);
+    reconnectToWifi();
+    reconnectToMQTT();
     client.loop();
     handleTouch();
     initDisplay();

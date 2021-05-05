@@ -41,6 +41,9 @@
   int Meassure::humidity;
   int Meassure::pressure;
 
+  int Meassure::SensorMapMin = 0;
+  int Meassure::SensorMapMax = 0;
+
   int Meassure::testCounter = 0;
   unsigned long Meassure::lasttime;
 
@@ -205,6 +208,13 @@
       counter++;
       if(counter >= AVERAGING_MEASUREMENTS) {
         airCondition = MHZ19b.getCO2(true, true);
+
+        //Additional Mapping for bad sensors
+        if((SensorMapMax != 0) && (SensorMapMin != 0)) {
+          airCondition = map(airCondition, 400, 2000, SensorMapMin, SensorMapMax);
+        }
+
+
         debug(SPAMM, SENSOR, "PPM: " + String(airCondition));
         //  Serial.println(airCondition);
         temperature = MHZ19b.getTemperature();

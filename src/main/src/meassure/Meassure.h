@@ -34,6 +34,9 @@ class Meassure {
     static void autoCalibrationMin();
     static MHZ19 getSensor();
 
+    static int SensorMapMin;
+    static int SensorMapMax;
+
   private:
     static void debugMeassure();
     //meassure
@@ -67,7 +70,7 @@ class Meassure {
     static int temperature;
     static int humidity;
     static int pressure;
-   
+
     static int testCounter;
     static unsigned long lasttime;
 };

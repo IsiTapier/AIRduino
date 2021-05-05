@@ -7,6 +7,7 @@
 
 #include "Arduino.h"
 #include "../settings/Settings.h"
+#include "../database/Database.h"
 
 enum DebugPriority {
   NONE = 0,
@@ -31,5 +32,6 @@ void debug(DebugPriority priority, DebugType type, String title, double value, S
 void debug(DebugPriority priority, DebugType type, String title, int value, String end = "");
 void debug(DebugPriority priority, DebugType type, String title, String value, String end = "");
 void debug(DebugPriority priority, DebugType type, String message);
+
 
 #endif

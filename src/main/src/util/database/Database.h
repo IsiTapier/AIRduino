@@ -36,11 +36,14 @@
   void mysql_insert(String grade, int co2, double temp);
   void getUniqueID();
   void setup_wifi();
-  void reconnect();
+  void reconnectToMQTT();
+  void reconnectToWifi();
 
   void subscribeToMQTT(String topic);
   void subscribeToMQTT(String topic, String c);
   void subscribeToMQTT(String topic, int id);
 
   void reportBug(String title);
+  void sendDebugToMQTT(String message);
+
 #endif
