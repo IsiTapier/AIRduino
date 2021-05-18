@@ -11,6 +11,8 @@ using namespace general;
   unsigned long Display::lastTouch;
   int Display::counter = 1000/STAGE_TIME-1;
 
+  
+
   void Display::setup() {
     debug(DEBUG, SETUP, "Display SETUP started");
     mode.setValue(LOADINGSCREEN, false);
@@ -36,7 +38,7 @@ using namespace general;
     mode.setValue(CHART);
     debug(DEBUG, SETUP, "Display SETUP completed");
     debug(DEBUG, SETUP, "");
-    delay(1000);
+    drawInfoScreen(5000);
     Meassure::setup();
     drawLogo();
     
@@ -175,4 +177,37 @@ using namespace general;
     }
   }
 
+void Display::drawInfoScreen(int time) {
+  display.fillScreen(BLACK);
+
+
+  dPrint(device_class, 160, 10, 5, LIGHT_BLUE, 1);
+  dPrint("Software:", 200, 70, 3, GREY, 5);
+  dPrint(software_version, 200, 70, 3, LIGHTGREY, 3);
+
+  dPrint("Mapping:", 200, 100, 3, GREY, 5);
+  if((Meassure::SensorMapMax != 0) && (Meassure::SensorMapMin != 0)) {
+    dPrint("AUS", 200, 100, 3, RED, 3);
+  } else {
+  	dPrint("AN", 200, 100, 3, GREEN, 3);
+  }
+
+
+  dPrint("Connection:", 200, 130, 3, GREY, 5);
+  if(client.connected()) {
+     dPrint("online", 200, 130, 3, GREEN, 3);
+  } else {
+    dPrint("MQTT", 200, 130, 3, RED, 3);
+  }   
+
+  if(WL_CONNECTED) {
+    dPrint("online", 200, 130, 3, GREEN, 3);
+  } else {
+    dPrint("WLAN", 200, 130, 3, RED, 3);
+  }
+
+  delay(time);
+  general::mode.setValue(LOADINGSCREEN);
+  general::mode.setValue(general::mode.getOldValue());  
+}
 

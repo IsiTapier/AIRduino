@@ -58,8 +58,8 @@
         MenuPage(
           Input(&developper::calibrateMin),
           Input(&general::empty),
+          Input(&developper::deviceInfo),
           Input(&developper::calibrateMax),
-          Input(&general::empty),
           Input(&general::calibrateTouch)
         )
     }, 0, general::developperSettings.getValuePointer())},

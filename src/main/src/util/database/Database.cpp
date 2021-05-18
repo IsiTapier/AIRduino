@@ -52,6 +52,8 @@
         subscribeToMQTT("cali/low/", device_class);
         subscribeToMQTT("cali/high/", device_class);
         subscribeToMQTT("cali/touch/", device_class);
+        subscribeToMQTT("manager/restart/", device_class);
+        subscribeToMQTT("manager/deepSleep/", device_class);
       }
     }
   }
@@ -92,7 +94,7 @@
           }
           digit++;
         }
-
+        
         switch (x) {
           case 0: {
             device_class = output;
@@ -206,8 +208,6 @@
     getUniqueID();
     subscribeToMQTT("config/get/", device_id);
     subscribeToMQTT("maintenance/", device_id);
-    subscribeToMQTT("manager/restart/", device_class);
-    subscribeToMQTT("manager/deepSleep/", device_class);
 
     debug(IMPORTANT, SETUP, "Requesting config...");
     client.publish("config/request", device_id.c_str());

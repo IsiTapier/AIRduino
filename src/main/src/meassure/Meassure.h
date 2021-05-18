@@ -14,8 +14,8 @@
 
 #define RANGE 2000
 #define SENSORCONNECTED (MHZ19b.errorCode == RESULT_OK)
-#define SENSORERROR (airCondition <= 0)
-#define SENSORERRORLAST (airConditionLast <= 0)
+#define SENSORERROR (airCondition <= 200)
+#define SENSORERRORLAST (airConditionLast <= 200)
 
 class Meassure {
 

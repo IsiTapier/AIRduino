@@ -13,6 +13,8 @@
 #include "menu/Menu.h"
 #include "../util/Util.h"
 
+extern const String software_version;
+
 class Display {
   public:
     static void setup();
@@ -20,6 +22,7 @@ class Display {
     static void loop();
     static void initDisplay();
     static void handleTouch(); //TODO relocate
+    static void drawInfoScreen(int time);
 
   private:
     static TSPoint p;

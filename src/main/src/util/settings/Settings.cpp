@@ -51,6 +51,7 @@
   const std::vector<String> titlesCalibrateMax = {"calibrate Max"};
   const std::vector<String> titlesAutoMinCali = {"auto Min Calibration"};
 
+
   const std::vector<String> titles = {};
 
   //names
@@ -166,6 +167,7 @@ namespace developper {
   Setting calibrateMin = Setting(ACTIVATOR, "", titlesCalibrateMin, 1);
   Setting calibrateMax = Setting(ACTIVATOR, "", titlesCalibrateMax, 2);
   Setting autoCalibrationMin = Setting(ACTIVATOR, "", titlesAutoMinCali, 3);
+  Setting deviceInfo = Setting(ACTIVATOR, "", {"Device Info"}, 11);
 }
 
 namespace report {

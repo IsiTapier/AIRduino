@@ -21,6 +21,8 @@
   const char* ssid = "FRITZ!Box 7590 JG";
   const char* password = "4400834912335401";
   const char* mqtt_server = "192.168.178.57";
+
+  const String software_version = "5.3";
 /*   const char* ssid = "AG-iOT";
   const char* password = "#Wlan4iOT#JCBS-AG!"; */
 

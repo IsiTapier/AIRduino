@@ -76,6 +76,7 @@ namespace developper {
   extern Setting calibrateMin;
   extern Setting calibrateMax;
   extern Setting autoCalibrationMin;
+  extern Setting deviceInfo;
 }
 
 namespace report {

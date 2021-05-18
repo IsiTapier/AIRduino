@@ -4,6 +4,7 @@
 
 #include "Button.h"
 #include "../../display/menu/Menu.h"
+#include "../../display/Display.h"
 
   Button::Button(void) {}
 
@@ -47,6 +48,7 @@
       case 8: reportBug("Ton Problem"); break; 
       case 9: reportBug("Schnelle Hilfe ben" +oe+ "tigt"); break; 
       case 10: requestDecision("ea.jcbs@gmail.com", "wir bitten um Feedback", "", "Zur" +ue+ "ck"); break; 
+      case 11: Display::drawInfoScreen(5000); break; 
       default: break;
     }
 
