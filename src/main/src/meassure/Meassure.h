@@ -33,10 +33,7 @@ class Meassure {
     static void calibrateMax();
     static void autoCalibrationMin();
     static MHZ19 getSensor();
-
-    static int SensorMapMin;
-    static int SensorMapMax;
-
+    
   private:
     static void debugMeassure();
     //meassure

@@ -20,12 +20,20 @@
 #include "database/Database.h"
 #include "../meassure/Meassure.h"
 
-#define EEPROM_SIZE (1+4*sizeof(short))
+#define EEPROM_SIZE (1+6*sizeof(short))
 
 #define XMIN (1)
 #define XMAX (1+1*sizeof(short))
 #define YMIN (1+2*sizeof(short))
 #define YMAX (1+3*sizeof(short))
+#define MAPMIN (1+4*sizeof(short))
+#define MAPMAX (1+5*sizeof(short))
+
+#define SENSORMAPMIN (EEPROM.readShort(MAPMIN))
+#define SENSORMAPMAX (EEPROM.readShort(MAPMIN))
+
+#define SETMAPMIN(value) EEPROM.writeShort(MAPMIN, value); EEPROM.commit()
+#define SETMAPMAX(value) EEPROM.writeShort(MAPMAX, value); EEPROM.commit()
 
 //pins
 

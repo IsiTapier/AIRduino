@@ -186,7 +186,7 @@ void Display::drawInfoScreen(int time) {
   dPrint(software_version, 200, 70, 3, LIGHTGREY, 3);
 
   dPrint("Mapping:", 200, 100, 3, GREY, 5);
-  if((Meassure::SensorMapMax != 0) && (Meassure::SensorMapMin != 0)) {
+  if((SENSORMAPMIN != 0) && (SENSORMAPMAX != 0)) {
     dPrint("AUS", 200, 100, 3, RED, 3);
   } else {
   	dPrint("AN", 200, 100, 3, GREEN, 3);

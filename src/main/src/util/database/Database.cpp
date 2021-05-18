@@ -139,9 +139,9 @@
             break;
           case 17: colorModes::c_slider.setValue((short) atoi(output.c_str()), false);
             break;
-          case 18: Meassure::SensorMapMin = (short) atoi(output.c_str());
+          case 18: SETMAPMIN((short) atoi(output.c_str()));
             break;
-          case 19: Meassure::SensorMapMax = (short) atoi(output.c_str());
+          case 19: SETMAPMAX((short) atoi(output.c_str()));
             break;
           case 20: general::debugPriority.setValue((short) atoi(output.c_str()), false);
             break;
