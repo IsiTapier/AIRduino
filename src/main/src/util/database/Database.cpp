@@ -54,6 +54,8 @@
         subscribeToMQTT("cali/touch/", device_class);
         subscribeToMQTT("manager/restart/", device_class);
         subscribeToMQTT("manager/deepSleep/", device_class);
+        subscribeToMQTT("manager/testPeep/", device_class);
+
       }
     }
   }
@@ -183,7 +185,18 @@
       int minutes = atoi(payload_string.c_str());
       
       debug(IMPORTANT, SETUP, "ESP wurde für " + String(minutes) + " Minuten in den Sleepmode versetzt");
-      ESP.deepSleep(minutes * 60000);
+      ESP.deepSleep(minutes * 60 * 1000000);
+    }
+    if(topic == "manager/testPeep/" + device_class) {
+      ledcAttachPin(PIEZO, 0);
+      for(int x = 0; x <= 10; x++) {
+        if(x%2 == 0) {
+          ledcWriteNote(0, NOTE_C, 3);
+        } else {
+          ledcDetachPin(PIEZO);
+        }
+        delay(500);
+      }
     }
   }
 

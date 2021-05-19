@@ -30,7 +30,7 @@
 #define MAPMAX (1+5*sizeof(short))
 
 #define SENSORMAPMIN (EEPROM.readShort(MAPMIN))
-#define SENSORMAPMAX (EEPROM.readShort(MAPMIN))
+#define SENSORMAPMAX (EEPROM.readShort(MAPMAX))
 
 #define SETMAPMIN(value) EEPROM.writeShort(MAPMIN, value); EEPROM.commit()
 #define SETMAPMAX(value) EEPROM.writeShort(MAPMAX, value); EEPROM.commit()
