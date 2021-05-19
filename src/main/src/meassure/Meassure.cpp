@@ -212,7 +212,7 @@
     // if(SENSORCONNECTED) {
       counter++;
       if(counter >= AVERAGING_MEASUREMENTS) {
-        airCondition = MHZ19b.getCO2(true, false);
+        airCondition = MHZ19b.getCO2(true, true);
         //Additional Mapping for bad sensors
         if((SENSORMAPMIN > 0) && (SENSORMAPMAX > 0)) {
           airCondition = map(airCondition, 400, 2000, SENSORMAPMIN, SENSORMAPMAX);
@@ -221,7 +221,19 @@
         debug(SPAMM, SENSOR, "PPM: " + String(airCondition));
         //Serial.println(airCondition);
         //Serial.println(SENSORCONNECTED);
-        temperature = MHZ19b.getTemperature(true, false);
+        /*Serial.print(MHZ19b.getCO2Raw(true)); 
+        Serial.print("  ");
+        Serial.print(MHZ19b.getCO2(false, true));
+        Serial.print("  ");
+        Serial.print(MHZ19b.getCO2(true, true));
+        Serial.print("  ");
+        Serial.print(MHZ19b.getTemperature(false, true));
+        Serial.print("  ");
+        Serial.print(MHZ19b.getTemperature(true, true));
+        Serial.print("  ");
+        Serial.print(MHZ19b.getTempAdjustment());
+        Serial.println();
+        temperature = MHZ19b.getTemperature(true, false);*/
         //Serial.println(temperature);
 
 

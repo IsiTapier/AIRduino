@@ -38,10 +38,10 @@
 #define REQUESTDECISIONCOOLDOWN 500
 
 //settings
-#define STAGE_TIME 5
+#define STAGE_TIME 25
 #define LOOP_TIME 1000
 #define MENU_BUTTON_COOLDOWN 1*1000
-#define VENTILATING_TIMEOUT general::ventilating_timeout.getValue()*1000
+#define VENTILATING_TIMEOUT general::ventilating_timeout.getValue()*2*1000
 #define TOUCH_COOLDOWN 200
 
 //peeper
@@ -63,7 +63,7 @@
 #define ALPHA_MEASUREMENTS 0.7
 #define ALPHA_LOWEST 0.5
 
-#define MAX_INCREASE 0
+#define MAX_INCREASE 10
 #define MAX_DECREASE -40
 #define MAX_INCREASE_LOWEST 100
 

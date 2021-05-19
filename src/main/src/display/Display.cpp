@@ -38,7 +38,7 @@ using namespace general;
     mode.setValue(CHART);
     debug(DEBUG, SETUP, "Display SETUP completed");
     debug(DEBUG, SETUP, "");
-    drawInfoScreen(5000);
+    //drawInfoScreen(5000);
     Meassure::setup();
     drawLogo();
     lastReconnect = millis();
