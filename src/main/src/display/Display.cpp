@@ -7,11 +7,10 @@
 using namespace general;
 
   TSPoint Display::p;
+  unsigned long Display::lastCycleTime = 0;
+  unsigned long Display::lastLoop = 0;
   unsigned long Display::lastModeChange = 0;
   unsigned long Display::lastTouch;
-  int Display::counter = 1000/STAGE_TIME-1;
-
-  
 
   void Display::setup() {
     debug(DEBUG, SETUP, "Display SETUP started");
@@ -69,16 +68,21 @@ using namespace general;
   }
 
   void Display::loop() {
-    while((millis()-Meassure::getStartTime())%STAGE_TIME > 0) {}
-    delay(1);
-    reconnectToWifi();
+    unsigned long currentCycleTime = millis();
+    while(currentCycleTime - lastCycleTime < STAGE_TIME) {currentCycleTime = millis();}
+    if(currentCycleTime - lastCycleTime > STAGE_TIME) {
+      Serial.print("Warning - timing system failed: ");
+      Serial.print(currentCycleTime-lastCycleTime-STAGE_TIME);
+      Serial.println("ms");
+    }
+    lastCycleTime = currentCycleTime;
+    //reconnectToWifi();
     reconnectToMQTT();
-    client.loop();
+    //client.loop();
     handleTouch();
     initDisplay();
-    counter++;
-    if(counter >= 1000/STAGE_TIME) {
-      counter = 0;
+    if(currentCycleTime - lastLoop >= LOOP_TIME) {
+      lastLoop = currentCycleTime;
       Meassure::loop();
       boolean changed = DisplayV1::getGraphData();
       /*if(mode.getValue() == MENU) {

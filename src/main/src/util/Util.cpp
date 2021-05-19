@@ -220,29 +220,32 @@
     dPrint(op1, 0, 240, 4, GREEN, 6);
     dPrint(op2, 320, 240, 4, RED, 8);
     TSPoint p = ts.getPoint();
+    while(p.isTouching()) {
+      p = ts.getPoint();
+      delay(100);
+    }
+    delay(400);
     unsigned long timeoutStart = millis();
     while(millis()-timeoutStart < timeout || timeout == 0) {
-      while(p.isTouching()) {
-        p = ts.getPoint();
-        delay(100);
-      }
-      delay(400);
-      while(!p.isTouching()) {
-        p = ts.getPoint();
-        if(p.isTouching()) {
-          p.calibrate();
-          if(p.isTouching(0, 160, 160, 240)) {
-            general::mode.setValue(LOADINGSCREEN);
-            general::mode.setValue(general::mode.getOldValue());            
-            return true;
-          }
-          if(p.isTouching(161, 320, 160, 240)) {
-            general::mode.setValue(LOADINGSCREEN);
-            general::mode.setValue(general::mode.getOldValue());            
-            return false;
-          }
-          delay(10);
+      delay(10);
+      p = ts.getPoint();
+      if(p.isTouching()) {
+        p.calibrate();
+        if(p.isTouching(0, 160, 160, 240)) {
+          general::mode.setValue(LOADINGSCREEN);
+          general::mode.setValue(general::mode.getOldValue());            
+          return true;
         }
+        if(p.isTouching(161, 320, 160, 240)) {
+          general::mode.setValue(LOADINGSCREEN);
+          general::mode.setValue(general::mode.getOldValue());            
+          return false;
+        }
+        while(p.isTouching()) {
+          p = ts.getPoint();
+          delay(100);
+        }
+        delay(200);
       }
     }
     return defaultValue;

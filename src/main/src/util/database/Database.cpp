@@ -290,6 +290,8 @@
 
   void reconnectToMQTT() {
     // Loop until we're reconnected
+    if (WiFi.status() != WL_CONNECTED)
+      return;
     if (!client.connected()) {
       Serial.print("Attempting MQTT connection...");
       // Create a random client ID

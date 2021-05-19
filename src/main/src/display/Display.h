@@ -15,6 +15,9 @@
 
 extern const String software_version;
 
+#define CURRENTCYCLE floor((currentCycleTime-Meassure::getStartTime())/STAGE_TIME)
+#define LASTCYCLE floor((lastCycleTime-Meassure::getStartTime())/STAGE_TIME)
+
 class Display {
   public:
     static void setup();
@@ -27,8 +30,9 @@ class Display {
   private:
     static TSPoint p;
     static unsigned long lastModeChange;
-    static int counter;
     static unsigned long lastTouch;
+    static unsigned long lastCycleTime;
+    static unsigned long lastLoop;
 };
 
 #endif
