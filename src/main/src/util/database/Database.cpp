@@ -296,32 +296,33 @@
 
   void reconnectToWifi() {
     if (WiFi.status() != WL_CONNECTED) {
-      Serial.println("reconnect Wifi");
       WiFi.reconnect();
     }
   }
 
   void reconnectToMQTT() {
     // Loop until we're reconnected
-    if (WiFi.status() != WL_CONNECTED)
+    if (WiFi.status() != WL_CONNECTED || client.connected())
       return;
-    if (!client.connected()) {
-      Serial.print("Attempting MQTT connection...");
-      // Create a random client ID
-      String clientId = "ESP32Client-";
-      clientId += String(random(0xffff), HEX);
-      // Attempt to connect
-      if (client.connect(clientId.c_str())) {
-        Serial.println("connected");
-        client.subscribe("msg");
-      } else {
-        Serial.print("failed, rc=");
-        Serial.print(client.state());
-        Serial.println(" try again in 1 seconds");
-      }
+    //Serial.print("Attempting MQTT connection...");
+    // Create a random client ID
+    String clientId = "ESP32Client-";
+    clientId += String(random(0xffff), HEX);
+    // Attempt to connect
+    client.connect(clientId.c_str());
+    /*
+    if (client.connect(clientId.c_str())) {
+      Serial.println("connected");
+      client.subscribe("msg");
+    } else {
+      Serial.print("failed, rc=");
+      Serial.print(client.state());
+      Serial.println(" try again in 1 seconds");
     }
+    
     if(!client.connected())
       Serial.println("Database not connected");
+    */
   }
 
   void subscribeToMQTT(String topic) {

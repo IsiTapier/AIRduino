@@ -97,6 +97,14 @@
     }
   }
 
+  void Meassure::reconnect() {
+    MHZ19b.begin(Serial1);
+  }
+
+  boolean Meassure::isConnected() {
+    return SENSORCONNECTED;
+  }
+
   void Meassure::calibrateMin() {
     if(requestDecision("Min Wert Kalibrierung", "Möchtest du fortfahren?")) {
       MHZ19b.calibrate();

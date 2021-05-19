@@ -9,6 +9,7 @@ using namespace general;
   TSPoint Display::p;
   unsigned long Display::lastCycleTime = 0;
   unsigned long Display::lastLoop = 0;
+  unsigned long Display::lastReconnect = 0;
   unsigned long Display::lastModeChange = 0;
   unsigned long Display::lastTouch;
 
@@ -40,7 +41,7 @@ using namespace general;
     drawInfoScreen(5000);
     Meassure::setup();
     drawLogo();
-    
+    lastReconnect = millis();
   }
 
   void Display::eeprom() {
@@ -76,13 +77,17 @@ using namespace general;
       Serial.println("ms");
     }
     lastCycleTime = currentCycleTime;
-    //reconnectToWifi();
-    reconnectToMQTT();
-    //client.loop();
+    if(client.connected())
+      client.loop();
     handleTouch();
     initDisplay();
+    if(currentCycleTime - lastReconnect >= RECONNECT_TIME) {
+      lastReconnect = currentCycleTime;
+      reconnect();
+    }
     if(currentCycleTime - lastLoop >= LOOP_TIME) {
       lastLoop = currentCycleTime;
+
       Meassure::loop();
       boolean changed = DisplayV1::getGraphData();
       /*if(mode.getValue() == MENU) {
@@ -213,5 +218,26 @@ void Display::drawInfoScreen(int time) {
   delay(time);
   general::mode.setValue(LOADINGSCREEN);
   general::mode.setValue(general::mode.getOldValue());  
+}
+
+void Display::reconnect() {
+  boolean isConnected = WiFi.isConnected();
+  Serial.print("Wifi: "); Serial.println(isConnected?"connected":"unconnected");
+  if(!isConnected) {
+    reconnectToWifi();
+    Serial.print("reconnect "); Serial.println(WiFi.isConnected()?"successful":"failed");
+  }
+  isConnected = client.connected();
+  Serial.print("MQTT: "); Serial.println(isConnected?"connected":"unconnected");
+  if(!isConnected) {
+    reconnectToMQTT();
+    Serial.print("reconnect "); Serial.println(client.connected()?"successful":"failed");
+  }
+  isConnected = Meassure::isConnected();
+  Serial.print("Sensor: "); Serial.println(isConnected?"connected":"unconnected");
+  if(!isConnected) {
+    Meassure::reconnect();
+    Serial.print("reconnect "); Serial.println(Meassure::isConnected()?"successful":"failed");
+  }
 }
 

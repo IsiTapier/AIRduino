@@ -26,6 +26,7 @@ class Display {
     static void initDisplay();
     static void handleTouch(); //TODO relocate
     static void drawInfoScreen(int time);
+    static void reconnect();
 
   private:
     static TSPoint p;
@@ -33,6 +34,7 @@ class Display {
     static unsigned long lastTouch;
     static unsigned long lastCycleTime;
     static unsigned long lastLoop;
+    static unsigned long lastReconnect;
 };
 
 #endif
