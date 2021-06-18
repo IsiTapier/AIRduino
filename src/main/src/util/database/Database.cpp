@@ -55,6 +55,7 @@
         subscribeToMQTT("manager/restart/", device_class);
         subscribeToMQTT("manager/deepSleep/", device_class);
         subscribeToMQTT("manager/testPeep/", device_class);
+        subscribeToMQTT("manager/message/", device_class);
 
       }
     }
@@ -197,6 +198,23 @@
         }
         delay(500);
       }
+    }
+    if(topic == "manager/message/" + device_class) {
+      display.fillScreen(BLACK);
+      dPrint("Admin-Message", 160, 20, 4, LIGHT_BLUE, 4);
+      String output;
+      int textHight = 45;
+      for(int x = 0; x < payload_string.length(); x++) {
+          output = output + payload_string[x] + "";
+          if((x%15 == 0)) {
+            dPrint(output, 20, textHight, 3, GREY);
+            output = "";
+            textHight += 25;
+          }
+      }
+      delay(10000);
+      general::mode.setValue(LOADINGSCREEN);
+      general::mode.setValue(general::mode.getOldValue());
     }
   }
 

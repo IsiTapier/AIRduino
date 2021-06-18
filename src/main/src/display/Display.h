@@ -27,6 +27,8 @@ class Display {
     static void handleTouch(); //TODO relocate
     static void drawInfoScreen(int time);
     static void reconnect();
+    static void drawTutorial();
+    static void drawAuthors();
 
   private:
     static TSPoint p;

@@ -23,6 +23,7 @@ using namespace general;
     display.setRotation(ROTATION);
     debug(INFO, SETUP, "Display initialized");
     //Logo
+
     drawLogo();
     eeprom();
     /*unsigned long begin = millis();
@@ -40,7 +41,9 @@ using namespace general;
     debug(DEBUG, SETUP, "");
     //drawInfoScreen(5000);
     Meassure::setup();
-    drawLogo();
+    drawTutorial();
+   
+
     lastReconnect = millis();
   }
 
@@ -205,15 +208,13 @@ void Display::drawInfoScreen(int time) {
   dPrint("Connection:", 200, 130, 3, GREY, 5);
   if(client.connected()) {
      dPrint("online", 200, 130, 3, GREEN, 3);
+  } else if(WiFi.status() != WL_CONNECTED) {
+    dPrint("WLAN", 200, 130, 3, RED, 3);
   } else {
     dPrint("MQTT", 200, 130, 3, RED, 3);
   }   
 
-  if(WL_CONNECTED) {
-    dPrint("online", 200, 130, 3, GREEN, 3);
-  } else {
-    dPrint("WLAN", 200, 130, 3, RED, 3);
-  }
+  
 
   delay(time);
   general::mode.setValue(LOADINGSCREEN);
@@ -240,4 +241,38 @@ void Display::reconnect() {
     Serial.print("reconnect "); Serial.println(Meassure::isConnected()?"successful":"failed");
   }
 }
+
+void Display::drawTutorial() {
+
+  display.fillScreen(BLACK);
+  display.pushImage(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, gear, WHITE);
+  dPrint("1436", PPM_MARGIN_LEFT, PPM_Y, PPM_SIZE, COLOR_STATUS_RISK, 6); 
+  if(general::theme.getValue())
+    display.pushImage(MENU_ARROW_RESET_START_X, MENU_ARROW_RESET_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, arrowResetDark, BLACK);
+  else
+    display.pushImage(MENU_ARROW_RESET_START_X, MENU_ARROW_RESET_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, arrowResetLight, WHITE);
+  dPrint("00:00", TIMER_X, TIMER_Y, TIMER_SIZE, WHITE, 8);
+  display.drawLine(DISPLAY_LENGTH-1, TOP_BAR_HEIGHT, DISPLAY_LENGTH-1, TOP_BAR_HEIGHT+DATABOX_BAR_THICKNESS-1, COLOR_STATUS_RISK);
+  display.fillRect(0, DATABOX_BAR_Y, DISPLAY_LENGTH, DATABOX_BAR_THICKNESS, COLOR_STATUS_RISK);  
+  display.fillRect(0, TOP_BAR_HEIGHT, DISPLAY_LENGTH, DATABOX_BAR_THICKNESS/* TOP_BAR_THICKNESS */, COLOR_STATUS_RISK);
+  dPrint("Tutorial", DISPLAY_LENGTH/2, STATUS_MARGIN_TOP, 3, GREY, 1);
+
+
+  dPrint("Timer", DISPLAY_LENGTH - 10, DATABOX_BAR_Y - 20, 2, GREY, 2); 
+  dPrint("Luftqualit" +ae+ "t", 10, DATABOX_BAR_Y - 20, 2, GREY, 0);   
+  dPrint("Men" +ue, 310, TOP_BAR_HEIGHT + 12, 2, GREY, 2);
+  dPrint("Timer-Reset", 10, TOP_BAR_HEIGHT + 12, 2, GREY, 0);
+  delay(10000);
+  drawAuthors();
+}
+
+void Display::drawAuthors() {
+    display.fillScreen(BLACK);
+    dPrint("created by", 160, 100, 2, GREY, 4);
+    dPrint("Erfinder-AG", 160, 130, 3, LIGHT_BLUE, 4);
+    delay(3000);
+    
+}
+
+
 

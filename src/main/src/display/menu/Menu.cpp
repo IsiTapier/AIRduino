@@ -12,35 +12,19 @@
   SubMenu subMenus[] = {
     {SubMenu("General", {
         MenuPage(
-          Input(&general::version),
+          //Input(&general::version),
           Input(&general::theme),
           Input(&general::reportSystem),
           Input(&general::language),
           Input(&general::sound),
-          Input(&general::autoTimeReset)
-        ),
+          Input(&general::autoTimeReset),
+          Input(&developper::deviceInfo)
+        ),      
         MenuPage(
-          Input(&general::data),
-          Input(&general::blink),//Input(&general::kernMode),
-          Input(&general::graph_speed),
-          Input(&general::segments),
-          Input(&general::blink_thickness),
-          Input(&general::ventilating_timeout)
-        ),
-        MenuPage(
-          Input(&general::debugPriority),
-          Input(&general::debugSetup),
-          Input(&general::debugSensor),
-          Input(&general::debugDisplay),
-          Input(&general::debugMenu),
-          Input(&general::debugTouch)
-        ),
-        MenuPage(
-          Input(&general::debugDatabase),
           Input(&general::developperSettings)
         )
     })},
-    {SubMenu("Farb-Modi", {
+    /*{SubMenu("Farb-Modi", {
         MenuPage(
           Input(&colorModes::c_design),
           Input(&colorModes::c_chart),
@@ -53,7 +37,7 @@
           Input(&colorModes::c_slider),
           Input(&colorModes::showTopBar)
         )
-    })},
+    })},*/
     {SubMenu("Developer", {
         MenuPage(
           Input(&developper::calibrateMin),
@@ -61,6 +45,25 @@
           Input(&developper::deviceInfo),
           Input(&developper::calibrateMax),
           Input(&general::calibrateTouch)
+        ),
+        MenuPage(
+          Input(&general::debugPriority),
+          Input(&general::debugSetup),
+          Input(&general::debugSensor),
+          Input(&general::debugDisplay),
+          Input(&general::debugMenu),
+          Input(&general::debugTouch)
+        ),
+        MenuPage(
+          Input(&general::data),
+          Input(&general::blink),//Input(&general::kernMode),
+          Input(&general::graph_speed),
+          Input(&general::segments),
+          Input(&general::blink_thickness),
+          Input(&general::ventilating_timeout)
+        ),
+        MenuPage(
+          Input(&general::debugDatabase)
         )
     }, 0, general::developperSettings.getValuePointer())},
     {SubMenu(REPORT_MENU_TITLE, {

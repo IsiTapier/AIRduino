@@ -38,7 +38,7 @@
 #define REQUESTDECISIONCOOLDOWN 500
 
 //settings
-#define STAGE_TIME 25
+#define STAGE_TIME 50
 #define LOOP_TIME 1000
 #define MENU_BUTTON_COOLDOWN 1*1000
 #define VENTILATING_TIMEOUT general::ventilating_timeout.getValue()*2*1000

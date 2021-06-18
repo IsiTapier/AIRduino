@@ -55,7 +55,7 @@
     }
     Serial1.begin(MHZ19BAUDRATE);
     MHZ19b.begin(Serial1);
-    while (!SENSORCONNECTED && requestDecision("Sensor nicht verbunden", "erneut versuchen?", "Ja", "Nein")) {
+    while (!SENSORCONNECTED && requestDecision("Sensor nicht verbunden", "erneut versuchen?", "Ja", "Nein", 15000, true)) {
       drawLogo();
       Serial.print("connecting to sensor");
       for (int x = 0; x <= 10; x++) {
@@ -63,7 +63,7 @@
         Serial.print(".");
       }
       Serial.println();
-      MHZ19b.begin(Serial1);
+      MHZ19b.begin(Serial1);     
     }
     drawLogo();
     if(SENSORCONNECTED) {
