@@ -22,6 +22,106 @@
     getUniqueID();
     Serial.println(device_id);
     setup_wifi();
+    setup_mqtt();
+  }
+
+  
+
+  void maintenanceMode() {
+    debug(IMPORTANT, SETUP, "/////////////////////////////////");
+    debug(IMPORTANT, SETUP, "Maintenance Mode activated");
+    debug(IMPORTANT, SETUP, "/////////////////////////////////");
+    display.fillScreen(BACKGROUND_COLOR);
+    dPrint(general::maintenance_mode.getTitle(), 160, 120, 3, TEXT_COLOR, 4);
+
+    while (general::mode.getValue() >= 3) {
+      reconnectToMQTT();
+      delay(500);
+      client.loop();
+    }
+    debug(IMPORTANT, SETUP, "/////////////////////////////////");
+    debug(IMPORTANT, SETUP, "Maintenance Mode disabled");
+    debug(IMPORTANT, SETUP, "/////////////////////////////////");
+  }
+
+  void config_request() {   //TODO: optimation
+    getUniqueID();
+    subscribeToMQTT("config/get/", device_id);
+    subscribeToMQTT("maintenance/", device_id);
+
+    debug(IMPORTANT, SETUP, "Requesting config...");
+    client.publish("config/request", device_id.c_str());
+    delay(500);
+    client.loop();
+  }
+
+  void config_update(String column, String value) {
+    if (client.connected()) {
+      reconnectToMQTT();
+      String config_update = column + " = '" +  value + "' WHERE `device_overview`.`device_id` = " + device_id;
+      client.publish("config/update", config_update.c_str());
+      debug(SPAMM, MENUD, "CONFIG - " + column + " = " + (String) value);
+    }
+  }
+
+  void config_update(String column, int value) {
+    config_update(column, (String)value);
+  }
+
+  void mysql_insert(String grade, int co2, double temp) {
+    if (!(grade[0] == 'a' && grade[1] == 'u' && grade[2] == 't') && client.connected()) {
+      String output = "VALUES ('" + grade + "', " + co2 + ", " + temp + ")";
+      client.publish("mysql/insert", output.c_str());
+      debug(INFO, DATABASE, "INSERTED into LOG grade: " + grade + " co2: " + co2 + " temp: " + temp);
+    }
+  }
+
+  void getUniqueID() {
+    device_id = "";
+    //for loop provided by the librarie to get a Unique ID of an arduino board
+    for (size_t i = 0; i < UniqueIDsize; i++) {
+      if (UniqueID[i] < 0x10)
+        //Serial.print("0");
+        device_id = device_id + "0";
+      device_id = device_id + "" + UniqueID[i];
+    }
+  }
+
+  void setup_wifi() {
+    Serial.println();
+    Serial.print("Connecting to ");
+    Serial.println(ssid);
+    // We start by connecting to a WiFi networ
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(ssid, password);
+    delay(500);
+    for(int z = 0; (z <= 2) && (WiFi.status() != WL_CONNECTED); z++) {
+      WiFi.begin(ssid, password);
+      for (int x = 0; (x <= 5) && (WiFi.status() != WL_CONNECTED); x++) {
+        delay(400);
+        Serial.print(".");
+      }
+    }
+    while ((WiFi.status() != WL_CONNECTED) && requestDecision("Wifi fehlgeschlagen", "erneut versuchen?", "Ja", "Nein")) {
+      drawLogo();
+      for(int z = 0; (z <= 2) && (WiFi.status() != WL_CONNECTED); z++) {
+        WiFi.begin(ssid, password);
+        for (int x = 0; (x <= 5) && (WiFi.status() != WL_CONNECTED); x++) {
+          delay(500);
+          Serial.print(".");
+        }
+      }
+    }
+    Serial.println();
+    if (WiFi.status() == WL_CONNECTED) {
+      randomSeed(micros());
+      Serial.println("WiFi connected");
+      Serial.println("IP address: ");
+      Serial.println(WiFi.localIP());
+    }
+  }
+
+  void setup_mqtt() {
     if(WiFi.status() == WL_CONNECTED) {
       client.setServer(mqtt_server, 1883);
       client.setCallback(callback);
@@ -61,7 +161,7 @@
     }
   }
 
-  void callback(char* topic_char, byte* payload, unsigned int length) {
+void callback(char* topic_char, byte* payload, unsigned int length) {
     Serial.print("MQTT: (");
     Serial.print(topic_char);
     Serial.print(") :: ");
@@ -212,105 +312,31 @@
             textHight += 25;
           }
       }
-      delay(10000);
       general::mode.setValue(LOADINGSCREEN);
       general::mode.setValue(general::mode.getOldValue());
     }
   }
 
-  void maintenanceMode() {
-    debug(IMPORTANT, SETUP, "/////////////////////////////////");
-    debug(IMPORTANT, SETUP, "Maintenance Mode activated");
-    debug(IMPORTANT, SETUP, "/////////////////////////////////");
-    display.fillScreen(BACKGROUND_COLOR);
-    dPrint(general::maintenance_mode.getTitle(), 160, 120, 3, TEXT_COLOR, 4);
-
-    while (general::mode.getValue() >= 3) {
-      reconnectToMQTT();
-      delay(500);
-      client.loop();
-    }
-    debug(IMPORTANT, SETUP, "/////////////////////////////////");
-    debug(IMPORTANT, SETUP, "Maintenance Mode disabled");
-    debug(IMPORTANT, SETUP, "/////////////////////////////////");
+  void reconnect() {
+  boolean isConnected = WiFi.isConnected();
+  Serial.print("Wifi: "); Serial.println(isConnected?"connected":"unconnected");
+  if(!isConnected) {
+    reconnectToWifi();
+    Serial.print("reconnect "); Serial.println(WiFi.isConnected()?"successful":"failed");
   }
-
-  void config_request() {   //TODO: optimation
-    getUniqueID();
-    subscribeToMQTT("config/get/", device_id);
-    subscribeToMQTT("maintenance/", device_id);
-
-    debug(IMPORTANT, SETUP, "Requesting config...");
-    client.publish("config/request", device_id.c_str());
-    delay(500);
-    client.loop();
+  isConnected = client.connected();
+  Serial.print("MQTT: "); Serial.println(isConnected?"connected":"unconnected");
+  if(!isConnected) {
+    reconnectToMQTT();
+    Serial.print("reconnect "); Serial.println(client.connected()?"successful":"failed");
   }
-
-  void config_update(String column, String value) {
-    if (client.connected()) {
-      reconnectToMQTT();
-      String config_update = column + " = '" +  value + "' WHERE `device_overview`.`device_id` = " + device_id;
-      client.publish("config/update", config_update.c_str());
-      debug(SPAMM, MENUD, "CONFIG - " + column + " = " + (String) value);
-    }
+  isConnected = Meassure::isConnected();
+  Serial.print("Sensor: "); Serial.println(isConnected?"connected":"unconnected");
+  if(!isConnected) {
+    Meassure::reconnect();
+    Serial.print("reconnect "); Serial.println(Meassure::isConnected()?"successful":"failed");
   }
-
-  void config_update(String column, int value) {
-    config_update(column, (String)value);
-  }
-
-  void mysql_insert(String grade, int co2, double temp) {
-    if (!(grade[0] == 'a' && grade[1] == 'u' && grade[2] == 't') && client.connected()) {
-      String output = "VALUES ('" + grade + "', " + co2 + ", " + temp + ")";
-      client.publish("mysql/insert", output.c_str());
-      debug(INFO, DATABASE, "INSERTED into LOG grade: " + grade + " co2: " + co2 + " temp: " + temp);
-    }
-  }
-
-  void getUniqueID() {
-    device_id = "";
-    //for loop provided by the librarie to get a Unique ID of an arduino board
-    for (size_t i = 0; i < UniqueIDsize; i++) {
-      if (UniqueID[i] < 0x10)
-        //Serial.print("0");
-        device_id = device_id + "0";
-      device_id = device_id + "" + UniqueID[i];
-    }
-  }
-
-  void setup_wifi() {
-    Serial.println();
-    Serial.print("Connecting to ");
-    Serial.println(ssid);
-    // We start by connecting to a WiFi networ
-    WiFi.mode(WIFI_STA);
-    WiFi.begin(ssid, password);
-    delay(500);
-    for(int z = 0; (z <= 2) && (WiFi.status() != WL_CONNECTED); z++) {
-      WiFi.begin(ssid, password);
-      for (int x = 0; (x <= 5) && (WiFi.status() != WL_CONNECTED); x++) {
-        delay(400);
-        Serial.print(".");
-      }
-    }
-    while ((WiFi.status() != WL_CONNECTED) && requestDecision("Wifi fehlgeschlagen", "erneut versuchen?", "Ja", "Nein")) {
-      drawLogo();
-      for(int z = 0; (z <= 2) && (WiFi.status() != WL_CONNECTED); z++) {
-        WiFi.begin(ssid, password);
-        for (int x = 0; (x <= 5) && (WiFi.status() != WL_CONNECTED); x++) {
-          delay(500);
-          Serial.print(".");
-        }
-      }
-    }
-    Serial.println();
-    if (WiFi.status() == WL_CONNECTED) {
-      randomSeed(micros());
-      Serial.println("WiFi connected");
-      Serial.println("IP address: ");
-      Serial.println(WiFi.localIP());
-    }
-  }
+}
 
   void reconnectToWifi() {
     if (WiFi.status() != WL_CONNECTED) {

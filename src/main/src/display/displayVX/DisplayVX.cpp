@@ -146,55 +146,11 @@ short DisplayVX::peepCounter = 0;
 
   //Write PPM, Time
   void DisplayVX::writeInfo() {
-    //ppm zeichnen
-    String lastppm;
-    if(ERRORLAST)
-      lastppm = "error";
-    else if(lastAirCondition < 10)
-      lastppm = "  " + String(lastAirCondition);
-    else if(lastAirCondition < 100)
-      lastppm = " " + String(lastAirCondition);
-    else if(lastAirCondition > 9999)
-      lastppm = "9999";
-    else
-      lastppm = String(lastAirCondition);
-    String ppm;
-    if(ERROR)
-      ppm = "error";
-    else if(airCondition <= 0)
-      ppm = lastppm;
-    else if(airCondition < 10)
-      ppm = "  " + String(airCondition);
-    else if(airCondition < 100)
-      ppm = " " + String(airCondition);
-    else if(airCondition > 9999)
-      ppm = "9999";
-    else
-      ppm = String(airCondition);
     if (lastState != state || start) {
-      //Wenn sich der Wert geändert hat oder state sich geändert hat
-      //Schreibt Status an die Decke
-      dPrint(lastState.getTitle(), DISPLAY_LENGTH/2, STATUS_MARGIN_TOP, LAST_STATUS_SIZE, BACKGROUND_COLOR, 1);
-      dPrint(state.getTitle(), DISPLAY_LENGTH/2, STATUS_MARGIN_TOP, STATUS_SIZE, state.getColor(COLORED_STATE), 1);
-
-      //Draw Datatbox
-
-      //Draw Bar
-      // if((BLACK_MODE == 0) && (general::version.getValue() == 0)) {
-        if(COLORED_BAR || start) {
-          display.fillRect(0, DATABOX_BAR_Y, DISPLAY_LENGTH, DATABOX_BAR_THICKNESS, state.getColor(COLORED_BAR));
-          if(colorModes::showTopBar.getValue())
-            display.fillRect(0, TOP_BAR_HEIGHT, DISPLAY_LENGTH, DATABOX_BAR_THICKNESS/* TOP_BAR_THICKNESS */, state.getColor(COLORED_BAR));
-        }
-      // }
-      //Draw PPM
-      dPrint(lastppm, PPM_MARGIN_LEFT, PPM_Y, ERRORLAST ? PPM_SIZE-1 : PPM_SIZE, DATABOX_BACKGROUND_COLOR, 6);
-      dPrint(ppm, PPM_MARGIN_LEFT, PPM_Y, ERROR ? PPM_SIZE-1 : PPM_SIZE, ERROR ? RED : state.getColor(COLORED_PPM), 6);
-      if (airCondition < 1000 && !ERROR) {
-        dPrint("ppm", PPM_STRING_X, PPM_STRING_Y, PPM_STRING_SIZE, state.getColor(COLORED_PPM), 6);
-      }
+      drawEssentials();
     }
-
+    drawPPM();
+    drawTimer();
     if(state == VENTILATING) {
       short x = map(airCondition, Meassure::getLowest(), Meassure::getHighest(), 0, DISPLAY_LENGTH);
       display.fillRect(0, DATABOX_BAR_Y, x, DATABOX_BAR_THICKNESS, state.getColor(COLORED_BAR));
@@ -205,18 +161,44 @@ short DisplayVX::peepCounter = 0;
       if(colorModes::showTopBar.getValue() && false)
         display.fillRect(x+1, TOP_BAR_HEIGHT, DISPLAY_LENGTH, DATABOX_BAR_THICKNESS, GREY);
     }
+  }
+
+  void DisplayVX::drawEssentials() {   
+    //Status
+    dPrint(lastState.getTitle(), DISPLAY_LENGTH/2, STATUS_MARGIN_TOP, LAST_STATUS_SIZE, BACKGROUND_COLOR, 1);
+    dPrint(state.getTitle(), DISPLAY_LENGTH/2, STATUS_MARGIN_TOP, STATUS_SIZE, state.getColor(COLORED_STATE), 1);
+    
+    //Draw Bar
+    if(COLORED_BAR || start) {
+      display.fillRect(0, DATABOX_BAR_Y, DISPLAY_LENGTH, DATABOX_BAR_THICKNESS, state.getColor(COLORED_BAR));
+      if(colorModes::showTopBar.getValue())
+        display.fillRect(0, TOP_BAR_HEIGHT, DISPLAY_LENGTH, DATABOX_BAR_THICKNESS/* TOP_BAR_THICKNESS */, state.getColor(COLORED_BAR));
+    }  
+  }
+
+  void DisplayVX::drawPPM() {
+    String lastppm = getLastPPMString();   
+    String ppm = getPPMString(lastppm);
+
+    //Draw PPM
+    dPrint(lastppm, PPM_MARGIN_LEFT, PPM_Y, ERRORLAST ? PPM_SIZE-1 : PPM_SIZE, DATABOX_BACKGROUND_COLOR, 6);
+    dPrint(ppm, PPM_MARGIN_LEFT, PPM_Y, ERROR ? PPM_SIZE-1 : PPM_SIZE, ERROR ? RED : state.getColor(COLORED_PPM), 6);
+    if (airCondition < 1000 && !ERROR) {
+      dPrint("ppm", PPM_STRING_X, PPM_STRING_Y, PPM_STRING_SIZE, state.getColor(COLORED_PPM), 6);
+    }
 
     //Verhindert überschreiben von "ppm"
     if((airCondition >= 1000 && lastAirCondition < 1000) || (ERROR && !ERRORLAST))
       dPrint("ppm", PPM_STRING_X, PPM_STRING_Y, PPM_STRING_SIZE, DATABOX_BACKGROUND_COLOR, 6);
 
     //write new Pixels
-    dPrint(ppm, PPM_MARGIN_LEFT, PPM_Y, ERROR ? PPM_SIZE-1 : PPM_SIZE, ERROR ? RED : state.getColor(COLORED_PPM), 6, DATABOX_BACKGROUND_COLOR, lastppm, ERRORLAST ? PPM_SIZE-1 : PPM_SIZE);
-    
+    dPrint(ppm, PPM_MARGIN_LEFT, PPM_Y, ERROR ? PPM_SIZE-1 : PPM_SIZE, ERROR ? RED : state.getColor(COLORED_PPM), 6, DATABOX_BACKGROUND_COLOR, lastppm, ERRORLAST ? PPM_SIZE-1 : PPM_SIZE); 
     if(airCondition < 1000 && !ERROR && (start || lastAirCondition >= 1000 || (ERRORLAST && !start)))
       dPrint("ppm", PPM_STRING_X, PPM_STRING_Y, PPM_STRING_SIZE, state.getColor(COLORED_PPM), 6);
-    //drawLoadingBar();)
 
+  }
+
+  void DisplayVX::drawTimer() {
     //calculate time since last ventilating
     unsigned long startTime = Meassure::getStartTime();
     seconds = (millis() - startTime) / 1000 % 60;
@@ -240,4 +222,36 @@ short DisplayVX::peepCounter = 0;
     dPrint(time, TIMER_X, TIMER_Y, TIMER_SIZE, TIME_COLOR, 8, DATABOX_BACKGROUND_COLOR, lastTime, -1, (seconds == 0 && (minutes == 0 || (minutes == 20 && COLORED_TIME))) || start);
     //Set new lasttime
     lastTime = time; //Setzt letzten Wert
+  }
+
+  String DisplayVX::getLastPPMString() {
+    String lastppm;
+    if(ERRORLAST)
+      lastppm = "error";
+    else if(lastAirCondition < 10)
+      lastppm = "  " + String(lastAirCondition);
+    else if(lastAirCondition < 100)
+      lastppm = " " + String(lastAirCondition);
+    else if(lastAirCondition > 9999)
+      lastppm = "9999";
+    else
+      lastppm = String(lastAirCondition);
+    return lastppm;
+  }
+
+  String DisplayVX::getPPMString(String lastppm) {
+    String ppm;
+    if(ERROR)
+      ppm = "error";
+    else if(airCondition <= 0)
+      ppm = lastppm;
+    else if(airCondition < 10)
+      ppm = "  " + String(airCondition);
+    else if(airCondition < 100)
+      ppm = " " + String(airCondition);
+    else if(airCondition > 9999)
+      ppm = "9999";
+    else
+      ppm = String(airCondition);
+    return ppm;
   }

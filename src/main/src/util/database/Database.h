@@ -36,6 +36,8 @@
   void mysql_insert(String grade, int co2, double temp);
   void getUniqueID();
   void setup_wifi();
+  void setup_mqtt();
+  void reconnect();
   void reconnectToMQTT();
   void reconnectToWifi();
 

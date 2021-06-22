@@ -13,18 +13,22 @@
     {SubMenu("General", {
         MenuPage(
           //Input(&general::version),
+          Input(&general::version),
           Input(&general::theme),
           Input(&general::reportSystem),
           Input(&general::language),
           Input(&general::sound),
-          Input(&general::autoTimeReset),
-          Input(&developper::deviceInfo)
+          Input(&general::autoTimeReset)         
         ),      
         MenuPage(
-          Input(&general::developperSettings)
+          //Input(&general::developperSettings),
+          Input(&developper::deviceInfo),
+          Input(&general::blink),
+          Input(&general::graph_speed),
+          Input(&general::ventilating_timeout)
         )
     })},
-    /*{SubMenu("Farb-Modi", {
+    {SubMenu("Farb-Modi", {
         MenuPage(
           Input(&colorModes::c_design),
           Input(&colorModes::c_chart),
@@ -37,7 +41,7 @@
           Input(&colorModes::c_slider),
           Input(&colorModes::showTopBar)
         )
-    })},*/
+    })},
     {SubMenu("Developer", {
         MenuPage(
           Input(&developper::calibrateMin),

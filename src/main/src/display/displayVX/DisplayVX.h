@@ -24,6 +24,11 @@ class DisplayVX {
     static void generateData(int startPPM, int endPPM, int changePPM);
     static void checkState();
     static void writeInfo();
+    static void drawEssentials();
+    static void drawPPM();
+    static String getLastPPMString();
+    static String getPPMString(String lastppm);
+    static void drawTimer();
     //static void createLines();
 
     static State state;

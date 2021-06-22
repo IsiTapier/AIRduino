@@ -116,12 +116,12 @@ namespace general {
   Setting blink_thickness = Setting(NUMBER, "blink_thickness", titlesBlinkThickness, 2, "'Blink Boarder Thickness' changed", 1, 9);
   Setting ventilating_timeout = Setting(NUMBER, "ventilating_timeout", titlesVentilatingTimeout, 5, "'ventilatingTimeout' changed", 1, 9);
 
-  Setting debugPriority = Setting(MULTISELECT, "", titlesDebugPriority, 3, "'Debug' changed", 0, 6, namesDebugPriority);
+  Setting debugPriority = Setting(MULTISELECT, "", titlesDebugPriority, 5, "'Debug' changed", 0, 6, namesDebugPriority);
   Setting debugSetup = Setting(SWITCH, "", titlesDebugSetup, 0, "'Debug Setup' changed");
   Setting debugSensor = Setting(SWITCH, "", titlesDebugSensor, 1, "'Debug Sensor' changed");
   Setting debugDisplay = Setting(SWITCH, "", titlesDebugDisplay, 0, "'Debug Display' changed");
   Setting debugMenu = Setting(SWITCH, "", titlesDebugMenu, 0, "'Debug Menu' changed");
-  Setting debugTouch = Setting(SWITCH, "", titlesDebugTouch, 0, "'Debug Touch' changed");
+  Setting debugTouch = Setting(SWITCH, "", titlesDebugTouch, 1, "'Debug Touch' changed");
   
   Setting debugDatabase = Setting(SWITCH, "", titlesDebugDatabase, 0, "'Debug Database' changed");
   Setting developperSettings = Setting(SWITCH, "", titlesDevelopperSettings, 0, "'Develop settings' changed");

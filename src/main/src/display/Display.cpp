@@ -3,102 +3,39 @@
 */
 
 #include "Display.h"
+#include "manager/Manager.h"
 
 using namespace general;
 
-  TSPoint Display::p;
-  unsigned long Display::lastCycleTime = 0;
-  unsigned long Display::lastLoop = 0;
-  unsigned long Display::lastReconnect = 0;
-  unsigned long Display::lastModeChange = 0;
+  TSPoint Display::p;  
   unsigned long Display::lastTouch;
 
   void Display::setup() {
     debug(DEBUG, SETUP, "Display SETUP started");
-    mode.setValue(LOADINGSCREEN, false);
+    
     display.begin();
     debug(INFO, SETUP, "Display connection started");
     display.fillScreen(BACKGROUND_COLOR);
     display.setTextWrap(false);
     display.setRotation(ROTATION);
-    debug(INFO, SETUP, "Display initialized");
-    //Logo
 
-    drawLogo();
-    eeprom();
-    /*unsigned long begin = millis();
-    while(millis() - begin > 2000) {
-      p = ts.getPoint();
-      if(p.isTouching()) {
-        ts.calibration();
-        break;
-      }
-    }*/
-    setupDatabaseConnection();
-    mode.setValue(LOADINGSCREEN, false);
-    mode.setValue(CHART);
     debug(DEBUG, SETUP, "Display SETUP completed");
     debug(DEBUG, SETUP, "");
-    //drawInfoScreen(5000);
-    Meassure::setup();
-    drawTutorial();
-   
-
-    lastReconnect = millis();
-  }
-
-  void Display::eeprom() {
-    EEPROM.begin(EEPROM_SIZE);
-    //    RESET EEPROM    //
-    /*EEPROM.write(0, 0);
-    EEPROM.writeShort(XMIN, 0);
-    EEPROM.writeShort(XMAX, 0);
-    EEPROM.writeShort(YMIN, 0);
-    EEPROM.writeShort(YMAX, 0);
-    EEPROM.commit();*/
-    if(EEPROM.read(0) == 255) {
-      EEPROM.write(0, 0);
-      EEPROM.commit();
-    }
-    if(EEPROM.readShort(XMIN) == EEPROM.readShort(XMAX) || EEPROM.readShort(YMIN) == EEPROM.readShort(YMAX))
-      ts.calibration();
-    if(debugSetup.getValue() && debugPriority.getValue()) {
-      debug(INFO, SETUP, "EEPROM: sensor", EEPROM.read(0));
-      debug(INFO, SETUP, "EEPROM: xmin", EEPROM.readShort(XMIN));
-      debug(INFO, SETUP, "EEPROM: xmax", EEPROM.readShort(XMAX));
-      debug(INFO, SETUP, "EEPROM: ymin", EEPROM.readShort(YMIN));
-      debug(INFO, SETUP, "EEPORM: ymax", EEPROM.readShort(YMAX));
-    }
+    drawLogo();
   }
 
   void Display::loop() {
-    unsigned long currentCycleTime = millis();
-    while(currentCycleTime - lastCycleTime < STAGE_TIME) {currentCycleTime = millis();}
-    if(currentCycleTime - lastCycleTime > STAGE_TIME) {
-      Serial.print("Warning - timing system failed: ");
-      Serial.print(currentCycleTime-lastCycleTime-STAGE_TIME);
-      Serial.println("ms");
-    }
-    lastCycleTime = currentCycleTime;
-    if(client.connected())
-      client.loop();
     handleTouch();
     initDisplay();
-    if(currentCycleTime - lastReconnect >= RECONNECT_TIME) {
-      lastReconnect = currentCycleTime;
-      reconnect();
-    }
-    if(currentCycleTime - lastLoop >= LOOP_TIME) {
-      lastLoop = currentCycleTime;
+    
+    if(Manager::currentCycleTime - Manager::lastLoop >= LOOP_TIME) {
+      Manager::lastLoop = Manager::currentCycleTime;
 
       Meassure::loop();
       boolean changed = DisplayV1::getGraphData();
-      /*if(mode.getValue() == MENU) {
-        Menu::loop();
-      } else */
 
       if(mode.getValue() == MENU) {
-        Menu::loop();
+        Manager::loop();
       } else if(mode.getValue() == CHART) {
         if(version.equals(V1)) {
           DisplayV1::loop(changed);
@@ -163,7 +100,7 @@ using namespace general;
             mode.setValue(CHART);
           else if(mode.equals(CHART))
             mode.setValue(MENU);
-          lastModeChange = millis();
+            Manager::lastModeChange = millis();
           lastTouch+=500;
         } else if(p.isTouching(MENU_ARROW_RESET_START_X-3, MENU_ARROW_RESET_END_X+3, MENU_ARROW_RESET_START_Y-3, MENU_ARROW_RESET_END_Y+3)) {
           if(mode.equals(MENU) && requestDecision("Einstellungs Reset", "Willst du fortfahren?")) {
@@ -191,8 +128,6 @@ using namespace general;
 
 void Display::drawInfoScreen(int time) {
   display.fillScreen(BLACK);
-
-
   dPrint(device_class, 160, 10, 5, LIGHT_BLUE, 1);
   dPrint("Software:", 200, 70, 3, GREY, 5);
   dPrint(software_version, 200, 70, 3, LIGHTGREY, 3);
@@ -204,7 +139,6 @@ void Display::drawInfoScreen(int time) {
   	dPrint("AN", 200, 100, 3, GREEN, 3);
   }
 
-
   dPrint("Connection:", 200, 130, 3, GREY, 5);
   if(client.connected()) {
      dPrint("online", 200, 130, 3, GREEN, 3);
@@ -213,33 +147,9 @@ void Display::drawInfoScreen(int time) {
   } else {
     dPrint("MQTT", 200, 130, 3, RED, 3);
   }   
-
-  
-
   delay(time);
   general::mode.setValue(LOADINGSCREEN);
   general::mode.setValue(general::mode.getOldValue());  
-}
-
-void Display::reconnect() {
-  boolean isConnected = WiFi.isConnected();
-  Serial.print("Wifi: "); Serial.println(isConnected?"connected":"unconnected");
-  if(!isConnected) {
-    reconnectToWifi();
-    Serial.print("reconnect "); Serial.println(WiFi.isConnected()?"successful":"failed");
-  }
-  isConnected = client.connected();
-  Serial.print("MQTT: "); Serial.println(isConnected?"connected":"unconnected");
-  if(!isConnected) {
-    reconnectToMQTT();
-    Serial.print("reconnect "); Serial.println(client.connected()?"successful":"failed");
-  }
-  isConnected = Meassure::isConnected();
-  Serial.print("Sensor: "); Serial.println(isConnected?"connected":"unconnected");
-  if(!isConnected) {
-    Meassure::reconnect();
-    Serial.print("reconnect "); Serial.println(Meassure::isConnected()?"successful":"failed");
-  }
 }
 
 void Display::drawTutorial() {
