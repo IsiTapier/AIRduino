@@ -54,7 +54,7 @@ using namespace general;
 
   void Input::draw(boolean redraw) {
     if(_inputSection != 0 && (mode.hasChanged() || redraw))
-      display.fillRect(0, MENU_SECTION_Y(_inputSection), MENU_SECTION_LENGTH+1, MENU_SECTION_BORDER_THICKNESS, TEXT_COLOR);
+      display.fillRect(0, MENU_SECTION_Y(_inputSection), MENU_SECTION_LENGTH+1, MENU_SECTION_BORDER_THICKNESS, MENU_LINE_COLOR);
     debug(INFO, MENUD, "Input:", _inputSection, "drawn");
   }
 

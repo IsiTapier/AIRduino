@@ -4,6 +4,7 @@
 
 #include "Database.h"
 #include "../Util.h"
+#include "../../guis/weatherGui/WeatherGui.h"
 
   //global variables
   WiFiClient espClient;
@@ -93,20 +94,27 @@
     Serial.println(ssid);
     // We start by connecting to a WiFi networ
     WiFi.mode(WIFI_STA);
+  
     WiFi.begin(ssid, password);
+    Serial.println(WiFi.scanNetworks(false, true));
+    Serial.println();
+
     delay(500);
+    Serial.println(WiFi.status());
+
     for(int z = 0; (z <= 2) && (WiFi.status() != WL_CONNECTED); z++) {
       WiFi.begin(ssid, password);
-      for (int x = 0; (x <= 5) && (WiFi.status() != WL_CONNECTED); x++) {
+      for (int x = 0; (x <= 10) && (WiFi.status() != WL_CONNECTED); x++) {
         delay(400);
         Serial.print(".");
       }
     }
-    while ((WiFi.status() != WL_CONNECTED) && requestDecision("Wifi fehlgeschlagen", "erneut versuchen?", "Ja", "Nein")) {
+    Serial.println(WiFi.status());
+    while ((WiFi.status() != WL_CONNECTED) && requestDecision("Wifi fehlgeschlagen", "erneut versuchen?", "Ja", "Nein", 10000, true)) {
       drawLogo();
       for(int z = 0; (z <= 2) && (WiFi.status() != WL_CONNECTED); z++) {
         WiFi.begin(ssid, password);
-        for (int x = 0; (x <= 5) && (WiFi.status() != WL_CONNECTED); x++) {
+        for (int x = 0; (x <= 7) && (WiFi.status() != WL_CONNECTED); x++) {
           delay(500);
           Serial.print(".");
         }
@@ -157,6 +165,12 @@
         subscribeToMQTT("manager/testPeep/", device_class);
         subscribeToMQTT("manager/message/", device_class);
 
+        subscribeToMQTT("weather/weather");
+        subscribeToMQTT("weather/windspeed");
+        subscribeToMQTT("weather/temp");
+        subscribeToMQTT("weather/humidity");
+        subscribeToMQTT("weather/forecastWeather3");
+        subscribeToMQTT("weather/forecastWeatherTomorrow");
       }
     }
   }
@@ -202,10 +216,10 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
           case 0: {
             device_class = output;
             if (device_class[0] == 'a' && device_class[1] == 'u' && device_class[2] == 't') { //if the grade is auto generated
-              debug(ERROR, DATABASE, "///////////////////// CONFIG ///////////////////////////");
+              /* debug(ERROR, DATABASE, "///////////////////// CONFIG ///////////////////////////");
               debug(ERROR, DATABASE, "Please enter the grade of your device into the database");
               debug(ERROR, DATABASE, "////////////////////////////////////////////////////////");
-            }
+             */}
           }
             break;
           case 1: general::version.setValue((short) atoi(output.c_str()), false);
@@ -314,6 +328,26 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
       }
       general::mode.setValue(LOADINGSCREEN);
       general::mode.setValue(general::mode.getOldValue());
+    }
+
+    //Weather system
+    if(topic == "weather/weather") {
+      WeatherGui::updateWeather(payload_string);
+    }
+    if(topic == "weather/windspeed") {
+      WeatherGui::updateWindspeed(payload_string);
+    }
+    if(topic == "weather/temp") {
+      WeatherGui::updateTemp(payload_string);
+    }
+    if(topic == "weather/humidity") {
+      WeatherGui::updateHumidity(payload_string);
+    }
+    if(topic == "weather/forecastWeather3") {
+      WeatherGui::updateForecastWeather3(payload_string);
+    }
+    if(topic == "weather/forecastWeatherTomorrow") {
+      WeatherGui::updateForecastWeatherTomorrow(payload_string);
     }
   }
 

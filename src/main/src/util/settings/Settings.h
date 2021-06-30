@@ -38,6 +38,7 @@ namespace general {
   extern Setting autoTimeReset;
 
   extern Setting mode;
+  extern Setting gui;
   extern Setting maintenance_mode;
   extern Setting reportSystem;
 }

@@ -4,6 +4,7 @@
 
 #include "Setting.h"
 #include "../../util/Util.h"
+#include "../../display/Display.h"
 
 Setting::Setting(void) {}
 Setting::Setting(SettingType type, const char* key, std::vector<String> title, short defaultValue, const char* debugMessage, short minValue, short maxValue, std::vector<std::vector<String>> names,  boolean colored) { //TODO DATATYPE
@@ -80,6 +81,7 @@ void Setting::shiftValue(boolean up, boolean upload) {
     setValue(_value+1);
   else
     setValue(_value-1);
+  
 }
 
 SettingType Setting::getType() {

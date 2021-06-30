@@ -51,6 +51,16 @@
     RESET = 4
   };
 
+  enum GUIS {
+    CO2_GUI = 0,
+    STOPWATCH_GUI = 1,
+    WEATHER_GUI = 2,
+    TIMER_GUI = 3,
+    RANDOM_STUDENT_GUI = 4,
+    DECIBEL_GUI = 5,
+    GUI_MENU = 6
+  };
+
   template<class T>
   struct _init_list_with_square_brackets {
     const std::initializer_list<T>& list;

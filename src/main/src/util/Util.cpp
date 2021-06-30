@@ -235,12 +235,12 @@
       p = ts.getPoint();
       if(p.isTouching()) {
         p.calibrate();
-        if(p.isTouching(0, 160, 160, 240)) {
+        if(p.isTouching(0, 160, 120, 240)) {
           general::mode.setValue(LOADINGSCREEN);
           general::mode.setValue(general::mode.getOldValue());            
           return true;
         }
-        if(p.isTouching(161, 320, 160, 240)) {
+        if(p.isTouching(161, 320, 120, 240)) {
           general::mode.setValue(LOADINGSCREEN);
           general::mode.setValue(general::mode.getOldValue());            
           return false;

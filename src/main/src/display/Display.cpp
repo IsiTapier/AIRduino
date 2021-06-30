@@ -37,13 +37,23 @@ using namespace general;
       if(mode.getValue() == MENU) {
         Manager::loop();
       } else if(mode.getValue() == CHART) {
-        if(version.equals(V1)) {
-          DisplayV1::loop(changed);
-        } else if(version.equals(V2)) {
-          DisplayV2::loop();
-        } else if(version.equals(V3)) {
-          DisplayV3::loop();
-        }
+        if(gui.getValue() == CO2_GUI) {
+          if(version.equals(V1)) {
+            DisplayV1::loop(changed);
+          } else if(version.equals(V2)) {
+            DisplayV2::loop();
+          } else if(version.equals(V3)) {
+            DisplayV3::loop();
+          }
+        } else if(gui.getValue() == STOPWATCH_GUI) {
+          StopwatchGui::loop();
+/*         } else if(gui.getValue() == TIMER_GUI) {
+     
+        } else if(gui.getValue() == DECIBEL_GUI) {
+          
+        } else if(gui.getValue() == RANDOM_STUDENT_GUI) {
+          */
+        } 
       } else if(mode.getValue() == MAINTENANCE) {
         maintenanceMode();
       }
@@ -51,18 +61,22 @@ using namespace general;
   }
 
   void Display::initDisplay() {
-    if(mode.hasChanged() || (version.hasChanged() && !mode.equals(MENU)) || theme.hasChanged() || language.hasChanged()) {
+    if(gui.hasChanged() || mode.hasChanged() || (version.hasChanged() && !mode.equals(MENU)) || theme.hasChanged() || language.hasChanged()) {
       if(mode.getValue() == CHART) {
-        if(version.equals(V1)) {
-          DisplayV1::setup();
-          DisplayV1::loop(false);
-        } else if(version.equals(V2)) {
-          DisplayV2::setup();
-          DisplayV2::loop();
-        } else if(version.equals(V3)) {
-          DisplayV3::setup();
-          DisplayV3::loop();
-        }
+        Serial.println("initDisplay");
+        if(gui.equals(CO2_GUI)) {
+          if(version.equals(V1)) {
+            DisplayV1::setup();
+            DisplayV1::loop(false);
+          } else if(version.equals(V2)) {
+            DisplayV2::setup();
+            DisplayV2::loop();
+          } else if(version.equals(V3)) {
+            DisplayV3::setup();
+            DisplayV3::loop();
+          }
+        }  
+        initAllGuis(); 
       } else if(mode.getValue() == MENU && (theme.hasChanged() || mode.hasChanged() || language.hasChanged())) {
         ledcDetachPin(PIEZO);
         Menu::setup();
@@ -78,9 +92,10 @@ using namespace general;
       theme.setValue(theme.getValue(), false);
       language.setValue(language.getValue(), false);
       mode.setValue(mode.getValue(), false);
+      gui.setValue(gui.getValue(), false);
     }
   }
-
+  
   void Display::handleTouch() {
     if(!p.isTouching()) {
       // a point object holds x y and z coordinates
@@ -93,31 +108,120 @@ using namespace general;
         if(!p.isTouching())
           return;
         lastTouch = millis();
-        if(p.isTouching(MENU_ARROW_BACK_START_X-3, MENU_ARROW_BACK_END_X+3, MENU_ARROW_BACK_START_Y-3, MENU_ARROW_BACK_END_Y+3)) {
-          if(debugSetup.getValue())
-            debug(INFO, SETUP, "change Mode");
-          if(mode.equals(MENU))
-            mode.setValue(CHART);
-          else if(mode.equals(CHART))
-            mode.setValue(MENU);
-            Manager::lastModeChange = millis();
+        if(p.isTouching(MENU_ARROW_BACK_START_X-10, MENU_ARROW_BACK_END_X+10, MENU_ARROW_BACK_START_Y-10, MENU_ARROW_BACK_END_Y+10)) {
+          if(gui.equals(GUI_MENU)) {
+            if(mode.equals(MENU)) {
+              MenuGui::initGui();
+              mode.setValue(CHART);
+              debug(INFO, SETUP, "change Mode to chart");
+            }        
+          } else {
+            gui.setValue(GUI_MENU);           
+          }           
           lastTouch+=500;
-        } else if(p.isTouching(MENU_ARROW_RESET_START_X-3, MENU_ARROW_RESET_END_X+3, MENU_ARROW_RESET_START_Y-3, MENU_ARROW_RESET_END_Y+3)) {
+          Manager::lastModeChange = millis();
+          return;
+        } 
+        if(p.isTouching(MENU_ARROW_RESET_START_X-3, MENU_ARROW_RESET_END_X+3, MENU_ARROW_RESET_START_Y-3, MENU_ARROW_RESET_END_Y+3)) {
           if(mode.equals(MENU) && requestDecision("Einstellungs Reset", "Willst du fortfahren?")) {
             if(debugSetup.getValue())
               debug(WARNING, SETUP, "reset");
             Menu::reset();
             Menu::setup();
+            
           } else if(mode.equals(CHART)) {
-            Meassure::resetStartTime(true);
-            DisplayV1::resetGraph();
-            if(version.equals(V1))
-              DisplayV1::setup();
+            if(gui.equals(CO2_GUI)) {
+              Meassure::resetStartTime(true);
+              DisplayV1::resetGraph();
+              if(version.equals(V1))
+                DisplayV1::setup(); 
+            }            
           }
-        } else if(mode.equals(MENU)) {
+          if(gui.equals(GUI_MENU)) {
+            if(mode.equals(CHART)) {
+              if(debugSetup.getValue())
+                debug(INFO, SETUP, "change Mode");
+              if(mode.equals(MENU))
+                mode.setValue(CHART);
+              else if(mode.equals(CHART))
+                mode.setValue(MENU);
+              Manager::lastModeChange = millis();
+            }
+          }
+          return;
+        } 
+        if(mode.equals(MENU)) {
           Menu::handleTouch(p);
-        } else if(mode.equals(CHART)) {
-          version.shiftValue();
+          //Stopwatch GUI
+        } 
+        if(p.isTouching(DISPLAY_LENGTH/2, DISPLAY_LENGTH, DISPLAY_HEIGHT/2, DISPLAY_HEIGHT)) {
+          if(gui.equals(STOPWATCH_GUI) && mode.equals(CHART)) {
+            StopwatchGui::toggleStopwatch();
+            return;
+          }          
+          
+        } if(p.isTouching(0, DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2, DISPLAY_HEIGHT)) {
+          if(gui.equals(STOPWATCH_GUI) && mode.equals(CHART)) {
+            StopwatchGui::resetStopwatch();
+          } 
+        //Timer Gui    
+        } if(p.isTouching(45, 100, 15, 100)) {
+          if(gui.equals(TIMER_GUI)) {
+            Serial.println("oben l");
+            TimerGui::updateDigit(1, 1);
+            return;
+          }
+        } if(p.isTouching(190, 240, 14, 100)) {
+          if(gui.equals(TIMER_GUI)) {
+            Serial.println("oben r");
+            TimerGui::updateDigit(2, 15);
+            return;
+          }
+          
+        } 
+        if(p.isTouching(40, 100, 101, 170)) {
+          if(gui.equals(TIMER_GUI)) {
+            Serial.println("unten l");
+            TimerGui::updateDigit(1, -1);
+            return;
+          }
+        } 
+        if(p.isTouching(190, 240, 101, 170)) {
+          if(gui.equals(TIMER_GUI)) {
+            TimerGui::updateDigit(2, -15);
+            Serial.println("unten r");
+            return;
+          }
+        }
+        if(gui.equals(TIMER_GUI)) {
+          if(p.isTouching(0, 160, DISPLAY_HEIGHT-66, 240)) {
+            TimerGui::resetTimer();
+            Serial.println("reset timer");
+            return;
+          }
+          if(p.isTouching(161, 320, DISPLAY_HEIGHT-66, 240 )) {
+            TimerGui::toggleTimer();
+            Serial.println("toggle timer");
+            return;
+          }
+        }
+        //-----------------
+        if(mode.equals(CHART)) {
+          gui.shiftValue();
+          if(gui.equals(CO2_GUI)) {
+            if(version.equals(V1)) {
+              DisplayV1::setup();
+              DisplayV1::loop(false);
+            } if(version.equals(V2)) {
+              DisplayV2::setup();
+              DisplayV2::loop();
+            } if(version.equals(V3)) {
+              DisplayV3::setup();
+              DisplayV3::loop();
+            }
+            return;
+          }     
+          initAllGuis();
           lastTouch+=500;
         } 
       }
@@ -126,11 +230,18 @@ using namespace general;
     }
   }
 
+void Display::initAllGuis() {
+  StopwatchGui::initGui();
+  WeatherGui::initGui();
+  TimerGui::initGui();
+  MenuGui::initGui();
+}
+
 void Display::drawInfoScreen(int time) {
   display.fillScreen(BLACK);
   dPrint(device_class, 160, 10, 5, LIGHT_BLUE, 1);
-  dPrint("Software:", 200, 70, 3, GREY, 5);
-  dPrint(software_version, 200, 70, 3, LIGHTGREY, 3);
+  dPrint("Software:", 170, 70, 3, GREY, 5);
+  dPrint(software_version, 170, 70, 3, LIGHTGREY, 3);
 
   dPrint("Mapping:", 200, 100, 3, GREY, 5);
   if((SENSORMAPMIN == 0) && (SENSORMAPMAX == 0)) {
@@ -147,6 +258,10 @@ void Display::drawInfoScreen(int time) {
   } else {
     dPrint("MQTT", 200, 130, 3, RED, 3);
   }   
+
+  dPrint("Wlan:", 150, 160, 3, GREY, 5);
+  dPrint(ssid, 150, 160, 3, LIGHTGREY, 3);
+  
   delay(time);
   general::mode.setValue(LOADINGSCREEN);
   general::mode.setValue(general::mode.getOldValue());  

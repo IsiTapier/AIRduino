@@ -10,6 +10,10 @@
 #include "displayV1/DisplayV1.h"
 #include "displayV2/DisplayV2.h"
 #include "displayV3/DisplayV3.h"
+#include "../guis/stopwatchGui/StopwatchGui.h"
+#include "../guis/weatherGui/WeatherGui.h"
+#include "../guis/timerGui/TimerGui.h"
+#include "../guis/menuGui/MenuGui.h"
 
 
 
@@ -27,6 +31,8 @@ class Display {
     static void reconnect();
     static void drawTutorial();
     static void drawAuthors();
+    static void initAllGuis();
+    
 
   private:
     static TSPoint p;

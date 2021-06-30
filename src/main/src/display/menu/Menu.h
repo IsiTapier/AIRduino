@@ -15,6 +15,7 @@ extern SubMenu subMenus[];
 //temporary
 #define DEFAULT_SUB_MENU 0
 #define REPORT_MENU_TITLE "Hilfe"
+#define LINE_COLOR (BLACK_MODE) ? GREY : GREY
 
 class Menu {
   public:

@@ -17,6 +17,7 @@ using namespace general;
   unsigned long Manager::lastModeChange = 0;
   unsigned long Manager::currentCycleTime = 0;
 
+
 void Manager::setup() {
     mode.setValue(LOADINGSCREEN, false);
     Display::setup();

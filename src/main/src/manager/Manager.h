@@ -24,6 +24,8 @@ class Manager {
     static unsigned long lastReconnect;
     static unsigned long lastModeChange;
     static unsigned long currentCycleTime;
+
+    
   private:
     
 };
