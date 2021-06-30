@@ -17,6 +17,7 @@ void StopwatchGui::initGui() {
         dPrint("RESET", DISPLAY_LENGTH*1/4, DISPLAY_HEIGHT*3/4, 4, ORANGE, 4);
         dPrint("Stoppuhr", MENU_ARROW_BACK_START_X - 5, 20, 2, GREY, 5);
         display.pushImage(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, homeDark, BLACK);
+        lastTime = "";
         drawStopwatch();
         drawButtons();
     }  
@@ -46,6 +47,7 @@ void StopwatchGui::resetStopwatch() {
     isRunning = false;
     millisAtPause = 0;
     startMillis = 0;
+    drawButtons();
     }
 
 void StopwatchGui::drawButtons() {
@@ -56,7 +58,6 @@ void StopwatchGui::drawButtons() {
     } else {
         dPrint("STOP", DISPLAY_LENGTH*3/4, DISPLAY_HEIGHT*3/4, 4, BLACK, 4);
         dPrint("START", DISPLAY_LENGTH*3/4, DISPLAY_HEIGHT*3/4, 4, LIME, 4); 
-        
     }
 }
 
