@@ -205,10 +205,11 @@ using namespace general;
             return;
           }
         }
+        MenuGui::handleTouch(p);
         //-----------------
-        if(mode.equals(CHART)) {
-          gui.shiftValue();
+        if(mode.equals(CHART)) {        
           if(gui.equals(CO2_GUI)) {
+            version.shiftValue();
             if(version.equals(V1)) {
               DisplayV1::setup();
               DisplayV1::loop(false);
@@ -218,7 +219,7 @@ using namespace general;
             } if(version.equals(V3)) {
               DisplayV3::setup();
               DisplayV3::loop();
-            }
+            }    
             return;
           }     
           initAllGuis();

@@ -13,7 +13,7 @@ class MenuGui {
   public:
     static void loop();
     static void initGui();
-
+    static void handleTouch(TSPoint p);
   private:
     
 

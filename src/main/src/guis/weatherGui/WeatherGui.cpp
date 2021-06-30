@@ -1,12 +1,12 @@
 
 #include "WeatherGui.h"
 
-String WeatherGui::weather = "Rain";
-String WeatherGui::windspeed = "1.5";
-String WeatherGui::humidity = "80";
-String WeatherGui::temp = "23.4";     
-String WeatherGui::forecastWeather3 = "Atmosphere";
-String WeatherGui::forecastWeatherTomorrow = "Thunderstorm";
+String WeatherGui::weather = "";
+String WeatherGui::windspeed = "";
+String WeatherGui::humidity = "";
+String WeatherGui::temp = "";     
+String WeatherGui::forecastWeather3 = "";
+String WeatherGui::forecastWeatherTomorrow = "";
 
 void WeatherGui::loop() {
     
