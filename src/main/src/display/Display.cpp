@@ -27,7 +27,8 @@ using namespace general;
   void Display::loop() {
     handleTouch();
     initDisplay();
-    
+    if(gui.getValue() == STOPWATCH_GUI)
+      StopwatchGui::loop();
     if(Manager::currentCycleTime - Manager::lastLoop >= LOOP_TIME) {
       Manager::lastLoop = Manager::currentCycleTime;
 
@@ -35,7 +36,7 @@ using namespace general;
       boolean changed = DisplayV1::getGraphData();
 
       if(mode.getValue() == MENU) {
-        Manager::loop();
+        Menu::loop();
       } else if(mode.getValue() == CHART) {
         if(gui.getValue() == CO2_GUI) {
           if(version.equals(V1)) {
@@ -46,7 +47,7 @@ using namespace general;
             DisplayV3::loop();
           }
         } else if(gui.getValue() == STOPWATCH_GUI) {
-          StopwatchGui::loop();
+        //  StopwatchGui::loop();
 /*         } else if(gui.getValue() == TIMER_GUI) {
      
         } else if(gui.getValue() == DECIBEL_GUI) {
@@ -163,6 +164,7 @@ using namespace general;
         } if(p.isTouching(0, DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2, DISPLAY_HEIGHT)) {
           if(gui.equals(STOPWATCH_GUI) && mode.equals(CHART)) {
             StopwatchGui::resetStopwatch();
+            return;
           } 
         //Timer Gui    
         } if(p.isTouching(45, 100, 15, 100)) {
@@ -241,27 +243,27 @@ void Display::initAllGuis() {
 void Display::drawInfoScreen(int time) {
   display.fillScreen(BLACK);
   dPrint(device_class, 160, 10, 5, LIGHT_BLUE, 1);
-  dPrint("Software:", 170, 70, 3, GREY, 5);
-  dPrint(software_version, 170, 70, 3, LIGHTGREY, 3);
+  dPrint("Software:", 10, 70, 3, GREY, 0);
+  dPrint(software_version, 9*6*3+10, 70, 3, LIGHTGREY, 0);
 
-  dPrint("Mapping:", 200, 100, 3, GREY, 5);
+  dPrint("Mapping:", 10, 100, 3, GREY, 0);
   if((SENSORMAPMIN == 0) && (SENSORMAPMAX == 0)) {
-    dPrint("AUS", 200, 100, 3, RED, 3);
+    dPrint("AUS", 8*6*3+10, 100, 3, RED, 0);
   } else {
-  	dPrint("AN", 200, 100, 3, GREEN, 3);
+  	dPrint("AN", 8*6*3+10, 100, 3, GREEN, 0);
   }
 
-  dPrint("Connection:", 200, 130, 3, GREY, 5);
+  dPrint("Connection:", 10, 130, 3, GREY, 0);
   if(client.connected()) {
-     dPrint("online", 200, 130, 3, GREEN, 3);
+    dPrint("online", 11*6*3+10, 130, 3, GREEN, 0);
   } else if(WiFi.status() != WL_CONNECTED) {
-    dPrint("WLAN", 200, 130, 3, RED, 3);
+    dPrint("WLAN", 11*6*3+10, 130, 3, RED, 0);
   } else {
-    dPrint("MQTT", 200, 130, 3, RED, 3);
+    dPrint("MQTT", 11*6*3+10, 130, 3, RED, 0);
   }   
 
-  dPrint("Wlan:", 150, 160, 3, GREY, 5);
-  dPrint(ssid, 150, 160, 3, LIGHTGREY, 3);
+  dPrint("Wlan:", 10, 160, 3, GREY, 0);
+  dPrint(ssid, 5*6*3+10, 160, 3, LIGHTGREY, 0);
   
   delay(time);
   general::mode.setValue(LOADINGSCREEN);
