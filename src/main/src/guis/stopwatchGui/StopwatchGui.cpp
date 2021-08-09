@@ -48,6 +48,7 @@ void StopwatchGui::resetStopwatch() {
     millisAtPause = 0;
     startMillis = 0;
     drawButtons();
+    drawIcon();
     }
 
 void StopwatchGui::drawButtons() {
@@ -76,7 +77,7 @@ void StopwatchGui::drawStopwatch() {
         drawDigits(millis() - startMillis);    
     } else {        
         // dPrint(lastTime, 160, 80, 9, BLACK, 4);
-        if(millisAtPause)
+        if(millisAtPause == 0)
             drawDigits(0);
         else 
             drawDigits(millisAtPause - startMillis);

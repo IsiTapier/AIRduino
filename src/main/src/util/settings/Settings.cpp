@@ -102,8 +102,7 @@
 namespace general {
   Setting empty = Setting(EMPTY);  
 
-
-  Setting version = Setting(MULTISELECT, "version", titlesVersion, 1, "'Version' changed", 1, 3, namesVersion, false);
+  Setting version = Setting(MULTISELECT, "version", titlesVersion, 3, "'Version' changed", 1, 3, namesVersion, false);
   Setting theme = Setting(SELECT, "theme", titlesTheme, 1, "'Theme' changed", 0, 1, namesTheme);
   Setting sound = Setting(SWITCH, "sound", titlesSound, 1, "'Piezo' changed");
   Setting blink = Setting(SWITCH, "blink", titlesBlink, 1, "'Blink' changed");
@@ -129,9 +128,10 @@ namespace general {
   Setting autoTimeReset = Setting(SWITCH, "", titlesAutoTimeReset, 1, "'Auto Time Reset' changed");
   
   Setting mode = Setting(MULTISELECT, "mode", titlesMode, MENU, "'Mode' changed", 0, 4);
-  Setting gui = Setting(MULTISELECT, "", titles, GUI_MENU, "'gui' changed", 0, 6);
+  Setting gui = Setting(MULTISELECT, "", titles, CO2_GUI, "'gui' changed", 0, 6);
   Setting maintenance_mode = Setting(MULTISELECT, "maintenance_mode", titlesMaintenanceMode, 0, "'Wartungsmodus' changed", 0, 3);
   Setting reportSystem = Setting(ACTIVATOR, "", titlesReportSystem, 4);
+  Setting manualReconnect = Setting(ACTIVATOR, "", {"reconnect"}, 12);
 }
 
 namespace colorModes {

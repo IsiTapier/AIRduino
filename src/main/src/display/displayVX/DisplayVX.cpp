@@ -98,10 +98,7 @@ short DisplayVX::peepCounter = 0;
   }
 
   void DisplayVX::checkState() {
-    if(lastState == VENTILATING && state != VENTILATING)
-      peep = -1;
     if(blinkSwitch) {
-      blinkSwitch = 0;
       //restore Border
       drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, 1, BACKGROUND_COLOR);
       display.drawLine(0, DISPLAY_HEIGHT-1, DISPLAY_LENGTH-1, DISPLAY_HEIGHT-1, DATABOX_BACKGROUND_COLOR);
@@ -113,12 +110,24 @@ short DisplayVX::peepCounter = 0;
         display.drawLine(0, TOP_BAR_HEIGHT, 0, TOP_BAR_HEIGHT+DATABOX_BAR_THICKNESS-1, state.getColor(COLORED_BAR));
         display.drawLine(DISPLAY_LENGTH-1, TOP_BAR_HEIGHT, DISPLAY_LENGTH-1, TOP_BAR_HEIGHT+DATABOX_BAR_THICKNESS-1, state.getColor(COLORED_BAR));
       }
-      if(peepCounter > 0)
+    } else {
+      if(state >= 3 && general::blink.getValue()) {
+        drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, 1, WHITE);
+      }    
+    }
+  }
+
+  void DisplayVX::peepLoop() {
+    if(lastState == VENTILATING && state != VENTILATING)
+      peep = -1;
+    if(blinkSwitch) {
+      blinkSwitch = 0;
+      if(peepCounter > 0) {
         ledcDetachPin(PIEZO);
+      }
     } else {
       if(state >= 3 && general::blink.getValue()) {
         blinkSwitch = 1;
-        drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, 1, WHITE);
       }
       if(airCondition < PEEPSTART)
         return;

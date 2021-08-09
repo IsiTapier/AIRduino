@@ -21,11 +21,11 @@ enum States {
 
 const String stateTitles[6][5] = {
   {"L"+ue+"ftet", "Gut", "Ok", "Schlecht", "L"+ue+"ften!"},
-  {"ventilating", "we", "okay", "bad", "horrible"},
+  {"ventilating", "well", "okay", "bad", "horrible"},
   {"a"+ea+"rer", "bon", "agr"+ea+"able", "dang"+ea+"reux", "terrible"},
   {"ventilasi", "Nggih", "ditrima", "ala", "bejat"},
   {"ventilacion", "bien", "agradable", "malo", "catastr"+oa+"fico"},
-  {"es ist nicht kalt", "l"+oe+"tig", "bon", "zut", "d"+ea+"gueulasse"}
+  {"es ist nicht kalt", "l"+oe+"tig", "bon", "zut", "dang it"}
 };
 
 class State {

@@ -17,7 +17,8 @@ class DisplayVX {
   public:
     static void setup();
     static void handleData();
-
+    static void peepLoop();
+    
   protected:
     static void drawDisplay();
     static void getData();

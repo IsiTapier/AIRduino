@@ -40,6 +40,7 @@
   void reconnect();
   void reconnectToMQTT();
   void reconnectToWifi();
+  void reconnectSystem();
 
   void subscribeToMQTT(String topic);
   void subscribeToMQTT(String topic, String c);

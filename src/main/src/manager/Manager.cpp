@@ -32,7 +32,13 @@ void Manager::setup() {
 void Manager::loop() {
     //Timing System Check
     currentCycleTime = millis();
-    while(currentCycleTime - lastCycleTime < STAGE_TIME) {currentCycleTime = millis();}
+    while(currentCycleTime - lastCycleTime < STAGE_TIME) {
+      currentCycleTime = millis();
+      if(gui.getValue() == TIMER_GUI)
+        TimerGui::loop();
+      if(gui.getValue() == STOPWATCH_GUI)
+        StopwatchGui::loop();
+      }
     if(currentCycleTime - lastCycleTime > STAGE_TIME) {
       Serial.print("Warning - timing system failed: ");
       Serial.print(currentCycleTime-lastCycleTime-STAGE_TIME);
@@ -48,9 +54,11 @@ void Manager::loop() {
     //Reconnect System
     if(currentCycleTime - lastReconnect >= RECONNECT_TIME) {
       lastReconnect = currentCycleTime;
-      reconnect();
+      reconnectSystem();           
     }
 }
+
+
 
 void Manager::eeprom() {
     EEPROM.begin(EEPROM_SIZE);

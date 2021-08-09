@@ -41,6 +41,7 @@ namespace general {
   extern Setting gui;
   extern Setting maintenance_mode;
   extern Setting reportSystem;
+  extern Setting manualReconnect;
 }
 
 namespace colorModes {

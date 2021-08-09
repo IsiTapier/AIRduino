@@ -40,8 +40,10 @@ void WeatherGui::initGui() {
 
 void WeatherGui::updateWeather(String _weather) {
     if(weather == "") {
-        display.fillScreen(BLACK);
-        dPrint("Wetter", MENU_ARROW_BACK_START_X - 5, 20, 2, GREY, 5);
+        if(gui.equals(WEATHER_GUI)) {
+            display.fillScreen(BLACK);
+            dPrint("Wetter", MENU_ARROW_BACK_START_X - 5, 20, 2, GREY, 5);      
+        }
         // dPrint("Wetter", DISPLAY_LENGTH/2, DISPLAY_HEIGHT/6, 5, BLUE, 4);
     }
     weather = _weather;
@@ -61,7 +63,7 @@ void WeatherGui::updateWindspeed(String _speed) {
         if(windspeed.length() > 4)
             windspeed == windspeed[0] + windspeed[1] + "";
         dPrint(windspeed, 30, DISPLAY_HEIGHT*2/3 + 30, 3, WHITE);
-        dPrint("m/s", 50, DISPLAY_HEIGHT*2/3 + 52, 2, GREY);
+        dPrint("km/h", 50, DISPLAY_HEIGHT*2/3 + 52, 2, GREY);
     }
 }
 

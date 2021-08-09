@@ -25,7 +25,8 @@
           Input(&developper::deviceInfo),
           Input(&general::blink),
           Input(&general::graph_speed),
-          Input(&general::ventilating_timeout)
+          Input(&general::ventilating_timeout),
+          Input(&general::manualReconnect)
         )
     })},
     {SubMenu("Farb-Modi", {

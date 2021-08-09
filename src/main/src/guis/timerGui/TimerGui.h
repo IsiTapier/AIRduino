@@ -23,14 +23,18 @@ class TimerGui {
     static void stopTimer();
     static void resetTimer();
     static void drawButtons();
-    static void drawDigits(int totalSeconds);
+    static void drawDigits(int _millis);
+    static void drawIcon();
+    static String getDigitsOfMillis(int _millis);
+    static void peep();
 
     static int goalMillis;
-    static int millisAtPause;
+    static int millisToGoal;
     static boolean isRunning;
     static int millisDifference;
     static String lastTime;
     static String lastDifference;
+    static int peepCount;
   private:
     
 

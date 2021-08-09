@@ -38,7 +38,7 @@
 #define REQUESTDECISIONCOOLDOWN 500
 
 //settings
-#define STAGE_TIME 50
+#define STAGE_TIME 25
 #define LOOP_TIME 1000
 #define MENU_BUTTON_COOLDOWN 1*1000
 #define VENTILATING_TIMEOUT general::ventilating_timeout.getValue()*2*1000
@@ -46,14 +46,14 @@
 
 //peeper
 //octave
-#define STARTOCTAVE 3
+#define STARTOCTAVE 2
 #define MAXOCTAVE 4
 //peeps
 #define INCREASEPEEPS 1
-#define STARTPEEPS 2
+#define STARTPEEPS 1
 #define MAXPEEPS 5
 //peep trigger
-#define PEEPSTART 2000
+#define PEEPSTART 1500
 #define PEEPEND -1
 #define PEEPINTERVAL 500
 
@@ -98,10 +98,10 @@
 
 #define DISPLAYED_PPM_LOWEST 400
 #define DISPLAYED_PPM_HIGHEST 2000
-
-#define LIMIT_GOOD 933
-#define LIMIT_MEDIUM 1466
-#define LIMIT_BAD 2000
+ 
+#define LIMIT_GOOD 1000
+#define LIMIT_MEDIUM 1500
+#define LIMIT_BAD 3000
 #define LIMIT_BLINK LIMIT_MEDIUM
 #define LIMIT_PIEP LIMIT_BAD
 

@@ -57,7 +57,6 @@ void DisplayV3::loop() {
 
  void DisplayV3::drawDisplay() {
     display.fillScreen(BLACK);
-    display.pushImage(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, gear, WHITE);
     debug(INFO, SETUP, "Display drawn");
     // dPrint("16:44", 160, 120, 11, BLACK, 4, state.getColor(true));
 }
@@ -108,7 +107,7 @@ void DisplayV3::writeInfoV3() {
       display.fillCircle(x, 0, 19, state.getColor(true));
 
       //draw ICONS
-      display.pushImage(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, gear, WHITE);
+      display.pushImage(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, homeDark, WHITE);
       display.pushImage(MENU_ARROW_RESET_START_X, MENU_ARROW_RESET_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, arrowResetDark, BLACK);
     }
     //calculate time since last ventilating

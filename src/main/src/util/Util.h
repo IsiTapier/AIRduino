@@ -58,7 +58,8 @@
     TIMER_GUI = 3,
     RANDOM_STUDENT_GUI = 4,
     DECIBEL_GUI = 5,
-    GUI_MENU = 6
+    GUI_MENU = 6,
+    RECONNECT_GUI = 7
   };
 
   template<class T>

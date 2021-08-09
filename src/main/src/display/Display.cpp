@@ -9,6 +9,7 @@ using namespace general;
 
   TSPoint Display::p;  
   unsigned long Display::lastTouch;
+  int Display::lastGui = GUI_MENU;
 
   void Display::setup() {
     debug(DEBUG, SETUP, "Display SETUP started");
@@ -27,13 +28,17 @@ using namespace general;
   void Display::loop() {
     handleTouch();
     initDisplay();
-    if(gui.getValue() == STOPWATCH_GUI)
-      StopwatchGui::loop();
-    if(Manager::currentCycleTime - Manager::lastLoop >= LOOP_TIME) {
+    
+
+    if(Manager::currentCycleTime - Manager::lastLoop >= LOOP_TIME) {     
       Manager::lastLoop = Manager::currentCycleTime;
+      DisplayVX::peepLoop();
 
       Meassure::loop();
       boolean changed = DisplayV1::getGraphData();
+      
+      TimerGui::peep();
+
 
       if(mode.getValue() == MENU) {
         Menu::loop();
@@ -81,6 +86,7 @@ using namespace general;
       } else if(mode.getValue() == MENU && (theme.hasChanged() || mode.hasChanged() || language.hasChanged())) {
         ledcDetachPin(PIEZO);
         Menu::setup();
+        
       } else if(mode.getValue() == LOADINGSCREEN) {
         Serial.println("Restart");
         ESP.restart();
@@ -112,18 +118,20 @@ using namespace general;
         if(p.isTouching(MENU_ARROW_BACK_START_X-10, MENU_ARROW_BACK_END_X+10, MENU_ARROW_BACK_START_Y-10, MENU_ARROW_BACK_END_Y+10)) {
           if(gui.equals(GUI_MENU)) {
             if(mode.equals(MENU)) {
-              MenuGui::initGui();
               mode.setValue(CHART);
               debug(INFO, SETUP, "change Mode to chart");
-            }        
+            } else {
+              gui.setValue(lastGui);
+            }       
           } else {
+            lastGui = gui.getValue();
             gui.setValue(GUI_MENU);           
           }           
           lastTouch+=500;
           Manager::lastModeChange = millis();
           return;
         } 
-        if(p.isTouching(MENU_ARROW_RESET_START_X-3, MENU_ARROW_RESET_END_X+3, MENU_ARROW_RESET_START_Y-3, MENU_ARROW_RESET_END_Y+3)) {
+        if(p.isTouching(MENU_ARROW_RESET_START_X-3, MENU_ARROW_RESET_END_X+10, MENU_ARROW_RESET_START_Y-3, MENU_ARROW_RESET_END_Y+10)) {
           if(mode.equals(MENU) && requestDecision("Einstellungs Reset", "Willst du fortfahren?")) {
             if(debugSetup.getValue())
               debug(WARNING, SETUP, "reset");
@@ -169,13 +177,13 @@ using namespace general;
         //Timer Gui    
         } if(p.isTouching(45, 100, 15, 100)) {
           if(gui.equals(TIMER_GUI)) {
-            Serial.println("oben l");
+            // Serial.println("oben l");
             TimerGui::updateDigit(1, 1);
             return;
           }
         } if(p.isTouching(190, 240, 14, 100)) {
           if(gui.equals(TIMER_GUI)) {
-            Serial.println("oben r");
+            // Serial.println("oben r");
             TimerGui::updateDigit(2, 15);
             return;
           }
@@ -183,7 +191,7 @@ using namespace general;
         } 
         if(p.isTouching(40, 100, 101, 170)) {
           if(gui.equals(TIMER_GUI)) {
-            Serial.println("unten l");
+            // Serial.println("unten l");
             TimerGui::updateDigit(1, -1);
             return;
           }
@@ -191,7 +199,7 @@ using namespace general;
         if(p.isTouching(190, 240, 101, 170)) {
           if(gui.equals(TIMER_GUI)) {
             TimerGui::updateDigit(2, -15);
-            Serial.println("unten r");
+            // Serial.println("unten r");
             return;
           }
         }
@@ -207,6 +215,24 @@ using namespace general;
             return;
           }
         }
+        //Zufall
+        if(gui.equals(RANDOM_STUDENT_GUI)) {
+          if(p.isTouching(0, 160, 40, 120)) {
+            RandomStudentGui::changeMax(-1);
+            Serial.println("remove 1 from maxRandomValue");
+            return;
+          }
+          if(p.isTouching(161, 320, 40, 120)) {
+            RandomStudentGui::changeMax(1);
+            Serial.println("added 1 to maxRandomValue");
+            return;
+          }
+          if(p.isTouching(161, 320, 121, 240)) {
+            RandomStudentGui::drawRandomNumber();
+            Serial.println("drawed random number");
+            return;
+          }
+        }
         MenuGui::handleTouch(p);
         //-----------------
         if(mode.equals(CHART)) {        
@@ -215,16 +241,17 @@ using namespace general;
             if(version.equals(V1)) {
               DisplayV1::setup();
               DisplayV1::loop(false);
-            } if(version.equals(V2)) {
+            } 
+            if(version.equals(V2)) {
               DisplayV2::setup();
               DisplayV2::loop();
-            } if(version.equals(V3)) {
+            }
+            if(version.equals(V3)) {
               DisplayV3::setup();
               DisplayV3::loop();
             }    
             return;
           }     
-          initAllGuis();
           lastTouch+=500;
         } 
       }
@@ -238,6 +265,7 @@ void Display::initAllGuis() {
   WeatherGui::initGui();
   TimerGui::initGui();
   MenuGui::initGui();
+  RandomStudentGui::initGui();
 }
 
 void Display::drawInfoScreen(int time) {

@@ -14,6 +14,7 @@
 #include "../guis/weatherGui/WeatherGui.h"
 #include "../guis/timerGui/TimerGui.h"
 #include "../guis/menuGui/MenuGui.h"
+#include "../guis/randomStudentGui/RandomStudentGui.h"
 
 
 
@@ -37,6 +38,7 @@ class Display {
   private:
     static TSPoint p;
     static unsigned long lastTouch;
+    static int lastGui;
     
 };
 

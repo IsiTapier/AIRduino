@@ -15,7 +15,7 @@
   unsigned long lastMsg = 0;
   char msg[MSG_BUFFER_SIZE];
   int value = 0;
-
+  int lastGui = GUI_MENU;
   boolean configReceived = false;
 
   //Database connection
@@ -58,7 +58,7 @@
 
   void config_update(String column, String value) {
     if (client.connected()) {
-      reconnectToMQTT();
+      // reconnectToMQTT();
       String config_update = column + " = '" +  value + "' WHERE `device_overview`.`device_id` = " + device_id;
       client.publish("config/update", config_update.c_str());
       debug(SPAMM, MENUD, "CONFIG - " + column + " = " + (String) value);
@@ -102,6 +102,7 @@
     delay(500);
     Serial.println(WiFi.status());
 
+
     for(int z = 0; (z <= 2) && (WiFi.status() != WL_CONNECTED); z++) {
       WiFi.begin(ssid, password);
       for (int x = 0; (x <= 10) && (WiFi.status() != WL_CONNECTED); x++) {
@@ -109,8 +110,9 @@
         Serial.print(".");
       }
     }
+    int counter = 0;
     Serial.println(WiFi.status());
-    while ((WiFi.status() != WL_CONNECTED) && requestDecision("Wifi fehlgeschlagen", "erneut versuchen?", "Ja", "Nein", 10000, true)) {
+    while ((WiFi.status() != WL_CONNECTED) && requestDecision("Wifi fehlgeschlagen", "erneut versuchen?", "Ja", "Nein", 10000, counter < 3)) {
       drawLogo();
       for(int z = 0; (z <= 2) && (WiFi.status() != WL_CONNECTED); z++) {
         WiFi.begin(ssid, password);
@@ -119,6 +121,7 @@
           Serial.print(".");
         }
       }
+      counter++;
     }
     Serial.println();
     if (WiFi.status() == WL_CONNECTED) {
@@ -162,6 +165,7 @@
         subscribeToMQTT("cali/touch/", device_class);
         subscribeToMQTT("manager/restart/", device_class);
         subscribeToMQTT("manager/deepSleep/", device_class);
+        subscribeToMQTT("manager/deepSleep/", device_id);
         subscribeToMQTT("manager/testPeep/", device_class);
         subscribeToMQTT("manager/message/", device_class);
 
@@ -171,6 +175,7 @@
         subscribeToMQTT("weather/humidity");
         subscribeToMQTT("weather/forecastWeather3");
         subscribeToMQTT("weather/forecastWeatherTomorrow");
+        subscribeToMQTT("manager/setGui/", device_class);
       }
     }
   }
@@ -206,8 +211,8 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
         if (digit <= length) {
           for (int d = 0; (d < 100) && ((char)payload[digit] != ',') && ((char)payload[digit] != ';'); d++) { //loop to loop the single digits
             output = output + "" + (char)payload[digit];
+            Serial.println((char)payload[digit]);
             digit++;
-            delay(1);
           }
           digit++;
         }
@@ -263,7 +268,7 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
           case 20: general::debugPriority.setValue((short) atoi(output.c_str()), false);
             break;
           case 21: general::debugSetup.setValue((short) atoi(output.c_str()), false);
-            break;
+            break; 
           case 22: general::debugSensor.setValue((short) atoi(output.c_str()), false);
             break;
           case 23: general::debugDisplay.setValue((short) atoi(output.c_str()), false);
@@ -296,7 +301,7 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
       debug(IMPORTANT, SETUP, "ESP restartet via MQTT");
       ESP.restart();
     }
-    if(topic == "manager/deepSleep/" + device_class) {
+    if((topic == "manager/deepSleep/" + device_class) || (topic == "manager/deepSleep/" + device_id)) {
       int minutes = atoi(payload_string.c_str());
       
       debug(IMPORTANT, SETUP, "ESP wurde für " + String(minutes) + " Minuten in den Sleepmode versetzt");
@@ -329,7 +334,10 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
       general::mode.setValue(LOADINGSCREEN);
       general::mode.setValue(general::mode.getOldValue());
     }
-
+    if(topic == "manager/setGui/" + device_class) {
+      gui.setValue(atoi(payload_string.c_str()));
+      Serial.println("changed gui remotely to " + atoi(payload_string.c_str()));
+    }
     //Weather system
     if(topic == "weather/weather") {
       WeatherGui::updateWeather(payload_string);
@@ -351,7 +359,55 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
     }
   }
 
-  void reconnect() {
+void reconnectSystem() {
+  if(!WiFi.isConnected() || !client.connected()) {
+    lastGui = gui.getValue();
+    gui.setValue(RECONNECT_GUI);
+    display.fillScreen(BLACK);
+    dPrint("Reconnecting", DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2, 3, LIGHT_BLUE, 4);
+  }
+  if(!WiFi.isConnected()) {     
+      dPrint("to WIFI", DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2 + 32, 3, LIGHTGREY, 4);
+      WiFi.disconnect();
+      WiFi.mode(WIFI_STA);
+      WiFi.begin(ssid, password);
+      WiFi.reconnect();
+      Serial.println("Reconnect Wifi");
+      for(int x = 0; !WiFi.isConnected() && x < 10; x++) {
+        delay(500);
+      }
+      if(WiFi.isConnected()) {
+        dPrint("succesful", DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, 2, GREEN, 4);
+      } else {
+        gui.setValue(GUI_MENU);
+        gui.setValue(lastGui);
+        mode.setValue(CHART);
+        Display::initAllGuis();
+        dPrint("failed", DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, 2, RED, 4);
+      }    
+      delay(1500);
+    }
+  else if(!client.connected() && WiFi.isConnected()) {
+      display.fillRect(0, DISPLAY_HEIGHT/2 + 20, DISPLAY_LENGTH, DISPLAY_HEIGHT, BLACK);
+      dPrint("to Server", DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2 + 32, 3, LIGHTGREY, 4);
+      reconnectToMQTT();
+      if(client.connected()) {
+        dPrint("succesful", DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, 2, GREEN, 4);
+      } else {
+        dPrint("failed", DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, 2, RED, 4);
+      }
+      delay(1500);
+      gui.setValue(GUI_MENU);
+      gui.setValue(lastGui);
+      mode.setValue(CHART);
+      Display::initAllGuis();
+  }
+  lastGui = 0;
+}
+
+
+
+void reconnect() {
   boolean isConnected = WiFi.isConnected();
   Serial.print("Wifi: "); Serial.println(isConnected?"connected":"unconnected");
   if(!isConnected) {
@@ -384,10 +440,11 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
       return;
     //Serial.print("Attempting MQTT connection...");
     // Create a random client ID
+    Serial.println("Reconnect to MQTT...");
     String clientId = "ESP32Client-";
     clientId += String(random(0xffff), HEX);
     // Attempt to connect
-    client.connect(clientId.c_str());
+    client.connect(clientId.c_str( ));
     /*
     if (client.connect(clientId.c_str())) {
       Serial.println("connected");
