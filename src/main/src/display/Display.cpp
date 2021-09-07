@@ -261,11 +261,14 @@ using namespace general;
   }
 
 void Display::initAllGuis() {
+  OverviewGui::initGui();
   StopwatchGui::initGui();
   WeatherGui::initGui();
   TimerGui::initGui();
   MenuGui::initGui();
   RandomStudentGui::initGui();
+  DecibelGui::initGui();
+  
 }
 
 void Display::drawInfoScreen(int time) {
@@ -328,6 +331,13 @@ void Display::drawAuthors() {
     dPrint("Erfinder-AG", 160, 130, 3, LIGHT_BLUE, 4);
     delay(3000);
     
+}
+
+void Display::drawTopBar(String title) {
+  dPrint(title, MENU_ARROW_BACK_START_X - 5, 20, 2, GREY, 5);
+  // display.pushImage(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, gear, WHITE);
+  display.pushImage(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, homeDark, BLACK);
+  display.pushImage(MENU_ARROW_RESET_START_X, MENU_ARROW_RESET_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, gear, WHITE);
 }
 
 

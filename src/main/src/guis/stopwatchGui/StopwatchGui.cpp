@@ -7,7 +7,7 @@ int StopwatchGui::millisAtPause = 0;
 boolean StopwatchGui::isRunning = false;
 
 void StopwatchGui::loop() {  
-    drawStopwatch();   
+    drawStopwatch(DISPLAY_LENGTH - 20, 80, 9);   
 }
 
 void StopwatchGui::initGui() {
@@ -15,10 +15,9 @@ void StopwatchGui::initGui() {
         Serial.println("init stopwatch");
         display.fillScreen(BLACK);
         dPrint("RESET", DISPLAY_LENGTH*1/4, DISPLAY_HEIGHT*3/4, 4, ORANGE, 4);
-        dPrint("Stoppuhr", MENU_ARROW_BACK_START_X - 5, 20, 2, GREY, 5);
-        display.pushImage(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, homeDark, BLACK);
+        Display::drawTopBar("Stoppuhr");
         lastTime = "";
-        drawStopwatch();
+        drawStopwatch(DISPLAY_LENGTH - 20, 80, 9);
         drawButtons();
     }  
 }
@@ -72,15 +71,15 @@ void StopwatchGui::toggleStopwatch() {
     drawButtons(); 
 }
 
-void StopwatchGui::drawStopwatch() {
+void StopwatchGui::drawStopwatch(int x, int y, int size) {
     if(isRunning) {
-        drawDigits(millis() - startMillis);    
+        drawDigits(millis() - startMillis, x, y, size);    
     } else {        
         // dPrint(lastTime, 160, 80, 9, BLACK, 4);
         if(millisAtPause == 0)
-            drawDigits(0);
+            drawDigits(0, x, y, size);
         else 
-            drawDigits(millisAtPause - startMillis);
+            drawDigits(millisAtPause - startMillis, x, y, size);
     }  
 }
 
@@ -92,7 +91,7 @@ void StopwatchGui::drawLines() {
     display.fillRoundRect(0, 113, DISPLAY_LENGTH, 10, 3, GREY);
 }
 
-void StopwatchGui::drawDigits(long totalSeconds) {
+void StopwatchGui::drawDigits(long totalSeconds, int x, int y, int size) {
     totalSeconds = totalSeconds / 1000;
     int minutes = round(totalSeconds/60);
     int seconds = totalSeconds - (minutes * 60);
@@ -107,8 +106,8 @@ void StopwatchGui::drawDigits(long totalSeconds) {
         digits = digits + "0";
     digits += seconds;
     if(lastTime != digits) {
-        if(lastTime != "") dPrint(lastTime, DISPLAY_LENGTH - 20, 80, 9, BLACK, 5);
-        dPrint(digits, DISPLAY_LENGTH - 20, 80, 9, WHITE, 5);       
+        if(lastTime != "") dPrint(lastTime, x, y, size, BLACK, 5);
+        dPrint(digits, x, y, size, WHITE, 5);       
     }  
     lastTime = digits; 
 }

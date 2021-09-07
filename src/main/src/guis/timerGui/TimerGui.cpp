@@ -28,7 +28,7 @@ void TimerGui::initGui() {
     if(gui.getValue() == TIMER_GUI) {
         Serial.println("init timer");
         display.fillScreen(BLACK);
-        dPrint("Timer", MENU_ARROW_BACK_START_X - 5, 20, 2, GREY, 5);
+        Display::drawTopBar("Timer");
         drawButtons();
         dPrint("RESET", DISPLAY_LENGTH*1/4, DISPLAY_HEIGHT*5/6, 4, RED, 4);
 
@@ -38,7 +38,6 @@ void TimerGui::initGui() {
         if(!isRunning) {
             drawDigits(millisDifference);
         }      
-        display.pushImage(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, homeDark, BLACK);
         drawAllArrows(GREY);
     }
 }

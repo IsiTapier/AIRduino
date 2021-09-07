@@ -16,9 +16,9 @@ class StopwatchGui {
     static void stopStopwatch();
     static void resetStopwatch();
     static void toggleStopwatch();
-    static void drawStopwatch();
+    static void drawStopwatch(int x, int y, int size);
     static void drawLines();
-    static void drawDigits(long _millis);
+    static void drawDigits(long _millis, int x, int y, int size);
     static void initGui();
     static void drawIcon();
     static void drawButtons();

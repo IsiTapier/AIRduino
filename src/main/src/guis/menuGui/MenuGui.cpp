@@ -29,6 +29,7 @@ void MenuGui::handleTouch(TSPoint p) {
         }
         if(p.isTouching(DISPLAY_LENGTH*6/11, DISPLAY_LENGTH, DISPLAY_HEIGHT*3/4-32, DISPLAY_HEIGHT*3/4+32)) {
             Serial.println("LÄrmampel");
+            gui.setValue(DECIBEL_GUI);
         }
     }
 }
@@ -37,13 +38,10 @@ void MenuGui::handleTouch(TSPoint p) {
 void MenuGui::initGui() {
     if(gui.equals(GUI_MENU)) {
         display.fillScreen(BLACK);
-        dPrint("Men" + ue, MENU_ARROW_BACK_START_X - 5, 20, 2, GREY, 5);
-        // display.pushImage(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, gear, WHITE);
-        display.pushImage(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, homeDark, BLACK);
-        display.pushImage(MENU_ARROW_RESET_START_X, MENU_ARROW_RESET_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, gear, WHITE);
+        Display::drawTopBar("Men" + ue);
         if(WiFi.isConnected()) {
             display.pushImage(MENU_ARROW_RESET_START_X + 40, MENU_ARROW_RESET_START_Y, MENU_ICON_SIZE, MENU_ICON_SIZE, wlanIconOn, BLACK);
-            if(!client.connected()) {
+            if(client.connected()) {
                 display.pushImage(MENU_ARROW_RESET_START_X + 80, MENU_ARROW_RESET_START_Y, MENU_ICON_SIZE, MENU_ICON_SIZE, mqttIcon, BLACK);
             }
         } else {
@@ -66,6 +64,6 @@ void MenuGui::initGui() {
         dPrint("", DISPLAY_LENGTH*6/11, DISPLAY_HEIGHT*2/4+16, 1, COLOR_STATUS_ALARM, 3);
         
         dPrint("L"+AE+"RMAMPEL", DISPLAY_LENGTH*6/11, DISPLAY_HEIGHT*3/4, 2, WHITE, 3);
-        dPrint("coming soon", DISPLAY_LENGTH*6/11, DISPLAY_HEIGHT*3/4+16, 1, COLOR_STATUS_ALARM, 3);
+        dPrint("Beta", DISPLAY_LENGTH*6/11, DISPLAY_HEIGHT*3/4+16, 1, SKYBLUE, 3);
     }
 }

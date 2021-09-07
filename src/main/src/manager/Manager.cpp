@@ -6,16 +6,18 @@
 
 #define CURRENTCYCLE floor((Manager::currentCycleTime-Meassure::getStartTime())/STAGE_TIME)
 #define LASTCYCLE floor((Manager::lastCycleTime-Meassure::getStartTime())/STAGE_TIME)
-
+#define STAGE_TIME_2 300
 
 
 using namespace general;
 
   unsigned long Manager::lastCycleTime = 0;
+  unsigned long Manager::lastCycleTime2 = 0;
   unsigned long Manager::lastLoop = 0;
   unsigned long Manager::lastReconnect = 0;
   unsigned long Manager::lastModeChange = 0;
   unsigned long Manager::currentCycleTime = 0;
+  unsigned long Manager::currentCycleTime2 = 0;
 
 
 void Manager::setup() {
@@ -38,13 +40,34 @@ void Manager::loop() {
         TimerGui::loop();
       if(gui.getValue() == STOPWATCH_GUI)
         StopwatchGui::loop();
+      if(gui.getValue() == OVERVIEW_GUI)
+        OverviewGui::loop();
+      
+    
+      if(currentCycleTime - lastCycleTime > STAGE_TIME) {
+        Serial.print("Warning - timing system failed: ");
+        Serial.print(currentCycleTime-lastCycleTime-STAGE_TIME);
+        Serial.println("ms");
       }
-    if(currentCycleTime - lastCycleTime > STAGE_TIME) {
-      Serial.print("Warning - timing system failed: ");
-      Serial.print(currentCycleTime-lastCycleTime-STAGE_TIME);
-      Serial.println("ms");
     }
     lastCycleTime = currentCycleTime;
+
+    //second Cycle
+    currentCycleTime2 = millis();
+    while(currentCycleTime2 - lastCycleTime2 < STAGE_TIME_2) {
+      currentCycleTime2 = millis();
+      
+      if(gui.getValue() == DECIBEL_GUI)
+        DecibelGui::loop();
+
+      if(currentCycleTime2 - lastCycleTime2 > STAGE_TIME_2) {
+        Serial.print("Warning - timing system 2 failed: ");
+        Serial.print(currentCycleTime2-lastCycleTime2-STAGE_TIME_2);
+        Serial.println("ms");
+      }
+    }
+    lastCycleTime2 = currentCycleTime2;
+
 
     // Client loop; Display loop
     if(client.connected())

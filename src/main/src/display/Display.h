@@ -15,6 +15,8 @@
 #include "../guis/timerGui/TimerGui.h"
 #include "../guis/menuGui/MenuGui.h"
 #include "../guis/randomStudentGui/RandomStudentGui.h"
+#include "../guis/overviewGui/OverviewGui.h"
+#include "../guis/decibelGui/DecibelGui.h"
 
 
 
@@ -33,6 +35,7 @@ class Display {
     static void drawTutorial();
     static void drawAuthors();
     static void initAllGuis();
+    static void drawTopBar(String title);
     
 
   private:

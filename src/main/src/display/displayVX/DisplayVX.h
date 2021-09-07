@@ -18,6 +18,10 @@ class DisplayVX {
     static void setup();
     static void handleData();
     static void peepLoop();
+    static String getLastPPMString();
+    static String getPPMString(String lastppm);
+    static State state;
+    static State lastState;
     
   protected:
     static void drawDisplay();
@@ -27,13 +31,11 @@ class DisplayVX {
     static void writeInfo();
     static void drawEssentials();
     static void drawPPM();
-    static String getLastPPMString();
-    static String getPPMString(String lastppm);
+    
     static void drawTimer();
     //static void createLines();
 
-    static State state;
-    static State lastState;
+    
     static int airCondition;
     static int lastAirCondition;
     static boolean blinkSwitch;

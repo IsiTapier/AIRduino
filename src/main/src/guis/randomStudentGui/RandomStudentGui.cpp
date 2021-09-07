@@ -11,8 +11,7 @@ void RandomStudentGui::initGui() {
         display.fillScreen(BLACK);
         drawArrows();
         display.fillRect(65, 215, 70, 5, LIGHTGREY);
-        dPrint("Zufallszahl", MENU_ARROW_BACK_START_X - 5, 20, 2, GREY, 5);
-        display.pushImage(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, homeDark, BLACK);
+        Display::drawTopBar("Zufallszahl");
     }  
 }
 

@@ -20,10 +20,12 @@ class Manager {
     static unsigned long getLastCycleTime();
     static unsigned long getCurrentCycleTime();*/
     static unsigned long lastCycleTime;
+    static unsigned long lastCycleTime2;
     static unsigned long lastLoop;
     static unsigned long lastReconnect;
     static unsigned long lastModeChange;
     static unsigned long currentCycleTime;
+    static unsigned long currentCycleTime2;
 
     
   private:
