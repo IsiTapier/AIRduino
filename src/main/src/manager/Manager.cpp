@@ -36,13 +36,6 @@ void Manager::loop() {
     currentCycleTime = millis();
     while(currentCycleTime - lastCycleTime < STAGE_TIME) {
       currentCycleTime = millis();
-      if(gui.getValue() == TIMER_GUI)
-        TimerGui::loop();
-      if(gui.getValue() == STOPWATCH_GUI)
-        StopwatchGui::loop();
-      if(gui.getValue() == OVERVIEW_GUI)
-        OverviewGui::loop();
-      
     
       if(currentCycleTime - lastCycleTime > STAGE_TIME) {
         Serial.print("Warning - timing system failed: ");
@@ -52,22 +45,14 @@ void Manager::loop() {
     }
     lastCycleTime = currentCycleTime;
 
-    //second Cycle
-    currentCycleTime2 = millis();
-    while(currentCycleTime2 - lastCycleTime2 < STAGE_TIME_2) {
-      currentCycleTime2 = millis();
-      
-      if(gui.getValue() == DECIBEL_GUI)
-        DecibelGui::loop();
-
-      if(currentCycleTime2 - lastCycleTime2 > STAGE_TIME_2) {
-        Serial.print("Warning - timing system 2 failed: ");
-        Serial.print(currentCycleTime2-lastCycleTime2-STAGE_TIME_2);
-        Serial.println("ms");
-      }
-    }
-    lastCycleTime2 = currentCycleTime2;
-
+    if(gui.getValue() == TIMER_GUI)
+      TimerGui::loop();
+    if(gui.getValue() == STOPWATCH_GUI)
+      StopwatchGui::loop();
+    if(gui.getValue() == OVERVIEW_GUI)
+      OverviewGui::loop();
+    if(gui.getValue() == DECIBEL_GUI)
+      DecibelGui::loop();
 
     // Client loop; Display loop
     if(client.connected())

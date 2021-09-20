@@ -10,19 +10,68 @@
 #define BAR_COLOR RED
 #define TITLE_COLOR LIGHTGREY
 
-#define AVERAGE_SEGMENTS 1000
-#define AVERAGE_TIME 10
+#define AVERAGE_SEGMENTS 10
+#define AVERAGE_TIME 100
+#define TEMP_AVERAGE_SEGMENTS 50
+#define CORRECTING_THRESHOLD_PERCENT 0.2
+
+
+// INFO zum Algo
+// 
+// Prinzipiell werden die absoluten Werte des Sensors auf ein flexibles Spektrum gemappt.
+// Das Spektrum passt sich automatisch an, und dehnt sich individuell auf jeden Sensor an.
+// Es wird ein Durchschnitt von Werten über ein bestimmten Zeit ermittelt, liegt der Durchschnitt
+// über oder unter dem Spektrum passen sich der 'lowestAverage' und 'highestAverage' an.
+//
 
 long lowestAverage = 0;
 long highestAverage = 0;
 long decibelAverage = 0;
+long decibelAverageCounter = 0;
+long timeStamp = 0;
 
 void DecibelGui::setup() {
+
+    //auto calibrate the mapping data
+    long setupAverage = 0;
+    for (int x = 0; x <= TEMP_AVERAGE_SEGMENTS; x++) {
+        setupAverage += 50; // !!!
+    }
+    setupAverage = setupAverage / TEMP_AVERAGE_SEGMENTS;
+    lowestAverage = setupAverage;
+    highestAverage = setupAverage + 1;
 
 }
 
 void DecibelGui::loop() {
-    Serial.println("loop");
+
+    if(millis() - timeStamp > AVERAGE_TIME) {
+        timeStamp = millis();
+        decibelAverage += random(0,100); // !!!
+        decibelAverageCounter++;
+        
+        //Wenn die Objekte für den Average collected sind...
+        if(decibelAverageCounter >= AVERAGE_SEGMENTS) {
+            decibelAverageCounter = 0;           
+            decibelAverage = decibelAverage / AVERAGE_SEGMENTS;
+            int differenceHighestLowest = highestAverage - lowestAverage;
+
+            if (decibelAverage < (lowestAverage - CORRECTING_THRESHOLD_PERCENT*differenceHighestLowest)) {
+                lowestAverage = decibelAverage;
+                Serial.print(": changed lowestAverage");
+                Serial.println(lowestAverage);
+            }
+            if (decibelAverage > (highestAverage + CORRECTING_THRESHOLD_PERCENT*differenceHighestLowest)) {
+                highestAverage = decibelAverage;
+                Serial.print(": changed highestAverage ");
+                Serial.println(highestAverage);
+            }
+            Serial.println(decibelAverage);
+            drawBar(decibelAverage, BAR_COLOR);
+            // Serial.println(map(decibelAverage, lowestAverage, highestAverage, 1, 100));
+            decibelAverage = 0;
+        }
+    }
 } 
 
 void DecibelGui::initGui() {
@@ -31,37 +80,18 @@ void DecibelGui::initGui() {
         Display::drawTopBar("L" + ae + "rm");
         dPrint("Lautst" + ae + "rke", DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2, 4, TITLE_COLOR, 7);
         drawBar(0, RED);
-        /* display.fillRect(MARGIN_SIDE-LINE_THICKNESS, BAR_HEIGHT-LINE_THICKNESS, DISPLAY_LENGTH - 2*MARGIN_SIDE + 2*LINE_THICKNESS, THICKNESS + 2*LINE_THICKNESS, OUTLINE_COLOR);
-        display.fillRect(MARGIN_SIDE, BAR_HEIGHT, DISPLAY_LENGTH - 2*MARGIN_SIDE, THICKNESS, BLACK);  */    
-        delay(1000);
-        for(int x = 0; x <= 100; x += 5) {
-            drawBar(x, RED);
-            delay(200);
-        }
-        for(int x = 100; x >= 0; x -= 5) {
-            drawBar(x, RED);
-            delay(200);
-        }
-        
     }
 }
 
 
 
 void DecibelGui::drawBar(int value, int color) {
-    /* int pixel = map(value, 1, 100, 1, BAR_LENGTH);
-    if((pixel <= BAR_LENGTH) && (pixel > 0)) {
-        display.fillRect(MARGIN_SIDE, BAR_HEIGHT, pixel, THICKNESS, BAR_COLOR);
-    } else if(pixel > BAR_LENGTH) {
-        display.fillRect(MARGIN_SIDE, BAR_HEIGHT, BAR_LENGTH, THICKNESS, BAR_COLOR);
-    } */
-
     int unit = map(value, 1, 100, 1, TOTAL_STRIPES);
     if(unit < 0)
         unit = 0;
     if(unit > TOTAL_STRIPES)
         unit = TOTAL_STRIPES;
-    Serial.println(value);
+
     // display.fillRect(0, DISPLAY_HEIGHT/2, DISPLAY_LENGTH, DISPLAY_HEIGHT/2, BLACK);
     drawStripes(unit, color);
 }
@@ -88,7 +118,6 @@ void DecibelGui::drawStripes(int value, int color) {
             display.fillRect(stripe_x, STRIPE_Y, 10, stripe_height, randomColor);
         }      
         stripe_x += 14;
-        Serial.println(x);
     }
 }
 
