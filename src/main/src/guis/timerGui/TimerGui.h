@@ -27,6 +27,7 @@ class TimerGui {
     static void drawIcon();
     static String getDigitsOfMillis(int _millis);
     static void peep();
+    static void resetTimerValues();
 
     static int goalMillis;
     static int millisToGoal;

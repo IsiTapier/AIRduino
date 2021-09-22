@@ -8,8 +8,10 @@ String TimerGui::lastTime = "00:00";
 String TimerGui::lastDifference = "00:00";
 boolean TimerGui::isRunning = false;
 int TimerGui::peepCount = 0;
+long peepTimestamp = 0;
 
-
+#define PEEP_COUNT 8*2
+#define PEEP_CICLE_TIME 250
 
 void TimerGui::loop() {
     if(gui.equals(TIMER_GUI)) {
@@ -17,9 +19,6 @@ void TimerGui::loop() {
             /* Serial.print("-on-");
             Serial.println((goalMillis - millis())); */
         }        
-        if(isRunning && 500 >= (goalMillis - millis())) {
-            resetTimer();
-        }
         drawTimer();
     }
 }
@@ -61,6 +60,7 @@ void TimerGui::startTimer() {
     } else {
         goalMillis = millis() + millisToGoal;
     }
+    lastDifference = getDigitsOfMillis(millisDifference);
     Serial.println("start timer");
     millisToGoal = 0;
 }
@@ -72,23 +72,29 @@ void TimerGui::stopTimer() {
 }
 
 void TimerGui::resetTimer() {
-    Serial.println("RESET");
+    Serial.println("RESET");  
+    resetTimerValues();
+
+    if(!gui.equals(TIMER_GUI)) return; 
     display.fillRect(0, 64, DISPLAY_LENGTH, 90, BLACK);
-    if(isRunning) {        
-        goalMillis = 0;
-        millisToGoal = 0;
-        isRunning = false;
-        Serial.println("reset timer");
-        drawAllArrows(GREY);
-        peepCount = 1;
-        return;
-    } else if(!isRunning && (millisDifference != 0)) {
-        millisDifference = 0;      
-        return;
-    } 
     drawButtons();
     drawDigits(millisDifference);
     drawIcon(); 
+}
+
+void TimerGui::resetTimerValues() {
+    if(isRunning) {     
+        isRunning = false;   
+        goalMillis = 0;
+        millisToGoal = 0;      
+        Serial.println("reset timer");
+        if(gui.equals(TIMER_GUI)) drawAllArrows(GREY);
+        peepCount = PEEP_COUNT;
+        return;
+    } else if(!isRunning && (millisDifference != 0)) {
+        millisDifference = 0;
+        return;
+    }
 }
 
 void TimerGui::drawTimer() {
@@ -182,15 +188,24 @@ void TimerGui::drawButtons() {
 }
 
 void TimerGui::peep() {
-    if(peepCount != 0) {
-        if(peepCount%2 == 1) {
-            dPrint(".", 10, 10, 2, WHITE);          
-        } else {
-            dPrint(".", 10, 10, 2, BLACK);         
-        }
-        peepCount--;
+    if(sound.equals(0)) {
+        peepCount = 0;
+        return;
     }
-    
+    if(peepTimestamp - millis() > PEEP_CICLE_TIME) {
+        if(peepCount != 0) {
+            if(peepCount%2 == 1) {
+                // dPrint(".", 10, 10, 2, WHITE);    
+                ledcDetachPin(PIEZO);      
+            } else {
+                // dPrint(".", 10, 10, 2, BLACK);
+                ledcAttachPin(PIEZO, 0);
+                ledcWriteNote(0, NOTE_G, 4);                   
+            }
+            peepCount--;
+        }
+        peepTimestamp = millis() + PEEP_CICLE_TIME;
+    }
 }
 
 void TimerGui::drawIcon() {

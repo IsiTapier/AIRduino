@@ -22,6 +22,9 @@ class DisplayVX {
     static String getPPMString(String lastppm);
     static State state;
     static State lastState;
+    static String lastTime;
+    static String time;
+    static void calculateTime();
     
   protected:
     static void drawDisplay();
@@ -41,8 +44,7 @@ class DisplayVX {
     static boolean blinkSwitch;
     static int statusLetters;
     static String statusInfo;
-    static String lastTime;
-    static String time;
+    
     static short seconds;
     static short minutes;
     static boolean start;

@@ -16,6 +16,7 @@
 #define CORRECTING_THRESHOLD_PERCENT 0.2
 
 
+
 // INFO zum Algo
 // 
 // Prinzipiell werden die absoluten Werte des Sensors auf ein flexibles Spektrum gemappt.

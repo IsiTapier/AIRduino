@@ -53,11 +53,16 @@ void Manager::loop() {
       OverviewGui::loop();
     if(gui.getValue() == DECIBEL_GUI)
       DecibelGui::loop();
-
+    
     // Client loop; Display loop
     if(client.connected())
       client.loop();
     Display::loop();
+
+    if(500 >= (TimerGui::goalMillis - millis())) {
+       TimerGui::resetTimer();
+    }
+    TimerGui::peep();
 
     //Reconnect System
     if(currentCycleTime - lastReconnect >= RECONNECT_TIME) {

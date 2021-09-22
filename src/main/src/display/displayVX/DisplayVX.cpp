@@ -212,6 +212,16 @@ short DisplayVX::peepCounter = 0;
 
   void DisplayVX::drawTimer() {
     //calculate time since last ventilating
+    calculateTime();
+
+    //Clear old Pixels
+    //write new Pixels
+    dPrint(time, TIMER_X, TIMER_Y, TIMER_SIZE, TIME_COLOR, 8, DATABOX_BACKGROUND_COLOR, lastTime, -1, (seconds == 0 && (minutes == 0 || (minutes == 20 && COLORED_TIME))) || start);
+    //Set new lasttime
+    lastTime = time; //Setzt letzten Wert
+  }
+
+  void DisplayVX::calculateTime() {
     unsigned long startTime = Meassure::getStartTime();
     seconds = (millis() - startTime) / 1000 % 60;
     minutes = ((millis() - startTime) / 1000 - seconds) / 60;
@@ -228,12 +238,6 @@ short DisplayVX::peepCounter = 0;
     if (seconds < 10)
       time = time + 0;
     time = time + seconds;
-
-    //Clear old Pixels
-    //write new Pixels
-    dPrint(time, TIMER_X, TIMER_Y, TIMER_SIZE, TIME_COLOR, 8, DATABOX_BACKGROUND_COLOR, lastTime, -1, (seconds == 0 && (minutes == 0 || (minutes == 20 && COLORED_TIME))) || start);
-    //Set new lasttime
-    lastTime = time; //Setzt letzten Wert
   }
 
   String DisplayVX::getLastPPMString() {

@@ -51,6 +51,9 @@ void WeatherGui::updateWeather(String _weather) {
         dPrint("Aktuell", 10, DISPLAY_HEIGHT*1/3, 2, GREY);
         drawWeatherIcon(_weather, 10, DISPLAY_HEIGHT*1/3 + 15); 
     }
+    if(gui.equals(OVERVIEW_GUI)) {
+        OverviewGui::drawWeatherData(temp, weather, humidity);
+    }
    
 }
 

@@ -15,13 +15,14 @@ class OverviewGui {
   public:
     static void loop();
     static void initGui();
-    
+    static void drawWeatherData(String temp, String weather, String humidity);
   private:
     static void drawPPM();
     static void drawPPM(boolean atStart);
-    static void drawWeatherData();
+    
     static String lastPPMString;
-
+    static void drawDecibleChart(int value, int x, int y, int width, int height, int elements, int color);
+    static void drawPPMTimer(int x, int y, int size, int color);
 };
 
 #endif

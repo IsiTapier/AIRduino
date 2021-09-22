@@ -24,12 +24,12 @@ void MenuGui::handleTouch(TSPoint p) {
             gui.setValue(TIMER_GUI);
         }
         if(p.isTouching(DISPLAY_LENGTH*6/11, DISPLAY_LENGTH, DISPLAY_HEIGHT*2/4-32, DISPLAY_HEIGHT*2/4+32)) {
-            Serial.println("ZUFALL");
-            gui.setValue(RANDOM_STUDENT_GUI);
-        }
-        if(p.isTouching(DISPLAY_LENGTH*6/11, DISPLAY_LENGTH, DISPLAY_HEIGHT*3/4-32, DISPLAY_HEIGHT*3/4+32)) {
             Serial.println("LÄrmampel");
             gui.setValue(DECIBEL_GUI);
+        }
+        if(p.isTouching(DISPLAY_LENGTH*6/11, DISPLAY_LENGTH, DISPLAY_HEIGHT*3/4-32, DISPLAY_HEIGHT*3/4+32)) {           
+            Serial.println(UE + "berblick");
+            gui.setValue(OVERVIEW_GUI);
         }
     }
 }
@@ -60,10 +60,10 @@ void MenuGui::initGui() {
         dPrint("TIMER", DISPLAY_LENGTH*6/11, DISPLAY_HEIGHT*1/4, 2, WHITE, 3);
         dPrint("", DISPLAY_LENGTH*6/11, DISPLAY_HEIGHT*1/4+16, 1, COLOR_STATUS_ALARM, 3);
         
-        dPrint("ZUFALL", DISPLAY_LENGTH*6/11, DISPLAY_HEIGHT*2/4, 2, WHITE, 3);
-        dPrint("", DISPLAY_LENGTH*6/11, DISPLAY_HEIGHT*2/4+16, 1, COLOR_STATUS_ALARM, 3);
+        dPrint("L"+AE+"RMAMPEL", DISPLAY_LENGTH*6/11, DISPLAY_HEIGHT*2/4, 2, WHITE, 3);
+        dPrint("Beta", DISPLAY_LENGTH*6/11, DISPLAY_HEIGHT*2/4+16, 1, SKYBLUE, 3);
         
-        dPrint("L"+AE+"RMAMPEL", DISPLAY_LENGTH*6/11, DISPLAY_HEIGHT*3/4, 2, WHITE, 3);
-        dPrint("Beta", DISPLAY_LENGTH*6/11, DISPLAY_HEIGHT*3/4+16, 1, SKYBLUE, 3);
+        dPrint(UE + "berblick", DISPLAY_LENGTH*6/11, DISPLAY_HEIGHT*3/4, 2, WHITE, 3);
+        dPrint("alles in einem", DISPLAY_LENGTH*6/11, DISPLAY_HEIGHT*3/4+16, 1, COLOR_STATUS_RISK, 3);
     }
 }
