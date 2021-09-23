@@ -14,10 +14,14 @@ class DecibelGui {
     static void loop();
     static void initGui();
     static void setup();
+    static void registerTouch(TSPoint ts);
+    static void drawTrafficLight(int value, int mapA, int mapB, int x, int y, int size);
 
   private:
+    static void drawSlider(int sliderX, int x, int y, int length, int height);
     static void drawBar(int value, int color);
     static void drawStripes(int value, int color);
+    
 };
 
 #endif

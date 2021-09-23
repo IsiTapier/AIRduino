@@ -130,7 +130,8 @@ using namespace general;
           lastTouch+=500;
           Manager::lastModeChange = millis();
           return;
-        } 
+        }
+
         if(p.isTouching(MENU_ARROW_RESET_START_X-3, MENU_ARROW_RESET_END_X+10, MENU_ARROW_RESET_START_Y-3, MENU_ARROW_RESET_END_Y+10)) {
           if(mode.equals(MENU) && requestDecision("Einstellungs Reset", "Willst du fortfahren?")) {
             if(debugSetup.getValue())
@@ -181,7 +182,8 @@ using namespace general;
             TimerGui::updateDigit(1, 1);
             return;
           }
-        } if(p.isTouching(190, 240, 14, 100)) {
+        } 
+        if(p.isTouching(190, 240, 14, 100)) {
           if(gui.equals(TIMER_GUI)) {
             // Serial.println("oben r");
             TimerGui::updateDigit(2, 15);
@@ -233,6 +235,7 @@ using namespace general;
             return;
           }
         }
+        DecibelGui::registerTouch(p);
         MenuGui::handleTouch(p);
         //-----------------
         if(mode.equals(CHART)) {        

@@ -16,6 +16,7 @@ void OverviewGui::loop() {
             timerLastValue = digits;  
         }     
     }
+    DecibelGui::drawTrafficLight(50, 1, 100, 230, 195, 20);
     drawPPMTimer(MARGIN, 80, 4, WHITE);
     drawPPM();
 }
@@ -42,10 +43,10 @@ void OverviewGui::initGui() {
         
 
         dPrint("L" + AE + "RM", MARGIN, 195, 4, LIGHTGREY, 3);
-        for(int x = 1; x < 60; x += 10) {
+        /* for(int x = 1; x < 60; x += 10) {
             drawDecibleChart(x, 160, 175, 160-MARGIN, 40, 10, RED);
             delay(100);
-        }
+        } */
 
                   
          if(TimerGui::isRunning) {
