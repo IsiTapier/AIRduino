@@ -42,6 +42,7 @@
   void reconnectToMQTT();
   void reconnectToWifi();
   void reconnectSystem();
+  
 
   void generalSubscriptions();
   void subscribeToMQTT(String topic);

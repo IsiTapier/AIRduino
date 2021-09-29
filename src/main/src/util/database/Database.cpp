@@ -162,7 +162,7 @@
 
         dPrint(device_class, 5, 5, 3, WHITE);
 
-        generalSubscribtions();
+        generalSubscriptions();
         
       }
     }
@@ -346,11 +346,15 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
       WeatherGui::updateForecastWeatherTomorrow(payload_string);
     }
     if(topic == "time") {
-
+      currentTime = payload_string;
+      if(gui.equals(CLOCK_GUI)) {
+        ClockGui::drawClock(DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2, 4, 4, WHITE);
+      }
+      
     }
   }
 
-void generalSubscribtions() {
+void generalSubscriptions() {
   subscribeToMQTT("cali/low/", device_class);
   subscribeToMQTT("cali/high/", device_class);
   subscribeToMQTT("cali/touch/", device_class);
@@ -406,7 +410,7 @@ void reconnectSystem() {
       dPrint("to Server", DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2 + 32, 3, LIGHTGREY, 4);
       reconnectToMQTT();
       if(client.connected()) {
-        generalSubscribtions();
+        generalSubscriptions();
         dPrint("succesful", DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, 2, GREEN, 4);
       } else {
         dPrint("failed", DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, 2, RED, 4);
@@ -477,6 +481,7 @@ void reconnect() {
 
   void subscribeToMQTT(String topic) {
     client.subscribe(topic.c_str());
+    Serial.println(topic);
     debug(IMPORTANT, SETUP, "Subscribed to: " + topic);
   }
 
