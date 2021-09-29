@@ -15,7 +15,8 @@ class RandomStudentGui {
     static void drawRandomNumber();
     static void changeMax(int difference);
     static void handleTouch(TSPoint p);
-    
+    static String shortenName(String x);
+
   private:
     static void drawGui();  
     static void drawMaxRandomValue();   

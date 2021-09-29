@@ -1,6 +1,7 @@
 
 #include "DecibelGui.h"
 
+
 //design
 #define BAR_LENGTH DISPLAY_LENGTH - 2*MARGIN_SIDE
 #define STRIPE_HEIGT 10
@@ -21,15 +22,16 @@
 
 int trafficLightColor = GREY;
 
-long initialValue = 0; //Totpunkt der Amplitude
+int initialValue = 0; //Totpunkt der Amplitude
 long timeStamp = 0;
-long loopCounter = AVERAGE_ELEMENTS;
-long loopAverage = 0;
+int loopCounter = AVERAGE_ELEMENTS;
+
 int measuredValue = 0;
 double _sliderFactor = 1;
 int sliderX = MARGIN;
 int DecibelGui::trafficLightStage = 1;
 boolean DecibelGui::isActive = true;
+int DecibelGui::loopAverage = 0;
 
 
 void DecibelGui::setup() {
@@ -70,6 +72,7 @@ void DecibelGui::loop() {
         if(loopCounter <= 0) {
             loopAverage = loopAverage / AVERAGE_ELEMENTS;
             loopCounter = AVERAGE_ELEMENTS;
+            Meassure::decibelValue = loopAverage;
             
             Serial.println("----");
             Serial.println(DisplayVX::recentPeepStatus);
@@ -198,7 +201,7 @@ void DecibelGui::registerTouch(TSPoint ts) {
 void DecibelGui::drawSlider(int sliderX, int x, int y, int length, int height) {
 
     display.fillRect(0, y-height*4, DISPLAY_LENGTH, height*8, BLACK);
-    display.fillRect(x, y, length, height, LIGHTGREY);
+    display.fillRoundRect(x, y, length, height, 3, LIGHTGREY);
     display.fillRect(sliderX, y, height*2, height*3, LIGHTGREY);
     display.fillRect(sliderX, y-height*2, height*2, height*2, LIGHTGREY);
 

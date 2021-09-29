@@ -18,6 +18,7 @@ class DecibelGui {
     static void drawTrafficLight(int value, int x, int y, int size);
     static int trafficLightStage;
     static boolean isActive;
+    static int loopAverage;
 
   private:
     static void drawSlider(int sliderX, int x, int y, int length, int height);

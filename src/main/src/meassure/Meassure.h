@@ -12,6 +12,7 @@
 #include "../extern/Adafruit_BME280_Library-master/Adafruit_BME280.h"
 #include "../extern/MH_Z19/src/MHZ19.h"
 
+
 #define RANGE 2000
 #define SENSORCONNECTED (MHZ19b.errorCode == RESULT_OK)
 #define SENSORERROR (airCondition <= 200)
@@ -35,6 +36,7 @@ class Meassure {
     static MHZ19 getSensor();
     static void reconnect();
     static boolean isConnected();
+    static int decibelValue;
     
   private:
     static void debugMeassure();
