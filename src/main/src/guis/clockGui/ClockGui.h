@@ -11,8 +11,10 @@
 
 class ClockGui {
   public:
+    static void loop();
     static void initGui();
     static void drawClock(int x, int y, int size, int datum, int color);
+    static void drawDate(int x, int y, int size, int datum, int color);
   private:
     
 

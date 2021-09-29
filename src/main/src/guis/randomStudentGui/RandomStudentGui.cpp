@@ -21,7 +21,11 @@ void RandomStudentGui::initGui() {
         if(client.connected()) calculateMode = true;
         drawSideBar(calculateMode);
         dPrint("RANDOM", DISPLAY_LENGTH/2, DISPLAY_HEIGHT-15, 3, COLOR_STATUS_RISK, 7);
+
+        Serial.println(shortenName("Jan Felix Schreiber"));
+        Serial.println(shortenName("Lisa Charlotte Mueller"));
     }  
+
 }
 
 void RandomStudentGui::drawSideBar(boolean mode) {
@@ -81,6 +85,20 @@ void RandomStudentGui::changeMax(int difference) {
         maxRandomValue -= 100;
     }
     drawMaxRandomValue();
+}
+
+String RandomStudentGui::shortenName(String fullName) {
+    String preName = "";
+    String secondName = "";
+    String namePile;
+    for(int x = 0; fullName[x] != ' '; x++) {
+        preName += fullName[x];
+    }
+    for(int x = fullName.length()-1; fullName[x] != ' '; x--) {
+        secondName += fullName[x];
+    }
+    String output = preName + " " + secondName[secondName.length() - 1];
+    return output;
 }
 
 

@@ -46,8 +46,8 @@
 
 //peeper
 //octave
-#define STARTOCTAVE 4
-#define MAXOCTAVE 6
+#define STARTOCTAVE 2
+#define MAXOCTAVE 4
 //peeps
 #define INCREASEPEEPS 1
 #define STARTPEEPS 1

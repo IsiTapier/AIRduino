@@ -49,14 +49,15 @@ void OverviewGui::initGui() {
         } */
 
                   
-         if(TimerGui::isRunning) {
+        if(TimerGui::isRunning) {
             dPrint("TIMER", MARGIN, 150, 4, LIGHTGREY, 3);
             dPrint(TimerGui::getDigitsOfMillis(TimerGui::goalMillis - millis()), DISPLAY_LENGTH-MARGIN, 130, 5, WHITE, 2);                  
         } else if(client.connected()) {       
-            drawWeatherData("-", "", "-"); 
+            drawWeatherData(WeatherGui::temp, WeatherGui::weather, WeatherGui::humidity); 
         } else {
             //Stopwtch
-            StopwatchGui::drawStopwatch(DISPLAY_LENGTH-MARGIN, 150, 5);
+            if(!StopwatchGui::isRunning) dPrint("00:00", DISPLAY_LENGTH-MARGIN, 150, 5, WHITE, 5);
+            // StopwatchGui::drawStopwatch(DISPLAY_LENGTH-MARGIN, 150, 5);
             dPrint("STOP", MARGIN, 150, 4, LIGHTGREY, 3);
         }
     }
@@ -92,9 +93,9 @@ void OverviewGui::drawWeatherData(String temp, String weather, String humidity) 
     /* dPrint(WeatherGui::temp + "C", 20, 50, 3, BLUE);
     WeatherGui::drawWeatherIcon(WeatherGui::forecastWeather3, 20, 120);
     dPrint(WeatherGui::humidity + "%", 20, 200, 2, WHITE); */
-
+    display.fillRect(0, 115, DISPLAY_LENGTH, 50, BLACK);
     dPrint(temp + "C", MARGIN, 150, 5, LIGHTGREY, 3);
-    WeatherGui::drawWeatherIcon(weather, 130, 110);
+    WeatherGui::drawWeatherIcon(weather, 130, 120);
     dPrint(humidity + "%", 2*92+MARGIN, 150, 5, LIGHTGREY, 3);
  }
 

@@ -3,8 +3,8 @@
 
 String WeatherGui::weather = "";
 String WeatherGui::windspeed = "";
-String WeatherGui::humidity = "";
-String WeatherGui::temp = "";     
+String WeatherGui::humidity = "-";
+String WeatherGui::temp = "-";     
 String WeatherGui::forecastWeather3 = "";
 String WeatherGui::forecastWeatherTomorrow = "";
 
@@ -31,8 +31,9 @@ void WeatherGui::initGui() {
             }
             
         } else {
-            dPrint("Internet", DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2, 4, LIGHTGREY, 4);
-            dPrint("fehlgeschlagen", DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2 + 35, 3, RED, 4);
+            dPrint("Error", DISPLAY_LENGTH/2, DISPLAY_HEIGHT/4, 4, RED, TC_DATUM);
+            dPrint("Keine Verbindung", DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2, 3, WHITE, MC_DATUM);
+            dPrint("zum Server", DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2 + 30, 3, WHITE, MC_DATUM);
         }
     }  
 }

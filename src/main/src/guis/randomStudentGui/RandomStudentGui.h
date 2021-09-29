@@ -14,6 +14,7 @@ class RandomStudentGui {
     static void initGui();
     static void drawRandomNumber();
     static void changeMax(int difference);
+    static String shortenName(String x);
   private:
     static void drawArrows();   
     static void drawMaxRandomValue();   

@@ -22,6 +22,7 @@
   extern char msg[MSG_BUFFER_SIZE];
   extern int value;
   extern String currentTime;
+  extern String currentDate;
 
   extern const char* ssid;
   extern const char* password;
@@ -34,7 +35,7 @@
   void maintenanceMode();
   void config_update(String column, String value);
   void config_update(String column, int value);
-  void mysql_insert(String grade, int co2, double temp);
+  void mysql_insert(String grade, int co2, double temp, int decibel);
   void getUniqueID();
   void setup_wifi();
   void setup_mqtt();

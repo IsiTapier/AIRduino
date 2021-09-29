@@ -18,6 +18,7 @@
   int lastGui = GUI_MENU;
   boolean configReceived = false;
   String currentTime = "00:00";
+  String currentDate = "01.01.";
 
   //Database connection
   void setupDatabaseConnection() {
@@ -57,26 +58,26 @@
     client.loop();
   }
 
-  void config_update(String column, String value) {
-    if (client.connected()) {
-      // reconnectToMQTT();
-      String config_update = column + " = '" +  value + "' WHERE `device_overview`.`device_id` = " + device_id;
-      client.publish("config/update", config_update.c_str());
-      debug(SPAMM, MENUD, "CONFIG - " + column + " = " + (String) value);
-    }
+void config_update(String column, String value) {
+  if (client.connected()) {
+    // reconnectToMQTT();
+    String config_update = column + " = '" +  value + "' WHERE `device_overview`.`device_id` = " + device_id;
+    client.publish("config/update", config_update.c_str());
+    debug(SPAMM, MENUD, "CONFIG - " + column + " = " + (String) value);
   }
+}
 
-  void config_update(String column, int value) {
-    config_update(column, (String)value);
-  }
+void config_update(String column, int value) {
+  config_update(column, (String)value);
+}
 
-  void mysql_insert(String grade, int co2, double temp) {
-    if (!(grade[0] == 'a' && grade[1] == 'u' && grade[2] == 't') && client.connected()) {
-      String output = "VALUES ('" + grade + "', " + co2 + ", " + temp + ")";
-      client.publish("mysql/insert", output.c_str());
-      debug(INFO, DATABASE, "INSERTED into LOG grade: " + grade + " co2: " + co2 + " temp: " + temp);
-    }
+void mysql_insert(String grade, int co2, double temp, int decibel) {
+  if (!(grade[0] == 'a' && grade[1] == 'u' && grade[2] == 't') && client.connected()) {
+    String output = "VALUES ('" + grade + "', " + co2 + ", " + temp + ", " + decibel + ")";
+    client.publish("mysql/insert", output.c_str());
+    debug(INFO, DATABASE, "INSERTED into LOG grade: " + grade + " co2: " + co2 + " temp: " + temp + " decibel: " + decibel);
   }
+}
 
   void getUniqueID() {
     device_id = "";
@@ -398,12 +399,9 @@ void reconnectSystem() {
       if(WiFi.isConnected()) {
         dPrint("succesful", DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, 2, GREEN, 4);
       } else {
-        gui.setValue(GUI_MENU);
-        gui.setValue(lastGui);
-        mode.setValue(CHART);
         Display::initAllGuis();
         dPrint("failed", DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, 2, RED, 4);
-      }    
+      } 
       delay(1500);
     } else if(!client.connected() && WiFi.isConnected()) {
       display.fillRect(0, DISPLAY_HEIGHT/2 + 20, DISPLAY_LENGTH, DISPLAY_HEIGHT, BLACK);
@@ -416,11 +414,11 @@ void reconnectSystem() {
         dPrint("failed", DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, 2, RED, 4);
       }
       delay(1500);
-      gui.setValue(GUI_MENU);
-      gui.setValue(lastGui);
-      mode.setValue(CHART);
-      Display::initAllGuis();
   }
+  gui.setValue(GUI_MENU);
+  gui.setValue(lastGui);
+  mode.setValue(CHART);
+  Display::initAllGuis();
   lastGui = 0;
 }
 
@@ -447,65 +445,65 @@ void reconnect() {
   }
 }
 
-  void reconnectToWifi() {
-    if (WiFi.status() != WL_CONNECTED) {
-      WiFi.reconnect();
-    }
+void reconnectToWifi() {
+  if (WiFi.status() != WL_CONNECTED) {
+    WiFi.reconnect();
   }
+}
 
-  void reconnectToMQTT() {
-    // Loop until we're reconnected
-    if (WiFi.status() != WL_CONNECTED || client.connected())
-      return;
-    //Serial.print("Attempting MQTT connection...");
-    // Create a random client ID
-    Serial.println("Reconnect to MQTT...");
-    String clientId = "ESP32Client-";
-    clientId += String(random(0xffff), HEX);
-    // Attempt to connect
-    client.connect(clientId.c_str( ));
-    /*
-    if (client.connect(clientId.c_str())) {
-      Serial.println("connected");
-      client.subscribe("msg");
-    } else {
-      Serial.print("failed, rc=");
-      Serial.print(client.state());
-      Serial.println(" try again in 1 seconds");
-    }
-    
-    if(!client.connected())
-      Serial.println("Database not connected");
-    */
+void reconnectToMQTT() {
+  // Loop until we're reconnected
+  if (WiFi.status() != WL_CONNECTED || client.connected())
+    return;
+  //Serial.print("Attempting MQTT connection...");
+  // Create a random client ID
+  Serial.println("Reconnect to MQTT...");
+  String clientId = "ESP32Client-";
+  clientId += String(random(0xffff), HEX);
+  // Attempt to connect
+  client.connect(clientId.c_str( ));
+  /*
+  if (client.connect(clientId.c_str())) {
+    Serial.println("connected");
+    client.subscribe("msg");
+  } else {
+    Serial.print("failed, rc=");
+    Serial.print(client.state());
+    Serial.println(" try again in 1 seconds");
   }
+  
+  if(!client.connected())
+    Serial.println("Database not connected");
+  */
+}
 
-  void subscribeToMQTT(String topic) {
-    client.subscribe(topic.c_str());
-    Serial.println(topic);
-    debug(IMPORTANT, SETUP, "Subscribed to: " + topic);
-  }
+void subscribeToMQTT(String topic) {
+  client.subscribe(topic.c_str());
+  Serial.println(topic);
+  debug(IMPORTANT, SETUP, "Subscribed to: " + topic);
+}
 
-  void subscribeToMQTT(String topic, String c) {
-    topic = topic + c;
-    client.subscribe(topic.c_str());
-    Serial.println(topic);
-    debug(IMPORTANT, SETUP, "Subscribed to: " + topic);
-  }
+void subscribeToMQTT(String topic, String c) {
+  topic = topic + c;
+  client.subscribe(topic.c_str());
+  Serial.println(topic);
+  debug(IMPORTANT, SETUP, "Subscribed to: " + topic);
+}
 
-  void subscribeToMQTT(String topic, int id) {
-    topic = topic + id;
-    client.subscribe(topic.c_str());
-    debug(IMPORTANT, SETUP, "Subscribed to: " + topic);
-  }
+void subscribeToMQTT(String topic, int id) {
+  topic = topic + id;
+  client.subscribe(topic.c_str());
+  debug(IMPORTANT, SETUP, "Subscribed to: " + topic);
+}
 
-  void reportBug(String title) {
-    if(requestDecision(title, "wirklich melden?")) {
-      String payload = device_class + "," + title;
-      client.publish("report", payload.c_str());
-    }
+void reportBug(String title) {
+  if(requestDecision(title, "wirklich melden?")) {
+    String payload = device_class + "," + title;
+    client.publish("report", payload.c_str());
   }
+}
 
-  void sendDebugToMQTT(String message) {
-    String adress = "console/" + device_class;
-    client.publish(adress.c_str(), message.c_str());
-  }
+void sendDebugToMQTT(String message) {
+  String adress = "console/" + device_class;
+  client.publish(adress.c_str(), message.c_str());
+}

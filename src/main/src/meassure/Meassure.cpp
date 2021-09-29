@@ -40,6 +40,7 @@
   int Meassure::temperature;
   int Meassure::humidity;
   int Meassure::pressure;
+  int Meassure::decibelValue = 0;
 
   int Meassure::testCounter = 0;
   unsigned long Meassure::lasttime;
@@ -246,7 +247,7 @@
         } else
           airConditionLast = airCondition;
         if(airCondition != 0 /*|| temperature != 0*/)
-          mysql_insert(device_class, airCondition, temperature);
+          mysql_insert(device_class, airCondition, temperature, decibelValue);
         counter = 0;
         return true;
       }
