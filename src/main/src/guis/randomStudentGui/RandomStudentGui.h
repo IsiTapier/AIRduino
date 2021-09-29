@@ -14,11 +14,14 @@ class RandomStudentGui {
     static void initGui();
     static void drawRandomNumber();
     static void changeMax(int difference);
+    static void handleTouch(TSPoint p);
+    
   private:
-    static void drawArrows();   
+    static void drawGui();  
     static void drawMaxRandomValue();   
-    static void drawSideBar(boolean mode);
+    static void drawSideBar();
 
+    static int minRandomValue;
     static int maxRandomValue;
     static int lastMaxRandomValue;
     static int lastRandomValue;

@@ -228,7 +228,7 @@ using namespace general;
         }
         //Zufall
         if(gui.equals(RANDOM_STUDENT_GUI)) {
-          if(p.isTouching(0, 160, 40, 120)) {
+          /*if(p.isTouching(0, 160, 40, 120)) {
             RandomStudentGui::changeMax(-1);
             Serial.println("remove 1 from maxRandomValue");
             return;
@@ -242,11 +242,12 @@ using namespace general;
             RandomStudentGui::drawRandomNumber();
             Serial.println("drawed random number");
             return;
-          }
+          }*/
         }
         TimeGui::handleTouch(p);
         DecibelGui::registerTouch(p);
         MenuGui::handleTouch(p);
+        RandomStudentGui::handleTouch(p);
         //-----------------
         if(mode.equals(CHART)) {        
           if(gui.equals(CO2_GUI)) {
@@ -347,8 +348,8 @@ void Display::drawAuthors() {
     
 }
 
-void Display::drawTopBar(String title) {
-  dPrint(title, MENU_ARROW_BACK_START_X - 5, 20, 2, GREY, 5);
+void Display::drawTopBar(String title, String oldTitle) {
+  dPrint(title, MENU_ARROW_BACK_START_X - 5, 20, 2, GREY, 5, BLACK, oldTitle);
   // display.pushImage(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, gear, WHITE);
   display.pushImage(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, homeDark, BLACK);
   display.pushImage(MENU_ARROW_RESET_START_X, MENU_ARROW_RESET_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, gear, WHITE);

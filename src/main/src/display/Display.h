@@ -37,7 +37,7 @@ class Display {
     static void drawTutorial();
     static void drawAuthors();
     static void initAllGuis();
-    static void drawTopBar(String title);
+    static void drawTopBar(String title, String oldTitle = "");
     
 
   private:
