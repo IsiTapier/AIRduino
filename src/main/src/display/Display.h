@@ -17,6 +17,8 @@
 #include "../guis/randomStudentGui/RandomStudentGui.h"
 #include "../guis/overviewGui/OverviewGui.h"
 #include "../guis/decibelGui/DecibelGui.h"
+#include "../guis/clockGui/ClockGui.h"
+#include "../guis/timeGui/TimeGui.h"
 
 
 

@@ -5,7 +5,6 @@
 
 /*
 ToDo
-- settings in den guis....
 - ton sensor anschließen
 - ton algo
 - case for ton ding
@@ -21,13 +20,13 @@ ToDo
 
   //Buchse 1.16.01
 
-  const String software_version = "8.81";
+  const String software_version = "2.0";
 /*   const char* ssid = "AG-iOT";
   const char* password = "#Wlan4iOT#JCBS-AG!";
   const char* mqtt_server = "169.254.191.226"; */
   const char* ssid = "JCBS-Schüler";
   const char* password = "JCBS-Schueler#2021!";
-  const char* mqtt_server = "192.168.2.96";
+  const char* mqtt_server = "192.168.2.97";
 /*
    _____      _ 
   / ____|    | |

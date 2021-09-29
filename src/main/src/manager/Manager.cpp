@@ -29,6 +29,7 @@ void Manager::setup() {
     mode.setValue(LOADINGSCREEN, false);
     mode.setValue(CHART);   
     Meassure::setup();
+    DecibelGui::setup();
 }
 
 void Manager::loop() {
@@ -45,15 +46,15 @@ void Manager::loop() {
     }
     lastCycleTime = currentCycleTime;
 
-    if(gui.getValue() == TIMER_GUI)
-      TimerGui::loop();
-    if(gui.getValue() == STOPWATCH_GUI)
-      StopwatchGui::loop();
-    if(gui.getValue() == OVERVIEW_GUI)
-      OverviewGui::loop();
-    if(gui.getValue() == DECIBEL_GUI)
+    if(mode.getValue() == CHART) {
+      if(gui.getValue() == TIMER_GUI)
+        TimerGui::loop();
+      if(gui.getValue() == STOPWATCH_GUI)
+        StopwatchGui::loop();
+      if(gui.getValue() == OVERVIEW_GUI)
+        OverviewGui::loop();
       DecibelGui::loop();
-    
+    }
     // Client loop; Display loop
     if(client.connected())
       client.loop();

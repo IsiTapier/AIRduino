@@ -12,14 +12,17 @@
 class RandomStudentGui {
   public:
     static void initGui();
-    static void drawArrows();
     static void drawRandomNumber();
-    static void drawMaxRandomValue();
     static void changeMax(int difference);
+  private:
+    static void drawArrows();   
+    static void drawMaxRandomValue();   
+    static void drawSideBar(boolean mode);
+
     static int maxRandomValue;
     static int lastMaxRandomValue;
     static int lastRandomValue;
-  private:
+  
 
 };
 

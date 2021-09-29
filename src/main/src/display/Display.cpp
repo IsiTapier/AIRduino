@@ -115,30 +115,33 @@ using namespace general;
         if(!p.isTouching())
           return;
         lastTouch = millis();
-        if(p.isTouching(MENU_ARROW_BACK_START_X-10, MENU_ARROW_BACK_END_X+10, MENU_ARROW_BACK_START_Y-10, MENU_ARROW_BACK_END_Y+10)) {
-          if(gui.equals(GUI_MENU)) {
-            if(mode.equals(MENU)) {
-              mode.setValue(CHART);
-              debug(INFO, SETUP, "change Mode to chart");
-            } else {
+        if(p.isTouching(MENU_ARROW_BACK_START_X-15, MENU_ARROW_BACK_END_X+10, MENU_ARROW_BACK_START_Y-10, MENU_ARROW_BACK_END_Y+15)) {
+          if(mode.equals(CHART)) {
+            if(gui.equals(GUI_MENU)) {
               gui.setValue(lastGui);
-            }       
-          } else {
-            lastGui = gui.getValue();
-            gui.setValue(GUI_MENU);           
-          }           
+            } else {
+              lastGui = gui.getValue();
+              gui.setValue(GUI_MENU);
+            }
+          } else if(mode.equals(MENU)) {
+            mode.setValue(CHART);
+            gui.setValue(lastGui);
+          }
+
           lastTouch+=500;
           Manager::lastModeChange = millis();
           return;
         }
 
         if(p.isTouching(MENU_ARROW_RESET_START_X-3, MENU_ARROW_RESET_END_X+10, MENU_ARROW_RESET_START_Y-3, MENU_ARROW_RESET_END_Y+10)) {
+          	//Reset Settings
           if(mode.equals(MENU) && requestDecision("Einstellungs Reset", "Willst du fortfahren?")) {
             if(debugSetup.getValue())
               debug(WARNING, SETUP, "reset");
             Menu::reset();
             Menu::setup();
             
+          //Reset Time Counter of CO2 Gui
           } else if(mode.equals(CHART)) {
             if(gui.equals(CO2_GUI)) {
               Meassure::resetStartTime(true);
@@ -146,24 +149,30 @@ using namespace general;
               if(version.equals(V1))
                 DisplayV1::setup(); 
             }            
-          }
-          if(gui.equals(GUI_MENU)) {
+          }     
+          
+          if(!gui.equals(CO2_GUI)) {
             if(mode.equals(CHART)) {
               if(debugSetup.getValue())
                 debug(INFO, SETUP, "change Mode");
-              if(mode.equals(MENU))
+              if(mode.equals(MENU)) {
+                gui.setValue(lastGui);
                 mode.setValue(CHART);
-              else if(mode.equals(CHART))
+              } else if(mode.equals(CHART)) {
+                lastGui = gui.getValue();
                 mode.setValue(MENU);
+              }
+                
               Manager::lastModeChange = millis();
             }
           }
-          return;
         } 
+
         if(mode.equals(MENU)) {
           Menu::handleTouch(p);
           //Stopwatch GUI
-        } 
+        }
+         
         if(p.isTouching(DISPLAY_LENGTH/2, DISPLAY_LENGTH, DISPLAY_HEIGHT/2, DISPLAY_HEIGHT)) {
           if(gui.equals(STOPWATCH_GUI) && mode.equals(CHART)) {
             StopwatchGui::toggleStopwatch();
@@ -235,6 +244,7 @@ using namespace general;
             return;
           }
         }
+        TimeGui::handleTouch(p);
         DecibelGui::registerTouch(p);
         MenuGui::handleTouch(p);
         //-----------------
@@ -271,6 +281,7 @@ void Display::initAllGuis() {
   MenuGui::initGui();
   RandomStudentGui::initGui();
   DecibelGui::initGui();
+  TimeGui::initGui();
   
 }
 

@@ -1,6 +1,7 @@
 
 #include "DecibelGui.h"
 
+//design
 #define BAR_LENGTH DISPLAY_LENGTH - 2*MARGIN_SIDE
 #define STRIPE_HEIGT 10
 #define TRAFFIC_LIGHT_X DISPLAY_LENGTH/2
@@ -9,74 +10,103 @@
 
 #define BAR_COLOR RED
 #define TITLE_COLOR LIGHTGREY
-#define MARGIN 20
+#define MARGIN 30
 
-#define AVERAGE_SEGMENTS 10
-#define AVERAGE_TIME 1000
-#define TEMP_AVERAGE_SEGMENTS 50
-#define CORRECTING_THRESHOLD_PERCENT 0.2
+//Algo
+#define AVERAGE_ELEMENTS 100
+#define TOTAL_LOOP_LENGTH 2000
+#define LOOP_LENGTH TOTAL_LOOP_LENGTH / AVERAGE_ELEMENTS
+#define AMOUNT_OF_PEEPS 2
 
 
-
-// INFO zum Algo
-// 
-// Prinzipiell werden die absoluten Werte des Sensors auf ein flexibles Spektrum gemappt.
-// Das Spektrum passt sich automatisch an, und dehnt sich individuell auf jeden Sensor an.
-// Es wird ein Durchschnitt von Werten über ein bestimmten Zeit ermittelt, liegt der Durchschnitt
-// über oder unter dem Spektrum passen sich der 'lowestAverage' und 'highestAverage' an.
-//
-
-long lowestAverage = 0;
-long highestAverage = 0;
-long decibelAverage = 0;
-long decibelAverageCounter = 0;
-long timeStamp = 0;
 int trafficLightColor = GREY;
 
+long initialValue = 0; //Totpunkt der Amplitude
+long timeStamp = 0;
+long loopCounter = AVERAGE_ELEMENTS;
+long loopAverage = 0;
+int measuredValue = 0;
+double _sliderFactor = 1;
+int sliderX = MARGIN;
+int DecibelGui::trafficLightStage = 1;
+boolean DecibelGui::isActive = true;
+
+
 void DecibelGui::setup() {
-
-    //auto calibrate the mapping data
-    long setupAverage = 0;
-    for (int x = 0; x <= TEMP_AVERAGE_SEGMENTS; x++) {
-        setupAverage += 50; // !!!
+//calculate initialValue
+    for (int c = 0; c <= 1000; c++) {
+        measuredValue = analogRead(MICROPHONE_MODULE);
+        initialValue += measuredValue;
+        delay(3);
     }
-    setupAverage = setupAverage / TEMP_AVERAGE_SEGMENTS;
-    lowestAverage = setupAverage;
-    highestAverage = setupAverage + 1;
+    initialValue = initialValue / 1000;
 
+    if(initialValue >= 50) {
+        Serial.print("Lärmampel: initialValue:");
+        Serial.println(initialValue);
+        Serial.print("Lärmampel: LOOP_LENGTH:");
+        Serial.println(LOOP_LENGTH);
+    } else {
+        Serial.println("Lärmampel ist nicht aktiv");
+        DecibelGui::isActive = false;
+    }
 }
 
 void DecibelGui::loop() {
+    if(!isActive) return;
 
-    if(millis() - timeStamp > AVERAGE_TIME) {
+    if ((millis() - timeStamp) > LOOP_LENGTH) {
         timeStamp = millis();
+        measuredValue = analogRead(MICROPHONE_MODULE);
 
-        drawTrafficLight(random(1, 100), 1, 100, 160, 135, 35);
+        if(measuredValue > initialValue) {
+            loopAverage += measuredValue;
+            //Serial.println(measuredValue);
+        } else {
+            //Serial.println(2*initialValue - measuredValue);
+            loopAverage += 2*initialValue - measuredValue;
+        }
 
-        /* decibelAverage += random(0,100); // !!!
-        decibelAverageCounter++;
-        
-        //Wenn die Objekte für den Average collected sind...
-        if(decibelAverageCounter >= AVERAGE_SEGMENTS) {
-            decibelAverageCounter = 0;           
-            decibelAverage = decibelAverage / AVERAGE_SEGMENTS;
-            int differenceHighestLowest = highestAverage - lowestAverage;
+        if(loopCounter <= 0) {
+            loopAverage = loopAverage / AVERAGE_ELEMENTS;
+            loopCounter = AVERAGE_ELEMENTS;
+            
+            Serial.println("----");
+            Serial.println(DisplayVX::recentPeepStatus);
+            if(!DisplayVX::recentPeepStatus) { //verhindert kettenreaktion zwischen piepser des CO2s und dem Mikro
+                int oldTrafficLightStage = trafficLightStage;
+                trafficLightStage = map(loopAverage, initialValue, 1.5*initialValue - _sliderFactor, 0, 4);
 
-            if (decibelAverage < (lowestAverage - CORRECTING_THRESHOLD_PERCENT*differenceHighestLowest)) {
-                lowestAverage = decibelAverage;
-                Serial.print(": changed lowestAverage");
-                Serial.println(lowestAverage);
+                if(gui.equals(DECIBEL_GUI)) {
+                    drawTrafficLight(trafficLightStage, 160, 135, 35);
+                    display.fillRect(0, 200, 70, 40, BLACK);
+                    dPrint(loopAverage, 10, DISPLAY_HEIGHT-10, 2, WHITE, 6);
+                }
+                
+                Serial.print(initialValue);
+                Serial.print(" - ");
+                Serial.print(loopAverage);
+                Serial.print(" - ");
+                Serial.println(1.5*initialValue - _sliderFactor);
+                
+                if(trafficLightStage >= 3) {
+                    if(oldTrafficLightStage != trafficLightStage) {
+                        if(gui.equals(DECIBEL_GUI) || gui.equals(OVERVIEW_GUI)) {
+                            TimerGui::peepCount += AMOUNT_OF_PEEPS * 2;
+
+                        }
+                        
+                    }
+                }
             }
-            if (decibelAverage > (highestAverage + CORRECTING_THRESHOLD_PERCENT*differenceHighestLowest)) {
-                highestAverage = decibelAverage;
-                Serial.print(": changed highestAverage ");
-                Serial.println(highestAverage);
+            if(TimerGui::peepCount > 0) {
+                DisplayVX::recentPeepStatus = true;
+            } else {
+                DisplayVX::recentPeepStatus = false;
             }
-            Serial.println(decibelAverage);
-            drawBar(decibelAverage, BAR_COLOR);
-            // Serial.println(map(decibelAverage, lowestAverage, highestAverage, 1, 100));
-            decibelAverage = 0;
-        } */
+            
+        }
+        loopCounter--;
     }
 } 
 
@@ -87,7 +117,11 @@ void DecibelGui::initGui() {
         dPrint("Sensibilit" + ae + "t", 160, 235, 2, GREY, 7);
         dPrint("L" + ae + "rmampel", DISPLAY_LENGTH/2, 90, 4, TITLE_COLOR, 7);
         //drawBar(0, RED);
-        drawSlider(50, MARGIN, 195, DISPLAY_LENGTH-MARGIN*2, 5);
+        drawSlider(sliderX, MARGIN, 195, DISPLAY_LENGTH-MARGIN*2, 5);
+        drawTrafficLight(-999, 160, 135, 35);
+        drawSliderFactor(round(_sliderFactor/10));
+
+        if(!DecibelGui::isActive) dPrint("Deaktiviert", DISPLAY_LENGTH/2, 50, 2, COLOR_STATUS_ALARM, 7);
     }
 }
 
@@ -126,22 +160,19 @@ void DecibelGui::drawStripes(int value, int color) {
     }
 }
 
-void DecibelGui::drawTrafficLight(int value, int startA, int startB, int x, int y, int size) {
-    int lightDigit = map(value, startA, startB, 1, 3);
+void DecibelGui::drawTrafficLight(int lightDigit, int x, int y, int size) {
     int circleDistance = size*2.5;
     for(int c = -1; c <= 1; c++) {
         display.fillCircle(x - c*circleDistance, y, size, GREY);
     }
 
-    if(lightDigit <= 1) {
+    if((lightDigit <= 1) && (lightDigit != -999)) {
         trafficLightColor = COLOR_STATUS_NORMAL;
         display.fillCircle(x-circleDistance, y, size, COLOR_STATUS_NORMAL);
-    }
-    if(lightDigit == 2) {
+    } else if(lightDigit == 2) {
         trafficLightColor = COLOR_STATUS_RISK;
         display.fillCircle(x, y, size, COLOR_STATUS_RISK);
-    }
-    if(lightDigit >= 3) {
+    } else if(lightDigit >= 3) {
         trafficLightColor = COLOR_STATUS_ALARM;
         display.fillCircle(x+circleDistance, y, size, COLOR_STATUS_ALARM);
     }
@@ -151,9 +182,15 @@ void DecibelGui::drawTrafficLight(int value, int startA, int startB, int x, int 
 void DecibelGui::registerTouch(TSPoint ts) {
     if(!gui.equals(DECIBEL_GUI)) return;
     
-    if(ts.isTouching(MARGIN, DISPLAY_LENGTH-2*MARGIN, 120, 240)) {
-        int x = map(ts.x, EEPROM.readShort(XMIN), EEPROM.readShort(XMAX), MARGIN, DISPLAY_LENGTH-MARGIN*2);
-        drawSlider(x, MARGIN, 195, DISPLAY_LENGTH-MARGIN*2, 5);
+    if(ts.isTouching(0, DISPLAY_LENGTH, 80, 240)) {
+        sliderX = map(ts.x, EEPROM.readShort(XMIN), EEPROM.readShort(XMAX), MARGIN, DISPLAY_LENGTH-MARGIN*2);
+        drawSlider(sliderX, MARGIN, 195, DISPLAY_LENGTH-MARGIN*2, 5);
+        _sliderFactor = map(sliderX, MARGIN, DISPLAY_LENGTH-MARGIN, 0, initialValue/2);
+        constrain(_sliderFactor, 0, initialValue/2);
+
+        display.fillRect(240, 210, 80, 40, BLACK);
+        drawSliderFactor(round(_sliderFactor/10));
+
     }
     
 }
@@ -167,5 +204,10 @@ void DecibelGui::drawSlider(int sliderX, int x, int y, int length, int height) {
 
 }
 
-
+void DecibelGui::drawSliderFactor(int value) {
+    dPrint(round(_sliderFactor/10), DISPLAY_LENGTH-MARGIN, 235, 2, LIGHTGREY, 8);
+    dPrint("x", DISPLAY_LENGTH-MARGIN + 3, 235, 2, LIGHTGREY, 6);
+    Serial.print("Slider Factor: ");
+    Serial.println(_sliderFactor);  
+}
 

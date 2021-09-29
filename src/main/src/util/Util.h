@@ -35,6 +35,8 @@
 #define SETMAPMIN(value) EEPROM.writeShort(MAPMIN, value); EEPROM.commit()
 #define SETMAPMAX(value) EEPROM.writeShort(MAPMAX, value); EEPROM.commit()
 
+
+
 //pins
 
   enum Version {
@@ -60,7 +62,9 @@
     DECIBEL_GUI = 5,
     GUI_MENU = 6,
     RECONNECT_GUI = 7,
-    OVERVIEW_GUI = 8
+    OVERVIEW_GUI = 8,
+    TIME_GUI = 9,
+    CLOCK_GUI = 10
   };
 
   template<class T>

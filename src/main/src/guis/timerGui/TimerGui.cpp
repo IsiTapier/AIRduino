@@ -75,12 +75,12 @@ void TimerGui::resetTimer() {
     Serial.println("RESET");  
     resetTimerValues();
 
-    if(!gui.equals(TIMER_GUI)) return; 
+    if(!gui.equals(TIMER_GUI) || gui.equals(MENU)) return; 
     display.fillRect(0, 64, DISPLAY_LENGTH, 90, BLACK);
     drawButtons();
     drawDigits(millisDifference);
     drawIcon(); 
-}
+} 
 
 void TimerGui::resetTimerValues() {
     if(isRunning) {     

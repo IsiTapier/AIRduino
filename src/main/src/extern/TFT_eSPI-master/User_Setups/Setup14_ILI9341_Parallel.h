@@ -36,7 +36,8 @@
 #define BMESDA 22
 #define BMESCL 23
 //#define GAS_SENSOR 36
-#define PIEZO 21     
+#define PIEZO 21   
+#define MICROPHONE_MODULE 36
 
 #define LOAD_GLCD   // Font 1. Original Adafruit 8 pixel font needs ~1820 bytes in FLASH
 #define LOAD_FONT2  // Font 2. Small 16 pixel high font, needs ~3534 bytes in FLASH, 96 characters

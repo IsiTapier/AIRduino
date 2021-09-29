@@ -128,7 +128,7 @@ namespace general {
   Setting autoTimeReset = Setting(SWITCH, "", titlesAutoTimeReset, 1, "'Auto Time Reset' changed");
   
   Setting mode = Setting(MULTISELECT, "mode", titlesMode, MENU, "'Mode' changed", 0, 4);
-  Setting gui = Setting(MULTISELECT, "", titles, CO2_GUI, "'gui' changed", 0, 8);
+  Setting gui = Setting(MULTISELECT, "", titles, CO2_GUI, "'gui' changed", 0, 10);
   Setting maintenance_mode = Setting(MULTISELECT, "maintenance_mode", titlesMaintenanceMode, 0, "'Wartungsmodus' changed", 0, 3);
   Setting reportSystem = Setting(ACTIVATOR, "", titlesReportSystem, 4);
   Setting manualReconnect = Setting(ACTIVATOR, "", {"reconnect"}, 12);

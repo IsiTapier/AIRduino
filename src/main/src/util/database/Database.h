@@ -21,6 +21,7 @@
   extern unsigned long lastMsg;
   extern char msg[MSG_BUFFER_SIZE];
   extern int value;
+  extern String currentTime;
 
   extern const char* ssid;
   extern const char* password;
@@ -42,6 +43,7 @@
   void reconnectToWifi();
   void reconnectSystem();
 
+  void generalSubscriptions();
   void subscribeToMQTT(String topic);
   void subscribeToMQTT(String topic, String c);
   void subscribeToMQTT(String topic, int id);

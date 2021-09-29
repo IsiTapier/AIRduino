@@ -16,7 +16,7 @@ void OverviewGui::loop() {
             timerLastValue = digits;  
         }     
     }
-    DecibelGui::drawTrafficLight(50, 1, 100, 230, 195, 20);
+    DecibelGui::drawTrafficLight(DecibelGui::trafficLightStage, 230, 195, 20);
     drawPPMTimer(MARGIN, 80, 4, WHITE);
     drawPPM();
 }
@@ -77,7 +77,7 @@ void OverviewGui::drawPPM(boolean atStart) {
             return;
         }
     }
-    Serial.println("drawPPM " + DisplayVX::getLastPPMString());
+    //Serial.println("drawPPM " + DisplayVX::getLastPPMString());
 
     dPrint(lastPPMString, DISPLAY_LENGTH-MARGIN, 60, 5, BLACK, 2);
     dPrint(DisplayVX::getPPMString(lastPPMString), DISPLAY_LENGTH-MARGIN, 60, 5, DisplayVX::state.getColor(), 2);

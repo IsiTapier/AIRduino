@@ -25,6 +25,7 @@ class DisplayVX {
     static String lastTime;
     static String time;
     static void calculateTime();
+    static boolean recentPeepStatus;
     
   protected:
     static void drawDisplay();

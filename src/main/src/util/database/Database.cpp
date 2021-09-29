@@ -17,6 +17,7 @@
   int value = 0;
   int lastGui = GUI_MENU;
   boolean configReceived = false;
+  String currentTime = "00:00";
 
   //Database connection
   void setupDatabaseConnection() {
@@ -160,22 +161,9 @@
         } while(!configReceived && (millis()-timeout < 1000 || requestDecision("Config nicht geladen", "erneut versuchen?", "Ja", "Nein")));
 
         dPrint(device_class, 5, 5, 3, WHITE);
-        subscribeToMQTT("cali/low/", device_class);
-        subscribeToMQTT("cali/high/", device_class);
-        subscribeToMQTT("cali/touch/", device_class);
-        subscribeToMQTT("manager/restart/", device_class);
-        subscribeToMQTT("manager/deepSleep/", device_class);
-        subscribeToMQTT("manager/deepSleep/", device_id);
-        subscribeToMQTT("manager/testPeep/", device_class);
-        subscribeToMQTT("manager/message/", device_class);
 
-        subscribeToMQTT("weather/weather");
-        subscribeToMQTT("weather/windspeed");
-        subscribeToMQTT("weather/temp");
-        subscribeToMQTT("weather/humidity");
-        subscribeToMQTT("weather/forecastWeather3");
-        subscribeToMQTT("weather/forecastWeatherTomorrow");
-        subscribeToMQTT("manager/setGui/", device_class);
+        generalSubscribtions();
+        
       }
     }
   }
@@ -357,14 +345,41 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
     if(topic == "weather/forecastWeatherTomorrow") {
       WeatherGui::updateForecastWeatherTomorrow(payload_string);
     }
+    if(topic == "time") {
+
+    }
   }
 
+void generalSubscribtions() {
+  subscribeToMQTT("cali/low/", device_class);
+  subscribeToMQTT("cali/high/", device_class);
+  subscribeToMQTT("cali/touch/", device_class);
+  subscribeToMQTT("manager/restart/", device_class);
+  subscribeToMQTT("manager/deepSleep/", device_class);
+  subscribeToMQTT("manager/deepSleep/", device_id);
+  subscribeToMQTT("manager/testPeep/", device_class);
+  subscribeToMQTT("manager/message/", device_class);
+  subscribeToMQTT("time");
+
+  subscribeToMQTT("weather/weather");
+  subscribeToMQTT("weather/windspeed");
+  subscribeToMQTT("weather/temp");
+  subscribeToMQTT("weather/humidity");
+  subscribeToMQTT("weather/forecastWeather3");
+  subscribeToMQTT("weather/forecastWeatherTomorrow");
+  subscribeToMQTT("manager/setGui/", device_class);
+
+}
+
 void reconnectSystem() {
+  if(((TimerGui::goalMillis - millis()) < 60*1000) && TimerGui::peepCount <= 0) return;
+
   if(!WiFi.isConnected() || !client.connected()) {
     lastGui = gui.getValue();
     gui.setValue(RECONNECT_GUI);
     display.fillScreen(BLACK);
     dPrint("Reconnecting", DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2, 3, LIGHT_BLUE, 4);
+    ledcDetachPin(PIEZO);
   }
   if(!WiFi.isConnected()) {     
       dPrint("to WIFI", DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2 + 32, 3, LIGHTGREY, 4);
@@ -386,12 +401,12 @@ void reconnectSystem() {
         dPrint("failed", DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, 2, RED, 4);
       }    
       delay(1500);
-    }
-  else if(!client.connected() && WiFi.isConnected()) {
+    } else if(!client.connected() && WiFi.isConnected()) {
       display.fillRect(0, DISPLAY_HEIGHT/2 + 20, DISPLAY_LENGTH, DISPLAY_HEIGHT, BLACK);
       dPrint("to Server", DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2 + 32, 3, LIGHTGREY, 4);
       reconnectToMQTT();
       if(client.connected()) {
+        generalSubscribtions();
         dPrint("succesful", DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, 2, GREEN, 4);
       } else {
         dPrint("failed", DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, 2, RED, 4);

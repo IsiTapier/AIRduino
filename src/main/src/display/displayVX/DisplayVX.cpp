@@ -20,6 +20,8 @@ boolean DisplayVX::start;
 boolean DisplayVX::drop = false;
 short DisplayVX::peep = -1;
 short DisplayVX::peepCounter = 0;
+boolean DisplayVX::recentPeepStatus = 0;
+
 
   /*
      _____      _
@@ -146,6 +148,7 @@ short DisplayVX::peepCounter = 0;
           if(general::sound.getValue()) {
             ledcAttachPin(PIEZO, 0);
             ledcWriteNote(0, peep%2 == 0 ? NOTE_C : NOTE_G, min((int)floor(peep/2)+STARTOCTAVE, MAXOCTAVE));
+            recentPeepStatus = true;
           }
           peepCounter++;
           blinkSwitch = 1;
