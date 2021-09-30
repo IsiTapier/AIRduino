@@ -21,7 +21,10 @@ int RandomStudentGui::lastRandomValue = 0;
 //false == random number; true == random student;
 boolean calculateMode = false;
 boolean minValueSelect = true;
+unsigned long lastTouching = 0;
 String testclass[16] = {"Jan", "Tim", "Willibon", "Isajah", "Jonas", "Josua", "Cindy", "Marit", "Helena", "Lotta", "Hannah", "Rozerin", "Janice", "Maja", "Rahel", "Nele"};
+
+#define LONG_PRESS (millis()-lastTouching < 800)
 
 void RandomStudentGui::initGui()
 {
@@ -145,10 +148,7 @@ void RandomStudentGui::changeMax(int difference)
 void RandomStudentGui::handleTouch(TSPoint p)
 {
     if (gui.equals(RANDOM_STUDENT_GUI))
-    {
-        p.calibrate();
-        Serial.println(p.xc);
-        Serial.println(p.yc);
+    {   
         if (p.yc > TOP_MARGIN)
             if (p.xc > DISPLAY_LENGTH - SIDE_MARGIN - TOUCH_FIELD_INCREASE)
             {
@@ -170,16 +170,17 @@ void RandomStudentGui::handleTouch(TSPoint p)
                 {
                     if (minValueSelect)
                     {
+                        
                         if (minRandomValue < maxRandomValue)
-                            minRandomValue++;
+                            minRandomValue+=LONG_PRESS&&minRandomValue+10<=maxRandomValue?10:1;
                         else if (maxRandomValue < 99)
                         {
-                            minRandomValue++;
-                            maxRandomValue++;
+                            minRandomValue+=LONG_PRESS&&maxRandomValue+10<=99?10:1;
+                            maxRandomValue+=LONG_PRESS&&maxRandomValue+10<=99?10:1;
                         }
                     }
                     else if (maxRandomValue < 99)
-                        maxRandomValue++;
+                        maxRandomValue+=LONG_PRESS&&maxRandomValue+10<=99?10:1;
                     drawGui();
                 }
                 else
@@ -187,17 +188,18 @@ void RandomStudentGui::handleTouch(TSPoint p)
                     if (minValueSelect)
                     {
                         if (minRandomValue > 0)
-                            minRandomValue--;
+                            minRandomValue-=LONG_PRESS&&minRandomValue>10?10:1;
                     }
                     else if (maxRandomValue > minRandomValue)
-                        maxRandomValue--;
+                        maxRandomValue-=LONG_PRESS&&maxRandomValue-10>=minRandomValue?10:1;
                     else if (minRandomValue > 0)
                     {
-                        minRandomValue--;
-                        maxRandomValue--;
+                        minRandomValue-=LONG_PRESS&&minRandomValue>10?10:1;
+                        maxRandomValue-=LONG_PRESS&&minRandomValue>10?10:1;
                     }
                     drawGui();
                 }
+                lastTouching = millis();
             }
             else if (p.yc > 180)
             {
