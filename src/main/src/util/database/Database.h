@@ -43,12 +43,13 @@
   void reconnectToMQTT();
   void reconnectToWifi();
   void reconnectSystem();
-  
 
   void generalSubscriptions();
   void subscribeToMQTT(String topic);
   void subscribeToMQTT(String topic, String c);
   void subscribeToMQTT(String topic, int id);
+  void saveClassList(String list);
+  String shortenName(String input);
 
   void reportBug(String title);
   void sendDebugToMQTT(String message);

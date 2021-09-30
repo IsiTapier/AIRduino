@@ -104,7 +104,7 @@ namespace general {
 
   Setting version = Setting(MULTISELECT, "version", titlesVersion, 3, "'Version' changed", 1, 3, namesVersion, false);
   Setting theme = Setting(SELECT, "theme", titlesTheme, 1, "'Theme' changed", 0, 1, namesTheme);
-  Setting sound = Setting(SWITCH, "sound", titlesSound, 1, "'Piezo' changed");
+  Setting sound = Setting(SWITCH, "sound", titlesSound, 0, "'Piezo' changed");
   Setting blink = Setting(SWITCH, "blink", titlesBlink, 1, "'Blink' changed");
   Setting data = Setting(SWITCH, "", titlesData, 1, "Data gettering changed", 0, 1, namesData); //TODO: connect to database
   Setting calibrateTouch = Setting(ACTIVATOR, "", titlesCalibrateTouch, 0);
@@ -128,7 +128,7 @@ namespace general {
   Setting autoTimeReset = Setting(SWITCH, "", titlesAutoTimeReset, 1, "'Auto Time Reset' changed");
   
   Setting mode = Setting(MULTISELECT, "mode", titlesMode, MENU, "'Mode' changed", 0, 4);
-  Setting gui = Setting(MULTISELECT, "", titles, CO2_GUI, "'gui' changed", 0, 10);
+  Setting  gui = Setting(MULTISELECT, "", titles, CO2_GUI, "'gui' changed", 0, 10);
   Setting maintenance_mode = Setting(MULTISELECT, "maintenance_mode", titlesMaintenanceMode, 0, "'Wartungsmodus' changed", 0, 3);
   Setting reportSystem = Setting(ACTIVATOR, "", titlesReportSystem, 4);
   Setting manualReconnect = Setting(ACTIVATOR, "", {"reconnect"}, 12);

@@ -24,13 +24,13 @@ boolean minValueSelect = true;
 void RandomStudentGui::initGui() {
     if(gui.getValue() == RANDOM_STUDENT_GUI) {
         display.fillScreen(BLACK);
+        saveClassList("Tim Ramsch, Leon Kugel, Lea Ulti, Baba Ralf Erich");
         // if(client.connected()) calculateMode = true;
         drawSideBar();
         drawGui();
         dPrint("RANDOM", DISPLAY_LENGTH/2, DISPLAY_HEIGHT-15, 3, COLOR_STATUS_RISK, 7);
 
-        Serial.println(shortenName("Jan Felix Schreiber"));
-        Serial.println(shortenName("Lisa Charlotte Mueller"));
+        
     }  
 
 }
@@ -167,19 +167,7 @@ void RandomStudentGui::handleTouch(TSPoint p) {
     }
 }
 
-String RandomStudentGui::shortenName(String fullName) {
-    String preName = "";
-    String secondName = "";
-    String namePile;
-    for(int x = 0; fullName[x] != ' '; x++) {
-        preName += fullName[x];
-    }
-    for(int x = fullName.length()-1; fullName[x] != ' '; x--) {
-        secondName += fullName[x];
-    }
-    String output = preName + " " + secondName[secondName.length() - 1];
-    return output;
-}
+
 
 
 

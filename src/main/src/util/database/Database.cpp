@@ -350,7 +350,10 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
       currentTime = payload_string;
       if(gui.equals(CLOCK_GUI)) {
         ClockGui::drawClock(DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2, 4, 4, WHITE);
-      }
+      }     
+    }
+    if(topic == "class/list/" + device_class) {
+      gui.setValue(atoi(payload_string.c_str()));
       
     }
   }
@@ -364,6 +367,7 @@ void generalSubscriptions() {
   subscribeToMQTT("manager/deepSleep/", device_id);
   subscribeToMQTT("manager/testPeep/", device_class);
   subscribeToMQTT("manager/message/", device_class);
+  subscribeToMQTT("class/list/", device_class);
   subscribeToMQTT("time");
 
   subscribeToMQTT("weather/weather");
@@ -504,6 +508,41 @@ void reportBug(String title) {
 }
 
 void sendDebugToMQTT(String message) {
+
   String adress = "console/" + device_class;
   client.publish(adress.c_str(), message.c_str());
+}
+
+void saveClassList(String rawList) {
+  String namePile;
+  String output[30];
+  int nameCounter = 0;
+  for(int x = 0;  x < rawList.length(); x++) {
+    if(rawList[x] == ',') {
+      output[nameCounter] = shortenName(namePile);
+      namePile = "";
+      nameCounter++;
+    } else {
+      namePile += rawList[x];
+    }
+  }
+  for(int x = 1; x < nameCounter; x++) {
+    Serial.print(output[x]);
+    Serial.print("; ");
+  }
+  Serial.println();
+}
+
+String shortenName(String fullName) {
+    String preName = "";
+    String secondName = "";
+    String namePile;
+    for(int x = 0; fullName[x] != ' '; x++) {
+        preName += fullName[x];
+    }
+    for(int x = fullName.length()-1; fullName[x] != ' '; x--) {
+        secondName += fullName[x];
+    }
+    String output = preName + " " + secondName[secondName.length() - 1];
+    return output;
 }
