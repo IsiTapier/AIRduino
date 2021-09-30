@@ -11,6 +11,7 @@
 #define ROUNDING 2
 #define TOUCH_FIELD_INCREASE 10
 #define SPIN_TEXT_SIZE 4
+#define ROLL_LENGTH 20
 
 int RandomStudentGui::minRandomValue = 1;
 int RandomStudentGui::maxRandomValue = 24;
@@ -20,7 +21,7 @@ int RandomStudentGui::lastRandomValue = 0;
 //false == random number; true == random student;
 boolean calculateMode = false;
 boolean minValueSelect = true;
-String testclass[16] = {"Jan", "Tim", "William", "Isajah", "Jonas", "Josua", "Cindy", "Marit", "Helena", "Lotta", "Hannah", "Rozerin", "Janice", "Maja", "Rahel", "Nele"};
+String testclass[16] = {"Jan", "Tim", "Willibon", "Isajah", "Jonas", "Josua", "Cindy", "Marit", "Helena", "Lotta", "Hannah", "Rozerin", "Janice", "Maja", "Rahel", "Nele"};
 
 void RandomStudentGui::initGui()
 {
@@ -96,13 +97,14 @@ void RandomStudentGui::drawGui(bool mode)
         int minValue = calculateMode?0:minRandomValue;
         int maxValue = calculateMode?15:maxRandomValue;
         int randomValue = random(minValue, maxValue+1);
-        if(maxValue > 30)
+       /* if(maxValue > 30)
             maxValue = 30;
         if(randomValue < maxValue) {
             minValue = randomValue-maxValue;
             maxValue = randomValue;
-        }
-        for (int i = randomValue-22; i < randomValue-2; i++){
+        }*/
+        Serial.println(randomValue);
+        for (int i = randomValue+max(minValue, maxValue-2-ROLL_LENGTH); i < randomValue+maxValue-2; i++){
             for (int j = 0.5*SPIN_TEXT_SIZE*LETTER_HEIGHT; j <= 1.5*SPIN_TEXT_SIZE*LETTER_HEIGHT; j++) {
                 dPrint(calculateMode?testclass[(i+(j>SPIN_TEXT_SIZE*LETTER_HEIGHT?3:2))%(maxValue+1)]:String(minValue+(i+(j>SPIN_TEXT_SIZE*LETTER_HEIGHT?3:2))%(maxValue-minValue+1)), DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2 + (j-1)%(SPIN_TEXT_SIZE*LETTER_HEIGHT) - 1.5*SPIN_TEXT_SIZE*LETTER_HEIGHT, SPIN_TEXT_SIZE, BLACK, CC_DATUM);
                 dPrint(calculateMode?testclass[(i+(j>SPIN_TEXT_SIZE*LETTER_HEIGHT?2:1))%(maxValue+1)]:String(minValue+(i+(j>SPIN_TEXT_SIZE*LETTER_HEIGHT?2:1))%(maxValue-minValue+1)), DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2 + (j-1)%(SPIN_TEXT_SIZE*LETTER_HEIGHT) - 0.5*SPIN_TEXT_SIZE*LETTER_HEIGHT, SPIN_TEXT_SIZE, BLACK, CC_DATUM);
