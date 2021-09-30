@@ -49,7 +49,8 @@
   void subscribeToMQTT(String topic, String c);
   void subscribeToMQTT(String topic, int id);
   void saveClassList(String list);
-  String shortenName(String input);
+  void addPreAndLastName(String input, int digit);
+  void shortenAllNames();
 
   void reportBug(String title);
   void sendDebugToMQTT(String message);

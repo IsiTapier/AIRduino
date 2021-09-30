@@ -19,6 +19,11 @@
   boolean configReceived = false;
   String currentTime = "00:00";
   String currentDate = "01.01.";
+  String classPreNames[30];
+  String classSecondNames[30];
+  String classFinalNames[30];
+  int classLength = 0;
+  
 
   //Database connection
   void setupDatabaseConnection() {
@@ -353,8 +358,7 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
       }     
     }
     if(topic == "class/list/" + device_class) {
-      gui.setValue(atoi(payload_string.c_str()));
-      
+      saveClassList(payload_string);    
     }
   }
 
@@ -369,6 +373,7 @@ void generalSubscriptions() {
   subscribeToMQTT("manager/message/", device_class);
   subscribeToMQTT("class/list/", device_class);
   subscribeToMQTT("time");
+  
 
   subscribeToMQTT("weather/weather");
   subscribeToMQTT("weather/windspeed");
@@ -515,25 +520,29 @@ void sendDebugToMQTT(String message) {
 
 void saveClassList(String rawList) {
   String namePile;
-  String output[30];
   int nameCounter = 0;
+
   for(int x = 0;  x < rawList.length(); x++) {
     if(rawList[x] == ',') {
-      output[nameCounter] = shortenName(namePile);
+      addPreAndLastName(namePile, nameCounter);
       namePile = "";
       nameCounter++;
     } else {
       namePile += rawList[x];
+      // Serial.print(rawList[x]);
     }
+    if(x <= rawList.length()) classLength = nameCounter;
   }
-  for(int x = 1; x < nameCounter; x++) {
-    Serial.print(output[x]);
-    Serial.print("; ");
+
+  shortenAllNames();
+  for(int x = 0; x < classLength; x++) { 
+    Serial.print(classFinalNames[x]); 
+    Serial.print(", ");
   }
   Serial.println();
 }
 
-String shortenName(String fullName) {
+void addPreAndLastName(String fullName, int digit) {
     String preName = "";
     String secondName = "";
     String namePile;
@@ -543,6 +552,25 @@ String shortenName(String fullName) {
     for(int x = fullName.length()-1; fullName[x] != ' '; x--) {
         secondName += fullName[x];
     }
-    String output = preName + " " + secondName[secondName.length() - 1];
-    return output;
+    
+    classPreNames[digit] = preName;
+    classSecondNames[digit] = secondName;
+}
+
+void shortenAllNames() {
+  for(int x = 0; x < classLength; x++) {
+    boolean similar = false;
+    for(int y = 0; y < classLength; y++) {
+      if(x != y) {
+        if(classPreNames[x] == classPreNames[y]) {         
+          similar = true;
+        }
+      }
+    }
+    if(similar) {
+      classFinalNames[x] = classPreNames[x] + " " + classSecondNames[x][classSecondNames[x].length() - 1] + "."; 
+    } else {
+      classFinalNames[x] = classPreNames[x];
+    }
+  }
 }
