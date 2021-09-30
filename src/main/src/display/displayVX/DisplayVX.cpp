@@ -145,7 +145,7 @@ boolean DisplayVX::recentPeepStatus = 0;
       }
       if(peepCounter > 0) {
         if(peepCounter <= min(peep*INCREASEPEEPS+STARTPEEPS, MAXPEEPS)) {
-          if(general::sound.getValue()) {
+          if(general::sound.getValue() && ALLOW_PIEP) {
             ledcAttachPin(PIEZO, 0);
             ledcWriteNote(0, peep%2 == 0 ? NOTE_C : NOTE_G, min((int)floor(peep/2)+STARTOCTAVE, MAXOCTAVE));
             recentPeepStatus = true;
