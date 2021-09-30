@@ -18,7 +18,7 @@ class RandomStudentGui {
     static String shortenName(String x);
 
   private:
-    static void drawGui();  
+    static void drawGui(bool mode = false);  
     static void drawMaxRandomValue();   
     static void drawSideBar();
 
