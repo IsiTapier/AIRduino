@@ -93,18 +93,10 @@ void RandomStudentGui::drawGui(bool mode)
 
         }
     } else {
-        maxRandomValue = 99;
         ledcDetachPin(PIEZO);
         int minValue = calculateMode?0:minRandomValue;
         int maxValue = calculateMode?15:maxRandomValue;
         int randomValue = random(minValue, maxValue+1);
-       /* if(maxValue > 30)
-            maxValue = 30;
-        if(randomValue < maxValue) {
-            minValue = randomValue-maxValue;
-            maxValue = randomValue;
-        }*/
-        Serial.println(randomValue);
         for (int i = randomValue+max(minValue, maxValue-2-ROLL_LENGTH); i < randomValue+maxValue-2; i++){
             for (int j = 0.5*SPIN_TEXT_SIZE*LETTER_HEIGHT; j <= 1.5*SPIN_TEXT_SIZE*LETTER_HEIGHT; j++) {
                 dPrint(calculateMode?testclass[(i+(j>SPIN_TEXT_SIZE*LETTER_HEIGHT?3:2))%(maxValue+1)]:String(minValue+(i+(j>SPIN_TEXT_SIZE*LETTER_HEIGHT?3:2))%(maxValue-minValue+1)), DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2 + (j-1)%(SPIN_TEXT_SIZE*LETTER_HEIGHT) - 1.5*SPIN_TEXT_SIZE*LETTER_HEIGHT, SPIN_TEXT_SIZE, BLACK, CC_DATUM);
