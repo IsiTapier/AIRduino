@@ -3,6 +3,8 @@
   #include "manager/Manager.h"
   
 
+  #define GENERAL_SOUND false
+
 /*
 ToDo
 - ton sensor anschließen
