@@ -7,10 +7,7 @@
 
 /*
 ToDo
-- ton sensor anschließen
-- ton algo
-- case for ton ding
-
+- in node red zur conifig auch die klasse mitschicken lassen auf "class/list"
 */
 
 /*   const char* ssid = "DESKTOP-Q7HRET5 8763";

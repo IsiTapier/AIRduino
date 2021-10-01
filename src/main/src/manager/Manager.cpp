@@ -37,7 +37,7 @@ void Manager::loop() {
     currentCycleTime = millis();
     while(currentCycleTime - lastCycleTime < STAGE_TIME) {
       currentCycleTime = millis();
-    
+      
       if(currentCycleTime - lastCycleTime > STAGE_TIME) {
         Serial.print("Warning - timing system failed: ");
         Serial.print(currentCycleTime-lastCycleTime-STAGE_TIME);
