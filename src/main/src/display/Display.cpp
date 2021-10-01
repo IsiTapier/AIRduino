@@ -247,7 +247,6 @@ using namespace general;
         TimeGui::handleTouch(p);
         DecibelGui::registerTouch(p);
         MenuGui::handleTouch(p);
-        RandomStudentGui::handleTouch(p);
         //-----------------
         if(mode.equals(CHART)) {        
           if(gui.equals(CO2_GUI)) {
@@ -269,8 +268,10 @@ using namespace general;
           lastTouch+=500;
         } 
       }
+      RandomStudentGui::handleTouch(p);
     } else {
       p = ts.getPoint();
+      RandomStudentGui::handleTouch(p);
     }
   }
 

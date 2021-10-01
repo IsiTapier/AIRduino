@@ -13,6 +13,8 @@
 #define SPIN_TEXT_SIZE 4
 #define ROLL_LENGTH 20
 
+#define NO_REAPEAT true
+
 int RandomStudentGui::minRandomValue = 1;
 int RandomStudentGui::maxRandomValue = 24;
 int RandomStudentGui::lastMaxRandomValue = 24;
@@ -21,10 +23,12 @@ int RandomStudentGui::lastRandomValue = 0;
 //false == random number; true == random student;
 boolean calculateMode = false;
 boolean minValueSelect = true;
-unsigned long lastTouching = 0;
-String testclass[16] = {"Jan", "Tim", "Willibon", "Isajah", "Jonas", "Josua", "Cindy", "Marit", "Helena", "Lotta", "Hannah", "Rozerin", "Janice", "Maja", "Rahel", "Nele"};
+boolean lastTouching = 0;
+unsigned long lastTouch = 0;
+std::vector<String> testclass = {"Jan", "Tim", "Willibon", "Isajah", "Jonas", "Josua", "Cindy", "Marit", "Helena", "Lotta", "Hannah", "Rozerin", "Janice", "Maja", "Rahel", "Nele"};
+std::vector<String> temparray;
 
-#define LONG_PRESS (millis()-lastTouching < 800)
+#define LONG_PRESS (lastTouching)
 
 void RandomStudentGui::initGui()
 {
@@ -33,10 +37,9 @@ void RandomStudentGui::initGui()
         display.fillScreen(BLACK);
         saveClassList("Tim Ramsch, Leon Kugel, Lea Ulti, Baba Ralf Erich");
         // if(client.connected()) calculateMode = true;
+        temparray = testclass;
         drawSideBar();
         drawGui();
-
-        
     }  
 
 }
@@ -97,6 +100,8 @@ void RandomStudentGui::drawGui(bool mode)
         }
     } else {
         ledcDetachPin(PIEZO);
+        if(temparray.size() == 0)
+            temparray = testclass;
         int minValue = calculateMode?0:minRandomValue;
         int maxValue = calculateMode?15:maxRandomValue;
         int randomValue = random(minValue, maxValue+1);
@@ -113,6 +118,7 @@ void RandomStudentGui::drawGui(bool mode)
                 delayMicroseconds(pow(max(i-randomValue-maxValue+7,0), 7));
             }
         }
+       // temparray.
     }
 }
 
@@ -145,64 +151,54 @@ void RandomStudentGui::changeMax(int difference)
     drawMaxRandomValue();
 }
 
-void RandomStudentGui::handleTouch(TSPoint p)
-{
-    if (gui.equals(RANDOM_STUDENT_GUI))
-    {   
+void RandomStudentGui::handleTouch(TSPoint p) {
+    if(millis()-lastTouch < 200)
+        return;
+    if(!p.isTouching()) {
+        lastTouching = false;
+        return;
+    }
+    lastTouch = millis();
+    p.calibrate();
+    if(gui.equals(RANDOM_STUDENT_GUI)) { 
         if (p.yc > TOP_MARGIN)
-            if (p.xc > DISPLAY_LENGTH - SIDE_MARGIN - TOUCH_FIELD_INCREASE)
-            {
-                if (p.yc < TOP_MARGIN + (DISPLAY_HEIGHT - TOP_MARGIN - LINE_MARGIN) / 2)
-                {
+            if (p.xc > DISPLAY_LENGTH - SIDE_MARGIN - TOUCH_FIELD_INCREASE) {
+                temparray = testclass;
+                if (p.yc < TOP_MARGIN + (DISPLAY_HEIGHT - TOP_MARGIN - LINE_MARGIN) / 2) {
                     calculateMode = true;
                     drawGui();
-                }
-                else
-                {
+                } else {
                     calculateMode = false;
                     drawGui();
                 }
-            }
-            else if (p.xc < SIDE_MARGIN + TOUCH_FIELD_INCREASE)
-            {
+            } else if (p.xc < SIDE_MARGIN + TOUCH_FIELD_INCREASE) {  
+                temparray = testclass;
                 dPrint((minRandomValue < 10 ? "0" : "") + String(minRandomValue) + (maxRandomValue < 10 ? "-0" : "-") + String(maxRandomValue), DISPLAY_LENGTH / 2 + 3, TOP_MARGIN + LINE_MARGIN + (DISPLAY_HEIGHT - TOP_MARGIN - LINE_MARGIN) / 2 - 6, 6, BLACK, CC_DATUM);
-                if (p.yc < TOP_MARGIN + (DISPLAY_HEIGHT - TOP_MARGIN - LINE_MARGIN) / 2)
-                {
-                    if (minValueSelect)
-                    {
-                        
+                if (p.yc < TOP_MARGIN + (DISPLAY_HEIGHT - TOP_MARGIN - LINE_MARGIN) / 2) {
+                    if (minValueSelect) {
                         if (minRandomValue < maxRandomValue)
                             minRandomValue+=LONG_PRESS&&minRandomValue+10<=maxRandomValue?10:1;
-                        else if (maxRandomValue < 99)
-                        {
+                        else if (maxRandomValue < 99) {
                             minRandomValue+=LONG_PRESS&&maxRandomValue+10<=99?10:1;
                             maxRandomValue+=LONG_PRESS&&maxRandomValue+10<=99?10:1;
                         }
-                    }
-                    else if (maxRandomValue < 99)
+                    } else if (maxRandomValue < 99)
                         maxRandomValue+=LONG_PRESS&&maxRandomValue+10<=99?10:1;
                     drawGui();
-                }
-                else
-                {
-                    if (minValueSelect)
-                    {
+                } else {
+                    if (minValueSelect) {
                         if (minRandomValue > 0)
                             minRandomValue-=LONG_PRESS&&minRandomValue>10?10:1;
-                    }
-                    else if (maxRandomValue > minRandomValue)
+                    } else if (maxRandomValue > minRandomValue)
                         maxRandomValue-=LONG_PRESS&&maxRandomValue-10>=minRandomValue?10:1;
-                    else if (minRandomValue > 0)
-                    {
+                    else if (minRandomValue > 0) {
                         minRandomValue-=LONG_PRESS&&minRandomValue>10?10:1;
                         maxRandomValue-=LONG_PRESS&&minRandomValue>10?10:1;
                     }
                     drawGui();
                 }
-                lastTouching = millis();
-            }
-            else if (p.yc > 180)
-            {
+                lastTouching = true;
+            } else if (p.yc > 180) {
                 drawGui(true);
             } else {
                 minValueSelect = !minValueSelect;
