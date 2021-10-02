@@ -201,6 +201,7 @@ void Display::handleTouch() {
     }
   } else {
     p = ts.getPoint();
+    RandomStudentGui::handleTouch(p);
   }
 }
 

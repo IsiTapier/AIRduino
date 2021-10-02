@@ -92,6 +92,14 @@
     return (sizeof(array)/sizeof(T));
   }
 
+  template<class T>
+  bool contains(std::vector<T> vector, T value) {
+    for(int i = 0; i < vector.size(); i++)
+      if(vector[i] == value)
+        return true;
+    return false;
+  }
+
   //global variables
   extern TFT_eSPI display;
   extern TouchScreen ts;
