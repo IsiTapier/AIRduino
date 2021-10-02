@@ -13,20 +13,26 @@
     {SubMenu("General", {
         MenuPage(
           //Input(&general::version),
-          Input(&general::version),
-          Input(&general::theme),
-          Input(&general::reportSystem),
+          // Input(&general::theme),
           Input(&general::language),
+          Input(&general::manualReconnect),
+          Input(&general::autoTimeReset),
+          Input(&general::blink),
           Input(&general::sound),
-          Input(&general::autoTimeReset)         
-        ),      
+          Input(&general::empty)
+        ),
         MenuPage(
           //Input(&general::developperSettings),
-          Input(&developper::deviceInfo),
-          Input(&general::blink),
+          Input(&general::theme),
+          Input(&general::reportSystem),
           Input(&general::graph_speed),
           Input(&general::ventilating_timeout),
-          Input(&general::manualReconnect)
+          Input(&general::manualReconnect),
+          Input(&general::empty)
+        ),
+        MenuPage(
+          Input(&general::developperSettings),
+          Input(&developper::deviceInfo)
         )
     })},
     {SubMenu("Farb-Modi", {
@@ -46,7 +52,7 @@
     {SubMenu("Developer", {
         MenuPage(
           Input(&developper::calibrateMin),
-          Input(&general::empty),
+          Input(&developper::screenShot),
           Input(&developper::deviceInfo),
           Input(&developper::calibrateMax),
           Input(&general::calibrateTouch)

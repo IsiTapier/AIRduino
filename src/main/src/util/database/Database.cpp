@@ -109,7 +109,6 @@ void mysql_insert(String grade, int co2, double temp, int decibel) {
     delay(500);
     Serial.println(WiFi.status());
 
-
     for(int z = 0; (z <= 2) && (WiFi.status() != WL_CONNECTED); z++) {
       WiFi.begin(ssid, password);
       for (int x = 0; (x <= 10) && (WiFi.status() != WL_CONNECTED); x++) {
@@ -353,9 +352,11 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
     }
     if(topic == "time") {
       currentTime = payload_string;
-      if(gui.equals(CLOCK_GUI)) {
-        ClockGui::drawClock(DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2, 4, 4, WHITE);
-      }     
+      ClockGui::loop();         
+    }
+    if(topic == "date") {
+      currentDate = payload_string;
+      ClockGui::loop();          
     }
     if(topic == "class/list/" + device_class) {
       saveClassList(payload_string);    
@@ -373,6 +374,7 @@ void generalSubscriptions() {
   subscribeToMQTT("manager/message/", device_class);
   subscribeToMQTT("class/list/", device_class);
   subscribeToMQTT("time");
+  subscribeToMQTT("date");
   
 
   subscribeToMQTT("weather/weather");
@@ -387,6 +389,8 @@ void generalSubscriptions() {
 
 void reconnectSystem() {
   if(((TimerGui::goalMillis - millis()) < 60*1000) && TimerGui::peepCount <= 0) return;
+  if((millis()-Display::lastTouch <= 20000) || (millis()-Display::lastTouch >= 500)) return; 
+
 
   if(!WiFi.isConnected() || !client.connected()) {
     lastGui = gui.getValue();

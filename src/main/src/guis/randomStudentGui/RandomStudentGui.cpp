@@ -22,7 +22,7 @@ int RandomStudentGui::lastRandomValue = 0;
 boolean calculateMode = false;
 boolean minValueSelect = true;
 unsigned long lastTouching = 0;
-String testclass[16] = {"Jan", "Tim", "Willibon", "Isajah", "Jonas", "Josua", "Cindy", "Marit", "Helena", "Lotta", "Hannah", "Rozerin", "Janice", "Maja", "Rahel", "Nele"};
+// String testclass[16] = {"Jan", "Tim", "Willibon", "Isajah", "Jonas", "Josua", "Cindy", "Marit", "Helena", "Lotta", "Hannah", "Rozerin", "Janice", "Maja", "Rahel", "Nele"};
 
 #define LONG_PRESS (millis()-lastTouching < 800)
 
@@ -31,14 +31,11 @@ void RandomStudentGui::initGui()
     if (gui.getValue() == RANDOM_STUDENT_GUI)
     {
         display.fillScreen(BLACK);
-        saveClassList("Jan Felix Schreiber,Tim Sch,Tim Günther,Tim Tappe,Jonas Br,Josua Mau,Cindy Le,Marit Str,Helena Kl,Lotta Pa,Hannah Vol,Rozerin Dem,Janice Hop,Maja Ku,Rahel Bue,Nele Wae");
+        //saveClassList("Jan Felix Schreiber,Tim Sch,Tim Günther,Tim Tappe,Jonas Br,Josua Mau,Cindy Le,Marit Str,Helena Kl,Lotta Pa,Hannah Vol,Rozerin Dem,Janice Hop,Maja Ku,Rahel Bue,Nele Wae");
         // if(client.connected()) calculateMode = true;
         drawSideBar();
-        drawGui();
-
-        
+        drawGui();      
     }  
-
 }
 
 void RandomStudentGui::drawSideBar()
@@ -72,7 +69,8 @@ void RandomStudentGui::drawSideBar()
 }
 
 void RandomStudentGui::drawGui(bool mode)
-{
+{   
+    if(mode && calculateMode && classLength == 0) return;
     Display::drawTopBar(String(calculateMode ? "Sch" + ue + "ler" : "Zahl") + " - Zufall", String(!calculateMode ? "Sch" + ue + "ler" : "Zahl") + " - Zufall");
     display.fillRect(SIDE_MARGIN, TOP_MARGIN, DISPLAY_LENGTH - 2 * SIDE_MARGIN, DISPLAY_HEIGHT - TOP_MARGIN, BLACK);
     dPrint("RANDOM", DISPLAY_LENGTH / 2, DISPLAY_HEIGHT - 15, 3, COLOR_STATUS_RISK, 7);
@@ -98,16 +96,16 @@ void RandomStudentGui::drawGui(bool mode)
     } else {
         ledcDetachPin(PIEZO);
         int minValue = calculateMode?0:minRandomValue;
-        int maxValue = calculateMode?15:maxRandomValue;
+        int maxValue = calculateMode?classLength-1:maxRandomValue;
         int randomValue = random(minValue, maxValue+1);
         for (int i = randomValue+max(minValue, maxValue-2-ROLL_LENGTH); i < randomValue+maxValue-2; i++){
             for (int j = 0.5*SPIN_TEXT_SIZE*LETTER_HEIGHT; j <= 1.5*SPIN_TEXT_SIZE*LETTER_HEIGHT; j++) {
-                dPrint(calculateMode?testclass[(i+(j>SPIN_TEXT_SIZE*LETTER_HEIGHT?3:2))%(maxValue+1)]:String(minValue+(i+(j>SPIN_TEXT_SIZE*LETTER_HEIGHT?3:2))%(maxValue-minValue+1)), DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2 + (j-1)%(SPIN_TEXT_SIZE*LETTER_HEIGHT) - 1.5*SPIN_TEXT_SIZE*LETTER_HEIGHT, SPIN_TEXT_SIZE, BLACK, CC_DATUM);
-                dPrint(calculateMode?testclass[(i+(j>SPIN_TEXT_SIZE*LETTER_HEIGHT?2:1))%(maxValue+1)]:String(minValue+(i+(j>SPIN_TEXT_SIZE*LETTER_HEIGHT?2:1))%(maxValue-minValue+1)), DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2 + (j-1)%(SPIN_TEXT_SIZE*LETTER_HEIGHT) - 0.5*SPIN_TEXT_SIZE*LETTER_HEIGHT, SPIN_TEXT_SIZE, BLACK, CC_DATUM);
-                dPrint(calculateMode?testclass[(i+(j>SPIN_TEXT_SIZE*LETTER_HEIGHT?1:0))%(maxValue+1)]:String(minValue+(i+(j>SPIN_TEXT_SIZE*LETTER_HEIGHT?1:0))%(maxValue-minValue+1)), DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2 + (j-1)%(SPIN_TEXT_SIZE*LETTER_HEIGHT) + 0.5*SPIN_TEXT_SIZE*LETTER_HEIGHT, SPIN_TEXT_SIZE, BLACK, CC_DATUM);
-                dPrint(calculateMode?testclass[(i+(j>=SPIN_TEXT_SIZE*LETTER_HEIGHT?3:2))%(maxValue+1)]:String(minValue+(i+(j>=SPIN_TEXT_SIZE*LETTER_HEIGHT?3:2))%(maxValue-minValue+1)), DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2 + j%(SPIN_TEXT_SIZE*LETTER_HEIGHT) - 1.5*SPIN_TEXT_SIZE*LETTER_HEIGHT, SPIN_TEXT_SIZE, WHITE, CC_DATUM);
-                dPrint(calculateMode?testclass[(i+(j>=SPIN_TEXT_SIZE*LETTER_HEIGHT?2:1))%(maxValue+1)]:String(minValue+(i+(j>=SPIN_TEXT_SIZE*LETTER_HEIGHT?2:1))%(maxValue-minValue+1)), DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2 + j%(SPIN_TEXT_SIZE*LETTER_HEIGHT) - 0.5*SPIN_TEXT_SIZE*LETTER_HEIGHT, SPIN_TEXT_SIZE, WHITE, CC_DATUM);
-                dPrint(calculateMode?testclass[(i+(j>=SPIN_TEXT_SIZE*LETTER_HEIGHT?1:0))%(maxValue+1)]:String(minValue+(i+(j>=SPIN_TEXT_SIZE*LETTER_HEIGHT?1:0))%(maxValue-minValue+1)), DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2 + j%(SPIN_TEXT_SIZE*LETTER_HEIGHT) + 0.5*SPIN_TEXT_SIZE*LETTER_HEIGHT, SPIN_TEXT_SIZE, WHITE, CC_DATUM);
+                dPrint(calculateMode?classFinalNames[(i+(j>SPIN_TEXT_SIZE*LETTER_HEIGHT?3:2))%(maxValue+1)]:String(minValue+(i+(j>SPIN_TEXT_SIZE*LETTER_HEIGHT?3:2))%(maxValue-minValue+1)), DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2 + (j-1)%(SPIN_TEXT_SIZE*LETTER_HEIGHT) - 1.5*SPIN_TEXT_SIZE*LETTER_HEIGHT, SPIN_TEXT_SIZE, BLACK, CC_DATUM);
+                dPrint(calculateMode?classFinalNames[(i+(j>SPIN_TEXT_SIZE*LETTER_HEIGHT?2:1))%(maxValue+1)]:String(minValue+(i+(j>SPIN_TEXT_SIZE*LETTER_HEIGHT?2:1))%(maxValue-minValue+1)), DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2 + (j-1)%(SPIN_TEXT_SIZE*LETTER_HEIGHT) - 0.5*SPIN_TEXT_SIZE*LETTER_HEIGHT, SPIN_TEXT_SIZE, BLACK, CC_DATUM);
+                dPrint(calculateMode?classFinalNames[(i+(j>SPIN_TEXT_SIZE*LETTER_HEIGHT?1:0))%(maxValue+1)]:String(minValue+(i+(j>SPIN_TEXT_SIZE*LETTER_HEIGHT?1:0))%(maxValue-minValue+1)), DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2 + (j-1)%(SPIN_TEXT_SIZE*LETTER_HEIGHT) + 0.5*SPIN_TEXT_SIZE*LETTER_HEIGHT, SPIN_TEXT_SIZE, BLACK, CC_DATUM);
+                dPrint(calculateMode?classFinalNames[(i+(j>=SPIN_TEXT_SIZE*LETTER_HEIGHT?3:2))%(maxValue+1)]:String(minValue+(i+(j>=SPIN_TEXT_SIZE*LETTER_HEIGHT?3:2))%(maxValue-minValue+1)), DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2 + j%(SPIN_TEXT_SIZE*LETTER_HEIGHT) - 1.5*SPIN_TEXT_SIZE*LETTER_HEIGHT, SPIN_TEXT_SIZE, WHITE, CC_DATUM);
+                dPrint(calculateMode?classFinalNames[(i+(j>=SPIN_TEXT_SIZE*LETTER_HEIGHT?2:1))%(maxValue+1)]:String(minValue+(i+(j>=SPIN_TEXT_SIZE*LETTER_HEIGHT?2:1))%(maxValue-minValue+1)), DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2 + j%(SPIN_TEXT_SIZE*LETTER_HEIGHT) - 0.5*SPIN_TEXT_SIZE*LETTER_HEIGHT, SPIN_TEXT_SIZE, WHITE, CC_DATUM);
+                dPrint(calculateMode?classFinalNames[(i+(j>=SPIN_TEXT_SIZE*LETTER_HEIGHT?1:0))%(maxValue+1)]:String(minValue+(i+(j>=SPIN_TEXT_SIZE*LETTER_HEIGHT?1:0))%(maxValue-minValue+1)), DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2 + j%(SPIN_TEXT_SIZE*LETTER_HEIGHT) + 0.5*SPIN_TEXT_SIZE*LETTER_HEIGHT, SPIN_TEXT_SIZE, WHITE, CC_DATUM);
                 display.fillRect(SIDE_MARGIN, DISPLAY_HEIGHT/2 - 2*SPIN_TEXT_SIZE*LETTER_HEIGHT, DISPLAY_LENGTH - 2*SIDE_MARGIN, SPIN_TEXT_SIZE*LETTER_HEIGHT, BLACK);
                 display.fillRect(SIDE_MARGIN, DISPLAY_HEIGHT/2 + SPIN_TEXT_SIZE*LETTER_HEIGHT, DISPLAY_LENGTH - 2*SIDE_MARGIN, SPIN_TEXT_SIZE*LETTER_HEIGHT, BLACK);  
                 delayMicroseconds(pow(max(i-randomValue-maxValue+7,0), 7));

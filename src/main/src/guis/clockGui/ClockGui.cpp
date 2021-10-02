@@ -9,15 +9,15 @@ void ClockGui::initGui() {
         if(client.connected()) {
             display.fillScreen(BLACK);
             Display::drawTopBar("Uhrzeit");
-
+            loop();
         }
     }
 }
 
 void ClockGui::loop() {
     if(!gui.equals(CLOCK_GUI)) return;
-    ClockGui::drawClock(DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2-5, 8, 7, WHITE);
-    // ClockGui::drawDate(DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2+5, 4, 1, GREY);
+    ClockGui::drawClock(DISPLAY_LENGTH/2, DISPLAY_HEIGHT/1.5-5, 8, 7, WHITE);
+    ClockGui::drawDate(DISPLAY_LENGTH/2, DISPLAY_HEIGHT/1.5+5, 4, 1, ORANGE);
 }
 
 void ClockGui::drawDate(int x, int y, int size, int datum, int color) {

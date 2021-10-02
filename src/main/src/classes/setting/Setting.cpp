@@ -58,6 +58,7 @@ short Setting::getMaxValue() {
 }
 
 void Setting::setValue(short value, boolean upload) {
+  if(getTitle() == developperSettings.getTitle() && (graph_speed.getValue() != graph_speed.getMinValue() || ventilating_timeout.getValue() != ventilating_timeout.getMinValue()) && value != 0) return;
   if(value > _maxValue)
     value = _maxValue;
   if(value < _minValue)

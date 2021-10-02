@@ -108,7 +108,7 @@ namespace general {
   Setting blink = Setting(SWITCH, "blink", titlesBlink, 1, "'Blink' changed");
   Setting data = Setting(SWITCH, "", titlesData, 1, "Data gettering changed", 0, 1, namesData); //TODO: connect to database
   Setting calibrateTouch = Setting(ACTIVATOR, "", titlesCalibrateTouch, 0);
-
+  
   Setting language = Setting(MULTISELECT, "language", titlesLanguage, 0, "'Status' changed", 0, 5, namesLanguage);
   // Setting kernMode = Setting(SWITCH, "", titlesKernMode, 0, "'Kern Modus' changed");
   Setting graph_speed = Setting(NUMBER, "graph_speed", titlesGraphSpeed, 5, "'Graph Speed' changed", 1, 9);
@@ -170,6 +170,7 @@ namespace developper {
   Setting calibrateMax = Setting(ACTIVATOR, "", titlesCalibrateMax, 2);
   Setting autoCalibrationMin = Setting(ACTIVATOR, "", titlesAutoMinCali, 3);
   Setting deviceInfo = Setting(ACTIVATOR, "", {"Device Info"}, 11);
+  Setting screenShot = Setting(ACTIVATOR, "", {"Screenshot"}, 13);
 }
 
 namespace report {

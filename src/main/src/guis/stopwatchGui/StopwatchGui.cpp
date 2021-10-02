@@ -22,6 +22,23 @@ void StopwatchGui::initGui() {
     }  
 }
 
+void StopwatchGui::handleTouch(TSPoint p) {
+    if(!gui.equals(STOPWATCH_GUI)) return;
+    
+    if(p.isTouching(DISPLAY_LENGTH/2, DISPLAY_LENGTH, DISPLAY_HEIGHT/2, DISPLAY_HEIGHT)) {
+        if(gui.equals(STOPWATCH_GUI) && mode.equals(CHART)) {
+            StopwatchGui::toggleStopwatch();
+            return;
+        }          
+    } 
+    if(p.isTouching(0, DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2, DISPLAY_HEIGHT)) {
+        if(gui.equals(STOPWATCH_GUI) && mode.equals(CHART)) {
+            StopwatchGui::resetStopwatch();
+            return;
+        } 
+    } 
+}
+
 void StopwatchGui::startStopwatch() {
     if(startMillis == 0) {
         startMillis = millis(); 

@@ -28,6 +28,7 @@ class TimerGui {
     static String getDigitsOfMillis(int _millis);
     static void peep();
     static void resetTimerValues();
+    static void handleTouch(TSPoint p);
 
     static int goalMillis;
     static int millisToGoal;

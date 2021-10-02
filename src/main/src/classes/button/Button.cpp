@@ -50,6 +50,7 @@
       case 10: requestDecision("ea.jcbs@gmail.com", "wir bitten um Feedback", "", "Zur" +ue+ "ck"); break; 
       case 11: Display::drawInfoScreen(5000); break; 
       case 12: reconnectSystem(); break;
+      case 13: Display::screenShot(); break;
       default: break;
     }
 

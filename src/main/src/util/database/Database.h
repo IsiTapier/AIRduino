@@ -24,6 +24,9 @@
   extern String currentTime;
   extern String currentDate;
 
+  extern String classFinalNames[];
+  extern int classLength;
+
   extern const char* ssid;
   extern const char* password;
   extern const char* mqtt_server;

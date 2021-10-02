@@ -38,11 +38,13 @@ class Display {
     static void drawAuthors();
     static void initAllGuis();
     static void drawTopBar(String title, String oldTitle = "");
+    static unsigned long lastTouch;
+    static void screenShot();
     
 
   private:
     static TSPoint p;
-    static unsigned long lastTouch;
+    
     static int lastGui;
     
 };

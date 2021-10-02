@@ -41,6 +41,41 @@ void TimerGui::initGui() {
     }
 }
 
+void TimerGui::handleTouch(TSPoint p) {
+    if(!gui.equals(TIMER_GUI)) return;
+    if(p.isTouching(0, DISPLAY_LENGTH/2, 15, DISPLAY_HEIGHT/2)) {
+        // Serial.println("oben l");
+        TimerGui::updateDigit(1, 1);
+        return;
+    } 
+    if(p.isTouching(DISPLAY_LENGTH/2, DISPLAY_LENGTH, MENU_ICON_HEIGHT, DISPLAY_HEIGHT/2)) {
+        // Serial.println("oben r");
+        TimerGui::updateDigit(2, 15);
+        return;
+    } 
+    if(p.isTouching(0, DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2, DISPLAY_HEIGHT-66)) {
+        // Serial.println("unten l");
+        TimerGui::updateDigit(1, -1);
+        return; 
+    } 
+    if(p.isTouching(DISPLAY_LENGTH/2, DISPLAY_LENGTH, DISPLAY_HEIGHT/2, DISPLAY_HEIGHT-66)) {
+    
+        TimerGui::updateDigit(2, -15);
+        // Serial.println("unten r");
+        return; 
+    }
+    if(p.isTouching(0, 160, DISPLAY_HEIGHT-66, 240)) {
+        TimerGui::resetTimer();
+        Serial.println("reset timer");
+        return;
+    }
+    if(p.isTouching(161, 320, DISPLAY_HEIGHT-66, 240 )) {
+        TimerGui::toggleTimer();
+        Serial.println("toggle timer");
+        return;
+    }
+}
+
 void TimerGui::toggleTimer() {
     if(isRunning) {
         stopTimer();

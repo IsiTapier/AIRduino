@@ -22,6 +22,7 @@ class StopwatchGui {
     static void initGui();
     static void drawIcon();
     static void drawButtons();
+    static void handleTouch(TSPoint p);
     
 
     static String lastTime;

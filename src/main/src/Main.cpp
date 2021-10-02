@@ -7,7 +7,7 @@
 
 /*
 ToDo
-- in node red zur conifig auch die klasse mitschicken lassen auf "class/list"
+
 */
 
 /*   const char* ssid = "DESKTOP-Q7HRET5 8763";
@@ -19,7 +19,7 @@ ToDo
 
   //Buchse 1.16.01
 
-  const String software_version = "2.0";
+  const String software_version = "2.01";
 /*   const char* ssid = "AG-iOT";
   const char* password = "#Wlan4iOT#JCBS-AG!";
   const char* mqtt_server = "169.254.191.226"; */

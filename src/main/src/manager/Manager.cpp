@@ -35,17 +35,20 @@ void Manager::setup() {
 void Manager::loop() {
     //Timing System Check
     currentCycleTime = millis();
-    while(currentCycleTime - lastCycleTime < STAGE_TIME) {
-      currentCycleTime = millis();
-      
-      if(currentCycleTime - lastCycleTime > STAGE_TIME) {
+
+    if(currentCycleTime - lastCycleTime > STAGE_TIME) {
         Serial.print("Warning - timing system failed: ");
         Serial.print(currentCycleTime-lastCycleTime-STAGE_TIME);
         Serial.println("ms");
       }
-    }
     lastCycleTime = currentCycleTime;
 
+    // Client loop; Display loop
+    if(client.connected())
+      client.loop();
+    Display::loop();
+
+    //guis
     if(mode.getValue() == CHART) {
       if(gui.getValue() == TIMER_GUI)
         TimerGui::loop();
@@ -55,11 +58,6 @@ void Manager::loop() {
         OverviewGui::loop();
       DecibelGui::loop();
     }
-    // Client loop; Display loop
-    if(client.connected())
-      client.loop();
-    Display::loop();
-
     if(500 >= (TimerGui::goalMillis - millis())) {
        TimerGui::resetTimer();
     }
