@@ -212,80 +212,69 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
         }
         
         switch (x) {
-          case 0: {
+          case 0:
             device_room = output;
-            device_class = device_room;
-            subscribeToMQTT("getClassViaRoom/", device_room);
-            
-            if (device_room[0] == 'a' && device_room[1] == 'u' && device_room[2] == 't') { //if the grade is auto generated
-              /* debug(ERROR, DATABASE, "///////////////////// CONFIG ///////////////////////////");
-              debug(ERROR, DATABASE, "Please enter the grade of your device into the database");
-              debug(ERROR, DATABASE, "////////////////////////////////////////////////////////");
-             */}
-          }
             break;
-          case 1: general::version.setValue((short) atoi(output.c_str()), false);
+          case 1:
+            device_class = output;
             break;
-          case 2: general::mode.setValue((short) atoi(output.c_str()), false);
+          case 2: general::version.setValue((short) atoi(output.c_str()), false);
             break;
-          case 3: general::theme.setValue((short) atoi(output.c_str()), false);
+          case 3: general::mode.setValue((short) atoi(output.c_str()), false);
             break;
-          case 4: general::language.setValue((short) atoi(output.c_str()), false);
+          case 4: general::theme.setValue((short) atoi(output.c_str()), false);
             break;
-          case 5: general::sound.setValue((short) atoi(output.c_str()), false);
+          case 5: general::language.setValue((short) atoi(output.c_str()), false);
             break;
-          case 6: general::blink.setValue((short) atoi(output.c_str()), false);
+          case 6: general::sound.setValue((short) atoi(output.c_str()), false);
             break;
-          case 7: general::graph_speed.setValue((short) atoi(output.c_str()), false);
+          case 7: general::blink.setValue((short) atoi(output.c_str()), false);
             break;
-          case 8: general::segments.setValue((short) atoi(output.c_str()), false);
+          case 8: general::graph_speed.setValue((short) atoi(output.c_str()), false);
             break;
-          case 9: general::blink_thickness.setValue((short) atoi(output.c_str()), false);
+          case 9: general::segments.setValue((short) atoi(output.c_str()), false);
             break;
-          case 10: general::ventilating_timeout.setValue((short) atoi(output.c_str()), false);
+          case 10: general::blink_thickness.setValue((short) atoi(output.c_str()), false);
             break;
-          case 11: colorModes::c_design.setValue((short) atoi(output.c_str()), false);
+          case 11: general::ventilating_timeout.setValue((short) atoi(output.c_str()), false);
             break;
-          case 12: colorModes::c_chart.setValue((short) atoi(output.c_str()), false);
+          case 12: colorModes::c_design.setValue((short) atoi(output.c_str()), false);
             break;
-          case 13: colorModes::c_bar.setValue((short) atoi(output.c_str()), false);
+          case 13: colorModes::c_chart.setValue((short) atoi(output.c_str()), false);
             break;
-          case 14: colorModes::c_state.setValue((short) atoi(output.c_str()), false);
+          case 14: colorModes::c_bar.setValue((short) atoi(output.c_str()), false);
             break;
-          case 15: colorModes::c_time.setValue((short) atoi(output.c_str()), false);
+          case 15: colorModes::c_state.setValue((short) atoi(output.c_str()), false);
             break;
-          case 16: colorModes::c_value.setValue((short) atoi(output.c_str()), false);
+          case 16: colorModes::c_time.setValue((short) atoi(output.c_str()), false);
             break;
-          case 17: colorModes::c_slider.setValue((short) atoi(output.c_str()), false);
+          case 17: colorModes::c_value.setValue((short) atoi(output.c_str()), false);
             break;
-          case 18:
+          case 18: colorModes::c_slider.setValue((short) atoi(output.c_str()), false);
             break;
-          case 19: 
+          case 19:
             break;
-          case 20: general::debugPriority.setValue((short) atoi(output.c_str()), false);
+          case 20: 
             break;
-          case 21: general::debugSetup.setValue((short) atoi(output.c_str()), false);
+          case 21: general::debugPriority.setValue((short) atoi(output.c_str()), false);
+            break;
+          case 22: general::debugSetup.setValue((short) atoi(output.c_str()), false);
             break; 
-          case 22: general::debugSensor.setValue((short) atoi(output.c_str()), false);
+          case 23: general::debugSensor.setValue((short) atoi(output.c_str()), false);
             break;
-          case 23: general::debugDisplay.setValue((short) atoi(output.c_str()), false);
+          case 24: general::debugDisplay.setValue((short) atoi(output.c_str()), false);
             break;
-          case 24: general::debugMenu.setValue((short) atoi(output.c_str()), false);
+          case 25: general::debugMenu.setValue((short) atoi(output.c_str()), false);
             break;
-          case 25: general::debugTouch.setValue((short) atoi(output.c_str()), false);
+          case 26: general::debugTouch.setValue((short) atoi(output.c_str()), false);
             break;
-          case 26: general::debugDatabase.setValue((short) atoi(output.c_str()), false);
+          case 27: general::debugDatabase.setValue((short) atoi(output.c_str()), false);
             break;
-          case 27: developper::isMappingActive.setValue((short) atoi(output.c_str()), false);
+          case 28: developper::isMappingActive.setValue((short) atoi(output.c_str()), false);
                   SET_MAP_IS_ACTIVE((short) atoi(output.c_str()));
             break;
         }
       }
-    }
-    if(topic == "getClassViaRoom/" + device_room) {
-      device_class = payload_string;
-      Serial.print("Class: ");
-      Serial.println(payload_string);
     }
     if(topic == "cali/low/" + device_class) {
       Meassure::getSensor().calibrate();
