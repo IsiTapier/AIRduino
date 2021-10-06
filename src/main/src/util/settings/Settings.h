@@ -80,6 +80,7 @@ namespace developper {
   extern Setting autoCalibrationMin;
   extern Setting deviceInfo;
   extern Setting screenShot;
+  extern Setting isMappingActive;
 }
 
 namespace report {

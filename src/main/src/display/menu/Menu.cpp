@@ -55,7 +55,8 @@
           Input(&developper::screenShot),
           Input(&developper::deviceInfo),
           Input(&developper::calibrateMax),
-          Input(&general::calibrateTouch)
+          Input(&general::calibrateTouch),
+          Input(&developper::isMappingActive)
         ),
         MenuPage(
           Input(&general::debugPriority),

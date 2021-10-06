@@ -57,6 +57,7 @@ void Manager::loop() {
       if(gui.getValue() == OVERVIEW_GUI)
         OverviewGui::loop();
       DecibelGui::loop();
+      MenuGui::loop();
     }
     if(500 >= (TimerGui::goalMillis - millis())) {
        TimerGui::resetTimer();

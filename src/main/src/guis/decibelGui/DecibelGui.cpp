@@ -29,6 +29,8 @@ int loopCounter = AVERAGE_ELEMENTS;
 int measuredValue = 0;
 double _sliderFactor = 1;
 int sliderX = MARGIN;
+int lastTrafficDigit = -10;
+
 int DecibelGui::trafficLightStage = 1;
 boolean DecibelGui::isActive = true;
 int DecibelGui::loopAverage = 0;
@@ -36,12 +38,12 @@ int DecibelGui::loopAverage = 0;
 
 void DecibelGui::setup() {
 //calculate initialValue
-    for (int c = 0; c <= 1000; c++) {
+    for (int c = 0; c <= 2000; c++) {
         measuredValue = analogRead(MICROPHONE_MODULE);
         initialValue += measuredValue;
         delay(3);
     }
-    initialValue = initialValue / 1000;
+    initialValue = initialValue / 2000;
 
     if(initialValue >= 50) {
         Serial.print("Lärmampel: initialValue:");
@@ -78,7 +80,7 @@ void DecibelGui::loop() {
             Serial.println(DisplayVX::recentPeepStatus);
             if(!DisplayVX::recentPeepStatus) { //verhindert kettenreaktion zwischen piepser des CO2s und dem Mikro
                 int oldTrafficLightStage = trafficLightStage;
-                trafficLightStage = map(loopAverage, initialValue, 1.5*initialValue - _sliderFactor, 0, 4);
+                trafficLightStage = map(loopAverage, initialValue, 2.25*initialValue - _sliderFactor, 0, 4);
 
                 if(gui.equals(DECIBEL_GUI)) {
                     drawTrafficLight(trafficLightStage, 160, 135, 35);
@@ -90,7 +92,7 @@ void DecibelGui::loop() {
                 Serial.print(" - ");
                 Serial.print(loopAverage);
                 Serial.print(" - ");
-                Serial.println(1.5*initialValue - _sliderFactor);
+                Serial.println(2.25*initialValue - _sliderFactor);
                 
                 if(trafficLightStage >= 3) {
                     if(oldTrafficLightStage != trafficLightStage) {
@@ -164,6 +166,10 @@ void DecibelGui::drawStripes(int value, int color) {
 }
 
 void DecibelGui::drawTrafficLight(int lightDigit, int x, int y, int size) {
+    if(lastTrafficDigit == lightDigit) return;
+
+    lastTrafficDigit = lightDigit;
+
     int circleDistance = size*2.5;
     for(int c = -1; c <= 1; c++) {
         display.fillCircle(x - c*circleDistance, y, size, GREY);
@@ -188,14 +194,13 @@ void DecibelGui::registerTouch(TSPoint ts) {
     if(ts.isTouching(0, DISPLAY_LENGTH, 80, 240)) {
         sliderX = map(ts.x, EEPROM.readShort(XMIN), EEPROM.readShort(XMAX), MARGIN, DISPLAY_LENGTH-MARGIN*2);
         drawSlider(sliderX, MARGIN, 195, DISPLAY_LENGTH-MARGIN*2, 5);
-        _sliderFactor = map(sliderX, MARGIN, DISPLAY_LENGTH-MARGIN, 0, initialValue/2);
+        _sliderFactor = map(sliderX, MARGIN, DISPLAY_LENGTH-MARGIN, 0, initialValue);
         constrain(_sliderFactor, 0, initialValue/2);
 
         display.fillRect(240, 210, 80, 40, BLACK);
         drawSliderFactor(round(_sliderFactor/10));
 
     }
-    
 }
 
 void DecibelGui::drawSlider(int sliderX, int x, int y, int length, int height) {

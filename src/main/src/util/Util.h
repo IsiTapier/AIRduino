@@ -27,14 +27,14 @@
 #define XMAX (1+1*sizeof(short))
 #define YMIN (1+2*sizeof(short))
 #define YMAX (1+3*sizeof(short))
-#define MAPMIN (1+4*sizeof(short))
-#define MAPMAX (1+5*sizeof(short))
+#define MAP_IS_ACTIVE (1+4*sizeof(short))
+#define MAP_MAX_IN (1+5*sizeof(short))
 
-#define SENSORMAPMIN (EEPROM.readShort(MAPMIN))
-#define SENSORMAPMAX (EEPROM.readShort(MAPMAX))
+#define GET_MAP_IS_ACTIVE (EEPROM.readShort(MAP_IS_ACTIVE))
+#define GET_MAP_MAX_IN (EEPROM.readShort(MAP_MAX_IN))
 
-#define SETMAPMIN(value) EEPROM.writeShort(MAPMIN, value); EEPROM.commit()
-#define SETMAPMAX(value) EEPROM.writeShort(MAPMAX, value); EEPROM.commit()
+#define SET_MAP_IS_ACTIVE(value) EEPROM.writeShort(MAP_IS_ACTIVE, value); EEPROM.commit()
+#define SET_MAP_MAX_IN(value) EEPROM.writeShort(MAP_MAX_IN, value); EEPROM.commit()
 
 
 

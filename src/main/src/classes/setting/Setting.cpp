@@ -59,6 +59,7 @@ short Setting::getMaxValue() {
 
 void Setting::setValue(short value, boolean upload) {
   if(getTitle() == developperSettings.getTitle() && (graph_speed.getValue() != graph_speed.getMinValue() || ventilating_timeout.getValue() != ventilating_timeout.getMinValue()) && value != 0) return;
+  
   if(value > _maxValue)
     value = _maxValue;
   if(value < _minValue)
@@ -71,6 +72,8 @@ void Setting::setValue(short value, boolean upload) {
   if(strlen(_key) != 0  && upload) {
     config_update(_key, _value);
   }
+
+  if(getTitle() == developper::isMappingActive.getTitle()) { SET_MAP_IS_ACTIVE(value); Serial.println(GET_MAP_IS_ACTIVE); }
 }
 
 void Setting::shiftValue(boolean up, boolean upload) {
