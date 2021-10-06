@@ -12,6 +12,7 @@
 
   String device_id;
   String device_class;
+  String device_room;
   unsigned long lastMsg = 0;
   char msg[MSG_BUFFER_SIZE];
   int value = 0;
@@ -212,8 +213,11 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
         
         switch (x) {
           case 0: {
-            device_class = output;
-            if (device_class[0] == 'a' && device_class[1] == 'u' && device_class[2] == 't') { //if the grade is auto generated
+            device_room = output;
+            device_class = device_room;
+            subscribeToMQTT("getClassViaRoom/", device_room);
+            
+            if (device_room[0] == 'a' && device_room[1] == 'u' && device_room[2] == 't') { //if the grade is auto generated
               /* debug(ERROR, DATABASE, "///////////////////// CONFIG ///////////////////////////");
               debug(ERROR, DATABASE, "Please enter the grade of your device into the database");
               debug(ERROR, DATABASE, "////////////////////////////////////////////////////////");
@@ -278,7 +282,11 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
         }
       }
     }
-
+    if(topic == "getClassViaRoom/" + device_room) {
+      device_class = payload_string;
+      Serial.print("Class: ");
+      Serial.println(payload_string);
+    }
     if(topic == "cali/low/" + device_class) {
       Meassure::getSensor().calibrate();
       Serial.println("Forced Min Cali via MQTT");
