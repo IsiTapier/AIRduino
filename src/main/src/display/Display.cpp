@@ -127,6 +127,7 @@ void Display::handleTouch() {
           mode.setValue(CHART);
           gui.setValue(lastGui);
         }
+        lastTouch+=LONG_COOLDOWN;
         Manager::lastModeChange = millis();
         return;
       }
@@ -161,12 +162,10 @@ void Display::handleTouch() {
               lastGui = gui.getValue();
               mode.setValue(MENU);
             }
-              
             Manager::lastModeChange = millis();
           }
         }
       } 
-
       if(mode.equals(MENU)) {
         Menu::handleTouch(p);
       }
@@ -195,7 +194,8 @@ void Display::handleTouch() {
             DisplayV3::loop();
           }    
           return;
-        }     
+        }    
+        //lastTouch+=LONG_COOLDOWN; 
       }
     }
   } else {

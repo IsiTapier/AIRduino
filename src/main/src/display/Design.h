@@ -43,6 +43,7 @@
 #define MENU_BUTTON_COOLDOWN 1*1000
 #define VENTILATING_TIMEOUT general::ventilating_timeout.getValue()*2*1000
 #define TOUCH_COOLDOWN 200
+#define LONG_COOLDOWN 500
 
 //peeper
 //octave
