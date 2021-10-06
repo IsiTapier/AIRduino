@@ -15,6 +15,7 @@ class ClockGui {
     static void initGui();
     static void drawClock(int x, int y, int size, int datum, int color);
     static void drawDate(int x, int y, int size, int datum, int color);
+    static void setLastTime(String _lastTime);
   private:
     
 

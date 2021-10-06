@@ -14,6 +14,7 @@ class MenuGui {
     static void loop();
     static void initGui();
     static void handleTouch(TSPoint p);
+    static void drawTimeDataAtUnderbar();
   private:
     
 

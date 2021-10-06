@@ -204,7 +204,7 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
         if (digit <= length) {
           for (int d = 0; (d < 100) && ((char)payload[digit] != ',') && ((char)payload[digit] != ';'); d++) { //loop to loop the single digits
             output = output + "" + (char)payload[digit];
-            Serial.println((char)payload[digit]);
+            // Serial.println((char)payload[digit]);
             digit++;
           }
           digit++;
@@ -254,9 +254,9 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
             break;
           case 17: colorModes::c_slider.setValue((short) atoi(output.c_str()), false);
             break;
-          case 18: SETMAPMIN((short) atoi(output.c_str()));
+          case 18:
             break;
-          case 19: SETMAPMAX((short) atoi(output.c_str()));
+          case 19: 
             break;
           case 20: general::debugPriority.setValue((short) atoi(output.c_str()), false);
             break;
@@ -271,6 +271,9 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
           case 25: general::debugTouch.setValue((short) atoi(output.c_str()), false);
             break;
           case 26: general::debugDatabase.setValue((short) atoi(output.c_str()), false);
+            break;
+          case 27: developper::isMappingActive.setValue((short) atoi(output.c_str()), false);
+                  SET_MAP_IS_ACTIVE((short) atoi(output.c_str()));
             break;
         }
       }
@@ -388,8 +391,11 @@ void generalSubscriptions() {
 }
 
 void reconnectSystem() {
+  Serial.print("Last Touch: ");
+  Serial.println(millis() - Display::lastTouch);
   if(((TimerGui::goalMillis - millis()) < 60*1000) && TimerGui::peepCount <= 0) return;
-  if((millis()-Display::lastTouch <= 20000) || (millis()-Display::lastTouch >= 500)) return; 
+  if(millis()-Display::lastTouch <= 20000) return;
+   Display::lastTouch = millis();
 
 
   if(!WiFi.isConnected() || !client.connected()) {
@@ -423,6 +429,7 @@ void reconnectSystem() {
       if(client.connected()) {
         generalSubscriptions();
         dPrint("succesful", DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, 2, GREEN, 4);
+        client.publish("config/request", device_id.c_str());
       } else {
         dPrint("failed", DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, 2, RED, 4);
       }

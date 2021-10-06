@@ -16,6 +16,7 @@ void OverviewGui::loop() {
             timerLastValue = digits;  
         }     
     }
+    
     DecibelGui::drawTrafficLight(DecibelGui::trafficLightStage, 230, 195, 20);
     drawPPMTimer(MARGIN, 80, 4, WHITE);
     drawPPM();

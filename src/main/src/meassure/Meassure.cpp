@@ -115,8 +115,9 @@
   }
 
   void Meassure::calibrateMax() {
-    if(requestDecision("Max Wert Kalibrierung", "Möchtest du fortfahren?")) {
-      MHZ19b.zeroSpan(1000);
+    if(requestDecision("kunst. Kalibrierung 2000ppm", "Möchtest du fortfahren?")) {
+      // MHZ19b.zeroSpan(1000);
+      SET_MAP_MAX_IN(MHZ19b.getCO2(true, true));
       debug(WARNING, SENSOR, "max value calibrated to 1000 PPM");
     }
     Menu::setup();
@@ -215,8 +216,8 @@
       if(counter >= AVERAGING_MEASUREMENTS) {
         airCondition = MHZ19b.getCO2(true, true);
         //Additional Mapping for bad sensors
-        if((SENSORMAPMIN > 0) && (SENSORMAPMAX > 0)) {
-          airCondition = map(airCondition, 400, 2000, SENSORMAPMIN, SENSORMAPMAX);
+        if(developper::isMappingActive.getValue() == 1) {
+          airCondition = map(airCondition, 400, GET_MAP_MAX_IN, 400, 2000);
         }
 
         debug(SPAMM, SENSOR, "PPM: " + String(airCondition));

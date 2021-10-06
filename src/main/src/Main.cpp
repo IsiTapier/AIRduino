@@ -8,6 +8,7 @@
 /*
 ToDo
 
+
 */
 
 /*   const char* ssid = "DESKTOP-Q7HRET5 8763";
@@ -19,7 +20,7 @@ ToDo
 
   //Buchse 1.16.01
 
-  const String software_version = "2.01";
+  const String software_version = "6/10/21";
 /*   const char* ssid = "AG-iOT";
   const char* password = "#Wlan4iOT#JCBS-AG!";
   const char* mqtt_server = "169.254.191.226"; */

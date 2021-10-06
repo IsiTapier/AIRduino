@@ -143,9 +143,9 @@ void Display::handleTouch() {
         } else if(mode.equals(CHART)) {
           if(gui.equals(CO2_GUI)) {
             Meassure::resetStartTime(true);
-            DisplayV1::resetGraph();
+            /* DisplayV1::resetGraph();
             if(version.equals(V1))
-              DisplayV1::setup();
+              DisplayV1::setup(); */
             return;
           }                     
         }     
@@ -201,7 +201,6 @@ void Display::handleTouch() {
     }
   } else {
     p = ts.getPoint();
-    RandomStudentGui::handleTouch(p);
   }
 }
 
@@ -225,7 +224,7 @@ void Display::drawInfoScreen(int time) {
   dPrint(software_version, 9*6*3+10, 70, 3, LIGHTGREY, 0);
 
   dPrint("Mapping:", 10, 100, 3, GREY, 0);
-  if((SENSORMAPMIN == 0) && (SENSORMAPMAX == 0)) {
+  if(developper::isMappingActive.getValue()) {
     dPrint("AUS", 8*6*3+10, 100, 3, RED, 0);
   } else {
   	dPrint("AN", 8*6*3+10, 100, 3, GREEN, 0);

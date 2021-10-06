@@ -2,7 +2,7 @@
 #include "MenuGui.h"
 
 void MenuGui::loop() {
-
+    if(gui.equals(GUI_MENU)) drawTimeDataAtUnderbar();
 } 
 
 void MenuGui::handleTouch(TSPoint p) {
@@ -41,6 +41,7 @@ void MenuGui::initGui() {
     if(gui.equals(GUI_MENU)) {
         display.fillScreen(BLACK);
         Display::drawTopBar("Men" + ue);
+        ClockGui::setLastTime("");
         if(WiFi.isConnected()) {
             display.pushImage(MENU_ARROW_RESET_START_X + 40, MENU_ARROW_RESET_START_Y, MENU_ICON_SIZE, MENU_ICON_SIZE, wlanIconOn, BLACK);
             if(client.connected()) {
@@ -74,4 +75,9 @@ void MenuGui::initGui() {
         dPrint(UE + "berblick", DISPLAY_LENGTH*7/11, DISPLAY_HEIGHT*3/4, 2, WHITE, 3);
         dPrint("alles in einem", DISPLAY_LENGTH*7/11, DISPLAY_HEIGHT*3/4+16, 1, COLOR_STATUS_RISK, 3);
     }
+}
+
+void MenuGui::drawTimeDataAtUnderbar() {
+    ClockGui::drawClock(DISPLAY_LENGTH/2 - 5, 220, 2, MR_DATUM, WHITE);
+    ClockGui::drawDate(DISPLAY_LENGTH/2 + 5, 220, 2, ML_DATUM, LIGHTGREY);
 }
