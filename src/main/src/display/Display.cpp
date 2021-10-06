@@ -197,7 +197,6 @@ void Display::handleTouch() {
           return;
         }     
       }
-      lastTouch+=50;
     }
   } else {
     p = ts.getPoint();
