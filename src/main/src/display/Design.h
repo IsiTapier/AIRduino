@@ -54,7 +54,7 @@
 #define STARTPEEPS 1
 #define MAXPEEPS 5
 //peep trigger
-#define PEEPSTART 1000
+#define PEEPSTART 1500
 #define PEEPEND -1
 #define PEEPINTERVAL 500
 

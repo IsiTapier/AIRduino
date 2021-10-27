@@ -133,6 +133,10 @@ void DisplayV3::writeInfoV3() {
     } else {
       dPrint(time, 165, 130, 10, RED, 1, BLACK, lastTime, -1, (seconds == 0 && (minutes == 0 || (minutes == 20 && COLORED_TIME))) || start || state.getColor() != lastState.getColor());
     }
+    if((minutes == 20) && (seconds == 0)) {
+      dPrint(time, 165, 130, 10, RED, 1, BLACK, lastTime, -1);
+    }
+    
     //Set new lasttime
     lastTime = time; //Setzt letzten Werts
 }

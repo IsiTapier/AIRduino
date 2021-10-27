@@ -49,7 +49,7 @@
       case 9: reportBug("Schnelle Hilfe ben" +oe+ "tigt"); break; 
       case 10: requestDecision("ea.jcbs@gmail.com", "wir bitten um Feedback", "", "Zur" +ue+ "ck"); break; 
       case 11: Display::drawInfoScreen(5000); break; 
-      case 12: reconnectSystem(); Display::lastTouch = millis() - 25000; break;
+      case 12: Display::lastTouch = millis(); reconnectSystem(); gui.setValue(GUI_MENU); break;
       case 13: Display::screenShot(); break;
       default: break;
     }

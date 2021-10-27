@@ -6,6 +6,13 @@
 #include "../Util.h"
 #include "../../guis/weatherGui/WeatherGui.h"
 
+//Makros to get client output condition for certain features
+#define GET_TOPIC_CLASS(_topic) (topic == _topic + device_class) 
+#define GET_TOPIC_ROOM(_topic) (topic == _topic + device_room) 
+#define GET_TOPIC_ID(_topic) (topic == _topic + device_id) 
+#define GET_TOPIC_CLASS_ROOM(_topic) GET_TOPIC_CLASS(_topic) || GET_TOPIC_ROOM(_topic) 
+#define GET_TOPIC_CLASS_ROOM_ID(_topic) GET_TOPIC_CLASS_ROOM(_topic) || GET_TOPIC_ID(_topic) 
+
   //global variables
   WiFiClient espClient;
   PubSubClient client(espClient);
@@ -195,7 +202,7 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
     }
 
     //get config via a single String
-    if (topic == "config/get/" + device_id) {
+    if(GET_TOPIC_ID("config/get/")) {
       debug(IMPORTANT, SETUP, "Config received");
       configReceived = true;
 
@@ -216,6 +223,7 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
             device_room = output;
             break;
           case 1:
+            if(output == "-") device_class = "";
             device_class = output;
             break;
           case 2: general::version.setValue((short) atoi(output.c_str()), false);
@@ -276,31 +284,31 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
         }
       }
     }
-    if(topic == "cali/low/" + device_class) {
+    if(GET_TOPIC_CLASS_ROOM_ID("cali/low/")) {
       Meassure::getSensor().calibrate();
       Serial.println("Forced Min Cali via MQTT");
     }
-    if(topic == "cali/high/" + device_class) {
+    if(GET_TOPIC_CLASS_ROOM_ID("cali/high/")) {
       int value = atoi(payload_string.c_str());
       Serial.println(value);
       Meassure::getSensor().zeroSpan(value);
       Serial.println("Forced Max Cali via MQTT");
     }
-    if(topic == "cali/touch/" + device_class) {
+    if(GET_TOPIC_CLASS_ROOM_ID("cali/touch/")) {
       Serial.println("Forced Touch Calibration via MQTT");
       ts.calibration();   
     }
-    if(topic == "manager/restart/" + device_class) {
-      debug(IMPORTANT, SETUP, "ESP restartet via MQTT");
+    if(GET_TOPIC_CLASS_ROOM_ID("manager/restart/")) {
+       debug(IMPORTANT, SETUP, "ESP restartet via MQTT");
       ESP.restart();
     }
-    if((topic == "manager/deepSleep/" + device_class) || (topic == "manager/deepSleep/" + device_id)) {
+    if(GET_TOPIC_CLASS_ROOM_ID("manager/deepSleep/")) {
       int minutes = atoi(payload_string.c_str());
       
       debug(IMPORTANT, SETUP, "ESP wurde für " + String(minutes) + " Minuten in den Sleepmode versetzt");
       ESP.deepSleep(minutes * 60 * 1000000);
     }
-    if(topic == "manager/testPeep/" + device_class) {
+    if(GET_TOPIC_CLASS_ROOM_ID("manager/testPeep/")) {
       ledcAttachPin(PIEZO, 0);
       for(int x = 0; x <= 10; x++) {
         if(x%2 == 0) {
@@ -311,7 +319,7 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
         delay(500);
       }
     }
-    if(topic == "manager/message/" + device_class) {
+    if(GET_TOPIC_CLASS_ROOM_ID("manager/message/")) {
       display.fillScreen(BLACK);
       dPrint("Admin-Message", 160, 20, 4, LIGHT_BLUE, 4);
       String output;
@@ -327,7 +335,7 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
       general::mode.setValue(LOADINGSCREEN);
       general::mode.setValue(general::mode.getOldValue());
     }
-    if(topic == "manager/setGui/" + device_class) {
+    if(GET_TOPIC_CLASS_ROOM_ID("manager/setGui/")) {
       gui.setValue(atoi(payload_string.c_str()));
       Serial.println("changed gui remotely to " + atoi(payload_string.c_str()));
     }
@@ -358,21 +366,21 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
       currentDate = payload_string;
       ClockGui::loop();          
     }
-    if(topic == "class/list/" + device_class) {
+    if(GET_TOPIC_CLASS_ROOM_ID("class/list/")) {
       saveClassList(payload_string);    
     }
   }
 
 void generalSubscriptions() {
-  subscribeToMQTT("cali/low/", device_class);
-  subscribeToMQTT("cali/high/", device_class);
-  subscribeToMQTT("cali/touch/", device_class);
-  subscribeToMQTT("manager/restart/", device_class);
-  subscribeToMQTT("manager/deepSleep/", device_class);
-  subscribeToMQTT("manager/deepSleep/", device_id);
-  subscribeToMQTT("manager/testPeep/", device_class);
-  subscribeToMQTT("manager/message/", device_class);
-  subscribeToMQTT("class/list/", device_class);
+  subscribeToMQTT("cali/low/", true);
+  subscribeToMQTT("cali/high/", true);
+  subscribeToMQTT("cali/touch/", true);
+  subscribeToMQTT("manager/restart/", true);
+  subscribeToMQTT("manager/deepSleep/", true);
+  subscribeToMQTT("manager/testPeep/", true);
+  subscribeToMQTT("manager/message/", true);
+  subscribeToMQTT("class/list/", true);
+  subscribeToMQTT("manager/setGui/", true);
   subscribeToMQTT("time");
   subscribeToMQTT("date");
   
@@ -383,7 +391,7 @@ void generalSubscriptions() {
   subscribeToMQTT("weather/humidity");
   subscribeToMQTT("weather/forecastWeather3");
   subscribeToMQTT("weather/forecastWeatherTomorrow");
-  subscribeToMQTT("manager/setGui/", device_class);
+  
 
 }
 
@@ -391,8 +399,7 @@ void reconnectSystem() {
   Serial.print("Last Touch: ");
   Serial.println(millis() - Display::lastTouch);
   if(((TimerGui::goalMillis - millis()) < 60*1000) && TimerGui::peepCount <= 0) return;
-  if(millis()-Display::lastTouch <= 20000) return;
-   Display::lastTouch = millis();
+  if(millis()-Display::lastTouch >= 20000) return;
 
 
   if(!WiFi.isConnected() || !client.connected()) {
@@ -496,14 +503,12 @@ void reconnectToMQTT() {
 
 void subscribeToMQTT(String topic) {
   client.subscribe(topic.c_str());
-  Serial.println(topic);
   debug(IMPORTANT, SETUP, "Subscribed to: " + topic);
 }
 
 void subscribeToMQTT(String topic, String c) {
   topic = topic + c;
   client.subscribe(topic.c_str());
-  Serial.println(topic);
   debug(IMPORTANT, SETUP, "Subscribed to: " + topic);
 }
 
@@ -511,6 +516,17 @@ void subscribeToMQTT(String topic, int id) {
   topic = topic + id;
   client.subscribe(topic.c_str());
   debug(IMPORTANT, SETUP, "Subscribed to: " + topic);
+}
+
+void subscribeToMQTT(String topic, boolean everything) {
+  if(everything) {
+    String tTopic = topic; 
+    tTopic += device_class; client.subscribe(tTopic.c_str()); tTopic = topic; 
+    tTopic += device_id; client.subscribe(tTopic.c_str()); tTopic = topic; 
+    tTopic += device_room; client.subscribe(tTopic.c_str()); tTopic = topic; 
+    
+    debug(IMPORTANT, SETUP, "Subscribed to liberally: " + topic);
+  }
 }
 
 void reportBug(String title) {

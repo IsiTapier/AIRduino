@@ -16,7 +16,6 @@ void OverviewGui::loop() {
             timerLastValue = digits;  
         }     
     }
-    
     DecibelGui::drawTrafficLight(DecibelGui::trafficLightStage, 230, 195, 20);
     drawPPMTimer(MARGIN, 80, 4, WHITE);
     drawPPM();
@@ -44,6 +43,7 @@ void OverviewGui::initGui() {
         
 
         dPrint("L" + AE + "RM", MARGIN, 195, 4, LIGHTGREY, 3);
+        DecibelGui::lastTrafficDigit = -10;
         /* for(int x = 1; x < 60; x += 10) {
             drawDecibleChart(x, 160, 175, 160-MARGIN, 40, 10, RED);
             delay(100);

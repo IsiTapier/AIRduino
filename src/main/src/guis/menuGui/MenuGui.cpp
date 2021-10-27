@@ -69,7 +69,7 @@ void MenuGui::initGui() {
         
         display.pushImage(DISPLAY_LENGTH/2, DISPLAY_HEIGHT*2/4-8, MENU_ICON_SIZE, MENU_ICON_SIZE, trafficLightIcon);
         dPrint("L"+AE+"RMAMPEL", DISPLAY_LENGTH*7/11, DISPLAY_HEIGHT*2/4, 2, WHITE, 3);
-        dPrint("Coming soon", DISPLAY_LENGTH*7/11, DISPLAY_HEIGHT*2/4+16, 1, GREY, 3);
+        dPrint("noice makes mad", DISPLAY_LENGTH*7/11, DISPLAY_HEIGHT*2/4+16, 1, GREY, 3);
         
         display.pushImage(DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4-8, MENU_ICON_SIZE, MENU_ICON_SIZE, overviewIcon);
         dPrint(UE + "berblick", DISPLAY_LENGTH*7/11, DISPLAY_HEIGHT*3/4, 2, WHITE, 3);

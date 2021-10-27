@@ -166,9 +166,6 @@ void Display::handleTouch() {
           }
         }
       } 
-      if(mode.equals(MENU)) {
-        Menu::handleTouch(p);
-      }
       if(mode.equals(CHART)) {
         TimerGui::handleTouch(p);
         TimeGui::handleTouch(p);
@@ -196,6 +193,9 @@ void Display::handleTouch() {
           return;
         }    
         //lastTouch+=LONG_COOLDOWN; 
+      }
+      if(mode.equals(MENU)) {
+        Menu::handleTouch(p);
       }
     }
   } else {
@@ -240,6 +240,11 @@ void Display::drawInfoScreen(int time) {
 
   dPrint("Wlan:", 10, 160, 3, GREY, 0);
   dPrint(ssid, 5*6*3+10, 160, 3, LIGHTGREY, 0);
+
+  dPrint("Room:", 10, 190, 3, GREY, 0);
+  dPrint(device_room, 5*6*3+10, 190, 3, LIGHTGREY, 0);
+
+
   
   delay(time);
   general::mode.setValue(LOADINGSCREEN);

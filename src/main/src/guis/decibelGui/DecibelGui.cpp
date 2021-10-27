@@ -17,7 +17,7 @@
 #define AVERAGE_ELEMENTS 100
 #define TOTAL_LOOP_LENGTH 2000
 #define LOOP_LENGTH TOTAL_LOOP_LENGTH / AVERAGE_ELEMENTS
-#define AMOUNT_OF_PEEPS 2
+#define AMOUNT_OF_PEEPS 1
 
 
 int trafficLightColor = GREY;
@@ -27,10 +27,10 @@ long timeStamp = 0;
 int loopCounter = AVERAGE_ELEMENTS;
 
 int measuredValue = 0;
-double _sliderFactor = 1;
-int sliderX = MARGIN;
-int lastTrafficDigit = -10;
+double _sliderFactor = 1850;
+int sliderX = DISPLAY_LENGTH/2;
 
+int DecibelGui::lastTrafficDigit = -10;
 int DecibelGui::trafficLightStage = 1;
 boolean DecibelGui::isActive = true;
 int DecibelGui::loopAverage = 0;
@@ -76,8 +76,6 @@ void DecibelGui::loop() {
             loopCounter = AVERAGE_ELEMENTS;
             Meassure::decibelValue = loopAverage;
             
-            Serial.println("----");
-            Serial.println(DisplayVX::recentPeepStatus);
             if(!DisplayVX::recentPeepStatus) { //verhindert kettenreaktion zwischen piepser des CO2s und dem Mikro
                 int oldTrafficLightStage = trafficLightStage;
                 trafficLightStage = map(loopAverage, initialValue, 2.25*initialValue - _sliderFactor, 0, 4);
@@ -88,11 +86,11 @@ void DecibelGui::loop() {
                     dPrint(loopAverage, 10, DISPLAY_HEIGHT-10, 2, WHITE, 6);
                 }
                 
-                Serial.print(initialValue);
+/*                 Serial.print(initialValue);
                 Serial.print(" - ");
                 Serial.print(loopAverage);
                 Serial.print(" - ");
-                Serial.println(2.25*initialValue - _sliderFactor);
+                Serial.println(2.25*initialValue - _sliderFactor); */
                 
                 if(trafficLightStage >= 3) {
                     if(oldTrafficLightStage != trafficLightStage) {
@@ -194,7 +192,7 @@ void DecibelGui::registerTouch(TSPoint ts) {
     if(ts.isTouching(0, DISPLAY_LENGTH, 80, 240)) {
         sliderX = map(ts.x, EEPROM.readShort(XMIN), EEPROM.readShort(XMAX), MARGIN, DISPLAY_LENGTH-MARGIN*2);
         drawSlider(sliderX, MARGIN, 195, DISPLAY_LENGTH-MARGIN*2, 5);
-        _sliderFactor = map(sliderX, MARGIN, DISPLAY_LENGTH-MARGIN, 0, initialValue);
+        _sliderFactor = map(sliderX, MARGIN, DISPLAY_LENGTH-MARGIN, 0, initialValue*1.5);
         constrain(_sliderFactor, 0, initialValue/2);
 
         display.fillRect(240, 210, 80, 40, BLACK);

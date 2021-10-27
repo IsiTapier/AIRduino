@@ -7,7 +7,8 @@
 
 /*
 ToDo
-
+ - Alle Klassen in cloud
+ - Deep Sleep oder so checken
 
 */
 
@@ -20,7 +21,7 @@ ToDo
 
   //Buchse 1.16.01
 
-  const String software_version = "6/10/21";
+  const String software_version = "12/10/21";
 /*   const char* ssid = "AG-iOT";
   const char* password = "#Wlan4iOT#JCBS-AG!";
   const char* mqtt_server = "169.254.191.226"; */

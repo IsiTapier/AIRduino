@@ -18,6 +18,7 @@
 
   extern String device_id;
   extern String device_class;
+  extern String device_room;
   extern unsigned long lastMsg;
   extern char msg[MSG_BUFFER_SIZE];
   extern int value;
@@ -51,6 +52,8 @@
   void subscribeToMQTT(String topic);
   void subscribeToMQTT(String topic, String c);
   void subscribeToMQTT(String topic, int id);
+  void subscribeToMQTT(String topic, boolean everything);
+
   void saveClassList(String list);
   void addPreAndLastName(String input, int digit);
   void shortenAllNames();
