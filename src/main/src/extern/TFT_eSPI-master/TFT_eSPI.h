@@ -435,6 +435,10 @@ class TFT_eSPI : public Print { //friend class TFT_eSprite; // Sprite class has 
            drawRect(int32_t x, int32_t y, int32_t w, int32_t h, uint32_t color),
            drawRoundRect(int32_t x, int32_t y, int32_t w, int32_t h, int32_t radius, uint32_t color),
            fillRoundRect(int32_t x, int32_t y, int32_t w, int32_t h, int32_t radius, uint32_t color);
+           drawBorder(int32_t x, int32_t y, int32_t w, int32_t h, int32_t diameter, uint32_t color);
+           fillBorder(int32_t x, int32_t y, int32_t w, int32_t h, int32_t diameter, uint32_t color);
+           drawRoundBorder(int32_t x, int32_t y, int32_t w, int32_t h, int32_t diameter, int32_t radius, uint32_t color);
+           fillRoundBorder(int32_t x, int32_t y, int32_t w, int32_t h, int32_t diameter, int32_t radius, uint32_t color);
 
 
   void     drawGlyph(uint16_t code),
