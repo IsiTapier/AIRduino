@@ -7,6 +7,7 @@ int StopwatchGui::millisAtPause = 0;
 boolean StopwatchGui::isRunning = false;
 
 void StopwatchGui::loop() {  
+    if(gui.getValue() != STOPWATCH_GUI) return;
     drawStopwatch(DISPLAY_LENGTH - 20, 80, 9);   
 }
 

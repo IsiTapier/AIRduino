@@ -39,8 +39,8 @@
     switch(_setting->getDefaultValue()) {
       case 0: ts.calibration(); break;
       case 1: Meassure::calibrateMin(); break;
-      case 2: Meassure::calibrateMax(); break;
-      case 3: Meassure::autoCalibrationMin(); break;
+      case 2: Meassure::calibrateMax(2000); break;
+      case 3: break;
       case 4: Menu::openReportMenu(); break;
       case 5: reportBug("Sensor Fehler"); break; 
       case 6: reportBug("Komische Werte"); break;
@@ -51,6 +51,7 @@
       case 11: Display::drawInfoScreen(5000); break; 
       case 12: Display::lastTouch = millis(); reconnectSystem(); gui.setValue(GUI_MENU); break;
       case 13: Display::screenShot(); break;
+      case 14: gui.setValue(CALIBRATE_GUI); mode.setValue(CHART); break;
       default: break;
     }
 
