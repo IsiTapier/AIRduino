@@ -173,6 +173,8 @@ namespace developper {
   Setting screenShot = Setting(ACTIVATOR, "", {"Screenshot"}, 13);
   Setting isMappingActive = Setting(SWITCH, "isMappingActive", {"Mapping Active"}, 0);
   Setting triggerCalibrateGui = Setting(ACTIVATOR, "", {"CalibrateGui"}, 14);
+
+  
 }
 
 

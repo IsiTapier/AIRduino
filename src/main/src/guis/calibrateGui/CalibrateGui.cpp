@@ -30,10 +30,10 @@ void CalibrateGui::loop() {
 void CalibrateGui::handleTouch(TSPoint p) {
     if(!gui.equals(CALIBRATE_GUI)) return;
     if(p.isTouching(0, DISPLAY_LENGTH/2, 40, DISPLAY_HEIGHT*5/8)) {
-        maxPPM -= 50;
+        maxPPM -= 25;
     }
     if(p.isTouching(DISPLAY_LENGTH/2, DISPLAY_LENGTH, 40, DISPLAY_HEIGHT*5/8)) {
-        maxPPM += 50;
+        maxPPM += 25;
     }
     if(p.isTouching(0, DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, DISPLAY_HEIGHT)) {
         Meassure::calibrateMin();

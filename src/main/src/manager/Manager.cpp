@@ -27,6 +27,7 @@ void Manager::setup() {
     eeprom(); 
     setupDatabaseConnection();
     xTaskCreate(backgroundLoop, "backgroundLoop", 4096, NULL, 0, NULL);  
+    
     Meassure::setup();
     DecibelGui::setup();
     Serial.println(xPortGetCoreID());
