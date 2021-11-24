@@ -97,12 +97,12 @@
   const std::vector<std::vector<String>> namesCalibrateMax = {};
 
   const std::vector<std::vector<String>> names = {};
- 
+
 
 namespace general {
   Setting empty = Setting(EMPTY);  
 
-  Setting version = Setting(MULTISELECT, "version", titlesVersion, 2, "'Version' changed", 1, 3, namesVersion, false);
+  Setting version = Setting(MULTISELECT, "version", titlesVersion, 3, "'Version' changed", 1, 3, namesVersion, false);
   Setting theme = Setting(SELECT, "theme", titlesTheme, 1, "'Theme' changed", 0, 1, namesTheme);
   Setting sound = Setting(SWITCH, "sound", titlesSound, 1, "'Piezo' changed");
   Setting blink = Setting(SWITCH, "blink", titlesBlink, 1, "'Blink' changed");
@@ -117,7 +117,7 @@ namespace general {
   Setting ventilating_timeout = Setting(NUMBER, "ventilating_timeout", titlesVentilatingTimeout, 5, "'ventilatingTimeout' changed", 1, 9);
 
   Setting debugPriority = Setting(MULTISELECT, "", titlesDebugPriority, 5, "'Debug' changed", 0, 6, namesDebugPriority);
-  Setting debugSetup = Setting(SWITCH, "", titlesDebugSetup, 1, "'Debug Setup' changed");
+  Setting debugSetup = Setting(SWITCH, "", titlesDebugSetup, 0, "'Debug Setup' changed");
   Setting debugSensor = Setting(SWITCH, "", titlesDebugSensor, 1, "'Debug Sensor' changed");
   Setting debugDisplay = Setting(SWITCH, "", titlesDebugDisplay, 0, "'Debug Display' changed");
   Setting debugMenu = Setting(SWITCH, "", titlesDebugMenu, 0, "'Debug Menu' changed");
@@ -128,7 +128,7 @@ namespace general {
   Setting autoTimeReset = Setting(SWITCH, "", titlesAutoTimeReset, 1, "'Auto Time Reset' changed");
   
   Setting mode = Setting(MULTISELECT, "mode", titlesMode, MENU, "'Mode' changed", 0, 4);
-  Setting gui = Setting(MULTISELECT, "", titles, CO2_GUI, "'gui' changed", 0, 10);
+  Setting  gui = Setting(MULTISELECT, "", titles, CO2_GUI, "'gui' changed", 0, 10);
   Setting maintenance_mode = Setting(MULTISELECT, "maintenance_mode", titlesMaintenanceMode, 0, "'Wartungsmodus' changed", 0, 3);
   Setting reportSystem = Setting(ACTIVATOR, "", titlesReportSystem, 4);
   Setting manualReconnect = Setting(ACTIVATOR, "", {"reconnect"}, 12);
@@ -171,12 +171,8 @@ namespace developper {
   Setting autoCalibrationMin = Setting(ACTIVATOR, "", titlesAutoMinCali, 3);
   Setting deviceInfo = Setting(ACTIVATOR, "", {"Device Info"}, 11);
   Setting screenShot = Setting(ACTIVATOR, "", {"Screenshot"}, 13);
-  Setting isMappingActive = Setting(SWITCH, "isMappingActive", {"Mapping Active"}, 0);
-  Setting triggerCalibrateGui = Setting(ACTIVATOR, "", {"CalibrateGui"}, 14);
-
-  
+  Setting isMappingActive = Setting(SWITCH, "isMappingActive", {"Mapping Active"}, GET_MAP_IS_ACTIVE);
 }
-
 
 namespace report {
   Setting sensorError = Setting(ACTIVATOR, "", {"Sensor Fehler"}, 5);

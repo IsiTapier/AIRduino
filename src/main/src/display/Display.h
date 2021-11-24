@@ -19,7 +19,6 @@
 #include "../guis/decibelGui/DecibelGui.h"
 #include "../guis/clockGui/ClockGui.h"
 #include "../guis/timeGui/TimeGui.h"
-#include "../guis/calibrateGui/CalibrateGui.h"
 
 
 
@@ -41,15 +40,11 @@ class Display {
     static void drawTopBar(String title, String oldTitle = "");
     static unsigned long lastTouch;
     static void screenShot();
-
-
-    
     
 
   private:
     static TSPoint p;
     
-    static String lastPPM;
     static int lastGui;
     
 };

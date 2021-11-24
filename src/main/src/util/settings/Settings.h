@@ -81,7 +81,6 @@ namespace developper {
   extern Setting deviceInfo;
   extern Setting screenShot;
   extern Setting isMappingActive;
-  extern Setting triggerCalibrateGui;
 }
 
 namespace report {

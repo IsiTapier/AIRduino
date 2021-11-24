@@ -13,7 +13,6 @@ class Manager {
   public:
     static void setup();
     static void loop();
-    static void backgroundLoop(void* parm);
     static void eeprom();
     /*static unsigned long getLastModeChange();
     static unsigned long getLastLoop();

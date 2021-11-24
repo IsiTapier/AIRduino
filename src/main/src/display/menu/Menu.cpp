@@ -15,7 +15,7 @@
           //Input(&general::version),
           // Input(&general::theme),
           Input(&general::language),
-          Input(&developper::isMappingActive),
+          Input(&general::manualReconnect),
           Input(&general::autoTimeReset),
           Input(&general::blink),
           Input(&general::sound),
@@ -32,8 +32,7 @@
         ),
         MenuPage(
           Input(&general::developperSettings),
-          Input(&developper::deviceInfo),
-          Input(&developper::triggerCalibrateGui)
+          Input(&developper::deviceInfo)
         )
     })},
     {SubMenu("Farb-Modi", {
@@ -52,10 +51,10 @@
     })},
     {SubMenu("Developer", {
         MenuPage(
-          Input(&developper::triggerCalibrateGui),
-          Input(&general::empty),
+          Input(&developper::calibrateMin),
+          Input(&developper::screenShot),
           Input(&developper::deviceInfo),
-          Input(&general::empty),
+          Input(&developper::calibrateMax),
           Input(&general::calibrateTouch),
           Input(&developper::isMappingActive)
         ),

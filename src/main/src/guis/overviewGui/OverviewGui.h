@@ -21,6 +21,7 @@ class OverviewGui {
     static void drawPPM(boolean atStart);
     
     static String lastPPMString;
+    static void drawDecibleChart(int value, int x, int y, int width, int height, int elements, int color);
     static void drawPPMTimer(int x, int y, int size, int color);
 };
 

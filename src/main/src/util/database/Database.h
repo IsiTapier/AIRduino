@@ -41,7 +41,11 @@
   void config_update(String column, int value);
   void mysql_insert(String grade, int co2, double temp, int decibel);
   void getUniqueID();
+  void setup_wifi();
+  void setup_mqtt();
+  void reconnect();
   void reconnectToMQTT();
+  void reconnectToWifi();
   void reconnectSystem();
 
   void generalSubscriptions();

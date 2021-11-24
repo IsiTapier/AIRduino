@@ -18,7 +18,7 @@
   PubSubClient client(espClient);
 
   String device_id;
-  String device_class = "";
+  String device_class;
   String device_room;
   unsigned long lastMsg = 0;
   char msg[MSG_BUFFER_SIZE];
@@ -37,6 +37,8 @@
   void setupDatabaseConnection() {
     getUniqueID();
     Serial.println(device_id);
+    setup_wifi();
+    setup_mqtt();
   }
 
   
@@ -58,6 +60,17 @@
     debug(IMPORTANT, SETUP, "/////////////////////////////////");
   }
 
+  void config_request() {   //TODO: optimation
+    getUniqueID();
+    subscribeToMQTT("config/get/", device_id);
+    subscribeToMQTT("maintenance/", device_id);
+
+    debug(IMPORTANT, SETUP, "Requesting config...");
+    client.publish("config/request", device_id.c_str());
+    delay(500);
+    client.loop();
+  }
+
 void config_update(String column, String value) {
   if (client.connected()) {
     // reconnectToMQTT();
@@ -73,7 +86,6 @@ void config_update(String column, int value) {
 
 void mysql_insert(String grade, int co2, double temp, int decibel) {
   if (!(grade[0] == 'a' && grade[1] == 'u' && grade[2] == 't') && client.connected()) {
-    if(grade == "") return;
     String output = "VALUES ('" + grade + "', " + co2 + ", " + temp + ", " + decibel + ")";
     client.publish("mysql/insert", output.c_str());
     debug(INFO, DATABASE, "INSERTED into LOG grade: " + grade + " co2: " + co2 + " temp: " + temp + " decibel: " + decibel);
@@ -91,6 +103,83 @@ void mysql_insert(String grade, int co2, double temp, int decibel) {
     }
   }
 
+  void setup_wifi() {
+    Serial.println();
+    Serial.print("Connecting to ");
+    Serial.println(ssid);
+    // We start by connecting to a WiFi networ
+    WiFi.mode(WIFI_STA);
+  
+    WiFi.begin(ssid, password);
+    Serial.println(WiFi.scanNetworks(false, true));
+    Serial.println();
+
+    delay(500);
+    Serial.println(WiFi.status());
+
+    for(int z = 0; (z <= 2) && (WiFi.status() != WL_CONNECTED); z++) {
+      WiFi.begin(ssid, password);
+      for (int x = 0; (x <= 10) && (WiFi.status() != WL_CONNECTED); x++) {
+        delay(400);
+        Serial.print(".");
+      }
+    }
+    int counter = 0;
+    Serial.println(WiFi.status());
+    while ((WiFi.status() != WL_CONNECTED) && requestDecision("Wifi fehlgeschlagen", "erneut versuchen?", "Ja", "Nein", 10000, counter < 3)) {
+      drawLogo();
+      for(int z = 0; (z <= 2) && (WiFi.status() != WL_CONNECTED); z++) {
+        WiFi.begin(ssid, password);
+        for (int x = 0; (x <= 7) && (WiFi.status() != WL_CONNECTED); x++) {
+          delay(500);
+          Serial.print(".");
+        }
+      }
+      counter++;
+    }
+    Serial.println();
+    if (WiFi.status() == WL_CONNECTED) {
+      randomSeed(micros());
+      Serial.println("WiFi connected");
+      Serial.println("IP address: ");
+      Serial.println(WiFi.localIP());
+    }
+  }
+
+  void setup_mqtt() {
+    if(WiFi.status() == WL_CONNECTED) {
+      client.setServer(mqtt_server, 1883);
+      client.setCallback(callback);
+      delay(500);
+      if(!client.connected())
+        reconnectToMQTT();
+
+      while ((!client.connected()) && requestDecision("MQTT fehlgeschlagen", "erneut versuchen?", "Ja", "Nein")) {
+        drawLogo();
+        for (int x = 0; (x <= 5) && (!client.connected()); x++) {
+          delay(500);
+          Serial.print(".");
+          reconnectToMQTT();
+        }
+      }
+      
+      if(client.connected()) {
+        config_request();
+        unsigned long timeout = millis();
+        do{
+          if(millis()-timeout >= 1000)
+            timeout = millis();
+          drawLogo();
+          client.loop();
+        } while(!configReceived && (millis()-timeout < 1000 || requestDecision("Config nicht geladen", "erneut versuchen?", "Ja", "Nein")));
+
+        dPrint(device_class, 5, 5, 3, WHITE);
+
+        generalSubscriptions();
+        
+      }
+    }
+  }
 
 void callback(char* topic_char, byte* payload, unsigned int length) {
     Serial.print("MQTT: (");
@@ -123,7 +212,6 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
         if (digit <= length) {
           for (int d = 0; (d < 100) && ((char)payload[digit] != ',') && ((char)payload[digit] != ';'); d++) { //loop to loop the single digits
             output = output + "" + (char)payload[digit];
-            Serial.print((char)payload[digit]); 
             // Serial.println((char)payload[digit]);
             digit++;
           }
@@ -133,7 +221,6 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
         switch (x) {
           case 0:
             device_room = output;
-            Serial.println(device_room);
             break;
           case 1:
             if(output == "-") device_class = "";
@@ -285,8 +372,6 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
   }
 
 void generalSubscriptions() {
-  subscribeToMQTT("config/get/", true);
-  subscribeToMQTT("maintenance/", true);
   subscribeToMQTT("cali/low/", true);
   subscribeToMQTT("cali/high/", true);
   subscribeToMQTT("cali/touch/", true);
@@ -311,41 +396,106 @@ void generalSubscriptions() {
 }
 
 void reconnectSystem() {
-  // Serial.print("Wifi"); Serial.println(WiFi.isConnected());
+  Serial.print("Last Touch: ");
+  Serial.println(millis() - Display::lastTouch);
+  if(((TimerGui::goalMillis - millis()) < 60*1000) && TimerGui::peepCount <= 0) return;
+  if(millis()-Display::lastTouch >= 20000) return;
+
+
+  if(!WiFi.isConnected() || !client.connected()) {
+    lastGui = gui.getValue();
+    gui.setValue(RECONNECT_GUI);
+    display.fillScreen(BLACK);
+    dPrint("Reconnecting", DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2, 3, LIGHT_BLUE, 4);
+    ledcDetachPin(PIEZO);
+  }
   if(!WiFi.isConnected()) {     
+      dPrint("to WIFI", DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2 + 32, 3, LIGHTGREY, 4);
+      WiFi.disconnect();
       WiFi.mode(WIFI_STA);
       WiFi.begin(ssid, password);
       WiFi.reconnect();
-     
-      vTaskDelay(15000/portTICK_PERIOD_MS);
-      
+      Serial.println("Reconnect Wifi");
+      for(int x = 0; !WiFi.isConnected() && x < 10; x++) {
+        delay(500);
+      }
+      if(WiFi.isConnected()) {
+        dPrint("succesful", DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, 2, GREEN, 4);
+      } else {
+        Display::initAllGuis();
+        dPrint("failed", DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, 2, RED, 4);
+      } 
+      delay(1500);
     } else if(!client.connected() && WiFi.isConnected()) {
-      // display.fillRect(0, DISPLAY_HEIGHT/2 + 20, DISPLAY_LENGTH, DISPLAY_HEIGHT, BLACK);
-      // dPrint("to Server", DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2 + 32, 3, LIGHTGREY, 4);
+      display.fillRect(0, DISPLAY_HEIGHT/2 + 20, DISPLAY_LENGTH, DISPLAY_HEIGHT, BLACK);
+      dPrint("to Server", DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2 + 32, 3, LIGHTGREY, 4);
       reconnectToMQTT();
       if(client.connected()) {
         generalSubscriptions();
-        // dPrint("succesful", DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, 2, GREEN, 4);
+        dPrint("succesful", DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, 2, GREEN, 4);
         client.publish("config/request", device_id.c_str());
       } else {
-        // dPrint("failed", DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, 2, RED, 4);
+        dPrint("failed", DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, 2, RED, 4);
       }
+      delay(1500);
+  }
+  gui.setValue(GUI_MENU);
+  gui.setValue(lastGui);
+  mode.setValue(CHART);
+  Display::initAllGuis();
+  lastGui = 0;
+}
+
+
+
+void reconnect() {
+  boolean isConnected = WiFi.isConnected();
+  Serial.print("Wifi: "); Serial.println(isConnected?"connected":"unconnected");
+  if(!isConnected) {
+    reconnectToWifi();
+    Serial.print("reconnect "); Serial.println(WiFi.isConnected()?"successful":"failed");
+  }
+  isConnected = client.connected();
+  Serial.print("MQTT: "); Serial.println(isConnected?"connected":"unconnected");
+  if(!isConnected) {
+    reconnectToMQTT();
+    Serial.print("reconnect "); Serial.println(client.connected()?"successful":"failed");
+  }
+  isConnected = Meassure::isConnected();
+  Serial.print("Sensor: "); Serial.println(isConnected?"connected":"unconnected");
+  if(!isConnected) {
+    Meassure::reconnect();
+    Serial.print("reconnect "); Serial.println(Meassure::isConnected()?"successful":"failed");
   }
 }
 
+void reconnectToWifi() {
+  if (WiFi.status() != WL_CONNECTED) {
+    WiFi.reconnect();
+  }
+}
 
 void reconnectToMQTT() {
   // Loop until we're reconnected
   if (WiFi.status() != WL_CONNECTED || client.connected())
     return;
-  client.setServer(mqtt_server, 1883);
-  client.setCallback(callback);
+  //Serial.print("Attempting MQTT connection...");
+  // Create a random client ID
   Serial.println("Reconnect to MQTT...");
   String clientId = "ESP32Client-";
   clientId += String(random(0xffff), HEX);
   // Attempt to connect
   client.connect(clientId.c_str( ));
   /*
+  if (client.connect(clientId.c_str())) {
+    Serial.println("connected");
+    client.subscribe("msg");
+  } else {
+    Serial.print("failed, rc=");
+    Serial.print(client.state());
+    Serial.println(" try again in 1 seconds");
+  }
+  
   if(!client.connected())
     Serial.println("Database not connected");
   */
