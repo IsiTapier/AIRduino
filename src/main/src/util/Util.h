@@ -20,21 +20,24 @@
 #include "database/Database.h"
 #include "../meassure/Meassure.h"
 
-#define EEPROM_SIZE (1+6*sizeof(short))
+#define EEPROM_SIZE (1+6*sizeof(short) + sizeof(bool))
 #define ALLOW_PIEP true
 
 #define XMIN (1)
 #define XMAX (1+1*sizeof(short))
 #define YMIN (1+2*sizeof(short))
 #define YMAX (1+3*sizeof(short))
-#define MAP_IS_ACTIVE (1+4*sizeof(short))
-#define MAP_MAX_IN (1+5*sizeof(short))
+#define MAP_MAX_IN (1+4*sizeof(short))
+#define MAP_MAX_OUT (1+5*sizeof(short))
+#define MAP_IS_ACTIVE (1+6*sizeof(short))
 
-#define GET_MAP_IS_ACTIVE (EEPROM.readShort(MAP_IS_ACTIVE))
+#define GET_MAP_IS_ACTIVE (EEPROM.readBool(MAP_IS_ACTIVE))
 #define GET_MAP_MAX_IN (EEPROM.readShort(MAP_MAX_IN))
+#define GET_MAP_MAX_OUT (EEPROM.readShort(MAP_MAX_OUT))
 
-#define SET_MAP_IS_ACTIVE(value) EEPROM.writeShort(MAP_IS_ACTIVE, value); EEPROM.commit()
+#define SET_MAP_IS_ACTIVE(value) EEPROM.writeBool(MAP_IS_ACTIVE, value); EEPROM.commit()
 #define SET_MAP_MAX_IN(value) EEPROM.writeShort(MAP_MAX_IN, value); EEPROM.commit()
+#define SET_MAP_MAX_OUT(value) EEPROM.writeShort(MAP_MAX_OUT, value); EEPROM.commit()
 
 
 
@@ -62,10 +65,10 @@
     RANDOM_STUDENT_GUI = 4,
     DECIBEL_GUI = 5,
     GUI_MENU = 6,
-    RECONNECT_GUI = 7,
-    OVERVIEW_GUI = 8,
-    TIME_GUI = 9,
-    CLOCK_GUI = 10
+    OVERVIEW_GUI = 7,
+    TIME_GUI = 8,
+    CLOCK_GUI = 9,
+    CALIBRATE_GUI = 10
   };
 
   template<class T>
@@ -121,4 +124,5 @@
   void writeLoadingAnimation(int c1, int c2, int c3);
   boolean requestDecision(String topic, String question, String op1 = "ja", String op2 = "nein", long timeout = REQUESTDECISIONTIMEOUT, bool defaultValue = false);
   void drawLogo();
+  boolean haveEssentialsChanged();
 #endif

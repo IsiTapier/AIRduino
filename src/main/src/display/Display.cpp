@@ -68,7 +68,7 @@ void Display::loop() {
 void Display::initDisplay() {
   if(gui.hasChanged() || mode.hasChanged() || (version.hasChanged() && !mode.equals(MENU)) || theme.hasChanged() || language.hasChanged()) {
     if(mode.getValue() == CHART) {
-      Serial.println("initDisplay");
+      // Serial.println("initDisplay");
       if(gui.equals(CO2_GUI)) {
         if(version.equals(V1)) {
           DisplayV1::setup();
@@ -81,7 +81,9 @@ void Display::initDisplay() {
           DisplayV3::loop();
         }
       }  
-      initAllGuis(); 
+      initAllGuis();
+      if(developper::isMappingActive.hasChanged()) SET_MAP_IS_ACTIVE(developper::isMappingActive.getValue()); 
+      Serial.println(GET_MAP_IS_ACTIVE);
     } else if(mode.getValue() == MENU && (theme.hasChanged() || mode.hasChanged() || language.hasChanged())) {
       ledcDetachPin(PIEZO);
       Menu::setup();
@@ -115,7 +117,7 @@ void Display::handleTouch() {
         return;
       lastTouch = millis();
 
-      if(p.isTouching(MENU_ARROW_BACK_START_X-15, MENU_ARROW_BACK_END_X+10, MENU_ARROW_BACK_START_Y-10, MENU_ARROW_BACK_END_Y+15)) {
+      if(p.isTouching(MENU_ARROW_BACK_START_X-15, MENU_ARROW_BACK_END_X+10, MENU_ARROW_BACK_START_Y-10, MENU_ARROW_BACK_END_Y+5)) {
         if(mode.equals(CHART)) {
           if(gui.equals(GUI_MENU)) {
             gui.setValue(lastGui);
@@ -173,6 +175,7 @@ void Display::handleTouch() {
         StopwatchGui::handleTouch(p);
         MenuGui::handleTouch(p);
         RandomStudentGui::handleTouch(p);
+        CalibrateGui::handleTouch(p);
       }
       //-----------------
       if(mode.equals(CHART)) {        
@@ -187,8 +190,8 @@ void Display::handleTouch() {
             DisplayV2::loop();
           }
           if(version.equals(V3)) {
-            DisplayV3::setup();
-            DisplayV3::loop();
+            /* DisplayV3::setup();
+            DisplayV3::loop(); */
           }    
           return;
         }    
@@ -197,6 +200,7 @@ void Display::handleTouch() {
       if(mode.equals(MENU)) {
         Menu::handleTouch(p);
       }
+      lastTouch+=300;
     }
   } else {
     p = ts.getPoint();
@@ -213,7 +217,7 @@ void Display::initAllGuis() {
   DecibelGui::initGui();
   TimeGui::initGui();
   ClockGui::initGui();
-  
+  CalibrateGui::initGui();
 }
 
 void Display::drawInfoScreen(int time) {
@@ -291,15 +295,9 @@ void Display::drawTopBar(String title, String oldTitle) {
 }
 
 void Display::screenShot() {
-  /* int output[DISPLAY_LENGTH][DISPLAY_HEIGHT];
-  uint16_t _array[DISPLAY_LENGTH*DISPLAY_HEIGHT] PROGMEM;
-  display.readRectRGB(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, _array)
-  for(int y = 0; y <= DISPLAY_HEIGHT; y++) {
-    for(int x = 0; x <= DISPLAY_LENGTH; x++) {
-      
-      
-    }
-  }
-  Serial.print(); */
 }
+
+
+
+
 

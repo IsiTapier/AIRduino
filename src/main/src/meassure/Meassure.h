@@ -26,17 +26,19 @@ class Meassure {
     static void loop();
     static State getState();
     static int getAirCondition();
+    static int getRawAirCondition();
     static unsigned long getStartTime();
     static void resetStartTime(boolean cycle = false);
     static int getLowest();
     static int getHighest();
     static void calibrateMin();
-    static void calibrateMax();
-    static void autoCalibrationMin();
+    static void forcedMinCalibration();
+    static void calibrateMax(int targetPPM);
     static MHZ19 getSensor();
     static void reconnect();
     static boolean isConnected();
     static int decibelValue;
+
     
   private:
     static void debugMeassure();

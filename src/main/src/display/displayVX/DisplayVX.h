@@ -18,8 +18,6 @@ class DisplayVX {
     static void setup();
     static void handleData();
     static void peepLoop();
-    static String getLastPPMString();
-    static String getPPMString(String lastppm);
     static State state;
     static State lastState;
     static String lastTime;
@@ -27,6 +25,14 @@ class DisplayVX {
     static void calculateTime();
     static boolean recentPeepStatus;
     
+    static void drawPPMStraight(int x, int y, int size, int color, int datum, int backgroundColor);
+    static void drawPPMStraight(int x, int y, int size, int color, int datum);
+
+    static void drawRawPPMStraight(int x, int y, int size, int color, int datum, int backgroundColor);
+    static void drawRawPPMStraight(int x, int y, int size, int color, int datum);
+
+    static void drawTimer(int x, int y, int size, int color, int datum);
+
   protected:
     static void drawDisplay();
     static void getData();
@@ -35,7 +41,12 @@ class DisplayVX {
     static void writeInfo();
     static void drawEssentials();
     static void drawPPM();
-    
+  
+
+
+    static String lastPPM;
+    static int lastPPMSize;
+
     static void drawTimer();
     //static void createLines();
 

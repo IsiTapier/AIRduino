@@ -7,9 +7,9 @@
 
 /*
 ToDo
- - Alle Klassen in cloud
- - Deep Sleep oder so checken
-
+ - Calibrate Gui
+ - Auto Min Calibrate
+ - General PPM print
 */
 
 /*   const char* ssid = "DESKTOP-Q7HRET5 8763";
@@ -21,12 +21,12 @@ ToDo
 
   //Buchse 1.16.01
 
-  const String software_version = "12/10/21";
+  const String software_version = "23/11/21";
 /*   const char* ssid = "AG-iOT";
   const char* password = "#Wlan4iOT#JCBS-AG!";
   const char* mqtt_server = "169.254.191.226"; */
   const char* ssid = "JCBS-Schüler";
-  const char* password = "JCBS-Schueler#2021!";
+  const char* password = "R222MGmGwhdmv?";
   const char* mqtt_server = "192.168.2.97";
 /*
    _____      _ 
@@ -46,6 +46,7 @@ void setup() {
   Serial.println("SETUP:");
   Serial.println("Serial communication started at 9600 baud");
   Serial.println();
+
   Manager::setup();
   general::debugPriority.setValue(DEBUG);
 }
