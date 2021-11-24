@@ -22,7 +22,12 @@ short DisplayVX::peep = -1;
 short DisplayVX::peepCounter = 0;
 boolean DisplayVX::recentPeepStatus = 0;
 
+String DisplayVX::lastPPM = "";
+String lastRawPPM;
+int DisplayVX::lastPPMSize;
+int lastRawPPMSize;
 
+#define EssentialCondition general::gui.hasChanged() || general::mode.hasChanged() || (general::version.hasChanged() && !general::mode.equals(MENU)) || general::theme.hasChanged() || general::language.hasChanged()
   /*
      _____      _
     / ____|    | |
@@ -101,7 +106,7 @@ boolean DisplayVX::recentPeepStatus = 0;
 
   void DisplayVX::checkState() {
     if(blinkSwitch) {
-      //restore Border
+      //restore 
       drawBorder(0, 0, DISPLAY_LENGTH, DISPLAY_HEIGHT, 1, BACKGROUND_COLOR);
       display.drawLine(0, DISPLAY_HEIGHT-1, DISPLAY_LENGTH-1, DISPLAY_HEIGHT-1, DATABOX_BACKGROUND_COLOR);
       display.drawLine(0, DATABOX_Y, 0, DISPLAY_HEIGHT-1, DATABOX_BACKGROUND_COLOR);
@@ -178,7 +183,7 @@ boolean DisplayVX::recentPeepStatus = 0;
     }
   }
 
-  void DisplayVX::drawEssentials() {   
+  void DisplayVX::drawEssentials() {
     //Status
     dPrint(lastState.getTitle(), DISPLAY_LENGTH/2, STATUS_MARGIN_TOP, LAST_STATUS_SIZE, BACKGROUND_COLOR, 1);
     dPrint(state.getTitle(), DISPLAY_LENGTH/2, STATUS_MARGIN_TOP, STATUS_SIZE, state.getColor(COLORED_STATE), 1);
@@ -192,12 +197,8 @@ boolean DisplayVX::recentPeepStatus = 0;
   }
 
   void DisplayVX::drawPPM() {
-    String lastppm = getLastPPMString();   
-    String ppm = getPPMString(lastppm);
+    drawPPMStraight(PPM_MARGIN_LEFT, PPM_Y, ERROR ? PPM_SIZE-1 : PPM_SIZE, ERROR ? RED : state.getColor(COLORED_PPM), 6, DATABOX_BACKGROUND_COLOR);
 
-    //Draw PPM
-    dPrint(lastppm, PPM_MARGIN_LEFT, PPM_Y, ERRORLAST ? PPM_SIZE-1 : PPM_SIZE, DATABOX_BACKGROUND_COLOR, 6);
-    dPrint(ppm, PPM_MARGIN_LEFT, PPM_Y, ERROR ? PPM_SIZE-1 : PPM_SIZE, ERROR ? RED : state.getColor(COLORED_PPM), 6);
     if (airCondition < 1000 && !ERROR) {
       dPrint("ppm", PPM_STRING_X, PPM_STRING_Y, PPM_STRING_SIZE, state.getColor(COLORED_PPM), 6);
     }
@@ -207,7 +208,7 @@ boolean DisplayVX::recentPeepStatus = 0;
       dPrint("ppm", PPM_STRING_X, PPM_STRING_Y, PPM_STRING_SIZE, DATABOX_BACKGROUND_COLOR, 6);
 
     //write new Pixels
-    dPrint(ppm, PPM_MARGIN_LEFT, PPM_Y, ERROR ? PPM_SIZE-1 : PPM_SIZE, ERROR ? RED : state.getColor(COLORED_PPM), 6, DATABOX_BACKGROUND_COLOR, lastppm, ERRORLAST ? PPM_SIZE-1 : PPM_SIZE); 
+    //dPrint(ppm, PPM_MARGIN_LEFT, PPM_Y, ERROR ? PPM_SIZE-1 : PPM_SIZE, ERROR ? RED : state.getColor(COLORED_PPM), 6, DATABOX_BACKGROUND_COLOR, lastppm, ERRORLAST ? PPM_SIZE-1 : PPM_SIZE); 
     if(airCondition < 1000 && !ERROR && (start || lastAirCondition >= 1000 || (ERRORLAST && !start)))
       dPrint("ppm", PPM_STRING_X, PPM_STRING_Y, PPM_STRING_SIZE, state.getColor(COLORED_PPM), 6);
 
@@ -223,6 +224,55 @@ boolean DisplayVX::recentPeepStatus = 0;
     //Set new lasttime
     lastTime = time; //Setzt letzten Wert
   }
+
+void DisplayVX::drawTimer(int x, int y, int size, int color, int datum) {
+
+}
+
+void DisplayVX::drawPPMStraight(int x, int y, int size, int color, int datum, int backgroundColor) {
+  String _ppm = "";
+  if(ERROR)
+    _ppm = "error";
+  else if(airCondition <= 0)
+    _ppm = lastPPM;
+  else if(airCondition < 10)
+    _ppm = "  " + String(airCondition);
+  else if(airCondition < 100)
+    _ppm = " " + String(airCondition);
+  else if(airCondition > 9999)
+    _ppm = "9999";
+  else
+    _ppm = String(airCondition);
+
+  if(EssentialCondition || (_ppm != lastPPM)) {
+    // Serial.print("PPM: "); Serial.print(lastPPM); Serial.print(" - "); Serial.println(_ppm);
+    dPrint(lastPPM, x, y, lastPPMSize, backgroundColor, datum);
+    dPrint(_ppm, x, y, size, color, datum);
+    lastPPM = _ppm;
+    lastPPMSize = size;
+  }
+}
+
+void DisplayVX::drawPPMStraight(int x, int y, int size, int color, int datum) {
+  drawPPMStraight(x, y, size, color, datum, BLACK);
+}
+
+void DisplayVX::drawRawPPMStraight(int x, int y, int size, int color, int datum, int backgroundColor) {
+  String _ppm = String(Meassure::getRawAirCondition());
+    
+  if(EssentialCondition || (_ppm != lastRawPPM)) {
+    // Serial.print("RawPPM: "); Serial.print(lastRawPPM); Serial.print(" - "); Serial.println(_ppm);
+    dPrint(lastRawPPM, x, y, lastRawPPMSize, backgroundColor, datum);
+    dPrint(_ppm, x, y, size, color, datum);
+    lastRawPPM = _ppm;
+    lastRawPPMSize = size;
+  }
+}
+
+void DisplayVX::drawRawPPMStraight(int x, int y, int size, int color, int datum) {
+  drawRawPPMStraight(x, y, size, color, datum, BLACK);
+}
+
 
   void DisplayVX::calculateTime() {
     unsigned long startTime = Meassure::getStartTime();
@@ -241,36 +291,4 @@ boolean DisplayVX::recentPeepStatus = 0;
     if (seconds < 10)
       time = time + 0;
     time = time + seconds;
-  }
-
-  String DisplayVX::getLastPPMString() {
-    String lastppm;
-    if(ERRORLAST)
-      lastppm = "error";
-    else if(lastAirCondition < 10)
-      lastppm = "  " + String(lastAirCondition);
-    else if(lastAirCondition < 100)
-      lastppm = " " + String(lastAirCondition);
-    else if(lastAirCondition > 9999)
-      lastppm = "9999";
-    else
-      lastppm = String(lastAirCondition);
-    return lastppm;
-  }
-
-  String DisplayVX::getPPMString(String lastppm) {
-    String ppm;
-    if(ERROR)
-      ppm = "error";
-    else if(airCondition <= 0)
-      ppm = lastppm;
-    else if(airCondition < 10)
-      ppm = "  " + String(airCondition);
-    else if(airCondition < 100)
-      ppm = " " + String(airCondition);
-    else if(airCondition > 9999)
-      ppm = "9999";
-    else
-      ppm = String(airCondition);
-    return ppm;
   }

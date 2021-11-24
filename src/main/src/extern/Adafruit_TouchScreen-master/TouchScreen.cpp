@@ -66,6 +66,7 @@ void TSPoint::print() {
 }
 
 boolean TSPoint::isTouching(int startx, int endx, int starty, int endy) {
+  // if(z != 0) Serial.println(z);
   if (z < MINPRESSURE || z > MAXPRESSURE) {
     /*Serial.print((int)floor(millis()/1000));
     Serial.print(" ");

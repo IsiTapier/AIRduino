@@ -13,7 +13,6 @@ class DisplayV3 : DisplayVX {
     static void loop();
 
   private:
-    static void drawDisplay();
     static void writeInfoV3();
     static int stateBackgroundColor;
 };

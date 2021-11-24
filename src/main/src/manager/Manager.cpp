@@ -24,12 +24,15 @@ void Manager::setup() {
     mode.setValue(LOADINGSCREEN, false);
     Display::setup();
     lastReconnect = millis();
-    eeprom();
-    setupDatabaseConnection(); 
-    mode.setValue(LOADINGSCREEN, false);
-    mode.setValue(CHART);   
+    eeprom(); 
+    setupDatabaseConnection();
+    xTaskCreate(backgroundLoop, "backgroundLoop", 4096, NULL, 0, NULL);  
+    
     Meassure::setup();
     DecibelGui::setup();
+    Serial.println(xPortGetCoreID());
+    mode.setValue(LOADINGSCREEN, false);
+    mode.setValue(CHART); 
 }
 
 void Manager::loop() {
@@ -37,38 +40,43 @@ void Manager::loop() {
     currentCycleTime = millis();
 
     if(currentCycleTime - lastCycleTime > STAGE_TIME) {
-        Serial.print("Warning - timing system failed: ");
+       /*  Serial.print("Warning - timing system failed: ");
         Serial.print(currentCycleTime-lastCycleTime-STAGE_TIME);
-        Serial.println("ms");
+        Serial.println("ms"); */
       }
     lastCycleTime = currentCycleTime;
 
-    // Client loop; Display loop
-    if(client.connected())
-      client.loop();
+    // Display loop
     Display::loop();
 
     //guis
     if(mode.getValue() == CHART) {
-      if(gui.getValue() == TIMER_GUI)
-        TimerGui::loop();
-      if(gui.getValue() == STOPWATCH_GUI)
-        StopwatchGui::loop();
-      if(gui.getValue() == OVERVIEW_GUI)
-        OverviewGui::loop();
+      TimerGui::loop();
+      StopwatchGui::loop();
+      OverviewGui::loop();
       DecibelGui::loop();
+      CalibrateGui::loop();
       MenuGui::loop();
     }
     if(500 >= (TimerGui::goalMillis - millis())) {
        TimerGui::resetTimer();
     }
     TimerGui::peep();
+}
 
-    //Reconnect System
+void Manager::backgroundLoop(void* parm) {
+  setupDatabaseConnection();
+  for(;;) {
+    if(client.connected())
+      client.loop();
+
+/*     //Reconnect System
     if(currentCycleTime - lastReconnect >= RECONNECT_TIME) {
-      lastReconnect = currentCycleTime;
-      reconnectSystem();           
-    }
+      lastReconnect = currentCycleTime; */
+    reconnectSystem();          
+    vTaskDelay(RECONNECT_TIME/portTICK_PERIOD_MS);
+    Meassure::reconnect();
+  } 
 }
 
 
@@ -88,6 +96,7 @@ void Manager::eeprom() {
       debug(INFO, SETUP, "EEPROM: ymin", EEPROM.readShort(YMIN));
       debug(INFO, SETUP, "EEPORM: ymax", EEPROM.readShort(YMAX));
     }
+    developper::isMappingActive.setValue(GET_MAP_IS_ACTIVE);
   }
 
   //    RESET EEPROM    //
