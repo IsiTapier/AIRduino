@@ -53,7 +53,7 @@ void CalibrateGui::drawMaxPPM(int x, int y, int size, int color, int datum) {
 
 void CalibrateGui::autoCalibrate() {
     if(lastCali+3000 > millis()) return;
-    if((Meassure::getRawAirCondition() < 395) && (Meassure::isConnected())) {
+    if((Meassure::getRawAirCondition() < 395) && (Meassure::isConnected()) && (Meassure::getRawAirCondition() > 20)) {
         Serial.println(Meassure::getRawAirCondition());
         Meassure::forcedMinCalibration();
         lastCali = millis();
