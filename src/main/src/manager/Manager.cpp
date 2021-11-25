@@ -75,7 +75,7 @@ void Manager::backgroundLoop(void* parm) {
       lastReconnect = currentCycleTime; */
     reconnectSystem();          
     vTaskDelay(RECONNECT_TIME/portTICK_PERIOD_MS);
-    Meassure::reconnect();
+    
   } 
 }
 

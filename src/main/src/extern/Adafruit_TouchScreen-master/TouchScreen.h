@@ -11,7 +11,7 @@
 class TouchScreen;
 #include "../../util/Util.h"
 
-#define TOUCHINACURRACY 5
+#define TOUCHINACURRACY 2
 #define ERRORBIAS 50
 extern int errorCounter;
 

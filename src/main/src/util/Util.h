@@ -21,7 +21,7 @@
 #include "../meassure/Meassure.h"
 
 #define EEPROM_SIZE (1+6*sizeof(short) + sizeof(bool))
-#define ALLOW_PIEP true
+#define ALLOW_PIEP false
 
 #define XMIN (1)
 #define XMAX (1+1*sizeof(short))
