@@ -110,7 +110,10 @@
 
   void Meassure::calibrateMin() {
     if(requestDecision("Min Wert Kalibrierung", "Möchtest du fortfahren?")) {
+      int difference = airCondition - 400;
       MHZ19b.calibrate();
+      SET_MAP_MAX_IN(GET_MAP_MAX_IN - difference);
+      SET_MAP_MAX_OUT(GET_MAP_MAX_OUT - difference);
       debug(WARNING, SENSOR, "min value calibrated to 400 PPM");
     }
     Menu::setup();
@@ -119,6 +122,7 @@
   void Meassure::forcedMinCalibration() {
     MHZ19b.calibrate();
     Serial.println("Calibrated Min");
+
   }
 
   void Meassure::calibrateMax(int targetPPM) {

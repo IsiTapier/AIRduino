@@ -17,6 +17,7 @@ class CalibrateGui {
   private:
     static void drawMaxPPM(int x, int y, int size, int color, int datum);
     static void autoCalibrate();
+    static void drawLastCali();
 };
 
 #endif

@@ -48,11 +48,12 @@ void CalibrateGui::drawMaxPPM(int x, int y, int size, int color, int datum) {
 
     dPrint(lastMaxPPM, x, y, size, BLACK, datum);
     dPrint(maxPPM, x, y, size, color, datum);
+    drawLastCali();
     lastMaxPPM = maxPPM;
 }
 
 void CalibrateGui::autoCalibrate() {
-    if(lastCali+3000 > millis()) return;
+    if(lastCali+10000 > millis()) return;
     if((Meassure::getRawAirCondition() < 395) && (Meassure::isConnected()) && (Meassure::getRawAirCondition() > 20)) {
         Serial.println(Meassure::getRawAirCondition());
         Meassure::forcedMinCalibration();
@@ -61,5 +62,11 @@ void CalibrateGui::autoCalibrate() {
         delay(6000); 
         dPrint("cali.", DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2, 2, BLACK, CC_DATUM);  
     }
+}
+
+void CalibrateGui::drawLastCali() {
+    int _output = (millis() - lastCali) / 1000;
+    display.fillRect(160, DISPLAY_HEIGHT/2 + 10, 40, 20, BLACK);
+    dPrint(_output, 160, DISPLAY_HEIGHT/2, 1, WHITE, ML_DATUM);
 }
 
