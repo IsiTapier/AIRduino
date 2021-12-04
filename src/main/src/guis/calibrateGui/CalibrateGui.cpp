@@ -1,9 +1,18 @@
 
 #include "CalibrateGui.h"
 
-int maxPPM = 1500;
-int lastMaxPPM = 0;
+using namespace std;
+
+int _maxPPM = 1500;
+int _lastMaxPPM = 0;
 long lastCali = 0;
+String lastCaliString = "";
+
+
+long _loopTimestamp = 0;
+vector<int> valueArr;    
+int lastAllTimeMinValue;
+int lastAllTimeMaxValue;
 
 void CalibrateGui::initGui() {
     if(gui.equals(CALIBRATE_GUI)) {
@@ -25,32 +34,62 @@ void CalibrateGui::loop() {
     DisplayVX::drawPPMStraight(20, DISPLAY_HEIGHT/2, 4, WHITE, ML_DATUM);
     drawMaxPPM(DISPLAY_LENGTH*4/5, DISPLAY_HEIGHT/2, 4, COLOR_STATUS_RISK, CC_DATUM);
     autoCalibrate();
+
+    if((millis() - 5000) > _loopTimestamp) {
+        _loopTimestamp = millis();
+        drawLastCali(160, DISPLAY_HEIGHT*5/6, 3, WHITE, CC_DATUM);
+        
+        valueArr.insert(valueArr.begin(), Meassure::getRawAirCondition());
+        if(valueArr.size() == 60) valueArr.pop_back();
+
+        for(int i : valueArr) {
+            Serial.print(i);
+        }
+        Serial.println();
+
+        int _min = *min_element(valueArr.begin(), valueArr.end());
+        int _max = *max_element(valueArr.begin(), valueArr.end());
+        drawMinAndMaxValues(_min, _max, 160, DISPLAY_HEIGHT/2, 3, WHITE, CC_DATUM);
+    }
+}
+
+void CalibrateGui::drawMinAndMaxValues(int min, int max, int x, int y, int size, int color, int datum) {
+    dPrint(lastAllTimeMinValue, x, y, size, BLACK, datum);
+    dPrint(lastAllTimeMaxValue, x, y + 8*size + 4, size, BLACK, datum);
+    lastAllTimeMinValue = min;
+    lastAllTimeMaxValue = max;
+
+    dPrint(min, x, y, size, GREEN, datum);
+    dPrint(max, x, y + 8*size + 4, size, RED, datum);
+    Serial.println(min + "-" + max);
 }
 
 void CalibrateGui::handleTouch(TSPoint p) {
     if(!gui.equals(CALIBRATE_GUI)) return;
     if(p.isTouching(0, DISPLAY_LENGTH/2, 40, DISPLAY_HEIGHT*5/8)) {
-        maxPPM -= 25;
+        _maxPPM -= 25;
     }
     if(p.isTouching(DISPLAY_LENGTH/2, DISPLAY_LENGTH, 40, DISPLAY_HEIGHT*5/8)) {
-        maxPPM += 25;
+        _maxPPM += 25;
     }
     if(p.isTouching(0, DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, DISPLAY_HEIGHT)) {
         Meassure::calibrateMin();
+        lastCali = millis();
     }
     if(p.isTouching(DISPLAY_LENGTH/2, DISPLAY_LENGTH, DISPLAY_HEIGHT*3/4, DISPLAY_HEIGHT)) {
-        Meassure::calibrateMax(maxPPM);
+        Meassure::calibrateMax(_maxPPM);
     }
 }
     
 void CalibrateGui::drawMaxPPM(int x, int y, int size, int color, int datum) {
-    if(lastMaxPPM == maxPPM) return;
+    if(_lastMaxPPM == _maxPPM) return;
 
-    dPrint(lastMaxPPM, x, y, size, BLACK, datum);
-    dPrint(maxPPM, x, y, size, color, datum);
-    drawLastCali();
-    lastMaxPPM = maxPPM;
+    dPrint(_lastMaxPPM, x, y, size, BLACK, datum);
+    dPrint(_maxPPM, x, y, size, color, datum);
+    
+    _lastMaxPPM = _maxPPM;
 }
+
 
 void CalibrateGui::autoCalibrate() {
     if(lastCali+10000 > millis()) return;
@@ -58,15 +97,16 @@ void CalibrateGui::autoCalibrate() {
         Serial.println(Meassure::getRawAirCondition());
         Meassure::forcedMinCalibration();
         lastCali = millis();
-        dPrint("cali.", DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2, 2, RED, CC_DATUM);
+        dPrint("(MIN)", DISPLAY_LENGTH*1/5, DISPLAY_HEIGHT*7/8, 3, RED, CC_DATUM);
         delay(6000); 
-        dPrint("cali.", DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2, 2, BLACK, CC_DATUM);  
+        dPrint("(MIN)", DISPLAY_LENGTH*1/5, DISPLAY_HEIGHT*7/8, 3, GREY, CC_DATUM); 
     }
 }
 
-void CalibrateGui::drawLastCali() {
-    int _output = (millis() - lastCali) / 1000;
-    display.fillRect(160, DISPLAY_HEIGHT/2 + 10, 40, 20, BLACK);
-    dPrint(_output, 160, DISPLAY_HEIGHT/2, 1, WHITE, ML_DATUM);
+void CalibrateGui::drawLastCali(int x, int y, int size, int color, int datum) {
+    int _output = (millis() - lastCali) / 1000 / 60;
+    dPrint(lastCaliString, x, y, size, BLACK, datum);
+    dPrint(_output, x, y, size, color, datum);
+    lastCaliString = _output;
 }
 

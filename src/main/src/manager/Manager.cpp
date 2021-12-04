@@ -25,7 +25,6 @@ void Manager::setup() {
     Display::setup();
     lastReconnect = millis();
     eeprom(); 
-    setupDatabaseConnection();
     xTaskCreate(backgroundLoop, "backgroundLoop", 4096, NULL, 0, NULL);  
     
     Meassure::setup();

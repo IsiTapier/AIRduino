@@ -316,12 +316,13 @@ void reconnectSystem() {
       WiFi.mode(WIFI_STA);
       WiFi.begin(ssid, password);
       WiFi.reconnect();
-     
+     Serial.println("Connect");
       vTaskDelay(15000/portTICK_PERIOD_MS);
       
     } else if(!client.connected() && WiFi.isConnected()) {
       // display.fillRect(0, DISPLAY_HEIGHT/2 + 20, DISPLAY_LENGTH, DISPLAY_HEIGHT, BLACK);
       // dPrint("to Server", DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2 + 32, 3, LIGHTGREY, 4);
+      Serial.println("Connected +++");
       reconnectToMQTT();
       if(client.connected()) {
         generalSubscriptions();
