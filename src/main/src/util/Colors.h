@@ -27,6 +27,7 @@
 #define LIME        0x87F4
 #define LIGHT_BLUE  0x76BF
 #define TURKISE     0x3FFA
+#define DARKESTGREEN 0x5C29
 
 
 

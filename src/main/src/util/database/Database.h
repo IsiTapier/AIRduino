@@ -10,6 +10,7 @@
 #include "../../extern/PubSubClient/src/PubSubClient.h"
 #include "../../extern/ArduinoUniqueID/src/ArduinoUniqueID.h"
 
+
 #define MSG_BUFFER_SIZE (250)
 
   //global variables
@@ -43,6 +44,8 @@
   void getUniqueID();
   void reconnectToMQTT();
   void reconnectSystem();
+
+  void setupAsyncElegantOTA();
 
   void generalSubscriptions();
   void subscribeToMQTT(String topic);

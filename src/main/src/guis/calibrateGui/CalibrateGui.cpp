@@ -108,5 +108,6 @@ void CalibrateGui::drawLastCali(int x, int y, int size, int color, int datum) {
     dPrint(lastCaliString, x, y, size, BLACK, datum);
     dPrint(_output, x, y, size, color, datum);
     lastCaliString = _output;
+
 }
 

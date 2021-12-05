@@ -33,7 +33,7 @@ void DisplayV3::writeInfoV3() {
       dPrint(state.getTitle(), DISPLAY_LENGTH/2, STATUS_MARGIN_TOP+25, 4, GREY, 1);
     }
     
-    DisplayVX::drawPPMStraight(157, 125, PPM_SIZE+1, state.getColor(true), 7);
+    DisplayVX::drawPPMStraight(160, 112, 8, state.getColor(true), CC_DATUM);
 
     //Draw Bar
     if(lastAirCondition != airCondition || start) {
@@ -71,12 +71,12 @@ void DisplayV3::writeInfoV3() {
     //dPrint(lasttime, timeR_X, timeR_Y, timeR_SIZE, BAR_BACKGROUND_COLOR, 8);
     //write new Pixels
     if(minutes <= 20) {
-      dPrint(time, 165, 130, 10, WHITE, 1, BLACK, lastTime, -1, (seconds == 0 && (minutes == 0 || (minutes == 20 && COLORED_TIME))) || start || state.getColor() != lastState.getColor());
+      dPrint(time, 160, 185, 8, WHITE, CC_DATUM, BLACK, lastTime, -1, (seconds == 0 && (minutes == 0 || (minutes == 20 && COLORED_TIME))) || start || state.getColor() != lastState.getColor());
     } else {
-      dPrint(time, 165, 130, 10, RED, 1, BLACK, lastTime, -1, (seconds == 0 && (minutes == 0 || (minutes == 20 && COLORED_TIME))) || start || state.getColor() != lastState.getColor());
+      dPrint(time, 165, 185, 8, RED, 1, BLACK, lastTime, -1, (seconds == 0 && (minutes == 0 || (minutes == 20 && COLORED_TIME))) || start || state.getColor() != lastState.getColor());
     }
     if((minutes == 20) && (seconds == 0)) {
-      dPrint(time, 165, 130, 10, RED, 1, BLACK, lastTime, -1);
+      dPrint(time, 165, 185, 8, RED, 1, BLACK, lastTime, -1);
     }
     
     //Set new lasttime

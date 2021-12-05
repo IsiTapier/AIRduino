@@ -6,6 +6,10 @@
 #include "../Util.h"
 #include "../../guis/weatherGui/WeatherGui.h"
 
+ #include <AsyncTCP.h>
+  #include <ESPAsyncWebServer.h>
+  #include <AsyncElegantOTA.h>
+
 //Makros to get client output condition for certain features
 #define GET_TOPIC_CLASS(_topic) (topic == _topic + device_class) 
 #define GET_TOPIC_ROOM(_topic) (topic == _topic + device_room) 
@@ -16,6 +20,7 @@
   //global variables
   WiFiClient espClient;
   PubSubClient client(espClient);
+  AsyncWebServer server(80);
 
   String device_id;
   String device_class = "";
@@ -36,10 +41,22 @@
   //Database connection
   void setupDatabaseConnection() {
     getUniqueID();
+    reconnectSystem();
+    setupAsyncElegantOTA();
     Serial.println(device_id);
   }
 
-  
+  void setupAsyncElegantOTA() {
+    
+    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
+      request->send(200, "text/plain", "ElegantOTA Web Server of ESP32 (Class: " + device_class + "; Room: " + device_room + "; ID: " + device_id);
+    });
+
+    AsyncElegantOTA.begin(&server, "admin", "60Fdk3F1L4b!z03iLqQbXYa");    // Start ElegantOTA
+    server.begin();
+    Serial.println("HTTP server started");
+    Serial.println(WiFi.localIP());
+  }
 
   void maintenanceMode() {
     debug(IMPORTANT, SETUP, "/////////////////////////////////");
@@ -312,25 +329,26 @@ void generalSubscriptions() {
 
 void reconnectSystem() {
   // Serial.print("Wifi"); Serial.println(WiFi.isConnected());
+  if(WiFi.isConnected())
+      AsyncElegantOTA.loop();
   if(!WiFi.isConnected()) {     
       WiFi.mode(WIFI_STA);
       WiFi.begin(ssid, password);
       WiFi.reconnect();
-     Serial.println("Connect");
       vTaskDelay(15000/portTICK_PERIOD_MS);
       
-    } else if(!client.connected() && WiFi.isConnected()) {
-      // display.fillRect(0, DISPLAY_HEIGHT/2 + 20, DISPLAY_LENGTH, DISPLAY_HEIGHT, BLACK);
-      // dPrint("to Server", DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2 + 32, 3, LIGHTGREY, 4);
-      Serial.println("Connected +++");
-      reconnectToMQTT();
-      if(client.connected()) {
-        generalSubscriptions();
-        // dPrint("succesful", DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, 2, GREEN, 4);
-        client.publish("config/request", device_id.c_str());
-      } else {
-        // dPrint("failed", DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, 2, RED, 4);
-      }
+  } else if(!client.connected() && WiFi.isConnected()) {
+    // display.fillRect(0, DISPLAY_HEIGHT/2 + 20, DISPLAY_LENGTH, DISPLAY_HEIGHT, BLACK);
+    // dPrint("to Server", DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2 + 32, 3, LIGHTGREY, 4);
+    Serial.println("Connected +++");
+    reconnectToMQTT();
+    if(client.connected()) {
+      generalSubscriptions();
+      // dPrint("succesful", DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, 2, GREEN, 4);
+      client.publish("config/request", device_id.c_str());
+    } else {
+      // dPrint("failed", DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, 2, RED, 4);
+    }
   }
 }
 

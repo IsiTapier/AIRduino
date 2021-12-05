@@ -68,7 +68,7 @@ void Manager::backgroundLoop(void* parm) {
   for(;;) {
     if(client.connected())
       client.loop();
-
+    
 /*     //Reconnect System
     if(currentCycleTime - lastReconnect >= RECONNECT_TIME) {
       lastReconnect = currentCycleTime; */

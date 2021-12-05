@@ -1,7 +1,7 @@
 
   #include "Arduino.h"
   #include "manager/Manager.h"
-  
+
 
   #define GENERAL_SOUND false
 
@@ -15,9 +15,9 @@ ToDo
 /*   const char* ssid = "DESKTOP-Q7HRET5 8763";
   const char* password = "12345678";
   const char* mqtt_server = "79.231.0.86"; */
- /*  const char* ssid = "FRITZ!Box 7590 JG";
+  const char* ssid = "FRITZ!Box 7590 JG";
   const char* password = "4400834912335401";
-  const char* mqtt_server = "192.168.178.57"; */
+  const char* mqtt_server = "192.168.178.57";
 
   //Buchse 1.16.01
 
@@ -25,9 +25,9 @@ ToDo
 /*   const char* ssid = "AG-iOT";
   const char* password = "#Wlan4iOT#JCBS-AG!";
   const char* mqtt_server = "169.254.191.226"; */
-  const char* ssid = "JCBS-Schüler";
+/*   const char* ssid = "JCBS-Schüler";
   const char* password = "R222MGmGwhdmv?";
-  const char* mqtt_server = "192.168.2.97";
+  const char* mqtt_server = "192.168.2.97"; */
 /*
    _____      _ 
   / ____|    | |

@@ -23,7 +23,7 @@
         ),
         MenuPage(
           //Input(&general::developperSettings),
-          Input(&general::theme),
+          Input(&general::/* theme */empty),
           Input(&general::reportSystem),
           Input(&general::graph_speed),
           Input(&general::ventilating_timeout),
@@ -42,10 +42,10 @@
           Input(&colorModes::c_chart),
           Input(&colorModes::c_bar),
           Input(&colorModes::c_state),
-          Input(&colorModes::c_time),
-          Input(&colorModes::c_value)
+          Input(&colorModes::c_time)          
         ),
         MenuPage(
+          Input(&colorModes::c_value),
           Input(&colorModes::c_slider),
           Input(&colorModes::showTopBar)
         )
@@ -53,7 +53,6 @@
     {SubMenu("Developer", {
         MenuPage(
           Input(&developper::triggerCalibrateGui),
-          Input(&general::empty),
           Input(&developper::deviceInfo),
           Input(&general::empty),
           Input(&general::calibrateTouch),
@@ -70,8 +69,7 @@
         MenuPage(
           Input(&general::data),
           Input(&general::blink),//Input(&general::kernMode),
-          Input(&general::graph_speed),
-          Input(&general::segments),
+          Input(&general::graph_speed),         
           Input(&general::blink_thickness),
           Input(&general::ventilating_timeout)
         ),
@@ -85,8 +83,7 @@
           Input(&report::sensorWrong),
           Input(&report::graphicalBug),
           Input(&report::acousticBug),
-          Input(&report::helpShortterm),
-          Input(&report::developerEmail)
+          Input(&report::helpShortterm)
         )
     }, 0, &reportMenuOpen)}
   };
