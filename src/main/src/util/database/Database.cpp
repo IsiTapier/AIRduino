@@ -47,7 +47,6 @@
   }
 
   void setupAsyncElegantOTA() {
-    
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
       request->send(200, "text/plain", "ElegantOTA Web Server of ESP32 (Class: " + device_class + "; Room: " + device_room + "; ID: " + device_id);
     });

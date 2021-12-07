@@ -39,7 +39,7 @@ void CalibrateGui::loop() {
         _loopTimestamp = millis();
         drawLastCali(160, DISPLAY_HEIGHT*5/6, 3, WHITE, CC_DATUM);
         
-        valueArr.insert(valueArr.begin(), Meassure::getRawAirCondition());
+        if(Meassure::getRawAirCondition != 0) valueArr.insert(valueArr.begin(), Meassure::getRawAirCondition());
         if(valueArr.size() == 60) valueArr.pop_back();
 
         for(int i : valueArr) {
@@ -108,6 +108,5 @@ void CalibrateGui::drawLastCali(int x, int y, int size, int color, int datum) {
     dPrint(lastCaliString, x, y, size, BLACK, datum);
     dPrint(_output, x, y, size, color, datum);
     lastCaliString = _output;
-
 }
 

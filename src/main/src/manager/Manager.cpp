@@ -8,7 +8,6 @@
 #define LASTCYCLE floor((Manager::lastCycleTime-Meassure::getStartTime())/STAGE_TIME)
 #define STAGE_TIME_2 300
 
-
 using namespace general;
 
   unsigned long Manager::lastCycleTime = 0;
@@ -18,6 +17,7 @@ using namespace general;
   unsigned long Manager::lastModeChange = 0;
   unsigned long Manager::currentCycleTime = 0;
   unsigned long Manager::currentCycleTime2 = 0;
+  
 
 
 void Manager::setup() {
