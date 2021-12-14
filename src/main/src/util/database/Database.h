@@ -14,6 +14,8 @@
 #define MSG_BUFFER_SIZE (250)
 
   //global variables
+
+
   extern WiFiClient espClient;
   extern PubSubClient client;
 

@@ -22,6 +22,9 @@
   PubSubClient client(espClient);
   AsyncWebServer server(80);
 
+  const char* WifiSsid[2] = {"FRITZ!Box 7590 JG", "JCBS-Schüler"};
+  const char* WifiKeys[2] = {"4400834912335401", "K1,14DWwFuwuu."};
+
   String device_id;
   String device_class = "";
   String device_room;
@@ -37,6 +40,7 @@
   String classFinalNames[30];
   int classLength = 0;
   
+  byte wifiConnectionDigit = 0;
 
   //Database connection
   void setupDatabaseConnection() {
@@ -51,7 +55,7 @@
       request->send(200, "text/plain", "ElegantOTA Web Server of ESP32 (Class: " + device_class + "; Room: " + device_room + "; ID: " + device_id);
     });
 
-    AsyncElegantOTA.begin(&server, "admin", "60Fdk3F1L4b!z03iLqQbXYa");    // Start ElegantOTA
+    AsyncElegantOTA.begin(&server);    // Start ElegantOTA
     server.begin();
     Serial.println("HTTP server started");
     Serial.println(WiFi.localIP());
@@ -330,9 +334,12 @@ void reconnectSystem() {
   // Serial.print("Wifi"); Serial.println(WiFi.isConnected());
   if(WiFi.isConnected())
       AsyncElegantOTA.loop();
-  if(!WiFi.isConnected()) {     
+  if(!WiFi.isConnected()) {  
+      WiFi.disconnect();
       WiFi.mode(WIFI_STA);
-      WiFi.begin(ssid, password);
+      WiFi.begin(WifiSsid[wifiConnectionDigit%sizeOf(WifiSsid)], WifiKeys[wifiConnectionDigit%sizeOf(WifiKeys)]);
+      wifiConnectionDigit++;
+      
       WiFi.reconnect();
       vTaskDelay(15000/portTICK_PERIOD_MS);
       
@@ -348,6 +355,13 @@ void reconnectSystem() {
     } else {
       // dPrint("failed", DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, 2, RED, 4);
     }
+  }
+  if(WiFi.isConnected()) {
+    Serial.println("WIFI: Connected");
+    Serial.print("HostName: "); Serial.println(WiFi.getHostname());
+    Serial.print("Ssid: "); Serial.println(WiFi.SSID());
+    Serial.print("NetInfo: "); Serial.println(WiFi.macAddress());
+    Serial.print("IP: "); Serial.println(WiFi.localIP());
   }
 }
 

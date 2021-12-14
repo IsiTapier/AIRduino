@@ -52,7 +52,7 @@ int lastRawPPMSize;
     else if(general::version.equals(V1))
       generateData(200, 1050, 5);
     else
-      generateData(400, 1100, 100);
+      generateData(300, 2000, 100);
     //info
   }
 

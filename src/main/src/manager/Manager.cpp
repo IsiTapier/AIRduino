@@ -47,7 +47,7 @@ void Manager::loop() {
 
     // Display loop
     Display::loop();
-
+    
     //guis
     if(mode.getValue() == CHART) {
       TimerGui::loop();
@@ -66,13 +66,15 @@ void Manager::loop() {
 void Manager::backgroundLoop(void* parm) {
   setupDatabaseConnection();
   for(;;) {
+    Meassure::reconnect();
     if(client.connected())
       client.loop();
     
 /*     //Reconnect System
     if(currentCycleTime - lastReconnect >= RECONNECT_TIME) {
       lastReconnect = currentCycleTime; */
-    reconnectSystem();          
+    reconnectSystem();
+  	
     vTaskDelay(RECONNECT_TIME/portTICK_PERIOD_MS);
     
   } 
@@ -87,7 +89,7 @@ void Manager::eeprom() {
       EEPROM.commit();
     }
     if(EEPROM.readShort(XMIN) == EEPROM.readShort(XMAX) || EEPROM.readShort(YMIN) == EEPROM.readShort(YMAX))
-      ts.calibration();
+      // ts.calibration();
     if(debugSetup.getValue() && debugPriority.getValue()) {
       debug(INFO, SETUP, "EEPROM: sensor", EEPROM.read(0));
       debug(INFO, SETUP, "EEPROM: xmin", EEPROM.readShort(XMIN));

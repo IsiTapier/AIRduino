@@ -59,34 +59,12 @@ void DisplayV2::loop() {
 
 
 void DisplayV2::drawBarBorder() { //x,y,breite, höhe, dicke
-  /*for(short z = 0; z < BAR_BORDER_THICKNESS; z++) {
-    display.drawRect(BAR_BORDER_X - z, BAR_BORDER_Y - z, BAR_BORDER_LENGTH + z + 2, BAR_BORDER_HEIGHT + z + 2 , BAR_COLOR);
-  }
-
-  //   - search position of the bar -
-  //Draw balance bar
-  barPixel = map(airCondition, calibration[EEPROM.read(0)].getLowestPPM(), calibration[EEPROM.read(0)].getHighestPPM(), 0, BAR_LENGTH) + BAR_START_X;
-  display.fillRect(barPixel + 1, BAR_BORDER_Y, BAR_LENGTH - barPixel, BAR_HEIGHT, BACKGROUND_COLOR);
-  //display.fillRect(BAR_START_X, BAR_Y, BAR_WIDTH, BAR_HIGHT, BLACK); //Setzt das "Loch" in die Mitte des Rechtecks*/
-  //display.fillRect(BAR_BORDER_X, BAR_BORDER_Y, BAR_BORDER_LENGTH, BAR_BORDER_HEIGHT, BAR_COLOR);
-
-  //drawBorder(BAR_BORDER_X, BAR_BORDER_Y, BAR_BORDER_LENGTH, BAR_BORDER_HEIGHT, BAR_BORDER_THICKNESS, WHITE);
-  //display.fillRect(BAR_START_X, BAR_Y, BAR_LENGTH, BAR_HEIGHT, BACKGROUND_COLOR);
   drawBorder(BAR_BORDER_X, BAR_BORDER_Y, BAR_BORDER_LENGTH, BAR_BORDER_HEIGHT, BAR_BORDER_THICKNESS, CHART_BORDER_COLOR);
   drawSections();
 }
 
 
 void DisplayV2::drawSections() {
-  //    - Draw Sections -
-  //display.drawLine(FIRST_SECTION_X, BAR_Y - 10, FIRST_SECTION_X, BAR_Y + 10 + BAR_HIGHT, WHITE);
-  //display.drawLine(SECOND_SECTION_X, BAR_Y - 10, SECOND_SECTION_X, BAR_Y + 10 + BAR_HIGHT, WHITE);
-  /*for(short y = BAR_Y - 10; y < BAR_Y + 10 + BAR_HEIGHT; y = y+5) {
-    for(byte z = 0; z <= BAR_SECTIONS_THICKNESS; z++) {
-      display.drawPixel(FIRST_SECTION_X + z, y, BAR_SECTIONS_COLOR);
-      display.drawPixel(SECOND_SECTION_X + z, y, BAR_SECTIONS_COLOR);
-    }
-  }*/
   drawLine(FIRST_SECTION_START_X, BAR_SECTIONS_Y, BAR_SECTIONS_LENGTH, BAR_SECTIONS_HEIGHT, BAR_SECTIONS_COLOR, 1, BAR_SECTIONS_STRIPE_DISTANCE);
   drawLine(SECOND_SECTION_START_X, BAR_SECTIONS_Y, BAR_SECTIONS_LENGTH, BAR_SECTIONS_HEIGHT, BAR_SECTIONS_COLOR, 1, BAR_SECTIONS_STRIPE_DISTANCE);
 }
@@ -107,8 +85,18 @@ void DisplayV2::drawBar() {
   if(lastBarPixel < BAR_START_X || (state.getColor(COLORED_CHART) != lastState.getColor(COLORED_CHART) && (!COLOR_MODE || lastState == VENTILATING || state == VENTILATING)) || start)
     lastBarPixel = BAR_START_X;
 
+  Serial.println();
+  Serial.print("AirCondition: ");
+  Serial.print(airCondition);
+  Serial.print(" BarPixel: ");
+  Serial.print(barPixel);
+  Serial.print(" LastBarPixel: ");
+  Serial.print(lastBarPixel);
+  Serial.print(" State: ");
+  Serial.println(state.getTitle());
+
   //TODO: vereinfachen
-  if(COLOR_MODE && state != VENTILATING) {
+  if(COLOR_MODE && state != VENTILATING) { 
     if(airCondition >= LIMIT_GOOD) {
       if(!(lastAirCondition >= LIMIT_GOOD) || lastState == VENTILATING || start)
         display.fillRect(BAR_START_X, BAR_Y, FIRST_SECTION_X - BAR_START_X, BAR_HEIGHT, COLOR_STATUS_NORMAL);
@@ -134,13 +122,12 @@ void DisplayV2::drawBar() {
       display.fillRect(barPixel, BAR_Y, lastBarPixel - barPixel, BAR_HEIGHT, CHART_BACKGROUND_COLOR);
     }
   } else {
-    if(lastBarPixel < barPixel) {
-      display.fillRect(lastBarPixel, BAR_Y, barPixel - lastBarPixel, BAR_HEIGHT, state.getColor(COLORED_CHART));
-    } else {
-      display.fillRect(barPixel, BAR_Y, lastBarPixel - barPixel, BAR_HEIGHT, CHART_BACKGROUND_COLOR);
-    }
     if(lastState == VENTILATING && state != VENTILATING)
       display.fillRect(BAR_START_X, BAR_Y, barPixel - BAR_START_X, BAR_HEIGHT, state.getColor(COLORED_CHART));
+
+    display.fillRect(barPixel, BAR_Y, BAR_END_X - barPixel, BAR_HEIGHT, CHART_BACKGROUND_COLOR);
+    display.fillRect(BAR_START_X, BAR_Y, barPixel - BAR_START_X, BAR_HEIGHT, state.getColor(COLORED_CHART));
+
   }
   drawSections();
 }

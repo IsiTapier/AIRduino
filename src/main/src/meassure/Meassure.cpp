@@ -90,7 +90,7 @@
 
   void Meassure::loop() {
     // meassureEnvironment();
-    reconnect();
+    
     if(meassureAirCondition()) {
       calculateGradient();
       checkVentilating();
@@ -102,6 +102,7 @@
   void Meassure::reconnect() {
     if(SENSORCONNECTED) return;
     MHZ19b.begin(Serial1);
+    MHZ19b.autoCalibration(false);
   }
 
   boolean Meassure::isConnected() {
