@@ -117,7 +117,7 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
     Serial.print(topic_char);
     Serial.print(") :: ");
 
-    //Write payload into console; put payload into var
+    // Write payload into console; put payload into var
     String payload_string = "";
     for (int i = 0; i < length; i++) {
       payload_string = payload_string + "" + (char)payload[i];
