@@ -356,13 +356,7 @@ void reconnectSystem() {
       // dPrint("failed", DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, 2, RED, 4);
     }
   }
-  if(WiFi.isConnected()) {
-    Serial.println("WIFI: Connected");
-    Serial.print("HostName: "); Serial.println(WiFi.getHostname());
-    Serial.print("Ssid: "); Serial.println(WiFi.SSID());
-    Serial.print("NetInfo: "); Serial.println(WiFi.macAddress());
-    Serial.print("IP: "); Serial.println(WiFi.localIP());
-  }
+
 }
 
 

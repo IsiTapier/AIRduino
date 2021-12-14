@@ -226,12 +226,8 @@ void Display::drawInfoScreen(int time) {
   dPrint("Software:", 10, 70, 3, GREY, 0);
   dPrint(software_version, 9*6*3+10, 70, 3, LIGHTGREY, 0);
 
-  dPrint("Mapping:", 10, 100, 3, GREY, 0);
-  if(developper::isMappingActive.getValue()) {
-    dPrint("AUS", 8*6*3+10, 100, 3, RED, 0);
-  } else {
-  	dPrint("AN", 8*6*3+10, 100, 3, GREEN, 0);
-  }
+  dPrint("IP:", 10, 100, 3, GREY, 0);
+  dPrint(WiFi.localIP(), 8*6*3+10, 100, 3, RED, 0);
 
   dPrint("Connection:", 10, 130, 3, GREY, 0);
   if(client.connected()) {
@@ -248,8 +244,6 @@ void Display::drawInfoScreen(int time) {
   dPrint("Room:", 10, 190, 3, GREY, 0);
   dPrint(device_room, 5*6*3+10, 190, 3, LIGHTGREY, 0);
 
-
-  
   delay(time);
   general::mode.setValue(LOADINGSCREEN);
   general::mode.setValue(general::mode.getOldValue());  
