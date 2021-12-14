@@ -10,13 +10,14 @@
 #include "../util/Util.h"
 #include "../util/settings/Settings.h"
 #include "../extern/Adafruit_BME280_Library-master/Adafruit_BME280.h"
-#include "../extern/MH_Z19/src/MHZ19.h"
-
+// #include "../extern/MH_Z19/src/MHZ19.h"
+#include "MHZ.h"
 
 #define RANGE 2000
-#define SENSORCONNECTED (MHZ19b.errorCode == RESULT_OK)
+#define SENSORCONNECTED true//(MHZ19b.errorCode == RESULT_OK)
 #define SENSORERROR (airCondition <= 200)
 #define SENSORERRORLAST (airConditionLast <= 200)
+#define SENSOR_TYPE MHZ19C
 
 class Meassure {
 
@@ -34,7 +35,7 @@ class Meassure {
     static void calibrateMin();
     static void forcedMinCalibration();
     static void calibrateMax(int targetPPM);
-    static MHZ19 getSensor();
+    static MHZ getSensor();
     static void reconnect();
     static boolean isConnected();
     static int decibelValue;
@@ -51,7 +52,8 @@ class Meassure {
     static void setState();
 
     static Adafruit_BME280 bme;
-    static MHZ19 MHZ19b;
+    // static MHZ19 MHZ19b;
+    static MHZ MHZ19;
     static unsigned long tempAirCondition;
     static unsigned long temptempAirCondition;
     static float airConditionTemp;

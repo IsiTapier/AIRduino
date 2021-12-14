@@ -18,7 +18,8 @@
   */
 
   Adafruit_BME280 Meassure::bme = Adafruit_BME280(BMESDA, BMESCL);
-  MHZ19 Meassure::MHZ19b;
+  // MHZ19 Meassure::MHZ19b;
+  MHZ Meassure::MHZ19;
   unsigned long Meassure::tempAirCondition;
   unsigned long Meassure::temptempAirCondition;
   float Meassure::airConditionTemp;
@@ -54,43 +55,53 @@
     } else {
       debug(WARNING, SETUP, "Could not find a valid BME280 sensor, check wiring!");
     }
+    //Serial1.begin(MHZ19BAUDRATE);
+    //MHZ19b.begin(Serial1);
+    // while (!SENSORCONNECTED && requestDecision("Sensor nicht verbunden", "erneut versuchen?", "Ja", "Nein", 15000, false)) {
+    //   drawLogo();
+    //   Serial.print("connecting to sensor");
+    //   for (int x = 0; x <= 10; x++) {
+    //     delay(500);
+    //     Serial.print(".");
+    //   }
+    //   Serial.println();
+    //   MHZ19b.begin(Serial1);     
+    // }
+    drawLogo();
+    // if(SENSORCONNECTED) {
+    //   MHZ19b.autoCalibration(false);
+    //   debug(INFO, SENSOR, "ABC Status: " + MHZ19b.getABC() ? "ON" : "OFF");  // now print it's status
+    //   // MHZ19b.setRange(RANGE);
+    //   // MHZ19b.calibrate();
+    //   // MHZ19b.zeroSpan(1000);
+    // }
+
+    // if(SENSORCONNECTED) {
+    //   for(int x = 0; x <= 180 && ((MHZ19b.getCO2(true, true) == 10000) || (MHZ19b.getCO2(true, true) <= 0)); x++) {
+    //     delay(1000);
+    //   }
+    //   delay(SENSORDROPTIME);
+    // }
     Serial1.begin(MHZ19BAUDRATE);
-    MHZ19b.begin(Serial1);
-    while (!SENSORCONNECTED && requestDecision("Sensor nicht verbunden", "erneut versuchen?", "Ja", "Nein", 15000, true)) {
-      drawLogo();
-      Serial.print("connecting to sensor");
-      for (int x = 0; x <= 10; x++) {
-        delay(500);
+    MHZ19 = MHZ(&Serial1, SENSOR_TYPE);
+    MHZ19.setAutoCalibrate(false);
+    if (MHZ19.isPreHeating()) {
+      Serial.print("Preheating");
+      while (MHZ19.isPreHeating()) {
         Serial.print(".");
+        delay(5000);
       }
       Serial.println();
-      MHZ19b.begin(Serial1);     
     }
-    drawLogo();
-    if(SENSORCONNECTED) {
-      MHZ19b.autoCalibration(false);
-      debug(INFO, SENSOR, "ABC Status: " + MHZ19b.getABC() ? "ON" : "OFF");  // now print it's status
-      // MHZ19b.setRange(RANGE);
-      // MHZ19b.calibrate();
-      // MHZ19b.zeroSpan(1000);
-    }
-
-    if(SENSORCONNECTED) {
-      for(int x = 0; x <= 180 && ((MHZ19b.getCO2(true, true) == 10000) || (MHZ19b.getCO2(true, true) <= 0)); x++) {
-        delay(1000);
-      }
-      delay(SENSORDROPTIME);
-    }
-
+    MHZ19.setAutoCalibrate(false);
     startTime = millis();
     debug(DEBUG, SETUP, "Meassure SETUP ended");
     debug(DEBUG, SETUP, "");
-
   }
 
   void Meassure::loop() {
     // meassureEnvironment();
-    
+    reconnect();
     if(meassureAirCondition()) {
       calculateGradient();
       checkVentilating();
@@ -100,9 +111,9 @@
   }
 
   void Meassure::reconnect() {
-    if(SENSORCONNECTED) return;
-    MHZ19b.begin(Serial1);
-    MHZ19b.autoCalibration(false);
+    // if(SENSORCONNECTED) return;
+    // MHZ19b.begin(Serial1);
+    // MHZ19b.autoCalibration(false);
   }
 
   boolean Meassure::isConnected() {
@@ -112,7 +123,8 @@
   void Meassure::calibrateMin() {
     if(requestDecision("Min Wert Kalibrierung", "Möchtest du fortfahren?")) {
       int difference = airCondition - 400;
-      MHZ19b.calibrate();
+      // MHZ19b.calibrate();
+      MHZ19.calibrateZero();
       SET_MAP_MAX_IN(GET_MAP_MAX_IN - difference);
       SET_MAP_MAX_OUT(GET_MAP_MAX_OUT - difference);
       debug(WARNING, SENSOR, "min value calibrated to 400 PPM");
@@ -121,15 +133,15 @@
   }
 
   void Meassure::forcedMinCalibration() {
-    MHZ19b.calibrate();
+    // MHZ19b.calibrate();
+    MHZ19.calibrateZero();
     Serial.println("Calibrated Min");
-
   }
 
   void Meassure::calibrateMax(int targetPPM) {
     if(requestDecision("kunst. Kalibrierung " + targetPPM, "Möchtest du fortfahren?")) {
       // MHZ19b.zeroSpan(1000);
-      SET_MAP_MAX_IN((short) MHZ19b.getCO2(true, true));
+      SET_MAP_MAX_IN((short) MHZ19.readCO2UART()/*MHZ19b.getCO2(true, true)*/);
       SET_MAP_MAX_OUT((short) targetPPM);
       SET_MAP_IS_ACTIVE(true);
       developper::isMappingActive.setValue(true);
@@ -195,17 +207,16 @@
   */
 
   boolean Meassure::meassureAirCondition() {
-    if(SENSORCONNECTED) {
+    if(SENSORCONNECTED||true) {
       counter++;
       if(counter >= AVERAGING_MEASUREMENTS) {
-        airCondition = MHZ19b.getCO2(true, true);
+        airCondition = MHZ19.readCO2UART();//MHZ19b.getCO2(true, true);
         airConditionRaw = airCondition;
         //Additional Mapping for bad sensors
         if(developper::isMappingActive.getValue() == 1) {
           airCondition = map(airCondition, 400, GET_MAP_MAX_IN, 400, GET_MAP_MAX_OUT);
         }
-
-        debug(SPAMM, SENSOR, "PPM: " + String(airCondition));
+        debug(ERROR, SETUP, "PPM: " + String(airCondition));
         //Serial.println(airCondition);
         //Serial.println(SENSORCONNECTED);
         /*Serial.print(MHZ19b.getCO2Raw(true)); 
@@ -239,7 +250,6 @@
       }
       return false;
     }
-
     return false;
   }
 
@@ -321,6 +331,6 @@
     counter = -1;
   }
 
-  MHZ19 Meassure::getSensor() {
-    return Meassure::MHZ19b;
+  MHZ Meassure::getSensor() {
+    return Meassure::MHZ19;
   }

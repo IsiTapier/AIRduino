@@ -218,13 +218,13 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
       }
     }
     if(GET_TOPIC_CLASS_ROOM_ID("cali/low/")) {
-      Meassure::getSensor().calibrate();
+      Meassure::getSensor().calibrateZero();
       Serial.println("Forced Min Cali via MQTT");
     }
     if(GET_TOPIC_CLASS_ROOM_ID("cali/high/")) {
       int value = atoi(payload_string.c_str());
       Serial.println(value);
-      Meassure::getSensor().zeroSpan(value);
+      Meassure::getSensor().setRange(value);
       Serial.println("Forced Max Cali via MQTT");
     }
     if(GET_TOPIC_CLASS_ROOM_ID("cali/touch/")) {
