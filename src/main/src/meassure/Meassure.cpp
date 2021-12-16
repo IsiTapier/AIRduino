@@ -102,6 +102,8 @@
   void Meassure::reconnect() {
     if(SENSORCONNECTED) return;
     MHZ19b.begin(Serial1);
+    vTaskDelay(1000);
+    if(SENSORCONNECTED)
     MHZ19b.autoCalibration(false);
   }
 
