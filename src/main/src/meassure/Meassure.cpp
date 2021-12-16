@@ -90,7 +90,7 @@
 
   void Meassure::loop() {
     // meassureEnvironment();
-    
+    Meassure::reconnect();
     if(meassureAirCondition()) {
       calculateGradient();
       checkVentilating();

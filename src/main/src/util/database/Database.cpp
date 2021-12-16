@@ -284,9 +284,9 @@ void generalSubscriptions() {
 
 void reconnectSystem() {
   // Serial.print("Wifi"); Serial.println(WiFi.isConnected());
-  if(WiFi.isConnected()) {
-      AsyncElegantOTA.loop();
-  }
+  // if(WiFi.isConnected()) {
+  //     //AsyncElegantOTA.loop();
+  // }
   if(!WiFi.isConnected()) { 
      Serial.println("Wifi connect");  
       WiFi.disconnect();
@@ -297,7 +297,8 @@ void reconnectSystem() {
       WiFi.reconnect();
       vTaskDelay(10000/portTICK_PERIOD_MS);
       Serial.println("Wifi connect");
-  } else if(!client.connected() && WiFi.isConnected()) {
+  }
+  if(!client.connected() && WiFi.isConnected()) {
     reconnectToMQTT();
     if(client.connected()) {
       client.publish("config/request", device_id.c_str());
