@@ -17,22 +17,28 @@
 #define GET_TOPIC_CLASS_ROOM(_topic) GET_TOPIC_CLASS(_topic) || GET_TOPIC_ROOM(_topic) 
 #define GET_TOPIC_CLASS_ROOM_ID(_topic) GET_TOPIC_CLASS_ROOM(_topic) || GET_TOPIC_ID(_topic) 
 
+std::vector<char*> configSubscribeList = {"room", "class", "sound", "theme", "language", "ventilatingTimeout", "menuSegments", "mapping"};
+
   //global variables
   WiFiClient espClient;
   PubSubClient client(espClient);
   AsyncWebServer server(80);
 
-  const char* WifiSsid[2] = {"FRITZ!Box 7590 JG", "JCBS-Schüler"};
-  const char* WifiKeys[2] = {"4400834912335401", "K1,14DWwFuwuu."};
+  const char* WifiSsid[2] = {"JCBS-Schüler", "FRITZ!Box 7590 JG"};
+  const char* WifiKeys[2] = {"K1,14DWwFuwuu.", "4400834912335401"};
 
   String device_id;
-  String device_class = "";
+  String device_class = "32894";
   String device_room;
   unsigned long lastMsg = 0;
   char msg[MSG_BUFFER_SIZE];
   int value = 0;
   int lastGui = GUI_MENU;
+
+  String clientId = "ESP32Client-";
   boolean configReceived = false;
+
+
   String currentTime = "00:00";
   String currentDate = "01.01.";
   String classPreNames[30];
@@ -45,7 +51,13 @@
   //Database connection
   void setupDatabaseConnection() {
     getUniqueID();
+
+    client.setServer(mqtt_server, 1883);
+    client.setCallback(callback);
+
+    generalSubscriptions();
     reconnectSystem();
+    
     setupAsyncElegantOTA();
     Serial.println(device_id);
   }
@@ -94,6 +106,7 @@ void config_update(String column, int value) {
 void mysql_insert(String grade, int co2, double temp, int decibel) {
   if (!(grade[0] == 'a' && grade[1] == 'u' && grade[2] == 't') && client.connected()) {
     if(grade == "") return;
+    grade = "S15";
     String output = "VALUES ('" + grade + "', " + co2 + ", " + temp + ", " + decibel + ")";
     client.publish("mysql/insert", output.c_str());
     debug(INFO, DATABASE, "INSERTED into LOG grade: " + grade + " co2: " + co2 + " temp: " + temp + " decibel: " + decibel);
@@ -117,13 +130,14 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
     Serial.print(topic_char);
     Serial.print(") :: ");
 
+    return;
+
     // Write payload into console; put payload into var
     String payload_string = "";
     for (int i = 0; i < length; i++) {
       payload_string = payload_string + "" + (char)payload[i];
     }
     Serial.println(payload_string);
-
 
     //get Topic as a String
     String topic = "";
@@ -134,89 +148,9 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
 
     //get config via a single String
     if(GET_TOPIC_ID("config/get/")) {
-      debug(IMPORTANT, SETUP, "Config received");
-      configReceived = true;
 
-      int digit = 0;      
-      for (int x = 0; digit < length; x++) { //loop for every setting
-        String output = "";
-        if (digit <= length) {
-          for (int d = 0; (d < 100) && ((char)payload[digit] != ',') && ((char)payload[digit] != ';'); d++) { //loop to loop the single digits
-            output = output + "" + (char)payload[digit];
-            Serial.print((char)payload[digit]); 
-            // Serial.println((char)payload[digit]);
-            digit++;
-          }
-          digit++;
-        }
-        
-        switch (x) {
-          case 0:
-            device_room = output;
-            Serial.println(device_room);
-            break;
-          case 1:
-            if(output == "-") device_class = "";
-            device_class = output;
-            break;
-          case 2: general::version.setValue((short) atoi(output.c_str()), false);
-            break;
-          case 3: general::mode.setValue((short) atoi(output.c_str()), false);
-            break;
-          case 4: general::theme.setValue((short) atoi(output.c_str()), false);
-            break;
-          case 5: general::language.setValue((short) atoi(output.c_str()), false);
-            break;
-          case 6: general::sound.setValue((short) atoi(output.c_str()), false);
-            break;
-          case 7: general::blink.setValue((short) atoi(output.c_str()), false);
-            break;
-          case 8: general::graph_speed.setValue((short) atoi(output.c_str()), false);
-            break;
-          case 9: general::segments.setValue((short) atoi(output.c_str()), false);
-            break;
-          case 10: general::blink_thickness.setValue((short) atoi(output.c_str()), false);
-            break;
-          case 11: general::ventilating_timeout.setValue((short) atoi(output.c_str()), false);
-            break;
-          case 12: colorModes::c_design.setValue((short) atoi(output.c_str()), false);
-            break;
-          case 13: colorModes::c_chart.setValue((short) atoi(output.c_str()), false);
-            break;
-          case 14: colorModes::c_bar.setValue((short) atoi(output.c_str()), false);
-            break;
-          case 15: colorModes::c_state.setValue((short) atoi(output.c_str()), false);
-            break;
-          case 16: colorModes::c_time.setValue((short) atoi(output.c_str()), false);
-            break;
-          case 17: colorModes::c_value.setValue((short) atoi(output.c_str()), false);
-            break;
-          case 18: colorModes::c_slider.setValue((short) atoi(output.c_str()), false);
-            break;
-          case 19:
-            break;
-          case 20: 
-            break;
-          case 21: general::debugPriority.setValue((short) atoi(output.c_str()), false);
-            break;
-          case 22: general::debugSetup.setValue((short) atoi(output.c_str()), false);
-            break; 
-          case 23: general::debugSensor.setValue((short) atoi(output.c_str()), false);
-            break;
-          case 24: general::debugDisplay.setValue((short) atoi(output.c_str()), false);
-            break;
-          case 25: general::debugMenu.setValue((short) atoi(output.c_str()), false);
-            break;
-          case 26: general::debugTouch.setValue((short) atoi(output.c_str()), false);
-            break;
-          case 27: general::debugDatabase.setValue((short) atoi(output.c_str()), false);
-            break;
-          case 28: developper::isMappingActive.setValue((short) atoi(output.c_str()), false);
-                  SET_MAP_IS_ACTIVE((short) atoi(output.c_str()));
-            break;
-        }
-      }
     }
+    
     if(GET_TOPIC_CLASS_ROOM_ID("cali/low/")) {
       Meassure::getSensor().calibrate();
       Serial.println("Forced Min Cali via MQTT");
@@ -305,7 +239,6 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
   }
 
 void generalSubscriptions() {
-  subscribeToMQTT("config/get/", true);
   subscribeToMQTT("maintenance/", true);
   subscribeToMQTT("cali/low/", true);
   subscribeToMQTT("cali/high/", true);
@@ -327,54 +260,56 @@ void generalSubscriptions() {
   subscribeToMQTT("weather/forecastWeather3");
   subscribeToMQTT("weather/forecastWeatherTomorrow");
   
-
+  for(char* _channel : configSubscribeList) {
+    subscribeToMQTT("config/get/" + String(_channel) + "/", true);
+  }
 }
 
 void reconnectSystem() {
   // Serial.print("Wifi"); Serial.println(WiFi.isConnected());
-  if(WiFi.isConnected())
+  if(WiFi.isConnected()) {
       AsyncElegantOTA.loop();
-  if(!WiFi.isConnected()) {  
+  }
+  if(!WiFi.isConnected()) { 
+     Serial.println("Wifi connect");  
       WiFi.disconnect();
       WiFi.mode(WIFI_STA);
       WiFi.begin(WifiSsid[wifiConnectionDigit%sizeOf(WifiSsid)], WifiKeys[wifiConnectionDigit%sizeOf(WifiKeys)]);
       wifiConnectionDigit++;
       
       WiFi.reconnect();
-      vTaskDelay(15000/portTICK_PERIOD_MS);
-      
+      vTaskDelay(10000/portTICK_PERIOD_MS);
+      Serial.println("Wifi connect");
   } else if(!client.connected() && WiFi.isConnected()) {
-    // display.fillRect(0, DISPLAY_HEIGHT/2 + 20, DISPLAY_LENGTH, DISPLAY_HEIGHT, BLACK);
-    // dPrint("to Server", DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2 + 32, 3, LIGHTGREY, 4);
-    Serial.println("Connected +++");
     reconnectToMQTT();
     if(client.connected()) {
-      generalSubscriptions();
-      // dPrint("succesful", DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, 2, GREEN, 4);
       client.publish("config/request", device_id.c_str());
-    } else {
-      // dPrint("failed", DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, 2, RED, 4);
     }
   }
-
 }
 
 
 void reconnectToMQTT() {
-  // Loop until we're reconnected
-  if (WiFi.status() != WL_CONNECTED || client.connected())
+  if(!WiFi.isConnected()) {
     return;
-  client.setServer(mqtt_server, 1883);
-  client.setCallback(callback);
-  Serial.println("Reconnect to MQTT...");
-  String clientId = "ESP32Client-";
-  clientId += String(random(0xffff), HEX);
-  // Attempt to connect
-  client.connect(clientId.c_str( ));
-  /*
-  if(!client.connected())
-    Serial.println("Database not connected");
-  */
+  }
+  if(!client.connected()) {
+    Serial.print("Attempting MQTT connection...");
+    clientId = device_id;
+    /* clientId = "ESP32Client-";
+    clientId += String(random(0xffff), HEX); */
+  
+    if (client.connect(clientId.c_str())) {
+      Serial.println("connected");
+      client.publish("outTopic", "hello world");
+    } else {
+      Serial.print("failed, rc=");
+      Serial.print(client.state());
+      Serial.println(" try again in 5 seconds");
+      vTaskDelay(5000/portTICK_PERIOD_MS);
+
+    }
+  }
 }
 
 void subscribeToMQTT(String topic) {

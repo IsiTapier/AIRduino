@@ -45,7 +45,7 @@ void TSPoint::calibrate() {
       errorCounter = 0;
     if(errorCounter >= ERRORBIAS) {
       errorCounter = 0;
-      Serial.println("WARNING: touch calibration needed");
+      // Serial.println("WARNING: touch calibration needed");
       // ts.calibration();
     }
     print();

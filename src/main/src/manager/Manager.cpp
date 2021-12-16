@@ -66,15 +66,15 @@ void Manager::loop() {
 void Manager::backgroundLoop(void* parm) {
   setupDatabaseConnection();
   for(;;) {
-    Meassure::reconnect();
-    if(client.connected())
-      client.loop();
-    
+    Meassure::reconnect();    
 /*     //Reconnect System
     if(currentCycleTime - lastReconnect >= RECONNECT_TIME) {
       lastReconnect = currentCycleTime; */
     reconnectSystem();
-  	
+    if(client.connected()) {
+      for(int x = 0; x <= 50; x++) client.loop();
+    }
+  	Serial.println("TEst");
     vTaskDelay(RECONNECT_TIME/portTICK_PERIOD_MS);
     
   } 
