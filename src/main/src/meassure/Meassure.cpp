@@ -17,7 +17,7 @@
                          |_|
   */
 
-  Adafruit_BME280 Meassure::bme = Adafruit_BME280(BMESDA, BMESCL);
+  // Adafruit_BME280 Meassure::bme = Adafruit_BME280(BMESDA, BMESCL);
   // MHZ19 Meassure::MHZ19b;
   MHZ Meassure::MHZ19;
   unsigned long Meassure::tempAirCondition;
@@ -50,12 +50,12 @@
     debug(DEBUG, SETUP, "Meassure SETUP started");
     debug(INFO, SETUP, "Pins initialized");
     debug(INFO, SETUP, "Variables initialized");
-    if (bme.begin(0x76)) {
-      debug(INFO, SETUP, "BME-Sensor initialized");
-    } else {
-      debug(WARNING, SETUP, "Could not find a valid BME280 sensor, check wiring!");
-    }
-    //Serial1.begin(MHZ19BAUDRATE);
+    // if (bme.begin(0x76)) {
+    //   debug(INFO, SETUP, "BME-Sensor initialized");
+    // } else {
+    //   debug(WARNING, SETUP, "Could not find a valid BME280 sensor, check wiring!");
+    // }
+    // //Serial1.begin(MHZ19BAUDRATE);
     //MHZ19b.begin(Serial1);
     // while (!SENSORCONNECTED && requestDecision("Sensor nicht verbunden", "erneut versuchen?", "Ja", "Nein", 15000, false)) {
     //   drawLogo();
@@ -82,8 +82,10 @@
     //   }
     //   delay(SENSORDROPTIME);
     // }
-    Serial1.begin(MHZ19BAUDRATE);
-    MHZ19 = MHZ(&Serial1, SENSOR_TYPE);
+    MHZ19.setDebug(true);
+    Serial2.begin(MHZ19BAUDRATE, 134217756U, 22, 23);
+    MHZ19 = MHZ(&Serial2, SENSOR_TYPE);
+    // MHZ19.setDebug(true);
     MHZ19.setAutoCalibrate(false);
     if (MHZ19.isPreHeating()) {
       Serial.print("Preheating");
@@ -207,7 +209,7 @@
   */
 
   boolean Meassure::meassureAirCondition() {
-    if(SENSORCONNECTED||true) {
+    if(SENSORCONNECTED) {
       counter++;
       if(counter >= AVERAGING_MEASUREMENTS) {
         airCondition = MHZ19.readCO2UART();//MHZ19b.getCO2(true, true);
@@ -217,6 +219,7 @@
           airCondition = map(airCondition, 400, GET_MAP_MAX_IN, 400, GET_MAP_MAX_OUT);
         }
         debug(ERROR, SETUP, "PPM: " + String(airCondition));
+        debug(ERROR, SETUP, "Temperature: " + String(MHZ19.getLastTemperature()));
         //Serial.println(airCondition);
         //Serial.println(SENSORCONNECTED);
         /*Serial.print(MHZ19b.getCO2Raw(true)); 
@@ -253,12 +256,12 @@
     return false;
   }
 
-  void Meassure::meassureEnvironment() {
-    temperature = bme.readTemperature();
-    humidity = bme.readHumidity();
-    pressure = bme.readPressure()/100;
-    // debug(INFO, SENSOR, "Temperature: " + temperature + String(char(167)) +"C " + "Humidity: " + humidity + "% " + "Pressure: " + pressure + "mbar");
-  }
+  // void Meassure::meassureEnvironment() {
+  //   temperature = bme.readTemperature();
+  //   humidity = bme.readHumidity();
+  //   pressure = bme.readPressure()/100;
+  //   // debug(INFO, SENSOR, "Temperature: " + temperature + String(char(167)) +"C " + "Humidity: " + humidity + "% " + "Pressure: " + pressure + "mbar");
+  // }
 
   //  _____        _
   // |  __ \      | |

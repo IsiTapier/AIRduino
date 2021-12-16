@@ -6,12 +6,12 @@
 #define Meassure_h
 
 #include "Arduino.h"
-#include "../extern/MQ-135/MQ135.h"
+// #include "../extern/MQ-135/MQ135.h"
 #include "../util/Util.h"
 #include "../util/settings/Settings.h"
-#include "../extern/Adafruit_BME280_Library-master/Adafruit_BME280.h"
+// #include "../extern/Adafruit_BME280_Library-master/Adafruit_BME280.h"
 // #include "../extern/MH_Z19/src/MHZ19.h"
-#include "MHZ.h"
+#include "../extern/MH-Z CO2 Sensors/MHZ.h"
 
 #define RANGE 2000
 #define SENSORCONNECTED true//(MHZ19b.errorCode == RESULT_OK)
@@ -39,19 +39,18 @@ class Meassure {
     static void reconnect();
     static boolean isConnected();
     static int decibelValue;
-
     
   private:
     static void debugMeassure();
     //meassure
     static boolean meassureAirCondition();
-    static void meassureEnvironment();
+    // static void meassureEnvironment();
     //data
     static void calculateGradient();
     static void checkVentilating();
     static void setState();
 
-    static Adafruit_BME280 bme;
+    // static Adafruit_BME280 bme;
     // static MHZ19 MHZ19b;
     static MHZ MHZ19;
     static unsigned long tempAirCondition;
