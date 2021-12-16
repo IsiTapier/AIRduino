@@ -206,27 +206,7 @@
         }
 
         debug(SPAMM, SENSOR, "PPM: " + String(airCondition));
-        //Serial.println(airCondition);
-        //Serial.println(SENSORCONNECTED);
-        /*Serial.print(MHZ19b.getCO2Raw(true)); 
-        Serial.print("  ");
-        Serial.print(MHZ19b.getCO2(false, true));
-        Serial.print("  ");
-        Serial.print(MHZ19b.getCO2(true, true));
-        Serial.print("  ");
-        Serial.print(MHZ19b.getTemperature(false, true));
-        Serial.print("  ");
-        Serial.print(MHZ19b.getTemperature(true, true));
-        Serial.print("  ");
-        Serial.print(MHZ19b.getTempAdjustment());
-        Serial.println();
-        temperature = MHZ19b.getTemperature(true, false);*/
-        //Serial.println(temperature);
-
-
-        //Wert smoothen;
-        //airCondition = ALPHA_MEASUREMENTS * airCondition + (1 - ALPHA_MEASUREMENTS) * airConditionLast;
-
+        
         if(SENSORERROR && !SENSORERRORLAST) {
           airCondition = airConditionLast;
           airConditionLast = 0;

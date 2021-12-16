@@ -20,7 +20,7 @@
 #include "database/Database.h"
 #include "../meassure/Meassure.h"
 
-#define EEPROM_SIZE (1+6*sizeof(short) + sizeof(bool))
+#define EEPROM_SIZE (1+7*sizeof(short) + sizeof(bool))
 #define ALLOW_PIEP false
 
 #define XMIN (1)
@@ -29,15 +29,18 @@
 #define YMAX (1+3*sizeof(short))
 #define MAP_MAX_IN (1+4*sizeof(short))
 #define MAP_MAX_OUT (1+5*sizeof(short))
-#define MAP_IS_ACTIVE (1+6*sizeof(short))
+#define EEPROM_SENSOR_ID (1+6*sizeof(short))
+#define MAP_IS_ACTIVE (1+7*sizeof(short))
 
 #define GET_MAP_IS_ACTIVE (EEPROM.readBool(MAP_IS_ACTIVE))
 #define GET_MAP_MAX_IN (EEPROM.readShort(MAP_MAX_IN))
 #define GET_MAP_MAX_OUT (EEPROM.readShort(MAP_MAX_OUT))
+#define GET_EEPROM_SENSOR_ID (EEPROM.readShort(EEPROM_SENSOR_ID))
 
 #define SET_MAP_IS_ACTIVE(value) EEPROM.writeBool(MAP_IS_ACTIVE, value); EEPROM.commit()
 #define SET_MAP_MAX_IN(value) EEPROM.writeShort(MAP_MAX_IN, value); EEPROM.commit()
 #define SET_MAP_MAX_OUT(value) EEPROM.writeShort(MAP_MAX_OUT, value); EEPROM.commit()
+#define SET_EEPROM_SENSOR_ID(value) Serial.println(value); EEPROM.writeShort(EEPROM_SENSOR_ID, value); EEPROM.commit()
 
 
 

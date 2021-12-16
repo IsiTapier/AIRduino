@@ -10,6 +10,8 @@
   #include <ESPAsyncWebServer.h>
   #include <AsyncElegantOTA.h>
 
+
+
 //Makros to get client output condition for certain features
 #define GET_TOPIC_CLASS(_topic) (topic == _topic + device_class) 
 #define GET_TOPIC_ROOM(_topic) (topic == _topic + device_room) 
@@ -17,7 +19,8 @@
 #define GET_TOPIC_CLASS_ROOM(_topic) GET_TOPIC_CLASS(_topic) || GET_TOPIC_ROOM(_topic) 
 #define GET_TOPIC_CLASS_ROOM_ID(_topic) GET_TOPIC_CLASS_ROOM(_topic) || GET_TOPIC_ID(_topic) 
 
-std::vector<char*> configSubscribeList = {"room", "class", "sound", "theme", "language", "ventilatingTimeout", "menuSegments", "mapping"};
+  std::vector<char*> configSubscribeList = {"room", "class", "sound", "theme", "language", "ventilatingTimeout", "menuSegments", "mapping"};
+  short sensorID = -1; //Wenn auf -1 gesetzt, wird wird ein Wert aus dem EEPROM geholt
 
   //global variables
   WiFiClient espClient;
@@ -28,7 +31,7 @@ std::vector<char*> configSubscribeList = {"room", "class", "sound", "theme", "la
   const char* WifiKeys[2] = {"K1,14DWwFuwuu.", "4400834912335401"};
 
   String device_id;
-  String device_class = "32894";
+  String device_class = "";
   String device_room;
   unsigned long lastMsg = 0;
   char msg[MSG_BUFFER_SIZE];
@@ -37,6 +40,7 @@ std::vector<char*> configSubscribeList = {"room", "class", "sound", "theme", "la
 
   String clientId = "ESP32Client-";
   boolean configReceived = false;
+  
 
 
   String currentTime = "00:00";
@@ -50,6 +54,7 @@ std::vector<char*> configSubscribeList = {"room", "class", "sound", "theme", "la
 
   //Database connection
   void setupDatabaseConnection() {
+    manageSensorID();
     getUniqueID();
 
     client.setServer(mqtt_server, 1883);
@@ -71,6 +76,19 @@ std::vector<char*> configSubscribeList = {"room", "class", "sound", "theme", "la
     server.begin();
     Serial.println("HTTP server started");
     Serial.println(WiFi.localIP());
+  }
+
+  void manageSensorID() {
+    if(sensorID == -1) {
+      sensorID = GET_EEPROM_SENSOR_ID;
+      if(sensorID == NULL) {
+        sensorID = -1;
+      }
+    } else {
+      SET_EEPROM_SENSOR_ID((short)sensorID);
+      Serial.print("EEPROM SENSOR ID: "); Serial.println(GET_EEPROM_SENSOR_ID);
+    }
+    Serial.print("SensorID: "); Serial.println(sensorID);
   }
 
   void maintenanceMode() {
@@ -105,8 +123,7 @@ void config_update(String column, int value) {
 
 void mysql_insert(String grade, int co2, double temp, int decibel) {
   if (!(grade[0] == 'a' && grade[1] == 'u' && grade[2] == 't') && client.connected()) {
-    if(grade == "") return;
-    grade = "S15";
+    if(grade == "") grade = sensorID;
     String output = "VALUES ('" + grade + "', " + co2 + ", " + temp + ", " + decibel + ")";
     client.publish("mysql/insert", output.c_str());
     debug(INFO, DATABASE, "INSERTED into LOG grade: " + grade + " co2: " + co2 + " temp: " + temp + " decibel: " + decibel);
@@ -301,7 +318,7 @@ void reconnectToMQTT() {
   
     if (client.connect(clientId.c_str())) {
       Serial.println("connected");
-      client.publish("outTopic", "hello world");
+      client.publish("config/get", ((String)sensorID).c_str());
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
