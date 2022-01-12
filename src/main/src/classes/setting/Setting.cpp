@@ -6,6 +6,7 @@
 #include "../../util/Util.h"
 #include "../../display/Display.h"
 
+
 Setting::Setting(void) {}
 Setting::Setting(SettingType type, const char* key, std::vector<String> title, short defaultValue, const char* debugMessage, short minValue, short maxValue, std::vector<std::vector<String>> names,  boolean colored) { //TODO DATATYPE
   _type = type;
@@ -94,6 +95,10 @@ SettingType Setting::getType() {
 
 String Setting::getTitle() {
   return GETLANGUAGE(_title, false);
+}
+
+const char* Setting::getKey() {
+  return _key;
 }
 
 short Setting::getSize() {
