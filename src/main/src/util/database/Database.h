@@ -15,13 +15,15 @@
 
   //global variables
 
-
   extern WiFiClient espClient;
   extern PubSubClient client;
 
   extern String device_id;
   extern String device_class;
   extern String device_room;
+  extern boolean initialConfigReception;
+  extern short sensorID;
+
   extern unsigned long lastMsg;
   extern char msg[MSG_BUFFER_SIZE];
   extern int value;

@@ -17,7 +17,6 @@ using namespace general;
   unsigned long Manager::lastModeChange = 0;
   unsigned long Manager::currentCycleTime = 0;
   unsigned long Manager::currentCycleTime2 = 0;
-  
 
 
 void Manager::setup() {
@@ -32,6 +31,7 @@ void Manager::setup() {
     Serial.println(xPortGetCoreID());
     mode.setValue(LOADINGSCREEN, false);
     mode.setValue(CHART); 
+    Serial.println("t");
 }
 
 void Manager::loop() {
@@ -66,14 +66,13 @@ void Manager::loop() {
 void Manager::backgroundLoop(void* parm) {
   setupDatabaseConnection();
   for(;;) {  
-/*     //Reconnect System
-    if(currentCycleTime - lastReconnect >= RECONNECT_TIME) {
-      lastReconnect = currentCycleTime; */
     reconnectSystem();
-    // if(client.connected()) {
-    //   for(int x = 0; x <= 50; x++) client.loop();
-    // }
-    client.loop();
+    if(client.connected()) {
+      for(int x = 0; x <= 50; x++) {
+         client.loop();
+         vTaskDelay(10/portTICK_PERIOD_MS);
+      } 
+    }
     // Serial.println("test");
     vTaskDelay(RECONNECT_TIME/portTICK_PERIOD_MS);
     
@@ -88,8 +87,9 @@ void Manager::eeprom() {
       EEPROM.write(0, 0);
       EEPROM.commit();
     }
+    ts.calibration();
     if(EEPROM.readShort(XMIN) == EEPROM.readShort(XMAX) || EEPROM.readShort(YMIN) == EEPROM.readShort(YMAX))
-      // ts.calibration();
+      ts.calibration();
     if(debugSetup.getValue() && debugPriority.getValue()) {
       debug(INFO, SETUP, "EEPROM: sensor", EEPROM.read(0));
       debug(INFO, SETUP, "EEPROM: xmin", EEPROM.readShort(XMIN));

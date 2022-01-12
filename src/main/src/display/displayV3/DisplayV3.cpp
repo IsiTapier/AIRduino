@@ -75,7 +75,7 @@ void DisplayV3::writeInfoV3() {
     //dPrint(lasttime, timeR_X, timeR_Y, timeR_SIZE, BAR_BACKGROUND_COLOR, 8);
     //write new Pixels
     if(minutes <= 20) {
-      dPrint(time, 160, 185, 8, WHITE, CC_DATUM, BLACK, lastTime, -1, (seconds == 0 && (minutes == 0 || (minutes == 20 && COLORED_TIME))) || start || state.getColor() != lastState.getColor());
+      dPrint(time, 165, 185, 8, WHITE, CC_DATUM, BLACK, lastTime, -1, (seconds == 0 && (minutes == 0 || (minutes == 20 && COLORED_TIME))) || start || state.getColor() != lastState.getColor());
     } else {
       dPrint(time, 165, 185, 8, RED, CC_DATUM, BLACK, lastTime, -1, (seconds == 0 && (minutes == 0 || (minutes == 20 && COLORED_TIME))) || start || state.getColor() != lastState.getColor());
     }

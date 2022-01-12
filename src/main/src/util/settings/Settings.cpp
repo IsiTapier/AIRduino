@@ -6,6 +6,7 @@
 #include "Settings.h"
 #include "../Util.h"
 
+  
 
   //titles
   const std::vector<String> titlesVersion = {"Version", "version", "version", "versi","versi"+oa+"n"};
@@ -95,94 +96,70 @@
 
   const std::vector<std::vector<String>> namesCalibrateMin = {};
   const std::vector<std::vector<String>> namesCalibrateMax = {};
-
   const std::vector<std::vector<String>> names = {};
- 
-
+  
 namespace general {
-  Setting empty = Setting(EMPTY);  
+  Setting empty(EMPTY);  
 
-  Setting version = Setting(MULTISELECT, "version", titlesVersion, 2, "'Version' changed", 1, 3, namesVersion, false);
-  Setting theme = Setting(SELECT, "theme", titlesTheme, 1, "'Theme' changed", 0, 1, namesTheme);
-  Setting sound = Setting(SWITCH, "sound", titlesSound, 1, "'Piezo' changed");
-  Setting blink = Setting(SWITCH, "blink", titlesBlink, 1, "'Blink' changed");
-  Setting data = Setting(SWITCH, "", titlesData, 1, "Data gettering changed", 0, 1, namesData); //TODO: connect to database
-  Setting calibrateTouch = Setting(ACTIVATOR, "", titlesCalibrateTouch, 0);
+  Setting version(MULTISELECT, "version", titlesVersion, 2, "'Version' changed", 1, 3, namesVersion, false);
+  Setting theme(SELECT, "theme", titlesTheme, 1, "'Theme' changed", 0, 1, namesTheme);
+  Setting sound(SWITCH, "sound", titlesSound, 1, "'Piezo' changed");
+  Setting blink(SWITCH, "", titlesBlink, 1, "'Blink' changed");
+  Setting data(SWITCH, "", titlesData, 1, "Data gettering changed", 0, 1, namesData); //TODO: connect to database
+  Setting calibrateTouch(ACTIVATOR, "", titlesCalibrateTouch, 0);
   
-  Setting language = Setting(MULTISELECT, "language", titlesLanguage, 0, "'Status' changed", 0, 5, namesLanguage);
-  // Setting kernMode = Setting(SWITCH, "", titlesKernMode, 0, "'Kern Modus' changed");
-  Setting graph_speed = Setting(NUMBER, "graph_speed", titlesGraphSpeed, 5, "'Graph Speed' changed", 1, 9);
-  Setting segments = Setting(NUMBER, "segments", titlesSegments, 6, "'Segments' changed", 1, 6);
-  Setting blink_thickness = Setting(NUMBER, "blink_thickness", titlesBlinkThickness, 2, "'Blink Boarder Thickness' changed", 1, 9);
-  Setting ventilating_timeout = Setting(NUMBER, "ventilating_timeout", titlesVentilatingTimeout, 5, "'ventilatingTimeout' changed", 1, 9);
+  Setting language(MULTISELECT, "language", titlesLanguage, 0, "'Status' changed", 0, 5, namesLanguage);
+  // Setting kernMode(SWITCH, "", titlesKernMode, 0, "'Kern Modus' changed");
+  Setting graph_speed(NUMBER, "graph_speed", titlesGraphSpeed, 5, "'Graph Speed' changed", 1, 9);
+  Setting segments(NUMBER, "segments", titlesSegments, 6, "'Segments' changed", 1, 6);
+  Setting blink_thickness(NUMBER, "", titlesBlinkThickness, 2, "'Blink Boarder Thickness' changed", 1, 9);
+  Setting ventilating_timeout(NUMBER, "ventilating_timeout", titlesVentilatingTimeout, 5, "'ventilatingTimeout' changed", 1, 9);
 
-  Setting debugPriority = Setting(MULTISELECT, "", titlesDebugPriority, 5, "'Debug' changed", 0, 6, namesDebugPriority);
-  Setting debugSetup = Setting(SWITCH, "", titlesDebugSetup, 1, "'Debug Setup' changed");
-  Setting debugSensor = Setting(SWITCH, "", titlesDebugSensor, 1, "'Debug Sensor' changed");
-  Setting debugDisplay = Setting(SWITCH, "", titlesDebugDisplay, 0, "'Debug Display' changed");
-  Setting debugMenu = Setting(SWITCH, "", titlesDebugMenu, 0, "'Debug Menu' changed");
-  Setting debugTouch = Setting(SWITCH, "", titlesDebugTouch, 1, "'Debug Touch' changed");
+  Setting debugPriority(MULTISELECT, "", titlesDebugPriority, 5, "'Debug' changed", 0, 6, namesDebugPriority);
+  Setting debugSetup(SWITCH, "", titlesDebugSetup, 1, "'Debug Setup' changed");
+  Setting debugSensor(SWITCH, "", titlesDebugSensor, 1, "'Debug Sensor' changed");
+  Setting debugDisplay(SWITCH, "", titlesDebugDisplay, 0, "'Debug Display' changed");
+  Setting debugMenu(SWITCH, "", titlesDebugMenu, 0, "'Debug Menu' changed");
+  Setting debugTouch(SWITCH, "", titlesDebugTouch, 1, "'Debug Touch' changed");
   
-  Setting debugDatabase = Setting(SWITCH, "", titlesDebugDatabase, 0, "'Debug Database' changed");
-  Setting developperSettings = Setting(SWITCH, "", titlesDevelopperSettings, 0, "'Develop settings' changed");
-  Setting autoTimeReset = Setting(SWITCH, "", titlesAutoTimeReset, 1, "'Auto Time Reset' changed");
+  Setting debugDatabase(SWITCH, "", titlesDebugDatabase, 0, "'Debug Database' changed");
+  Setting developperSettings(SWITCH, "", titlesDevelopperSettings, 0, "'Develop settings' changed");
+  Setting autoTimeReset(SWITCH, "", titlesAutoTimeReset, 1, "'Auto Time Reset' changed");
   
-  Setting mode = Setting(MULTISELECT, "mode", titlesMode, MENU, "'Mode' changed", 0, 4);
-  Setting gui = Setting(MULTISELECT, "", titles, CO2_GUI, "'gui' changed", 0, 10);
-  Setting maintenance_mode = Setting(MULTISELECT, "maintenance_mode", titlesMaintenanceMode, 0, "'Wartungsmodus' changed", 0, 3);
-  Setting reportSystem = Setting(ACTIVATOR, "", titlesReportSystem, 4);
-  Setting manualReconnect = Setting(ACTIVATOR, "", {"reconnect"}, 12);
+  Setting mode(MULTISELECT, "", titlesMode, MENU, "'Mode' changed", 0, 4);
+  Setting gui(MULTISELECT, "", titles, CO2_GUI, "'gui' changed", 0, 10);
+  Setting maintenance_mode(MULTISELECT, "maintenance_mode", titlesMaintenanceMode, 0, "'Wartungsmodus' changed", 0, 3);
+  Setting reportSystem(ACTIVATOR, "", titlesReportSystem, 4);
+  Setting manualReconnect(ACTIVATOR, "", {"reconnect"}, 12);
 }
 
 namespace colorModes {
-  Setting c_design = Setting(SWITCH, "c_design", titlesColoredDesign, 0, "'farbiges Disign' changed");
-  Setting c_chart = Setting(SWITCH, "c_chart", titlesColoredChart, 1, "'farbiger Graph' changed");
-  Setting c_bar = Setting(SWITCH, "c_bar", titlesColoredBar, 1, "'farbige bar' changed");
-  Setting c_state = Setting(SWITCH, "c_state", titlesColoredState, 0, "'farbiger Status' changed");
-  Setting c_time = Setting(SWITCH, "c_time", titlesColoredTime, 1, "'farbige Zeit' changed");
-  Setting c_value = Setting(SWITCH, "c_value", titlesColoredValue, 1, "'farbiger Wert' changed");
+  Setting c_design(SWITCH, "", titlesColoredDesign, 0, "'farbiges Disign' changed");
+  Setting c_chart(SWITCH, "coloredChart", titlesColoredChart, 1, "'farbiger Graph' changed");
+  Setting c_bar(SWITCH, "", titlesColoredBar, 1, "'farbige bar' changed");
+  Setting c_state(SWITCH, "", titlesColoredState, 0, "'farbiger Status' changed");
+  Setting c_time(SWITCH, "", titlesColoredTime, 1, "'farbige Zeit' changed");
+  Setting c_value(SWITCH, "", titlesColoredValue, 1, "'farbiger Wert' changed");
 
-  Setting c_slider = Setting(SWITCH, "c_slider", titlesColoredSlider, 1, "'farbiger Toggle' changed");
-  Setting showTopBar = Setting(SWITCH, "", titlesShowTopBar, 1, "'showTopBar' changed");
+  Setting c_slider(SWITCH, "", titlesColoredSlider, 1, "'farbiger Toggle' changed");
+  Setting showTopBar(SWITCH, "", titlesShowTopBar, 1, "'showTopBar' changed");
 }
-
-/*namespace colors {
-  Setting* graphColor = Setting(COLOR "Graphfarbe", 0, true, "'Graphfarbe' changed");
-  Setting* valueNormal = Setting(COLOR, "Farbe 'Gut'", 0, true, "'' changed");
-  Setting* valueRisk = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
-  Setting* valueWarning = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
-  Setting* valueAlarm = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
-  Setting* barColor = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
-
-  Setting* barSectionColor = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
-  Setting* DataboxColor = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
-  Setting* defaultTextColor = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
-  Setting* ChartBorderColor = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
-  Setting* SliderDotColorOn = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
-  Setting* SliderDotColorOn = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
-
-  Setting* SliderColorStrip = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
-  Setting* SliderBackgroundColor = Setting(COLOR, "farbiger Toggle", 0, true, "'' changed");
-} */
 
 namespace developper {
-  Setting calibrateMin = Setting(ACTIVATOR, "", titlesCalibrateMin, 1);
-  Setting calibrateMax = Setting(ACTIVATOR, "", titlesCalibrateMax, 2);
-  Setting autoCalibrationMin = Setting(ACTIVATOR, "", titlesAutoMinCali, 3);
-  Setting deviceInfo = Setting(ACTIVATOR, "", {"Device Info"}, 11);
-  Setting screenShot = Setting(ACTIVATOR, "", {"Screenshot"}, 13);
-  Setting isMappingActive = Setting(SWITCH, "isMappingActive", {"Mapping Active"}, 0);
-  Setting triggerCalibrateGui = Setting(ACTIVATOR, "", {"CalibrateGui"}, 14);
-
-  
+  Setting calibrateMin(ACTIVATOR, "", titlesCalibrateMin, 1);
+  Setting calibrateMax(ACTIVATOR, "", titlesCalibrateMax, 2);
+  Setting autoCalibrationMin(ACTIVATOR, "", titlesAutoMinCali, 3);
+  Setting deviceInfo(ACTIVATOR, "", {"Device Info"}, 11);
+  Setting screenShot(ACTIVATOR, "", {"Screenshot"}, 13);
+  Setting isMappingActive(SWITCH, "", {"Mapping Active"}, 0);
+  Setting triggerCalibrateGui(ACTIVATOR, "", {"CalibrateGui"}, 14);
 }
 
-
 namespace report {
-  Setting sensorError = Setting(ACTIVATOR, "", {"Sensor Fehler"}, 5);
-  Setting sensorWrong = Setting(ACTIVATOR, "", {"Komische Werte"}, 6);
-  Setting graphicalBug = Setting(ACTIVATOR, "", {"Graphische Fehler"}, 7);
-  Setting acousticBug = Setting(ACTIVATOR, "", {"Ton Problem"}, 8);
-  Setting helpShortterm = Setting(ACTIVATOR, "", {"Hilfe schnell"}, 9);
-  Setting developerEmail = Setting(ACTIVATOR, "", {"Entwickler-Email"}, 10);
+  Setting sensorError(ACTIVATOR, "", {"Sensor Fehler"}, 5);
+  Setting sensorWrong(ACTIVATOR, "", {"Komische Werte"}, 6);
+  Setting graphicalBug(ACTIVATOR, "", {"Graphische Fehler"}, 7);
+  Setting acousticBug(ACTIVATOR, "", {"Ton Problem"}, 8);
+  Setting helpShortterm(ACTIVATOR, "", {"Hilfe schnell"}, 9);
+  Setting developerEmail(ACTIVATOR, "", {"Entwickler-Email"}, 10);
 }

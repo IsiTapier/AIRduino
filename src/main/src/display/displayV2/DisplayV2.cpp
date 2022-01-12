@@ -85,7 +85,7 @@ void DisplayV2::drawBar() {
   if(lastBarPixel < BAR_START_X || (state.getColor(COLORED_CHART) != lastState.getColor(COLORED_CHART) && (!COLOR_MODE || lastState == VENTILATING || state == VENTILATING)) || start)
     lastBarPixel = BAR_START_X;
 
-  Serial.println();
+/*   Serial.println();
   Serial.print("AirCondition: ");
   Serial.print(airCondition);
   Serial.print(" BarPixel: ");
@@ -93,7 +93,7 @@ void DisplayV2::drawBar() {
   Serial.print(" LastBarPixel: ");
   Serial.print(lastBarPixel);
   Serial.print(" State: ");
-  Serial.println(state.getTitle());
+  Serial.println(state.getTitle()); */
 
   //TODO: vereinfachen
   if(COLOR_MODE && state != VENTILATING) { 

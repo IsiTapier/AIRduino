@@ -38,6 +38,7 @@ class Setting {
     SettingType getType();
     String getTitle();
     short getSize();
+    const char* getKey();
     boolean getColored();
     String getName(boolean reverse = false);
     const char* getDebugMessage();

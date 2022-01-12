@@ -90,7 +90,7 @@
 
   void Meassure::loop() {
     // meassureEnvironment();
-    Meassure::reconnect();
+    // Meassure::reconnect();
     if(meassureAirCondition()) {
       calculateGradient();
       checkVentilating();
@@ -206,7 +206,7 @@
         }
 
         debug(SPAMM, SENSOR, "PPM: " + String(airCondition));
-        
+
         if(SENSORERROR && !SENSORERRORLAST) {
           airCondition = airConditionLast;
           airConditionLast = 0;
