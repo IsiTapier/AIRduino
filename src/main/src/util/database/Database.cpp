@@ -19,7 +19,8 @@
 #define GET_TOPIC_CLASS_ROOM_ID(_topic) GET_TOPIC_CLASS_ROOM(_topic) || GET_TOPIC_ID(_topic) 
 #define GET_TOPIC_W_SENSOR_ID "config/get/" + (String) sensorID
 
-  short sensorID = -1; //Wenn auf -1 gesetzt, wird wird ein Wert aus dem EEPROM geholt
+  #define SENSOR_ID -1
+  short sensorID = SENSOR_ID; //Wenn auf -1 gesetzt, wird wird ein Wert aus dem EEPROM geholt
 
   //global variables
   WiFiClient espClient;
@@ -73,7 +74,7 @@
 
     AsyncElegantOTA.begin(&server);    // Start ElegantOTA
     server.begin();
-    Serial.println("HTTP server started");
+    Serial.print("WIFI: HTTP server started at: ");
     Serial.println(WiFi.localIP());
   }
 
@@ -122,6 +123,7 @@ void config_update(String column, int value) {
 
 void mysql_insert(String grade, int co2, double temp, int decibel) {
   if(grade == "") grade = sensorID;
+  if(Meassure::getSensor().isPreHeating()) co2 = 0;
   String output = "VALUES ('" + grade + "', " + co2 + ", " + temp + ", " + decibel + ")";
   client.publish("mysql/insert", output.c_str());
   debug(INFO, DATABASE, "INSERTED into LOG grade: " + grade + " co2: " + co2 + " temp: " + temp + " decibel: " + decibel);
@@ -209,6 +211,8 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
         ledcWriteNote(0, NOTE_C, 3);
       } else {
         ledcDetachPin(PIEZO);
+      }
+    }
   }
   if(GET_TOPIC_CLASS_ROOM_ID("manager/message/")) {
     display.fillScreen(BLACK);
@@ -261,6 +265,7 @@ void callback(char* topic_char, byte* payload, unsigned int length) {
     saveClassList(payload_string);    
   }
 }
+  
 
 void generalSubscriptions() {
   Serial.print("DATABASE: "); Serial.println("General Subscriptions");
@@ -283,7 +288,7 @@ void generalSubscriptions() {
 
 void reconnectSystem() {
   if(!WiFi.isConnected()) { 
-     Serial.println("Wifi connect");  
+     Serial.println("WIFI: Trying to connect...");  
       WiFi.disconnect();
       WiFi.mode(WIFI_STA);
       WiFi.begin(WifiSsid[wifiConnectionDigit%sizeOf(WifiSsid)], WifiKeys[wifiConnectionDigit%sizeOf(WifiKeys)]);
@@ -291,7 +296,6 @@ void reconnectSystem() {
       
       WiFi.reconnect();
       vTaskDelay(10000/portTICK_PERIOD_MS);
-      Serial.println("Wifi connect");
   }
   if(!client.connected() && WiFi.isConnected()) {
     reconnectToMQTT();

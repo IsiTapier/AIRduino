@@ -50,22 +50,6 @@
     debug(DEBUG, SETUP, "Meassure SETUP started");
     debug(INFO, SETUP, "Pins initialized");
     debug(INFO, SETUP, "Variables initialized");
-    // if (bme.begin(0x76)) {
-    //   debug(INFO, SETUP, "BME-Sensor initialized");
-    // } else {
-    //   debug(WARNING, SETUP, "Could not find a valid BME280 sensor, check wiring!");
-    // }
-    // //Serial1.begin(MHZ19BAUDRATE);
-    //MHZ19b.begin(Serial1);
-    // while (!SENSORCONNECTED && requestDecision("Sensor nicht verbunden", "erneut versuchen?", "Ja", "Nein", 15000, false)) {
-    //   drawLogo();
-    //   Serial.print("connecting to sensor");
-    //   for (int x = 0; x <= 10; x++) {
-    //     delay(500);
-    //     Serial.print(".");
-    //   }
-    //   Serial.println();
-    //   MHZ19b.begin(Serial1);     
     // }
     drawLogo();
     // if(SENSORCONNECTED) {
@@ -88,12 +72,12 @@
     // MHZ19.setDebug(true);
     MHZ19.setAutoCalibrate(false);
     if (MHZ19.isPreHeating()) {
-      Serial.print("Preheating");
-      while (MHZ19.isPreHeating()) {
-        Serial.print(".");
-        delay(5000);
+      Serial.println("SENSOR: Preheating");
+      /* while (MHZ19.isPreHeating()) {
+        // Serial.print(".");
+        delay(1000);
       }
-      Serial.println();
+      Serial.println("SENSOR: Preheating ended..."); */
     }
     MHZ19.setAutoCalibrate(false);
     startTime = millis();
@@ -218,8 +202,9 @@
         if(developper::isMappingActive.getValue() == 1) {
           airCondition = map(airCondition, 400, GET_MAP_MAX_IN, 400, GET_MAP_MAX_OUT);
         }
+        temperature = MHZ19.getLastTemperature();
         debug(ERROR, SETUP, "PPM: " + String(airCondition));
-        debug(ERROR, SETUP, "Temperature: " + String(MHZ19.getLastTemperature()));
+        debug(ERROR, SETUP, "Temperature: " + String(temperature));
 
         //Wert smoothen;
         //airCondition = ALPHA_MEASUREMENTS * airCondition + (1 - ALPHA_MEASUREMENTS) * airConditionLast;
@@ -238,14 +223,6 @@
     }
     return false;
   }
-
-  // void Meassure::meassureEnvironment() {
-  //   temperature = bme.readTemperature();
-  //   humidity = bme.readHumidity();
-  //   pressure = bme.readPressure()/100;
-  //   // debug(INFO, SENSOR, "Temperature: " + temperature + String(char(167)) +"C " + "Humidity: " + humidity + "% " + "Pressure: " + pressure + "mbar");
-  // }
-
   //  _____        _
   // |  __ \      | |
   // | |  | | __ _| |_ __ _

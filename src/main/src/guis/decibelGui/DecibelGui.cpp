@@ -46,12 +46,12 @@ void DecibelGui::setup() {
     initialValue = initialValue / 2000;
 
     if(initialValue >= 50) {
-        Serial.print("Lärmampel: initialValue:");
+        Serial.print("LÄRMAMPEL: initialValue:");
         Serial.println(initialValue);
-        Serial.print("Lärmampel: LOOP_LENGTH:");
+        Serial.print("LÄRMAMPEL: LOOP_LENGTH:");
         Serial.println(LOOP_LENGTH);
     } else {
-        Serial.println("Lärmampel ist nicht aktiv");
+        Serial.println("LÄRMAMPEL ist nicht aktiv");
         DecibelGui::isActive = false;
     }
 }
@@ -86,11 +86,6 @@ void DecibelGui::loop() {
                     dPrint(loopAverage, 10, DISPLAY_HEIGHT-10, 2, WHITE, 6);
                 }
                 
-/*                 Serial.print(initialValue);
-                Serial.print(" - ");
-                Serial.print(loopAverage);
-                Serial.print(" - ");
-                Serial.println(2.25*initialValue - _sliderFactor); */
                 
                 if(trafficLightStage >= 3) {
                     if(oldTrafficLightStage != trafficLightStage) {

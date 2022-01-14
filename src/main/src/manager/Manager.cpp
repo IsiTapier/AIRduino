@@ -31,7 +31,6 @@ void Manager::setup() {
     Serial.println(xPortGetCoreID());
     mode.setValue(LOADINGSCREEN, false);
     mode.setValue(CHART); 
-    Serial.println("t");
 }
 
 void Manager::loop() {
@@ -87,7 +86,7 @@ void Manager::eeprom() {
       EEPROM.write(0, 0);
       EEPROM.commit();
     }
-    ts.calibration();
+    // ts.calibration();
     if(EEPROM.readShort(XMIN) == EEPROM.readShort(XMAX) || EEPROM.readShort(YMIN) == EEPROM.readShort(YMAX))
       ts.calibration();
     if(debugSetup.getValue() && debugPriority.getValue()) {

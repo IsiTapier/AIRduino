@@ -19,11 +19,11 @@ ToDo
   const char* mqtt_server = "79.231.0.86"; */
   const char* ssid = "FRITZ!Box 7590 JG";
   const char* password = "4400834912335401";
-  const char* mqtt_server = "192.168.2.83";
+  const char* mqtt_server = /* "192.168.2.83" */"192.168.178.56";
 
   //Buchse 1.16.01
 
-  const String software_version = "14.12 Overnight";
+  const String software_version = "12.1";
 /*   const char* ssid = "AG-iOT";
   const char* password = "#Wlan4iOT#JCBS-AG!";
   const char* mqtt_server = "169.254.191.226"; */
