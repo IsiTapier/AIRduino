@@ -227,26 +227,18 @@ void Display::drawInfoScreen(int time) {
   dPrint(software_version, 9*6*3+10, 70, 3, LIGHTGREY, 0);
 
   dPrint("IP:", 10, 100, 3, GREY, 0);
-  dPrint(WiFi.localIP(), 8*6*3+10, 100, 3, RED, 0);
+  dPrint(WiFi.localIP(), 8*3*3+10, 100, 3, LIGHTGREY, 0);
 
-  dPrint("Connection:", 10, 130, 3, GREY, 0);
-  if(client.connected()) {
-    dPrint("online", 11*6*3+10, 130, 3, GREEN, 0);
-  } else if(WiFi.status() != WL_CONNECTED) {
-    dPrint("WLAN", 11*6*3+10, 130, 3, RED, 0);
-  } else {
-    dPrint("MQTT", 11*6*3+10, 130, 3, RED, 0);
-  }   
+  dPrint("SensorID:", 10, 130, 3, GREY, 0);
+  char __SENSOR = 'C'; if(SENSOR_TYPE == MHZ19B) __SENSOR = 'B';
+  dPrint((String) sensorID + __SENSOR, 11*6*3+10, 130, 3, LIME, 0);
 
   dPrint("Wlan:", 10, 160, 3, GREY, 0);
   dPrint(ssid, 5*6*3+10, 160, 3, LIGHTGREY, 0);
 
   dPrint("Room:", 10, 190, 3, GREY, 0);
   dPrint(device_room, 5*6*3+10, 190, 3, LIGHTGREY, 0);
-
-  delay(time);
-  general::mode.setValue(LOADINGSCREEN);
-  general::mode.setValue(general::mode.getOldValue());  
+  if(DecibelGui::isActive) display.fillRoundRect(DISPLAY_LENGTH-20, DISPLAY_HEIGHT-20, 5, 5, 2, LIME);
 }
 
 void Display::drawTutorial() {

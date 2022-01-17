@@ -49,8 +49,8 @@ void OverviewGui::initGui() {
         if(TimerGui::isRunning) {
             dPrint("TIMER", MARGIN, 150, 4, LIGHTGREY, 3);
             dPrint(TimerGui::getDigitsOfMillis(TimerGui::goalMillis - millis()), DISPLAY_LENGTH-MARGIN, 130, 5, WHITE, 2);                  
-        } else if(client.connected()) {       
-            drawWeatherData(WeatherGui::temp, WeatherGui::weather, WeatherGui::humidity); 
+/*         } else if(client.connected()) {       
+            drawWeatherData(WeatherGui::temp, WeatherGui::weather, WeatherGui::humidity);  */
         } else {
             //Stopwtch
             if(!StopwatchGui::isRunning) dPrint("00:00", DISPLAY_LENGTH-MARGIN, 150, 5, WHITE, 5);

@@ -44,7 +44,9 @@
   int Meassure::decibelValue = 0;
 
   int Meassure::testCounter = 0;
+
   unsigned long Meassure::lasttime;
+  unsigned long lastReconnectViaRestart = 20*60*1000;
 
   void Meassure::setup() {
     debug(DEBUG, SETUP, "Meassure SETUP started");
@@ -73,11 +75,6 @@
     MHZ19.setAutoCalibrate(false);
     if (MHZ19.isPreHeating()) {
       Serial.println("SENSOR: Preheating");
-      /* while (MHZ19.isPreHeating()) {
-        // Serial.print(".");
-        delay(1000);
-      }
-      Serial.println("SENSOR: Preheating ended..."); */
     }
     MHZ19.setAutoCalibrate(false);
     startTime = millis();
@@ -214,9 +211,17 @@
           airConditionLast = 0;
         } else
           airConditionLast = airCondition;
-        if(airCondition != 0 /*|| temperature != 0*/)
-          mysql_insert(device_class, airCondition, temperature, decibelValue);
+        mysql_insert(device_class, airCondition, temperature, decibelValue);
         counter = 0;
+
+        if(millis() > lastReconnectViaRestart) {
+          if(airCondition <= 0) {
+            display.fillScreen(BLACK);
+            dPrint("RESTART", DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2, 5, RED, CC_DATUM);
+            delay(10000);
+            ESP.restart();
+          }
+        }
         return true;
       }
       return false;

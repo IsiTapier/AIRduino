@@ -19,7 +19,7 @@
 #define GET_TOPIC_CLASS_ROOM_ID(_topic) GET_TOPIC_CLASS_ROOM(_topic) || GET_TOPIC_ID(_topic) 
 #define GET_TOPIC_W_SENSOR_ID "config/get/" + (String) sensorID
 
-  #define SENSOR_ID -1
+  #define SENSOR_ID 58
   short sensorID = SENSOR_ID; //Wenn auf -1 gesetzt, wird wird ein Wert aus dem EEPROM geholt
 
   //global variables
@@ -69,7 +69,7 @@
 
   void setupAsyncElegantOTA() {
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
-      request->send(200, "text/plain", "ElegantOTA Web Server of ESP32 (Class: " + device_class + "; Room: " + device_room + "; ID: " + device_id);
+      request->send(200, "text/plain", "ElegantOTA Web Server of ESP32 (Class: " + device_class + "; Room: " + device_room + "; Sensor ID: " + SENSOR_ID);
     });
 
     AsyncElegantOTA.begin(&server);    // Start ElegantOTA
@@ -88,6 +88,7 @@
       SET_EEPROM_SENSOR_ID((short)sensorID);
       Serial.print("EEPROM SENSOR ID: "); Serial.println(GET_EEPROM_SENSOR_ID);
     }
+    device_class = sensorID;
     Serial.print("SensorID: "); Serial.println(sensorID);
   }
 
@@ -124,10 +125,9 @@ void config_update(String column, int value) {
 void mysql_insert(String grade, int co2, double temp, int decibel) {
   if(grade == "") grade = sensorID;
   if(Meassure::getSensor().isPreHeating()) co2 = 0;
-  String output = "VALUES ('" + grade + "', " + co2 + ", " + temp + ", " + decibel + ")";
+  String output = "VALUES ('" + grade + "', " + co2 + ", " + (String) Meassure::getRawAirCondition() + ", " + temp + ", " + decibel + ")";
   client.publish("mysql/insert", output.c_str());
   debug(INFO, DATABASE, "INSERTED into LOG grade: " + grade + " co2: " + co2 + " temp: " + temp + " decibel: " + decibel);
-
 }
 
 void getUniqueID() {
@@ -300,7 +300,6 @@ void reconnectSystem() {
   if(!client.connected() && WiFi.isConnected()) {
     reconnectToMQTT();
   }
-  if(random(1,20) == 20) Serial.println(client.state());
 }
 
 
@@ -317,7 +316,9 @@ void reconnectToMQTT() {
     if (client.connect(clientId.c_str())) {
       Serial.println("connected");
       generalSubscriptions();
+      Serial.println("3");
       client.publish("config2/request", ((String)sensorID).c_str());
+      Serial.println("4");
       
     } else {
       Serial.print("failed, rc=");
