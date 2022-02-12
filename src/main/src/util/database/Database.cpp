@@ -19,7 +19,7 @@
 #define GET_TOPIC_CLASS_ROOM_ID(_topic) GET_TOPIC_CLASS_ROOM(_topic) || GET_TOPIC_ID(_topic) 
 #define GET_TOPIC_W_SENSOR_ID "config/get/" + (String) sensorID
 
-  #define SENSOR_ID 58
+  #define SENSOR_ID -1
   short sensorID = SENSOR_ID; //Wenn auf -1 gesetzt, wird wird ein Wert aus dem EEPROM geholt
 
   //global variables
@@ -44,6 +44,7 @@
   int value = 0;
   int lastGui = GUI_MENU;
   String clientId = "ESP32Client-";
+  
 
   //Server Addons
   String currentTime = "00:00";
@@ -61,9 +62,9 @@
 
     client.setServer(mqtt_server, 1883);
     client.setCallback(callback);
-
+    client.setKeepAlive(60);
+    client.setSocketTimeout(60);
     reconnectSystem();
-    
     setupAsyncElegantOTA();
   }
 
@@ -90,6 +91,9 @@
     }
     device_class = sensorID;
     Serial.print("SensorID: "); Serial.println(sensorID);
+
+    dPrint(sensorID, DISPLAY_LENGTH/2, DISPLAY_HEIGHT*4/5, 5, WHITE, CC_DATUM);
+    vTaskDelay(2000/portTICK_PERIOD_MS);
   }
 
   void maintenanceMode() {
@@ -110,7 +114,7 @@
   }
 
 void config_update(String column, String value) {
-  if (client.connected()) {
+  if (isClientConnected) {
     // reconnectToMQTT();
     String config_update = column + " = '" +  value + "' WHERE `device_overview`.`device_id` = " + device_id;
     client.publish("config/update", config_update.c_str());
@@ -287,6 +291,7 @@ void generalSubscriptions() {
 }
 
 void reconnectSystem() {
+  isClientConnected = false;
   if(!WiFi.isConnected()) { 
      Serial.println("WIFI: Trying to connect...");  
       WiFi.disconnect();
@@ -296,9 +301,10 @@ void reconnectSystem() {
       
       WiFi.reconnect();
       vTaskDelay(10000/portTICK_PERIOD_MS);
-  }
-  if(!client.connected() && WiFi.isConnected()) {
+  } else if(!client.connected() && WiFi.isConnected()) {
     reconnectToMQTT();
+  } else {
+    isClientConnected = true;
   }
 }
 
@@ -314,12 +320,11 @@ void reconnectToMQTT() {
     clientId += String(random(0xffff), HEX); */
   
     if (client.connect(clientId.c_str())) {
-      Serial.println("connected");
+      Serial.println("||||...connected");
       generalSubscriptions();
-      Serial.println("3");
       client.publish("config2/request", ((String)sensorID).c_str());
-      Serial.println("4");
-      
+      Serial.println("WIFI: REQUESTED Config");
+      vTaskDelay(1000/portTICK_PERIOD_MS);
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());

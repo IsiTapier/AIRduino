@@ -41,9 +41,6 @@ class Display {
     static void drawTopBar(String title, String oldTitle = "");
     static unsigned long lastTouch;
     static void screenShot();
-
-
-    
     
 
   private:

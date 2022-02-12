@@ -60,7 +60,7 @@
     RESET = 4
   };
 
-  enum GUIS {
+  enum GUIS{
     CO2_GUI = 0,
     STOPWATCH_GUI = 1,
     WEATHER_GUI = 2,
@@ -110,6 +110,7 @@
   extern TFT_eSPI display;
   extern TouchScreen ts;
   extern Calibration calibration[];
+  extern boolean isClientConnected;
 
   //State
   State getStateOf(int value);

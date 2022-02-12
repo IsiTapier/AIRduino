@@ -46,7 +46,7 @@ void TimeGui::handleTouch(TSPoint p) {
         } else if(p.isTouching(DISPLAY_LENGTH*1/3, DISPLAY_LENGTH*2/3, DISPLAY_HEIGHT*1/4, DISPLAY_HEIGHT)) {
             gui.setValue(TIMER_GUI);
         } else if(p.isTouching(DISPLAY_LENGTH*2/3, DISPLAY_LENGTH, DISPLAY_HEIGHT*1/4, DISPLAY_HEIGHT)) {
-            if(client.connected()) {
+            if(isClientConnected) {
                 gui.setValue(CLOCK_GUI);
             } else {
                 dPrint("error", DISPLAY_LENGTH*5/6, DISPLAY_HEIGHT/2 + 70, 2, ORANGE, 4);

@@ -32,6 +32,7 @@ class DisplayVX {
     static void drawRawPPMStraight(int x, int y, int size, int color, int datum);
 
     static void drawTimer(int x, int y, int size, int color, int datum);
+    static void showHelp(String txt, int x, int y, int size, int color, int datum, int duration, int startDelay, int currentGui);
 
   protected:
     static void drawDisplay();
@@ -41,6 +42,7 @@ class DisplayVX {
     static void writeInfo();
     static void drawEssentials();
     static void drawPPM();
+    static void deleteTask(TaskHandle_t _task);
   
 
 

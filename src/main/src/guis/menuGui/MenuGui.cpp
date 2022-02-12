@@ -25,8 +25,9 @@ void MenuGui::handleTouch(TSPoint p) {
             gui.setValue(RANDOM_STUDENT_GUI);
         } */
         if(p.isTouching(DISPLAY_LENGTH*6/11, DISPLAY_LENGTH, 50, DISPLAY_HEIGHT*2/5+32)) {
-            Serial.println("LÄrmampel");
+            Serial.println("DecibelGui");
             gui.setValue(DECIBEL_GUI);
+            // gui.setValue(HELP_GUI);
         }
         if(p.isTouching(DISPLAY_LENGTH*6/11, DISPLAY_LENGTH, DISPLAY_HEIGHT*2/5+32, DISPLAY_HEIGHT)) {           
             Serial.println(UE + "berblick");
@@ -50,6 +51,7 @@ void MenuGui::initGui() {
         } else {
             display.pushImage(MENU_ARROW_RESET_START_X + 40, MENU_ARROW_RESET_START_Y, MENU_ICON_SIZE, MENU_ICON_SIZE, wlanIconOff, BLACK);
         }
+        dPrint(sensorID, DISPLAY_LENGTH/2, 12, 2, DARKGREY, TC_DATUM);
         
         double __x = (double) DISPLAY_LENGTH*2/11; double __y = (double) DISPLAY_HEIGHT*2/5- 10;
         display.pushImage(15, __y-8, MENU_ICON_SIZE, MENU_ICON_SIZE, co2Icon);

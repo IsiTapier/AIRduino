@@ -11,6 +11,8 @@ using namespace general;
   unsigned long Display::lastTouch;
   int Display::lastGui = GUI_MENU;
 
+
+
 void Display::setup() {
   debug(DEBUG, SETUP, "Display SETUP started");
   
@@ -124,6 +126,7 @@ void Display::handleTouch() {
           } else {
             lastGui = gui.getValue();
             gui.setValue(GUI_MENU);
+            Serial.println("RETURNED to Menu");
           }
         } else if(mode.equals(MENU)) {
           mode.setValue(CHART);
@@ -176,6 +179,7 @@ void Display::handleTouch() {
         MenuGui::handleTouch(p);
         RandomStudentGui::handleTouch(p);
         CalibrateGui::handleTouch(p);
+        
       }
       //-----------------
       if(mode.equals(CHART)) {        
@@ -217,7 +221,7 @@ void Display::initAllGuis() {
   DecibelGui::initGui();
   TimeGui::initGui();
   ClockGui::initGui();
-  CalibrateGui::initGui();
+  CalibrateGui::initGui();  
 }
 
 void Display::drawInfoScreen(int time) {
@@ -282,6 +286,10 @@ void Display::drawTopBar(String title, String oldTitle) {
 
 void Display::screenShot() {
 }
+
+
+
+
 
 
 

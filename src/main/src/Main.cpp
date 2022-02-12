@@ -23,7 +23,7 @@ ToDo
 
   //Buchse 1.16.01
 
-  const String software_version = "17.1";
+  const String software_version = "24.1 loop";
 /*   const char* ssid = "AG-iOT";
   const char* password = "#Wlan4iOT#JCBS-AG!";
   const char* mqtt_server = "169.254.191.226"; */

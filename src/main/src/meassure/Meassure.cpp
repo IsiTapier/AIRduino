@@ -57,7 +57,7 @@
     // if(SENSORCONNECTED) {
     //   MHZ19b.autoCalibration(false);
     //   debug(INFO, SENSOR, "ABC Status: " + MHZ19b.getABC() ? "ON" : "OFF");  // now print it's status
-    //   // MHZ19b.setRange(RANGE);
+    //   // 
     //   // MHZ19b.calibrate();
     //   // MHZ19b.zeroSpan(1000);
     // }
@@ -68,11 +68,13 @@
     //   }
     //   delay(SENSORDROPTIME);
     // }
+    delay(3000);
     MHZ19.setDebug(true);
     Serial2.begin(MHZ19BAUDRATE, 134217756U, 22, 23);
     MHZ19 = MHZ(&Serial2, SENSOR_TYPE);
     // MHZ19.setDebug(true);
     MHZ19.setAutoCalibrate(false);
+    MHZ19.setRange(3);
     if (MHZ19.isPreHeating()) {
       Serial.println("SENSOR: Preheating");
     }
@@ -80,6 +82,7 @@
     startTime = millis();
     debug(DEBUG, SETUP, "Meassure SETUP ended");
     debug(DEBUG, SETUP, "");
+    
   }
 
   void Meassure::loop() {
@@ -108,11 +111,31 @@
       int difference = airCondition - 400;
       // MHZ19b.calibrate();
       MHZ19.calibrateZero();
-      SET_MAP_MAX_IN(GET_MAP_MAX_IN - difference);
-      SET_MAP_MAX_OUT(GET_MAP_MAX_OUT - difference);
+      // SET_MAP_MAX_IN(GET_MAP_MAX_IN - difference);
+      // SET_MAP_MAX_OUT(GET_MAP_MAX_OUT - difference);
       debug(WARNING, SENSOR, "min value calibrated to 400 PPM");
     }
     Menu::setup();
+  }
+
+  void Meassure::calibrationSetup() {
+    for(int x = 25; x == 0; x--) {
+      display.fillScreen(BLACK);
+      dPrint(x, DISPLAY_LENGTH/2, DISPLAY_HEIGHT/2, 5, WHITE, CC_DATUM);
+      delay(60*1000);
+      if(x >= 0) {
+        if(requestDecision("auto Cali", (String) getRawAirCondition())) {
+          if(getRawAirCondition() > 100) {
+            calibrateMin();
+            dPrint("success", 10, 10, 5, GREEN);
+            return;
+            x = 999999;
+          }
+        } else {
+          ESP.restart();
+        }      
+      }
+    }
   }
 
   void Meassure::forcedMinCalibration() {

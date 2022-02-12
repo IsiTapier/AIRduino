@@ -49,9 +49,10 @@
       case 9: reportBug("Schnelle Hilfe ben" +oe+ "tigt"); break; 
       case 10: requestDecision("ea.jcbs@gmail.com", "wir bitten um Feedback", "", "Zur" +ue+ "ck"); break; 
       case 11: Display::drawInfoScreen(5000); break; 
-      case 12: Display::lastTouch = millis(); reconnectSystem(); gui.setValue(GUI_MENU); break;
+      case 12: Display::lastTouch = millis(); WiFi.disconnect(); reconnectSystem(); gui.setValue(GUI_MENU); break;
       case 13: Display::screenShot(); break;
       case 14: gui.setValue(CALIBRATE_GUI); mode.setValue(CHART); break;
+      case 15: Serial2.end(); delay(1000); ESP.restart();
       default: break;
     }
 

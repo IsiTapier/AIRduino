@@ -33,7 +33,9 @@
         MenuPage(
           Input(&general::developperSettings),
           Input(&developper::deviceInfo),
-          Input(&developper::triggerCalibrateGui)
+          Input(&developper::triggerCalibrateGui),
+          Input(&general::empty),
+          Input(&general::manualRestart)
         )
     })},
     {SubMenu("Farb-Modi", {

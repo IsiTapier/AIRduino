@@ -18,16 +18,19 @@ using namespace general;
   unsigned long Manager::currentCycleTime = 0;
   unsigned long Manager::currentCycleTime2 = 0;
 
+  unsigned long lastReconnectionBreakDownWifi = 0;
+  boolean killTask = false;
 
 void Manager::setup() {
     mode.setValue(LOADINGSCREEN, false);
     Display::setup();
     lastReconnect = millis();
     eeprom(); 
-    xTaskCreate(backgroundLoop, "backgroundLoop", 4096, NULL, 0, NULL);  
+    xTaskCreate(backgroundLoop, "backgroundLoop", 4096, NULL, 2, NULL);  
     
     Meassure::setup();
     DecibelGui::setup();
+
     Serial.println(xPortGetCoreID());
     mode.setValue(LOADINGSCREEN, false);
     mode.setValue(CHART); 
@@ -60,7 +63,20 @@ void Manager::loop() {
        TimerGui::resetTimer();
     }
     TimerGui::peep();
-}
+
+    if(lastReconnectionBreakDownWifi+(25*60*1000) <= millis()) {
+      lastReconnectionBreakDownWifi = millis();
+      if(!client.connected()) {
+        WiFi.disconnect();
+        client.disconnect();
+        // killTask = true;
+        Serial.println("DISCONNECTED WiFi and Client automatically");
+        Serial2.end(); 
+        delay(1000); 
+        ESP.restart();
+      }  
+    }
+  }
 
 void Manager::backgroundLoop(void* parm) {
   setupDatabaseConnection();
@@ -74,7 +90,6 @@ void Manager::backgroundLoop(void* parm) {
     }
     // Serial.println("test");
     vTaskDelay(RECONNECT_TIME/portTICK_PERIOD_MS);
-    
   } 
 }
 

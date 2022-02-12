@@ -39,6 +39,7 @@ class Meassure {
     static void reconnect();
     static boolean isConnected();
     static int decibelValue;
+    static void calibrationSetup();
     
   private:
     static void debugMeassure();

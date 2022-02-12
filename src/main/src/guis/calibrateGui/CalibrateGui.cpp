@@ -33,6 +33,8 @@ void CalibrateGui::loop() {
     DisplayVX::drawRawPPMStraight(20, DISPLAY_HEIGHT/4, 4, WHITE, ML_DATUM);
     DisplayVX::drawPPMStraight(20, DISPLAY_HEIGHT/2, 4, WHITE, ML_DATUM);
     drawMaxPPM(DISPLAY_LENGTH*4/5, DISPLAY_HEIGHT/2, 4, COLOR_STATUS_RISK, CC_DATUM);
+
+    if(SENSOR_TYPE == MHZ19C) return;
     autoCalibrate();
 
     if((millis() - 5000) > _loopTimestamp) {
@@ -68,9 +70,11 @@ void CalibrateGui::handleTouch(TSPoint p) {
     if(!gui.equals(CALIBRATE_GUI)) return;
     if(p.isTouching(0, DISPLAY_LENGTH/2, 40, DISPLAY_HEIGHT*5/8)) {
         _maxPPM -= 25;
+        SET_MAP_MAX_OUT((short) GET_MAP_MAX_OUT - 25);
     }
     if(p.isTouching(DISPLAY_LENGTH/2, DISPLAY_LENGTH, 40, DISPLAY_HEIGHT*5/8)) {
         _maxPPM += 25;
+        SET_MAP_MAX_OUT((short) GET_MAP_MAX_OUT + 25);
     }
     if(p.isTouching(0, DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, DISPLAY_HEIGHT)) {
         Meassure::calibrateMin();

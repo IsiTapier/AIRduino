@@ -36,7 +36,7 @@ void RandomStudentGui::initGui()
     {
         display.fillScreen(BLACK);
         //saveClassList("Jan Felix Schreiber,Tim Sch,Tim Günther,Tim Tappe,Jonas Br,Josua Mau,Cindy Le,Marit Str,Helena Kl,Lotta Pa,Hannah Vol,Rozerin Dem,Janice Hop,Maja Ku,Rahel Bue,Nele Wae");
-        // if(client.connected()) calculateMode = true;
+        // if(isClientConnected) calculateMode = true;
         temparray = testclass;
         drawSideBar();
         drawGui();

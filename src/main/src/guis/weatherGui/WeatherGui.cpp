@@ -16,7 +16,7 @@ void WeatherGui::initGui() {
     if(gui.equals(WEATHER_GUI)) {
         display.fillScreen(BLACK); 
         Display::drawTopBar("Wetter");
-        if(client.connected()) {
+        if(isClientConnected) {
             if(weather != "") {
                 updateWeather(weather);
                 updateWindspeed(windspeed);

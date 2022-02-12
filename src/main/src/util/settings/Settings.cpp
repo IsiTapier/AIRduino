@@ -127,10 +127,11 @@ namespace general {
   Setting autoTimeReset(SWITCH, "", titlesAutoTimeReset, 1, "'Auto Time Reset' changed");
   
   Setting mode(MULTISELECT, "", titlesMode, MENU, "'Mode' changed", 0, 4);
-  Setting gui(MULTISELECT, "", titles, CO2_GUI, "'gui' changed", 0, 10);
+  Setting gui(MULTISELECT, "", titles, CO2_GUI, "'gui' changed", 0, CALIBRATE_GUI);
   Setting maintenance_mode(MULTISELECT, "maintenance_mode", titlesMaintenanceMode, 0, "'Wartungsmodus' changed", 0, 3);
   Setting reportSystem(ACTIVATOR, "", titlesReportSystem, 4);
   Setting manualReconnect(ACTIVATOR, "", {"reconnect"}, 12);
+  Setting manualRestart(ACTIVATOR, "", {"restart"}, 15);
 }
 
 namespace colorModes {

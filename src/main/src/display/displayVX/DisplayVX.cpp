@@ -27,6 +27,20 @@ String lastRawPPM;
 int DisplayVX::lastPPMSize;
 int lastRawPPMSize;
 
+ struct helpTask_s {
+    TaskHandle_t* xTask;
+    String txt;
+    int x;
+    int y; 
+    int size;
+    int color; 
+    int datum;
+    int duration;
+    int startDelay;
+    int currentGui;
+    Setting* gui;
+  };  
+
 #define EssentialCondition general::gui.hasChanged() || general::mode.hasChanged() || (general::version.hasChanged() && !general::mode.equals(MENU)) || general::theme.hasChanged() || general::language.hasChanged()
   /*
      _____      _
@@ -292,3 +306,44 @@ void DisplayVX::drawRawPPMStraight(int x, int y, int size, int color, int datum)
       time = time + 0;
     time = time + seconds;
   }
+
+void DisplayVX::showHelp(String txt, int x, int y, int size, int color, int datum, int duration, int startDelay, int currentGui) {
+  // String _test = "↑Zeit zur" +ue+ "cksetzen";
+  TaskHandle_t handle = new TaskHandle_t;
+  struct helpTask_s _struct;
+
+  _struct.xTask = &handle;
+  _struct.txt = txt;
+  _struct.x = x;
+  _struct.y = y;
+  _struct.size = size;
+  _struct.color = color;
+  _struct.datum = datum;
+  _struct.duration = duration;
+  _struct.startDelay = startDelay;
+  _struct.currentGui = currentGui;
+  _struct.gui = &general::gui;
+
+  xTaskCreate([](void* parm){
+    struct helpTask_s _s = *((helpTask_s*) parm);
+    Serial.println("SHOW HELP 1");
+    for(;;) {
+      vTaskDelay(_s.startDelay/portTICK_PERIOD_MS);
+      // if(_s.currentGui != _s.gui->getValue()) deleteTask(*_s.xTask);
+      display.fillRoundRect(_s.x, _s.y, _s.txt.length()*6*_s.size + 4, 8*_s.size, 3, _s.color);
+      dPrint(_s.txt, _s.x, _s.y, _s.size, BLACK, _s.datum);
+      Serial.println("SHOW HELP 10");
+
+      vTaskDelay(_s.duration/portTICK_PERIOD_MS);
+      // if(_s.currentGui != _s.gui->getValue()) deleteTask(*_s.xTask);;
+      Serial.println("SHOW HELP 20");
+      deleteTask(*_s.xTask);
+      Serial.println("SHOW HELP 30");
+    }
+  }, "name", 2*1024, &_struct, 2, &handle);
+}
+
+void DisplayVX::deleteTask(TaskHandle_t _task) {
+  Serial.println("Deleted Task");
+  vTaskDelete(_task);
+}

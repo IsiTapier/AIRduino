@@ -30,7 +30,7 @@ void OverviewGui::initGui() {
         display.pushImage(MENU_ARROW_RESET_START_X, MENU_ARROW_RESET_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, gear, WHITE);
         if(WiFi.isConnected()) {
             display.pushImage(MENU_ARROW_RESET_START_X + 40, MENU_ARROW_RESET_START_Y, MENU_ICON_SIZE, MENU_ICON_SIZE, wlanIconOn, BLACK);
-            if(client.connected()) {
+            if(isClientConnected) {
                 display.pushImage(MENU_ARROW_RESET_START_X + 80, MENU_ARROW_RESET_START_Y, MENU_ICON_SIZE, MENU_ICON_SIZE, mqttIcon, BLACK);
             }
         } else {
@@ -49,7 +49,7 @@ void OverviewGui::initGui() {
         if(TimerGui::isRunning) {
             dPrint("TIMER", MARGIN, 150, 4, LIGHTGREY, 3);
             dPrint(TimerGui::getDigitsOfMillis(TimerGui::goalMillis - millis()), DISPLAY_LENGTH-MARGIN, 130, 5, WHITE, 2);                  
-/*         } else if(client.connected()) {       
+/*         } else if(isClientConnected) {       
             drawWeatherData(WeatherGui::temp, WeatherGui::weather, WeatherGui::humidity);  */
         } else {
             //Stopwtch
