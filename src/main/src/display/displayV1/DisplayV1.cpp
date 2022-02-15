@@ -54,6 +54,7 @@ int DisplayV1::lastPixel = 0;
         DisplayVX::checkState();
       }
       drawGraph();
+      DisplayVX::drawLoudspeaker();
     } else {
       if(general::mode.equals(CHART) && general::mode.equaled(CHART)) {
         DisplayVX::writeInfo();

@@ -8,6 +8,7 @@
 #include "Arduino.h"
 #include "../../util/Util.h"
 #include "../../manager/Manager.h"
+#include "../timerGui/TimerGui.h"
 
 class StopwatchGui {
   public:

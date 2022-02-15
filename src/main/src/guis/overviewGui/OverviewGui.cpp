@@ -7,17 +7,18 @@ String timerLastValue = "";
 
 void OverviewGui::loop() {
     if(gui.getValue() != OVERVIEW_GUI) return;
-    if(StopwatchGui::isRunning) StopwatchGui::drawStopwatch(DISPLAY_LENGTH-MARGIN, 150, 5);
+    /* if(StopwatchGui::isRunning)  */StopwatchGui::drawStopwatch(DISPLAY_LENGTH-MARGIN, 150, 5);
     if(TimerGui::isRunning && TimerGui::goalMillis != 0) {
         //loop functions
         String digits = TimerGui::getDigitsOfMillis(TimerGui::goalMillis - millis());
         if(digits != timerLastValue) {
-            dPrint(timerLastValue, DISPLAY_LENGTH-MARGIN, 130, 5, BLACK, 2);
-            dPrint(digits, DISPLAY_LENGTH-MARGIN, 130, 5, WHITE, 2); 
+            dPrint(timerLastValue, DISPLAY_LENGTH-MARGIN, 175, 5, BLACK, 2);
+            dPrint(digits, DISPLAY_LENGTH-MARGIN, 175, 5, WHITE, 2); 
             timerLastValue = digits;  
         }     
+    } else if(DECIBEL_GUI_INCLUDED){
+        DecibelGui::drawTrafficLight((DECIBEL_GUI_INCLUDED?DecibelGui::trafficLightStage:-999), 230, 195, 20);
     }
-    DecibelGui::drawTrafficLight(DecibelGui::trafficLightStage, 230, 195, 20);
     drawPPMTimer(MARGIN, 80, 4, WHITE);
     DisplayVX::drawPPMStraight(DISPLAY_LENGTH-MARGIN, 60, 5, DisplayVX::state.getColor(), 2);
 }
@@ -42,21 +43,21 @@ void OverviewGui::initGui() {
         drawPPMTimer(MARGIN, 80, 4, WHITE);
         display.fillRect(MARGIN, 110, DISPLAY_LENGTH-(2*MARGIN), 4, GREY);
         
-
-        dPrint("L" + AE + "RM", MARGIN, 195, 4, LIGHTGREY, 3);
-        DecibelGui::lastTrafficDigit = -10;
-                  
-        if(TimerGui::isRunning) {
-            dPrint("TIMER", MARGIN, 150, 4, LIGHTGREY, 3);
-            dPrint(TimerGui::getDigitsOfMillis(TimerGui::goalMillis - millis()), DISPLAY_LENGTH-MARGIN, 130, 5, WHITE, 2);                  
+          
+        if(TimerGui::isRunning || !DECIBEL_GUI_INCLUDED) {
+            dPrint("TIMER", MARGIN, 195, 4, LIGHTGREY, 3);
+            if(TimerGui::goalMillis != 0) dPrint(TimerGui::getDigitsOfMillis(TimerGui::goalMillis - millis()), DISPLAY_LENGTH-MARGIN, 175, 5, WHITE, 2);                  
 /*         } else if(isClientConnected) {       
             drawWeatherData(WeatherGui::temp, WeatherGui::weather, WeatherGui::humidity);  */
         } else {
-            //Stopwtch
-            if(!StopwatchGui::isRunning) dPrint("00:00", DISPLAY_LENGTH-MARGIN, 150, 5, WHITE, 5);
-            // StopwatchGui::drawStopwatch(DISPLAY_LENGTH-MARGIN, 150, 5);
-            dPrint("STOP", MARGIN, 150, 4, LIGHTGREY, 3);
+            dPrint("L" + AE + "RM", MARGIN, 195, 4, LIGHTGREY, 3);
+            DecibelGui::lastTrafficDigit = -10;
         }
+        //Stopwtch
+        if(!StopwatchGui::isRunning) dPrint("00:00", DISPLAY_LENGTH-MARGIN, 150, 5, WHITE, 5);
+        // StopwatchGui::drawStopwatch(DISPLAY_LENGTH-MARGIN, 150, 5);
+        dPrint("STOP", MARGIN, 150, 4, LIGHTGREY, 3);
+        
     }
 }
 

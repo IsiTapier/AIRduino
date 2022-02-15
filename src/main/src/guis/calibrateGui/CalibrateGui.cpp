@@ -69,12 +69,14 @@ void CalibrateGui::drawMinAndMaxValues(int min, int max, int x, int y, int size,
 void CalibrateGui::handleTouch(TSPoint p) {
     if(!gui.equals(CALIBRATE_GUI)) return;
     if(p.isTouching(0, DISPLAY_LENGTH/2, 40, DISPLAY_HEIGHT*5/8)) {
-        _maxPPM -= 25;
+        // _maxPPM -= 25;
         SET_MAP_MAX_OUT((short) GET_MAP_MAX_OUT - 25);
+        _maxPPM = GET_MAP_MAX_OUT;
     }
     if(p.isTouching(DISPLAY_LENGTH/2, DISPLAY_LENGTH, 40, DISPLAY_HEIGHT*5/8)) {
-        _maxPPM += 25;
+        // _maxPPM += 25;
         SET_MAP_MAX_OUT((short) GET_MAP_MAX_OUT + 25);
+        _maxPPM = GET_MAP_MAX_OUT;
     }
     if(p.isTouching(0, DISPLAY_LENGTH/2, DISPLAY_HEIGHT*3/4, DISPLAY_HEIGHT)) {
         Meassure::calibrateMin();

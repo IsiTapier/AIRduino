@@ -221,9 +221,6 @@
     dPrint(op1, 0, 240, 4, GREEN, 6);
     dPrint(op2, 320, 240, 4, RED, 8);
 
-    dPrint("bei vermehrten Errors", 160, 160, 2, GREY, 4);
-    dPrint("Strom neueinstecken", 160, 180, 2, GREY, 4);
-
     TSPoint p = ts.getPoint();
     while(p.isTouching()) {
       p = ts.getPoint();

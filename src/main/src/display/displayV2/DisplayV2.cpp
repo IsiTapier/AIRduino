@@ -35,6 +35,7 @@ void DisplayV2::loop() {
     drawDisplay();
     drawBarBorder();
     DisplayVX::handleData();
+    DisplayVX::drawLoudspeaker();
   }
   DisplayVX::writeInfo();
   DisplayVX::checkState();

@@ -24,6 +24,7 @@ class DisplayVX {
     static String time;
     static void calculateTime();
     static boolean recentPeepStatus;
+    static bool isInitEnabled;
     
     static void drawPPMStraight(int x, int y, int size, int color, int datum, int backgroundColor);
     static void drawPPMStraight(int x, int y, int size, int color, int datum);
@@ -34,6 +35,8 @@ class DisplayVX {
     static void drawTimer(int x, int y, int size, int color, int datum);
     static void showHelp(String txt, int x, int y, int size, int color, int datum, int duration, int startDelay, int currentGui);
 
+    static void drawLoudspeaker();
+    
   protected:
     static void drawDisplay();
     static void getData();

@@ -76,7 +76,6 @@
     AsyncElegantOTA.begin(&server);    // Start ElegantOTA
     server.begin();
     Serial.print("WIFI: HTTP server started at: ");
-    Serial.println(WiFi.localIP());
   }
 
   void manageSensorID() {
@@ -321,6 +320,10 @@ void reconnectToMQTT() {
   
     if (client.connect(clientId.c_str())) {
       Serial.println("||||...connected");
+      Serial.println(WiFi.localIP()); 
+      String _txt = WiFi.localIP().toString() + "' WHERE `device_overview`.`sensorId` = '" + (String) sensorID+ "';";
+      client.publish("updateIPAddress", _txt.c_str());
+
       generalSubscriptions();
       client.publish("config2/request", ((String)sensorID).c_str());
       Serial.println("WIFI: REQUESTED Config");

@@ -10,6 +10,7 @@
 #include <pgmspace.h>
 #include "../classes/calibration/Calibration.h"
 #include "../classes/state/State.h"
+#include "../classes/help/Help.h"
 #include "../extern/Adafruit_TouchScreen-master/TouchScreen.h"
 #include "../extern/TFT_eSPI-master/TFT_eSPI.h"
 #include "../util/data/Images.h"
@@ -21,7 +22,10 @@
 #include "../meassure/Meassure.h"
 
 #define EEPROM_SIZE (1+7*sizeof(short) + sizeof(bool))
+
+//IMPORTANT SETTINGS
 #define ALLOW_PIEP false
+ #define DECIBEL_GUI_INCLUDED false
 
 #define XMIN (1)
 #define XMAX (1+1*sizeof(short))

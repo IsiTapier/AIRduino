@@ -11,7 +11,7 @@
   //titles
   const std::vector<String> titlesVersion = {"Version", "version", "version", "versi","versi"+oa+"n"};
   const std::vector<String> titlesTheme = {"Thema", "theme", "th"+eg+"me", "tema", "tema"};
-  const std::vector<String> titlesSound = {"Ton", "sound", "son", "swara", "sonido"};
+  const std::vector<String> titlesSound = {"TON", "sound", "son", "swara", "sonido"};
   const std::vector<String> titlesBlink = {"Blinken", "blink", "clignoter", "lampu kilat", "destello"};
   const std::vector<String> titlesData = {"Daten", "data", "donn"+ea+"es", "data", "datos"};
   const std::vector<String> titlesCalibrateTouch = {"Touch kalibrieren", "calibrate Touch", "calibrage tactile", "tutul kalibrasi", "calibrar el tacto"};
@@ -124,7 +124,7 @@ namespace general {
   
   Setting debugDatabase(SWITCH, "", titlesDebugDatabase, 0, "'Debug Database' changed");
   Setting developperSettings(SWITCH, "", titlesDevelopperSettings, 0, "'Develop settings' changed");
-  Setting autoTimeReset(SWITCH, "", titlesAutoTimeReset, 1, "'Auto Time Reset' changed");
+  Setting autoTimeReset(SWITCH, "", titlesAutoTimeReset, 0, "'Auto Time Reset' changed");
   
   Setting mode(MULTISELECT, "", titlesMode, MENU, "'Mode' changed", 0, 4);
   Setting gui(MULTISELECT, "", titles, CO2_GUI, "'gui' changed", 0, CALIBRATE_GUI);

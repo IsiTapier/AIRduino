@@ -10,8 +10,8 @@ using namespace general;
   TSPoint Display::p;  
   unsigned long Display::lastTouch;
   int Display::lastGui = GUI_MENU;
-
-
+  
+  
 
 void Display::setup() {
   debug(DEBUG, SETUP, "Display SETUP started");
@@ -37,8 +37,6 @@ void Display::loop() {
 
     Meassure::loop();
     boolean changed = DisplayV1::getGraphData();
-    
-    TimerGui::peep();
 
 
     if(mode.getValue() == MENU) {
@@ -68,7 +66,7 @@ void Display::loop() {
 }
 
 void Display::initDisplay() {
-  if(gui.hasChanged() || mode.hasChanged() || (version.hasChanged() && !mode.equals(MENU)) || theme.hasChanged() || language.hasChanged()) {
+  if(gui.hasChanged() || mode.hasChanged() || (version.hasChanged() && !mode.equals(MENU)) || theme.hasChanged() || language.hasChanged() || DisplayVX::isInitEnabled) {
     if(mode.getValue() == CHART) {
       // Serial.println("initDisplay");
       if(gui.equals(CO2_GUI)) {
@@ -103,7 +101,13 @@ void Display::initDisplay() {
     language.setValue(language.getValue(), false);
     mode.setValue(mode.getValue(), false);
     gui.setValue(gui.getValue(), false);
+
+    DisplayVX::isInitEnabled = false;
   }
+}
+
+void Display::enableInit() {
+  DisplayVX::isInitEnabled = true;
 }
 
 void Display::handleTouch() {
@@ -149,6 +153,7 @@ void Display::handleTouch() {
         } else if(mode.equals(CHART)) {
           if(gui.equals(CO2_GUI)) {
             Meassure::resetStartTime(true);
+            TimerGui::peepCount += 2;
             /* DisplayV1::resetGraph();
             if(version.equals(V1))
               DisplayV1::setup(); */
@@ -169,6 +174,13 @@ void Display::handleTouch() {
             }
             Manager::lastModeChange = millis();
           }
+        }
+      }
+      if(p.isTouching(MENU_ARROW_RESET_START_X-3, MENU_ARROW_RESET_END_X+MENU_ICON_SIZE+10, MENU_ARROW_RESET_START_Y-3, MENU_ARROW_RESET_END_Y + MENU_ICON_SIZE +40)) {
+        if(gui.equals(CO2_GUI)) {
+          sound.shiftValue();
+          DisplayVX::drawLoudspeaker();
+          return;
         }
       } 
       if(mode.equals(CHART)) {

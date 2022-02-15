@@ -42,6 +42,7 @@ class Display {
     static unsigned long lastTouch;
     static void screenShot();
     
+    static void enableInit();
 
   private:
     static TSPoint p;

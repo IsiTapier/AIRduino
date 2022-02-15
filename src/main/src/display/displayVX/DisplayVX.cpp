@@ -27,6 +27,8 @@ String lastRawPPM;
 int DisplayVX::lastPPMSize;
 int lastRawPPMSize;
 
+bool DisplayVX::isInitEnabled = false;
+
  struct helpTask_s {
     TaskHandle_t* xTask;
     String txt;
@@ -41,7 +43,7 @@ int lastRawPPMSize;
     Setting* gui;
   };  
 
-#define EssentialCondition general::gui.hasChanged() || general::mode.hasChanged() || (general::version.hasChanged() && !general::mode.equals(MENU)) || general::theme.hasChanged() || general::language.hasChanged()
+#define EssentialCondition general::gui.hasChanged() || general::mode.hasChanged() || (general::version.hasChanged() && !general::mode.equals(MENU)) || general::theme.hasChanged() || general::language.hasChanged() || DisplayVX::isInitEnabled
   /*
      _____      _
     / ____|    | |
@@ -92,7 +94,17 @@ int lastRawPPMSize;
       display.pushImage(MENU_ARROW_RESET_START_X, MENU_ARROW_RESET_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, arrowResetLight, WHITE);
       display.pushImage(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, homeLight, WHITE);
     }
+    
     debug(INFO, SETUP, "Display drawn");
+  }
+
+  void DisplayVX::drawLoudspeaker() {
+    Serial.println("Draw Loudspeaker");
+    if(general::sound.getValue() == 0) {
+      display.pushImage(0, MENU_ARROW_RESET_START_Y + MENU_ICON_HEIGHT + 20, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, loudspeakerOff, WHITE);
+    } else {
+      display.pushImage(0, MENU_ARROW_RESET_START_Y + MENU_ICON_HEIGHT + 20, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, loudspeakerOn, WHITE);
+    }
   }
 
   void DisplayVX::getData() {
@@ -309,7 +321,7 @@ void DisplayVX::drawRawPPMStraight(int x, int y, int size, int color, int datum)
 
 void DisplayVX::showHelp(String txt, int x, int y, int size, int color, int datum, int duration, int startDelay, int currentGui) {
   // String _test = "↑Zeit zur" +ue+ "cksetzen";
-  TaskHandle_t handle = new TaskHandle_t;
+  /* TaskHandle_t handle = new TaskHandle_t;
   struct helpTask_s _struct;
 
   _struct.xTask = &handle;
@@ -340,7 +352,7 @@ void DisplayVX::showHelp(String txt, int x, int y, int size, int color, int datu
       deleteTask(*_s.xTask);
       Serial.println("SHOW HELP 30");
     }
-  }, "name", 2*1024, &_struct, 2, &handle);
+  }, "name", 2*1024, &_struct, 2, &handle); */
 }
 
 void DisplayVX::deleteTask(TaskHandle_t _task) {

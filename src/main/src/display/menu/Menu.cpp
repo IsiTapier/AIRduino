@@ -9,6 +9,8 @@
   int Menu::currentSubMenu = 0;
   boolean test = false;
 
+#if false
+
   SubMenu subMenus[] = {
     {SubMenu("General", {
         MenuPage(
@@ -38,7 +40,7 @@
           Input(&general::manualRestart)
         )
     })},
-    {SubMenu("Farb-Modi", {
+    /* {SubMenu("Farb-Modi", {
         MenuPage(
           Input(&colorModes::c_design),
           Input(&colorModes::c_chart),
@@ -51,7 +53,7 @@
           Input(&colorModes::c_slider),
           Input(&colorModes::showTopBar)
         )
-    })},
+    })}, */
     {SubMenu("Developer", {
         MenuPage(
           Input(&developper::triggerCalibrateGui),
@@ -90,6 +92,81 @@
     }, 0, &reportMenuOpen)}
   };
 
+#else 
+
+SubMenu subMenus[] = {
+    {SubMenu("General", {
+        MenuPage(
+          //Input(&general::version),
+          // Input(&general::theme),
+          // Input(&general::language),
+          Input(&general::sound),
+          Input(&general::empty),
+          Input(&general::blink),
+          Input(&general::autoTimeReset),
+          Input(&general::developperSettings)
+        ),
+        MenuPage(
+          Input(&general::graph_speed),
+          Input(&general::manualReconnect),
+          Input(&general::calibrateTouch), 
+          Input(&general::manualRestart),
+          Input(&general::ventilating_timeout)
+        )
+    })},
+    /* {SubMenu("Farb-Modi", {
+        MenuPage(
+          Input(&colorModes::c_design),
+          Input(&colorModes::c_chart),
+          Input(&colorModes::c_bar),
+          Input(&colorModes::c_state),
+          Input(&colorModes::c_time)          
+        ),
+        MenuPage(
+          Input(&colorModes::c_value),
+          Input(&colorModes::c_slider),
+          Input(&colorModes::showTopBar)
+        )
+    })}, */
+    {SubMenu("Developer", {
+        MenuPage(
+          Input(&developper::triggerCalibrateGui),
+          Input(&developper::deviceInfo),
+          Input(&general::empty),
+          Input(&general::calibrateTouch),
+          Input(&developper::isMappingActive)
+        ),
+        MenuPage(
+          Input(&general::debugPriority),
+          Input(&general::debugSetup),
+          Input(&general::debugSensor),
+          Input(&general::debugDisplay),
+          Input(&general::debugMenu),
+          Input(&general::debugTouch)
+        ),
+        MenuPage(
+          Input(&general::data),
+          Input(&general::blink),//Input(&general::kernMode),
+          Input(&general::graph_speed),         
+          Input(&general::blink_thickness),
+          Input(&general::ventilating_timeout)
+        ),
+        MenuPage(
+          Input(&general::debugDatabase)
+        )
+    }, 0, general::developperSettings.getValuePointer())},
+    {SubMenu(REPORT_MENU_TITLE, {
+        MenuPage(
+          Input(&report::sensorError),
+          Input(&report::sensorWrong),
+          Input(&report::graphicalBug),
+          Input(&report::acousticBug),
+          Input(&report::helpShortterm)
+        )
+    }, 0, &reportMenuOpen)}
+  };
+
+#endif
   void Menu::setup() {
     debug(DEBUG, SETUP, "Menu SETUP started");
     if(mode.hasChanged() || theme.hasChanged())

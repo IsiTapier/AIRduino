@@ -4,6 +4,7 @@
 
 #include "DisplayV3.h"
 
+Help* _timeHelp = new Help("Timer", DISPLAY_LENGTH/2, DISPLAY_HEIGHT-12, 2, LIGHTGREY, TL_DATUM, 4000, 4000);;
 
 int DisplayV3::stateBackgroundColor;
 String lastStateTitle = "";
@@ -19,16 +20,16 @@ void DisplayV3::setup() {
         //draw ICONS
     display.pushImage(MENU_ARROW_BACK_START_X, MENU_ARROW_BACK_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, homeDark, WHITE);
     display.pushImage(MENU_ARROW_RESET_START_X, MENU_ARROW_RESET_START_Y, MENU_ICON_LENGTH, MENU_ICON_HEIGHT, arrowResetDark, BLACK);  
-    DisplayVX::showHelp("Timer", 30, 30, 2, LIGHTGREY, 1, 10000, 2000, general::gui.getValue());
-    // DisplayVX::showHelp("PPM", 70, 100, 2, LIGHTGREY, 1, 500, 1000, general::gui.getValue());
+    DisplayVX::drawLoudspeaker();
 }
 
 void DisplayV3::loop() {
   	stateBackgroundColor = state.getBackgroundColor();
     writeInfoV3();
     DisplayVX::handleData();
-    
     DisplayVX::checkState();
+
+    // _timeHelp->loop();
 }
 
 void DisplayV3::writeInfoV3() {

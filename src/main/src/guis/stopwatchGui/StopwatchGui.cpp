@@ -51,6 +51,7 @@ void StopwatchGui::startStopwatch() {
         Serial.println(startMillis);
         millisAtPause = 0;
     }
+    TimerGui::peepCount += 2;
     isRunning = true;  
 }
 void StopwatchGui::stopStopwatch() {

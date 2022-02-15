@@ -26,7 +26,7 @@ void MenuGui::handleTouch(TSPoint p) {
         } */
         if(p.isTouching(DISPLAY_LENGTH*6/11, DISPLAY_LENGTH, 50, DISPLAY_HEIGHT*2/5+32)) {
             Serial.println("DecibelGui");
-            gui.setValue(DECIBEL_GUI);
+            // gui.setValue(DECIBEL_GUI);
             // gui.setValue(HELP_GUI);
         }
         if(p.isTouching(DISPLAY_LENGTH*6/11, DISPLAY_LENGTH, DISPLAY_HEIGHT*2/5+32, DISPLAY_HEIGHT)) {           
@@ -74,8 +74,8 @@ void MenuGui::initGui() {
 
         __x = (double) DISPLAY_LENGTH*7/11; __y = (double) DISPLAY_HEIGHT*2/5 -10;
         display.pushImage(DISPLAY_LENGTH/2, __y-8, MENU_ICON_SIZE, MENU_ICON_SIZE, trafficLightIcon);
-        dPrint("L"+AE+"RMAMPEL", __x, __y, 2, WHITE, 3);
-        dPrint("noice makes mad", __x, __y+16, 1, GREY, 3);
+        dPrint("L"+AE+"RMAMPEL", __x, __y, 2, GREY, 3);
+        dPrint("In Arbeit...", __x, __y+16, 1, GREY, 3);
         
         __x = (double) DISPLAY_LENGTH*7/11; __y = (double) DISPLAY_HEIGHT*3/5;
         display.pushImage(DISPLAY_LENGTH/2, __y-8, MENU_ICON_SIZE, MENU_ICON_SIZE, overviewIcon);
